@@ -37,6 +37,7 @@ export async function addBuiltHamperAction(input: {
   components: { variantId: string; quantity: number }[]
   giftMessage: string
   ribbonColour: string
+  deliverTo?: string
 }): Promise<BuilderResult> {
   const box = BOX_OPTIONS.find((b) => b.id === input.boxId)
   if (!box) return { ok: false, message: 'Pick a box before you add the hamper to your cart.' }
@@ -85,6 +86,9 @@ export async function addBuiltHamperAction(input: {
   }
   if (input.ribbonColour.trim()) {
     parentAttributes.push({ key: BUNDLE_ATTRIBUTES.ribbon, value: input.ribbonColour.trim() })
+  }
+  if (input.deliverTo?.trim()) {
+    parentAttributes.push({ key: BUNDLE_ATTRIBUTES.deliverTo, value: input.deliverTo.trim().slice(0, 40) })
   }
 
   const componentAttributes: CartLineAttribute[] = [

@@ -93,6 +93,7 @@ export const BUNDLE_ATTRIBUTES = {
   box: 'Box',
   giftMessage: 'Gift message',
   ribbon: 'Ribbon colour',
+  deliverTo: 'Deliver to',
   componentOf: '_partOfHamper',
 } as const
 
@@ -113,16 +114,62 @@ export function componentCount(selection: Pick<BuilderSelection, 'components'>):
 }
 
 /**
- * Categories offered in the builder, in the order they are shown. Each maps
- * to a query the commerce layer can answer, so adding a category does not
- * mean touching the builder UI.
+ * The picker's shelves, in the order the chips appear.
+ *
+ * The full shop is behind these: every published product in the client's
+ * export is either on the main site (wine, offered here from the live
+ * catalogue) or a quarantined builder item in one of the importer's aisles.
+ * Each shelf maps to a query the commerce layer can answer, so adding one
+ * does not mean touching the builder UI.
+ *
+ * Hamper staples come first. Cards are late on purpose: a card is the last
+ * thing you pick up in the shop too.
  */
-export const BUILDER_CATEGORIES = [
-  { id: 'wine', label: 'Wine and Champagne', productTypes: ['Red wine', 'White wine', 'Rosé wine', 'Champagne', 'Sparkling wine'], alcohol: true },
-  { id: 'spirits', label: 'Whiskey, gin and spirits', productTypes: ['Irish whiskey', 'Gin', 'Vodka', 'Liqueur'], alcohol: true },
-  { id: 'sweet', label: 'Chocolate and treats', productTypes: ['Chocolate', 'Confectionery'], alcohol: false },
-  { id: 'home', label: 'Candles and home', productTypes: ['Candle', 'Diffuser'], alcohol: false },
-  { id: 'glass', label: 'Crystal and glassware', productTypes: ['Crystal', 'Glassware'], alcohol: false },
+export type PickerShelf = {
+  id: string
+  label: string
+  /** What fills the shelf. */
+  query:
+    | { kind: 'aisle'; aisle: string }
+    | { kind: 'wine' }
+    | { kind: 'spirits' }
+    | { kind: 'all' }
+  /** True when everything on the shelf is alcohol. */
+  alcohol: boolean
+}
+
+export const PICKER_SHELVES: readonly PickerShelf[] = [
+  { id: 'all', label: 'Everything', query: { kind: 'all' }, alcohol: false },
+  { id: 'food', label: 'Food and larder', query: { kind: 'aisle', aisle: 'food-larder' }, alcohol: false },
+  { id: 'chocolate', label: 'Chocolate and sweet things', query: { kind: 'aisle', aisle: 'chocolate-sweets' }, alcohol: false },
+  { id: 'wine', label: 'Wine and Champagne', query: { kind: 'wine' }, alcohol: true },
+  { id: 'spirits', label: 'Whiskey and spirits', query: { kind: 'spirits' }, alcohol: true },
+  { id: 'cellar', label: 'More from the cellar', query: { kind: 'aisle', aisle: 'wine-cellar-extras' }, alcohol: true },
+  { id: 'candles', label: 'Candles and fragrance', query: { kind: 'aisle', aisle: 'candles-fragrance' }, alcohol: false },
+  { id: 'beauty', label: 'Beauty and bath', query: { kind: 'aisle', aisle: 'beauty-bath' }, alcohol: false },
+  { id: 'homeware', label: 'Homeware and kitchen', query: { kind: 'aisle', aisle: 'homeware-kitchen' }, alcohol: false },
+  { id: 'baby', label: 'Baby and children', query: { kind: 'aisle', aisle: 'baby-kids' }, alcohol: false },
+  { id: 'jewellery', label: 'Jewellery and accessories', query: { kind: 'aisle', aisle: 'jewellery-accessories' }, alcohol: false },
+  { id: 'cards', label: 'Cards and stationery', query: { kind: 'aisle', aisle: 'cards-stationery' }, alcohol: false },
+  { id: 'other', label: 'Everything else', query: { kind: 'aisle', aisle: 'everything-else' }, alcohol: false },
+]
+
+/**
+ * Where the hamper is going. Step one of the wizard, the same way a
+ * hamper order starts in the shop: it decides what we can promise about
+ * delivery, and it travels on the cart line so the bench sees it.
+ */
+export const DELIVERY_COUNTRIES = [
+  {
+    id: 'ireland',
+    label: 'Ireland',
+    note: 'Free hand delivery in our local area, €7.95 anywhere else in Ireland.',
+  },
+  {
+    id: 'uk',
+    label: 'United Kingdom',
+    note: 'We deliver to the UK. Some fresh items may not travel; we will confirm before packing.',
+  },
 ] as const
 
-export type BuilderCategoryId = (typeof BUILDER_CATEGORIES)[number]['id']
+export type DeliveryCountryId = (typeof DELIVERY_COUNTRIES)[number]['id']

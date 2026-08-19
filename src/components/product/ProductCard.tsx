@@ -33,12 +33,12 @@ export function ProductCardTile({
               alt={product.image.alt}
               width={product.image.width}
               height={product.image.height}
-              sizes="(min-width: 1280px) 22vw, (min-width: 768px) 30vw, 45vw"
+              sizes="(min-width: 1280px) 30vw, (min-width: 768px) 30vw, 45vw"
               priority={priority}
-              className="aspect-4/3 w-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
+              className="aspect-square w-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
             />
           ) : (
-            <div className="aspect-4/3 w-full bg-beige" />
+            <div className="aspect-square w-full bg-beige" />
           )}
 
           {badge ? (
@@ -66,7 +66,9 @@ export function ProductGrid({
   priorityCount?: number
 }) {
   return (
-    <ul className="grid grid-cols-2 gap-x-5 gap-y-10 md:grid-cols-3 xl:grid-cols-4">
+    // Three across at desktop, not four. The photography is the sell, and
+    // a quarter-width tile undersold it.
+    <ul className="grid grid-cols-2 gap-x-6 gap-y-12 md:grid-cols-3">
       {products.map((product, index) => (
         <li key={product.id}>
           <ProductCardTile product={product} priority={index < priorityCount} />

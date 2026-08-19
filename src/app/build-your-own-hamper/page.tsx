@@ -1,10 +1,9 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { HamperBuilder } from '@/components/builder/HamperBuilder'
+import { BuilderWizard } from '@/components/builder/BuilderWizard'
 import { JsonLd } from '@/components/seo/JsonLd'
-import { getProduct, queryProducts } from '@/lib/commerce'
-import type { ProductCard } from '@/lib/commerce/types'
-import { BUILDER_CATEGORIES, BUILDER_PARENT_HANDLE } from '@/lib/hamper-builder'
+import { getProduct } from '@/lib/commerce'
+import { BUILDER_PARENT_HANDLE } from '@/lib/hamper-builder'
 import { breadcrumbJsonLd } from '@/lib/seo/structured-data'
 
 export const revalidate = 900
@@ -12,7 +11,7 @@ export const revalidate = 900
 export const metadata: Metadata = {
   title: 'Build your own hamper',
   description:
-    'Pick the box, pick what goes in it, write the card. We pack it by hand in Co. Meath and send it out the same day we send everything else.',
+    'Pick the box, fill it from everything in the shop, write the card. We pack it by hand in Co. Meath and send it out the same day we send everything else.',
   alternates: { canonical: '/build-your-own-hamper' },
 }
 
@@ -23,6 +22,12 @@ export const metadata: Metadata = {
  * authority and broke trust at the highest-intent moment on the site. This
  * route is the fix, and the whole flow from first click to Shopify checkout
  * stays on theparcelconcierge.com.
+ *
+ * The full shop is behind it. The main site sells hampers and wine; every
+ * other product the client publishes is a quarantined builder item, and
+ * this wizard is the only place it can be seen or bought. The picker
+ * fetches the catalogue a shelf at a time from /api/builder-items, so the
+ * page itself ships only the box options.
  */
 export default async function BuildYourOwnHamperPage() {
   const parent = await getProduct(BUILDER_PARENT_HANDLE)
@@ -33,24 +38,9 @@ export default async function BuildYourOwnHamperPage() {
     notFound()
   }
 
-  const categories = await Promise.all(
-    BUILDER_CATEGORIES.map(async (category) => {
-      const { items } = await queryProducts({
-        productTypes: [...category.productTypes],
-        first: 24,
-        sort: 'price-asc',
-      })
-      return { id: category.id, label: category.label, alcohol: category.alcohol, items }
-    }),
-  )
-
-  const populated = categories.filter(
-    (category): category is typeof category & { items: ProductCard[] } => category.items.length > 0,
-  )
-
   return (
     <>
-      <HamperBuilder parent={parent} categories={populated} />
+      <BuilderWizard parent={parent} />
       <JsonLd
         data={breadcrumbJsonLd([
           { name: 'Home', path: '/' },

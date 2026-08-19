@@ -94,7 +94,14 @@ export type WineMetafields = {
   giftSet: boolean
 }
 
-export type ProductKind = 'hamper' | 'wine' | 'spirit' | 'addon'
+/**
+ * `builder-item` is the quarantined kind: the full shop catalogue, sold
+ * only as things you put in a built hamper. The main site sells hampers
+ * and wine; a builder item never appears in a listing, the sitemap or at
+ * a product URL, and the query layer enforces that rather than trusting
+ * each caller to remember. See scripts/catalogue/import-builder-items.mjs.
+ */
+export type ProductKind = 'hamper' | 'wine' | 'spirit' | 'addon' | 'builder-item'
 
 export type Product = {
   id: string
@@ -121,15 +128,25 @@ export type ProductCard = Pick<
   /** Set when the product carries badge:exclusive. Drives the card flag. */
   badges: string[]
   /**
-   * The first variant's id.
+   * The first AVAILABLE variant's id, not merely the first.
    *
    * Present so components that add straight to the cart (the hamper builder
    * and the cart cross-sell) do not have to fetch the full product first.
    * Shopify product and variant ids are unrelated, so this can never be
    * derived from the product id, and null means the caller must load the
    * product before it can add anything.
+   *
+   * Availability matters: a product whose first variant is sold out but
+   * whose second is in stock is a buyable product, and handing out the
+   * sold-out variant id made the builder reject boxes at add-to-cart.
    */
   defaultVariantId: string | null
+  /**
+   * What that variant costs. The price range's minimum can belong to a
+   * variant that is sold out, and a card that quotes one price and adds
+   * another is lying.
+   */
+  defaultVariantPriceMinor: number | null
 }
 
 export type CartLineAttribute = { key: string; value: string }
@@ -182,6 +199,11 @@ export type ProductQuery = {
   handles?: string[]
   minPriceMinor?: number
   maxPriceMinor?: number
+  /**
+   * Free-text search over titles. Exists for the hamper builder's picker,
+   * where two thousand items need a search box, not another facet.
+   */
+  text?: string
   /** Filter facets from the URL, e.g. grape=malbec. */
   facets?: Record<string, string[]>
   sort?: ProductSort

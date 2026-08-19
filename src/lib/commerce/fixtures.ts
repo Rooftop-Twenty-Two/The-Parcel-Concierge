@@ -1,3 +1,4 @@
+import builderItemsJson from '../../../data/catalogue/builder-items.json'
 import fixtureJson from '../../../data/catalogue/fixtures.json'
 import wineJson from '../../../data/catalogue/wines.json'
 import type { Catalogue, CatalogueProduct } from '../catalogue/schema'
@@ -29,12 +30,14 @@ import type {
  * The catalogue is assembled from every interchange file.
  *
  * wines.json is the real thing, imported from the client's Shopify export.
- * fixtures.json is the sample hampers and add-ons we wrote, which the real
- * export does not usefully cover yet. Both are the same shape, so nothing
- * downstream can tell them apart, and a handle collision resolves in favour
- * of the real data.
+ * builder-items.json is the rest of that export: everything the shop
+ * carries that is not on the main site, sold only through the hamper
+ * builder. fixtures.json is the sample hampers and add-ons we wrote, which
+ * the real export does not usefully cover yet. All three are the same
+ * shape, so nothing downstream can tell them apart, and a handle collision
+ * resolves in favour of the real data.
  */
-const sources = [wineJson as Catalogue, fixtureJson as Catalogue]
+const sources = [wineJson as Catalogue, builderItemsJson as Catalogue, fixtureJson as Catalogue]
 
 const merged = new Map<string, CatalogueProduct>()
 for (const source of sources) {
@@ -53,6 +56,7 @@ function kindOf(product: CatalogueProduct): ProductKind {
   if (product.tags.includes('type:hamper')) return 'hamper'
   if (product.tags.includes('type:wine')) return 'wine'
   if (product.tags.includes('type:spirit')) return 'spirit'
+  if (product.tags.includes('type:builder-item')) return 'builder-item'
   return 'addon'
 }
 
@@ -144,6 +148,9 @@ function toProduct(product: CatalogueProduct): Product {
 }
 
 function toCard(product: Product): ProductCard {
+  // The first variant that can actually be bought. See the type's comment:
+  // handing out a sold-out variant id made the builder reject boxes.
+  const buyable = product.variants.find((v) => v.availableForSale) ?? product.variants[0]
   return {
     id: product.id,
     handle: product.handle,
@@ -154,7 +161,8 @@ function toCard(product: Product): ProductCard {
     tags: product.tags,
     image: product.images[0] ?? null,
     badges: product.tags.filter((t) => t.startsWith('badge:')),
-    defaultVariantId: product.variants[0]?.id ?? null,
+    defaultVariantId: buyable?.id ?? null,
+    defaultVariantPriceMinor: buyable?.price.amountMinor ?? null,
   }
 }
 
@@ -167,7 +175,8 @@ export function fixtureProduct(handle: string): Product | null {
 }
 
 export function fixtureAllHandles(): string[] {
-  return PRODUCTS.map((p) => p.handle)
+  // The sitemap must never learn a builder item exists: they have no URL.
+  return PRODUCTS.filter((p) => p.kind !== 'builder-item').map((p) => p.handle)
 }
 
 /**
@@ -203,6 +212,18 @@ function matches(product: Product, query: ProductQuery): boolean {
   if (HIDDEN_FROM_LISTINGS.has(product.handle) && !query.handles?.includes(product.handle)) {
     return false
   }
+  // Builder items answer only two kinds of question: a query that names
+  // the kind (the builder's own picker) and an explicit handle lookup (the
+  // cart resolving what is in a box). Every other query on the site gets
+  // nothing, whatever else it asks for, so no future listing can leak the
+  // quarantined catalogue by forgetting a filter.
+  if (
+    product.kind === 'builder-item' &&
+    !query.kinds?.includes('builder-item') &&
+    !query.handles?.includes(product.handle)
+  ) {
+    return false
+  }
   if (query.handles && !query.handles.includes(product.handle)) return false
   if (query.kinds && !query.kinds.includes(product.kind)) return false
   if (query.tags && !query.tags.every((t) => product.tags.includes(t))) return false
@@ -215,6 +236,14 @@ function matches(product: Product, query: ProductQuery): boolean {
   }
   if (query.maxPriceMinor !== undefined && product.priceRange.min.amountMinor > query.maxPriceMinor) {
     return false
+  }
+  if (query.text) {
+    // Every word must appear somewhere in the title. "irish chocolate"
+    // should find Irish Chocolate Truffles, not everything Irish plus
+    // everything chocolate.
+    const title = product.title.toLowerCase()
+    const words = query.text.toLowerCase().split(/\s+/).filter(Boolean)
+    if (!words.every((w) => title.includes(w))) return false
   }
   if (query.wineFlags?.length) {
     if (!product.wine) return false

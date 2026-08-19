@@ -109,10 +109,20 @@ type RawCardProduct = {
   availableForSale: boolean
   featuredImage: Parameters<typeof normaliseImage>[0]
   priceRange: RawPriceRange
-  variants?: { nodes: { id: string }[] }
+  variants?: {
+    nodes: {
+      id: string
+      availableForSale?: boolean
+      price?: { amount: string; currencyCode: string }
+    }[]
+  }
 }
 
 export function normaliseProductCard(raw: RawCardProduct): ProductCard {
+  // The first variant that can actually be bought, so a card's + button
+  // never adds a sold-out variant of an in-stock product.
+  const nodes = raw.variants?.nodes ?? []
+  const buyable = nodes.find((v) => v.availableForSale !== false) ?? nodes[0] ?? null
   return {
     id: raw.id,
     handle: raw.handle,
@@ -122,7 +132,10 @@ export function normaliseProductCard(raw: RawCardProduct): ProductCard {
     availableForSale: raw.availableForSale,
     image: normaliseImage(raw.featuredImage),
     badges: raw.tags.filter((t) => t.startsWith('badge:')),
-    defaultVariantId: raw.variants?.nodes[0]?.id ?? null,
+    defaultVariantId: buyable?.id ?? null,
+    defaultVariantPriceMinor: buyable?.price
+      ? money(buyable.price.amount, buyable.price.currencyCode).amountMinor
+      : null,
     priceRange: {
       min: money(raw.priceRange.minVariantPrice.amount, raw.priceRange.minVariantPrice.currencyCode),
       max: money(raw.priceRange.maxVariantPrice.amount, raw.priceRange.maxVariantPrice.currencyCode),

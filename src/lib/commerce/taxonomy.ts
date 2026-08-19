@@ -27,7 +27,38 @@ export const RECIPIENT_TAGS = [
   'recipient:client',
 ] as const
 
-export const TYPE_TAGS = ['type:hamper', 'type:wine', 'type:spirit', 'type:addon'] as const
+export const TYPE_TAGS = [
+  'type:hamper',
+  'type:wine',
+  'type:spirit',
+  'type:addon',
+  // The quarantined kind: the full shop catalogue, sold only inside the
+  // hamper builder. See scripts/catalogue/import-builder-items.mjs.
+  'type:builder-item',
+] as const
+
+/**
+ * The builder's aisles. One per builder item, set by the importer from the
+ * shop's own tags and types. These are picker navigation, not site routes.
+ */
+export const AISLE_TAGS = [
+  'aisle:chocolate-sweets',
+  'aisle:food-larder',
+  'aisle:candles-fragrance',
+  'aisle:beauty-bath',
+  'aisle:baby-kids',
+  'aisle:jewellery-accessories',
+  'aisle:homeware-kitchen',
+  'aisle:cards-stationery',
+  'aisle:wine-cellar-extras',
+  'aisle:everything-else',
+] as const
+
+/**
+ * Alcohol the wine importer did not claim (beer, cider, cream liqueurs
+ * sold as food gifts). Arms the age gate when the item goes in a box.
+ */
+export const CONTENT_TAGS = ['contains:alcohol'] as const
 
 export const PRICE_TAGS = [
   'price:under-50',
@@ -49,6 +80,8 @@ export const ALL_TAGS = [
   ...TYPE_TAGS,
   ...PRICE_TAGS,
   ...BADGE_TAGS,
+  ...AISLE_TAGS,
+  ...CONTENT_TAGS,
 ] as const
 
 export type Tag = (typeof ALL_TAGS)[number]

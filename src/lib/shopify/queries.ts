@@ -41,11 +41,17 @@ export const PRODUCT_CARD_FRAGMENT = /* GraphQL */ `
         currencyCode
       }
     }
-    # One variant, so a card can add straight to the cart. Shopify product
-    # and variant ids are unrelated, so this cannot be derived client side.
-    variants(first: 1) {
+    # Enough variants to find the first buyable one, so a card can add
+    # straight to the cart. Shopify product and variant ids are unrelated,
+    # so this cannot be derived client side.
+    variants(first: 10) {
       nodes {
         id
+        availableForSale
+        price {
+          amount
+          currencyCode
+        }
       }
     }
   }

@@ -50,7 +50,7 @@ export async function resolveHubSlug(hub: CollectionHub, slug: string): Promise<
   return { kind: 'product', product }
 }
 
-function hubForKind(kind: Product['kind']): CollectionHub {
+function hubForKind(kind: Product['kind']): CollectionHub | null {
   switch (kind) {
     case 'hamper':
       return 'hampers'
@@ -59,5 +59,9 @@ function hubForKind(kind: Product['kind']): CollectionHub {
       return 'wine'
     case 'addon':
       return 'gifts'
+    case 'builder-item':
+      // No hub, so no URL. A builder item is only ever seen inside
+      // /build-your-own-hamper, which is the whole point of the kind.
+      return null
   }
 }

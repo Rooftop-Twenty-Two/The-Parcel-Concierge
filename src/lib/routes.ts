@@ -22,6 +22,10 @@ export function productPathFor(kind: ProductKind, handle: string): string {
       return `/wine/${handle}`
     case 'addon':
       return `/gifts/${handle}`
+    case 'builder-item':
+      // A builder item has no page of its own. Anywhere that would link to
+      // one links to the only place it can be bought.
+      return '/build-your-own-hamper'
   }
 }
 

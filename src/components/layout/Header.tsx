@@ -34,7 +34,16 @@ export function Header() {
   }, [])
 
   return (
-    <header className="sticky top-0 z-50 border-b border-rule bg-cream/95 backdrop-blur">
+    // The dropdown closes when the pointer leaves the HEADER, not the nav.
+    // The panel hangs below the nav with the header's own padding in
+    // between: closing on nav mouseleave meant the pointer fell off the
+    // menu in that padding, before it ever reached the panel. The panel is
+    // a DOM descendant of the header, so moving into it never counts as
+    // leaving, however far below the bar it extends.
+    <header
+      className="sticky top-0 z-50 border-b border-rule bg-cream/95 backdrop-blur"
+      onMouseLeave={() => setOpenIndex(null)}
+    >
       <DeliveryBar />
 
       <div className="mx-auto flex max-w-[1400px] items-center gap-4 px-4 py-3 lg:px-8">
@@ -49,12 +58,7 @@ export function Header() {
           />
         </Link>
 
-        <nav
-          ref={navRef}
-          aria-label="Main"
-          className="ml-auto hidden lg:block"
-          onMouseLeave={() => setOpenIndex(null)}
-        >
+        <nav ref={navRef} aria-label="Main" className="ml-auto hidden lg:block">
           <ul className="flex items-center gap-7">
             {NAV.map((item, index) => (
               <li key={item.href} className="static">

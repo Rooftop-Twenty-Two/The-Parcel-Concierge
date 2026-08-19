@@ -64,6 +64,11 @@ function buildSearchQuery(query: ProductQuery): string {
   // Hidden products never appear in a listing. See HIDDEN_FROM_LISTINGS.
   for (const handle of HIDDEN_FROM_LISTINGS) clauses.push(`-handle:'${handle}'`)
 
+  // The quarantined catalogue. Unless a query names the builder-item kind,
+  // it is excluded at the Storefront layer too, so the live store behaves
+  // exactly like the fixture: builder items exist only inside the builder.
+  if (!query.kinds?.includes('builder-item')) clauses.push(`-tag:'type:builder-item'`)
+
   for (const tag of query.tags ?? []) clauses.push(`tag:'${tag}'`)
   for (const kind of query.kinds ?? []) clauses.push(`tag:'type:${kind}'`)
 
@@ -77,6 +82,14 @@ function buildSearchQuery(query: ProductQuery): string {
     const max = query.maxPriceMinor === undefined ? '*' : query.maxPriceMinor / 100
     clauses.push(`variants.price:>=${min}`)
     if (max !== '*') clauses.push(`variants.price:<=${max}`)
+  }
+
+  if (query.text) {
+    // Storefront's default-field search covers the title. Quotes and
+    // backslashes are stripped rather than escaped: nobody's product is
+    // named with them, and stripping cannot break the query syntax.
+    const term = query.text.replace(/["'\\]/g, ' ').trim()
+    if (term) clauses.push(`(title:*${term}*)`)
   }
 
   // Multiple kinds must be ORed, not ANDed: a wine listing that also shows
@@ -203,7 +216,12 @@ export async function allProductHandles(): Promise<string[]> {
     } = await storefront({
       query: /* GraphQL */ `
         query AllHandles($first: Int!, $after: String) {
-          products(first: $first, after: $after, query: "available_for_sale:true") {
+          products(
+            first: $first
+            after: $after
+            # Builder items have no URL, so the sitemap must not see them.
+            query: "available_for_sale:true AND -tag:'type:builder-item'"
+          ) {
             nodes {
               handle
             }

@@ -1,0 +1,148 @@
+source,destination,type,note
+# The redirect map.
+#
+# THIS IS THE BIGGEST SINGLE RISK IN THE PROJECT. The URL structure is
+# changing from Shopify's /collections/ and /products/ paths to the new
+# routes, and every old URL needs a rule.
+#
+# This CSV is the source of truth. It is reviewable and diffable, and
+# `npm run redirects:build` generates src/generated/redirects.json from it,
+# which next.config.ts reads. Redirects are never hand-written in the config.
+#
+# Process, in order:
+#   1. Pull the full URL inventory from Search Console and the existing
+#      sitemap. Do this BEFORE writing any rules, so the map is built from
+#      what actually gets traffic rather than from what we assume exists.
+#   2. Add a row here for every old URL.
+#   3. Run `npm run redirects:validate`. It rejects loops, duplicate
+#      sources, destinations that are not routes on the new site, and any
+#      row missing a destination.
+#   4. Run `npm run redirects:build` and commit the generated JSON.
+#   5. Only then unpublish anything in Shopify. Nothing is unpublished
+#      until its redirect row exists and has been tested.
+#
+# Columns:
+#   source       old path, starting with /. No domain, no query string.
+#   destination  new path, starting with /. May carry a query string, which
+#                is how a removed grape collection keeps its grape as a
+#                filter.
+#   type         301 (permanent) or 302 (temporary). Default to 301.
+#   note         why. Keep it short. This is what the client reads at
+#                review.
+#
+# Rules from the brief:
+#   - Every retained product 301s from /products/[handle] to its new
+#     canonical route.
+#   - Every removed product 301s to its PARENT LISTING PAGE, never the
+#     homepage.
+#   - Every removed grape-variety collection 301s to /wine with the grape
+#     preserved as a filter parameter.
+#
+# The rows below are the structural rules that are true regardless of the
+# final catalogue decisions, plus worked examples of each per-product
+# pattern. The per-product rows are generated from the retain/remove list in
+# phase 2: see docs/redirects.md.
+#
+# ---------------------------------------------------------------------------
+# Structural: old Shopify collection paths
+# ---------------------------------------------------------------------------
+/collections/all,/hampers,301,Catalogue root now leads with hampers
+/collections/hampers,/hampers,301,Direct equivalent
+/collections/gift-hampers,/hampers,301,Merged into the hamper hub
+/collections/christmas-hampers,/occasions/christmas,301,Seasonal hub, evergreen URL
+/collections/christmas,/occasions/christmas,301,Seasonal hub, evergreen URL
+/collections/corporate,/corporate-gifting,301,Now a full B2B flow rather than a collection
+/collections/corporate-gifts,/corporate-gifting,301,Now a full B2B flow rather than a collection
+/collections/wine,/wine,301,The Wine Vault
+/collections/wines,/wine,301,The Wine Vault
+/collections/red-wine,/wine/red,301,Direct equivalent
+/collections/white-wine,/wine/white,301,Direct equivalent
+/collections/rose-wine,/wine/rose,301,Direct equivalent
+/collections/champagne,/wine/champagne-sparkling,301,Merged with sparkling
+/collections/sparkling-wine,/wine/champagne-sparkling,301,Merged with Champagne
+/collections/port,/wine/port-dessert,301,Merged with dessert wine
+/collections/dessert-wine,/wine/port-dessert,301,Merged with port
+/collections/whiskey,/wine/irish-whiskey,301,Direct equivalent
+/collections/irish-whiskey,/wine/irish-whiskey,301,Direct equivalent
+/collections/gin,/wine/gin-and-spirits,301,Merged into gin and spirits
+/collections/spirits,/wine/gin-and-spirits,301,Merged into gin and spirits
+/collections/candles,/gifts/candles-diffusers,301,Now part of the add-on band
+/collections/diffusers,/gifts/candles-diffusers,301,Now part of the add-on band
+/collections/chocolate,/gifts/chocolate-treats,301,Now part of the add-on band
+/collections/crystal,/gifts/crystal-glassware,301,Now part of the add-on band
+/collections/glassware,/gifts/crystal-glassware,301,Now part of the add-on band
+/collections/gifts-for-her,/gifts-for/her,301,Direct equivalent
+/collections/gifts-for-him,/gifts-for/him,301,Direct equivalent
+/collections/new-baby,/occasions/new-baby,301,Direct equivalent
+/collections/sympathy,/occasions/sympathy,301,Direct equivalent
+/collections/wedding,/occasions/wedding-engagement,301,Merged with engagement
+#
+# Removed categories. These 301 to their nearest surviving parent, never to
+# the homepage: a shopper who wanted a card should land somewhere that sells
+# something, and the link equity should follow the topic.
+/collections/cards,/gifts/chocolate-treats,301,The 254-SKU card estate is removed. Nearest add-on band.
+/collections/greeting-cards,/gifts/chocolate-treats,301,The 254-SKU card estate is removed. Nearest add-on band.
+/collections/beauty,/hampers/pamper,301,Beauty range removed. Pamper hampers are the nearest thing we still sell.
+/collections/skincare,/hampers/pamper,301,Beauty range removed. Pamper hampers are the nearest thing we still sell.
+/collections/homeware,/gifts/crystal-glassware,301,Homeware narrowed to crystal and glassware
+/collections/jewellery,/gifts,301,Pending the client retain/remove decision. Revisit before launch.
+#
+# ---------------------------------------------------------------------------
+# Grape-variety collections
+#
+# The old site had roughly 50 of these, most of them near empty. Grape is a
+# filter on /wine now, not a route, so each one redirects to /wine with the
+# grape preserved as a filter parameter. The shopper lands on the same set
+# of wines they were looking for.
+#
+# These are worked examples. The full list is generated from the Search
+# Console inventory in phase 2.
+# ---------------------------------------------------------------------------
+/collections/malbec,/wine?grape=Malbec,301,Grape is a filter now
+/collections/merlot,/wine?grape=Merlot,301,Grape is a filter now
+/collections/chardonnay,/wine?grape=Chardonnay,301,Grape is a filter now
+/collections/sauvignon-blanc,/wine?grape=Sauvignon%20Blanc,301,Grape is a filter now
+/collections/pinot-noir,/wine?grape=Pinot%20Noir,301,Grape is a filter now
+/collections/tempranillo,/wine?grape=Tempranillo,301,Grape is a filter now
+/collections/nebbiolo,/wine?grape=Nebbiolo,301,Grape is a filter now
+/collections/albarino,/wine?grape=Albari%C3%B1o,301,Grape is a filter now
+#
+# ---------------------------------------------------------------------------
+# The off-domain hamper builder
+#
+# This one is not a path redirect, it is a host redirect, and it has to be
+# configured at the DNS or hosting level for parcel-concierge.vercel.app
+# rather than here. It is listed so the row exists and gets tested. See
+# docs/redirects.md.
+# ---------------------------------------------------------------------------
+/build-a-hamper,/build-your-own-hamper,301,On-domain builder
+/custom-hamper,/build-your-own-hamper,301,On-domain builder
+/pages/build-your-own,/build-your-own-hamper,301,On-domain builder
+/hampers/build-your-own-hamper,/build-your-own-hamper,301,The builder has one URL and this is not it
+#
+# ---------------------------------------------------------------------------
+# Old Shopify pages
+# ---------------------------------------------------------------------------
+/pages/shipping-policy,/delivery,301,The blank shipping page now has content
+/pages/delivery,/delivery,301,Direct equivalent
+/pages/about-us,/about,301,Direct equivalent
+/pages/contact-us,/contact,301,Direct equivalent
+/pages/faq,/faq,301,Direct equivalent
+/pages/corporate,/corporate-gifting,301,Now a full B2B flow
+/policies/terms-of-service,/legal/terms,301,Direct equivalent
+/policies/privacy-policy,/legal/privacy,301,Direct equivalent
+/policies/refund-policy,/legal/returns,301,Direct equivalent
+#
+# ---------------------------------------------------------------------------
+# Products: worked examples of the two per-product patterns
+#
+# Retained: /products/[handle] to the product's new canonical route.
+# Removed:  /products/[handle] to its parent listing page.
+#
+# The full set is generated from the retain/remove list in phase 2 by
+# scripts/redirects/generate-product-redirects.ts. Do not hand-write them.
+# ---------------------------------------------------------------------------
+/products/the-meath-larder,/hampers/the-meath-larder,301,Retained hamper
+/products/the-whiskey-collector,/hampers/the-whiskey-collector,301,Retained hamper
+/products/bodegas-aldea-rioja-reserva,/wine/bodegas-aldea-rioja-reserva,301,Retained wine
+/products/wild-gorse-soy-candle,/gifts/wild-gorse-soy-candle,301,Retained add-on

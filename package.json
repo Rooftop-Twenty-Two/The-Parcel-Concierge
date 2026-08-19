@@ -1,0 +1,45 @@
+{
+  "name": "the-parcel-concierge",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Bespoke front end for The Parcel Concierge, with Shopify as headless commerce backend.",
+  "engines": {
+    "node": ">=22.6.0"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "npm run redirects:build && next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.scripts.json",
+    "test": "node --test --experimental-strip-types \"tests/**/*.test.ts\"",
+    "check": "npm run typecheck && npm run lint && npm run redirects:validate && npm run content:report && npm run test",
+    "redirects:build": "node scripts/redirects/build-redirect-map.mjs",
+    "redirects:validate": "node --experimental-strip-types scripts/redirects/validate-redirect-map.ts",
+    "ingest": "node --experimental-strip-types scripts/ingest/cli.ts",
+    "ingest:definitions": "node --experimental-strip-types scripts/ingest/cli.ts definitions",
+    "content:report": "node --experimental-strip-types scripts/content/report.ts",
+    "fixtures:generate": "node --experimental-strip-types scripts/fixtures/generate-catalogue.ts",
+    "redirects:products": "node --experimental-strip-types scripts/redirects/generate-product-redirects.ts",
+    "photography:optimise": "node scripts/photography/optimise.mjs"
+  },
+  "dependencies": {
+    "@tailwindcss/postcss": "4.1.13",
+    "@types/node": "22.15.3",
+    "@types/react": "19.1.9",
+    "@types/react-dom": "19.1.7",
+    "next": "15.5.4",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "server-only": "^0.0.1",
+    "tailwindcss": "4.1.13",
+    "typescript": "5.9.2"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.6",
+    "@netlify/plugin-nextjs": "^5.15.13",
+    "eslint": "9.34.0",
+    "eslint-config-next": "15.5.4"
+  }
+}

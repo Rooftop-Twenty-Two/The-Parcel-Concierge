@@ -1,0 +1,59 @@
+# Netlify configuration.
+#
+# The brief specifies Vercel, and nothing here is Vercel-specific, so the
+# site deploys to either. This file exists so a Netlify deploy does not
+# depend on auto-detection guessing right.
+#
+# Two things were breaking the build before this file existed:
+#
+#   1. NODE VERSION. `npm run build` used to run a TypeScript script through
+#      Node's `--experimental-strip-types`, which only exists on Node 22.6
+#      and later. On an older Node the build died immediately with
+#      `bad option: --experimental-strip-types`. The build path is now plain
+#      JavaScript, and Node is pinned below as well, so it cannot recur.
+#
+#   2. THE NEXT RUNTIME. App Router, server actions, route handlers and
+#      on-demand revalidation all need @netlify/plugin-nextjs. It is
+#      declared explicitly below rather than left to detection.
+
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  # Must satisfy the "engines" field in package.json. The dev tooling
+  # (ingest, fixtures, content report, tests) reads TypeScript directly and
+  # needs 22.6 or later.
+  NODE_VERSION = "22"
+  # Netlify defaults NODE_ENV to production, which would skip devDependencies.
+  # Next needs typescript, tailwind and the eslint config at build time.
+  NPM_FLAGS = "--include=dev"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Deploy previews and branch builds must never be indexed. The site also
+# sets noindex itself while it is running on the fixture catalogue, but a
+# header is the belt to that braces.
+[context.deploy-preview]
+  [context.deploy-preview.environment]
+    NEXT_PUBLIC_SITE_URL = "https://deploy-preview.netlify.app"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# The immutable build output can be cached hard. Everything else is handled
+# by the Next runtime, which understands ISR and the cache tags the Shopify
+# webhook revalidates.
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/placeholder/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"

@@ -47,5 +47,15 @@ export function AgeGate({ context }: { context: 'listing' | 'product' | 'cart' }
 
   if (state !== 'blocked') return null
 
-  return <AgeGateDialog minimumAge={AGE_GATE.minimumAge} context={context} />
+  return (
+    <AgeGateDialog
+      minimumAge={AGE_GATE.minimumAge}
+      context={context}
+      // The dialog reports success back up rather than refreshing the
+      // route: a refresh re-renders the server tree but leaves this
+      // component's state as it was, which kept the dialog on screen
+      // saying "One moment" forever after the cookie was already set.
+      onConfirmed={() => setState('confirmed')}
+    />
+  )
 }

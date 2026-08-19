@@ -16,15 +16,19 @@ import { PostmarkRoundel } from '@/components/ui/Stamp'
 export function AgeGateDialog({
   minimumAge,
   context,
+  onConfirmed,
 }: {
   minimumAge: number
   context: 'listing' | 'product' | 'cart'
+  /** Called once the confirmation cookie is set, so the owner can unmount us. */
+  onConfirmed: () => void
 }) {
   const router = useRouter()
   const dialogRef = useRef<HTMLDivElement>(null)
   const confirmRef = useRef<HTMLButtonElement>(null)
   const [pending, setPending] = useState(false)
   const [declined, setDeclined] = useState(false)
+  const [failed, setFailed] = useState(false)
 
   useEffect(() => {
     confirmRef.current?.focus()
@@ -57,8 +61,22 @@ export function AgeGateDialog({
 
   async function confirm() {
     setPending(true)
-    await fetch('/api/age-check', { method: 'POST' })
-    router.refresh()
+    setFailed(false)
+    try {
+      const response = await fetch('/api/age-check', { method: 'POST' })
+      if (!response.ok) throw new Error(`age-check returned ${response.status}`)
+      // Close the gate ourselves. router.refresh() alone cannot do it:
+      // it re-renders the server tree but leaves the client component
+      // that mounted us in its "blocked" state, and the visitor stands
+      // at a button reading "One moment" with the cookie already set.
+      onConfirmed()
+      router.refresh()
+    } catch {
+      // Failing open on an age check is the wrong direction to fail, so
+      // the gate stays. But it must say so rather than hang.
+      setPending(false)
+      setFailed(true)
+    }
   }
 
   return (
@@ -99,6 +117,11 @@ export function AgeGateDialog({
             <Button onClick={() => setDeclined(true)} variant="ghost">
               No, I am not
             </Button>
+            {failed ? (
+              <p role="alert" className="text-sm text-red">
+                That did not save. Check your connection and try again.
+              </p>
+            ) : null}
           </div>
         )}
 

@@ -130,7 +130,13 @@ export function HamperBuilder({
 
   return (
     <>
-      {showAgeGate ? <AgeGateDialog minimumAge={AGE_GATE.minimumAge} context="cart" /> : null}
+      {showAgeGate ? (
+        <AgeGateDialog
+          minimumAge={AGE_GATE.minimumAge}
+          context="cart"
+          onConfirmed={() => setShowAgeGate(false)}
+        />
+      ) : null}
 
       <section className="bg-navy text-cream">
         <div className="mx-auto max-w-[1400px] px-4 py-14 lg:px-8">

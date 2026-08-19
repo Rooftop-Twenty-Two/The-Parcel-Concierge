@@ -119,7 +119,20 @@ export async function HubPage({
 
       {result.items.length >= MIN_PRODUCTS_PER_LISTING ? (
         <section className="mx-auto max-w-[1400px] px-4 pb-14 lg:px-8">
-          <h2 className="font-display text-[length:var(--text-display)] text-navy">Everything here</h2>
+          {/*
+            A hub shows a sample, not the whole hub. It used to be headed
+            "Everything here", which was true of thirty hampers and became
+            a lie the day three hundred and forty one wines arrived. The
+            full list lives behind the cards above, where it can be paged
+            and filtered, and where the reader has told us what they want.
+
+            Deliberately not paginated. Paging needs the URL, reading the
+            URL makes the page render on demand, and a hub is the second
+            most visited page in its section. It stays static.
+          */}
+          <h2 className="font-display text-[length:var(--text-display)] text-navy">
+            A few to start you off
+          </h2>
           <div className="mt-8">
             <ProductGrid products={result.items} priorityCount={4} />
           </div>

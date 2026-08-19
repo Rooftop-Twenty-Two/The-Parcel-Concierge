@@ -106,6 +106,19 @@ test('hamper budget bands tile the price line without gaps or overlaps', () => {
 
 test('every alcohol listing is flagged so the age gate arms', () => {
   for (const collection of collectionsInHub('wine')) {
+    // The one exemption is earned rather than granted: a listing may leave
+    // the gate down only if its own query filters to de-alcoholised
+    // products, so it cannot pull a bottle of wine in by accident. Setting
+    // alcohol: false on any other wine listing still fails here.
+    const cannotContainAlcohol = collection.query.wineFlags?.includes('isAlcoholFree') ?? false
+    if (cannotContainAlcohol) {
+      assert.equal(
+        collection.alcohol,
+        false,
+        `${collection.path} filters to alcohol free products, so the gate should be down`,
+      )
+      continue
+    }
     assert.ok(collection.alcohol, `${collection.path} sells alcohol but is not flagged`)
   }
 })

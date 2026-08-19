@@ -12,6 +12,12 @@ import {
   type CollectionDef,
   type FacetKey,
 } from '@/lib/commerce/collections'
+import {
+  firstForStep,
+  hasMore,
+  nextStepHref,
+  parseStep,
+} from '@/lib/commerce/pagination'
 import type { ProductQuery } from '@/lib/commerce/types'
 import { breadcrumbJsonLd } from '@/lib/seo/structured-data'
 
@@ -55,8 +61,13 @@ export function hasActiveFilters(facets: Record<string, string[]>): boolean {
 export async function buildListingQuery(
   collection: CollectionDef,
   facets: Record<string, string[]>,
+  step = 1,
 ): Promise<ProductQuery> {
   const query: ProductQuery = { ...collection.query, facets }
+
+  // Paging asks for more from the start rather than carrying a cursor in
+  // the URL. See src/lib/commerce/pagination.ts for why.
+  query.first = firstForStep(collection.query.first ?? 24, step)
 
   if (collection.curated) {
     const curated = await getCuratedListing(collection.path)
@@ -78,7 +89,9 @@ export async function ListingPage({
   searchParams: ListingSearchParams
 }) {
   const facets = parseFacets(searchParams, collection.facets)
-  const query = await buildListingQuery(collection, facets)
+  const step = parseStep(searchParams.more)
+  const pageSize = collection.query.first ?? 24
+  const query = await buildListingQuery(collection, facets, step)
 
   const [copy, result] = await Promise.all([
     getListingCopy(collection.path),
@@ -148,6 +161,16 @@ export async function ListingPage({
         {result.items.length ? (
           <div className="mt-8">
             <ProductGrid products={result.items} priorityCount={4} />
+            <ShowMore
+              shown={result.items.length}
+              total={result.totalKnown}
+              paged={step > 1}
+              href={
+                hasMore(result.pageInfo, step, pageSize)
+                  ? nextStepHref(collection.path, searchParams, step)
+                  : null
+              }
+            />
           </div>
         ) : (
           <EmptyFilterState basePath={collection.path} />
@@ -169,6 +192,52 @@ export async function ListingPage({
 
       <JsonLd data={breadcrumbJsonLd(crumbs)} />
     </>
+  )
+}
+
+/**
+ * The bottom of a grid.
+ *
+ * It says how far down the list the reader is, because a grid that shows
+ * twenty four of a hundred and thirty one without saying so is the thing
+ * this replaced. `total` is only trustworthy where the source knows it:
+ * Storefront will not give a count for a search, so the count is stated
+ * only when it is larger than what is on screen.
+ *
+ * The control is a link, not a button. It works with JavaScript off, the
+ * URL it produces is shareable, and a crawler follows it.
+ */
+export function ShowMore({
+  shown,
+  total,
+  href,
+  paged,
+}: {
+  shown: number
+  total: number
+  href: string | null
+  /** True once the reader has asked for more, so the end is worth stating. */
+  paged: boolean
+}) {
+  // A listing that fits on one page needs no footer. One the reader has
+  // paged through does: having clicked "Show more" they are owed the word
+  // that there is no more.
+  if (!href && total <= shown && !paged) return null
+
+  return (
+    <div id="more" className="mt-12 flex flex-col items-center gap-3 border-t border-rule pt-10">
+      <p className="text-sm text-ink-muted">
+        {total > shown ? `Showing ${shown} of ${total}` : `Showing all ${shown}`}
+      </p>
+      {href ? (
+        <Link
+          href={href}
+          className="border border-navy px-8 py-3 font-serif text-lg text-navy transition-colors hover:bg-navy hover:text-cream"
+        >
+          Show more
+        </Link>
+      ) : null}
+    </div>
   )
 }
 

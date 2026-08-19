@@ -183,12 +183,12 @@ export const CONTENT: CmsData = {
     {
       path: '/wine',
       intro:
-        'The Wine Vault. Around a hundred and fifty bottles, chosen by us, with eight we import ourselves that no other Irish retailer stocks. Filter by grape, country, style or budget.',
+        'The Wine Vault. Over three hundred bottles, chosen by us, from weeknight reds to Champagne and Irish whiskey. Filter by grape, country, style or budget.',
       seoBlock:
-        '<p>We are a gifting business that takes wine seriously, which is an unusual combination and the reason this list looks the way it does. We buy directly from estates where we can, which is how eight of these bottles ended up being available in Ireland only from us. Everything else on the list is here because we drank it and wanted to sell it.</p><p>Grape, region and style are filters on this page rather than separate sections, so you can start from Malbec, or from Spain, or from "something full bodied under €25", and get to the same place. If you would rather start from the money, the three budget pages will do it faster.</p><p>Wine is alcohol, so we can only deliver to somebody over 18 and there are places we cannot ship to. The delivery page sets out exactly where.</p>',
+        '<p>We are a gifting business that takes wine seriously, which is an unusual combination and the reason this list looks the way it does. We buy directly from estates where we can. Everything else on the list is here because we drank it and wanted to sell it.</p><p>Grape, region and style are filters on this page rather than separate sections, so you can start from Malbec, or from Spain, or from "something full bodied under €25", and get to the same place. If you would rather start from the money, the three budget pages will do it faster.</p><p>Wine is alcohol, so we can only deliver to somebody over 18 and there are places we cannot ship to. The delivery page sets out exactly where.</p>',
       metaTitle: 'The Wine Vault: fine wine and Irish spirits',
       metaDescription:
-        'Wine, Champagne and Irish spirits chosen by us, including eight exclusive imports no other Irish retailer stocks. Filter by grape, country, style or budget.',
+        'Over three hundred wines, Champagnes and Irish spirits chosen by us. Filter by grape, country, style or budget.',
     },
     {
       path: '/wine/fine-wines',

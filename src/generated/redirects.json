@@ -1,0 +1,307 @@
+[
+  {
+    "source": "/collections/all",
+    "destination": "/hampers",
+    "permanent": true
+  },
+  {
+    "source": "/collections/hampers",
+    "destination": "/hampers",
+    "permanent": true
+  },
+  {
+    "source": "/collections/gift-hampers",
+    "destination": "/hampers",
+    "permanent": true
+  },
+  {
+    "source": "/collections/christmas-hampers",
+    "destination": "/occasions/christmas",
+    "permanent": true
+  },
+  {
+    "source": "/collections/christmas",
+    "destination": "/occasions/christmas",
+    "permanent": true
+  },
+  {
+    "source": "/collections/corporate",
+    "destination": "/corporate-gifting",
+    "permanent": true
+  },
+  {
+    "source": "/collections/corporate-gifts",
+    "destination": "/corporate-gifting",
+    "permanent": true
+  },
+  {
+    "source": "/collections/wine",
+    "destination": "/wine",
+    "permanent": true
+  },
+  {
+    "source": "/collections/wines",
+    "destination": "/wine",
+    "permanent": true
+  },
+  {
+    "source": "/collections/red-wine",
+    "destination": "/wine/red",
+    "permanent": true
+  },
+  {
+    "source": "/collections/white-wine",
+    "destination": "/wine/white",
+    "permanent": true
+  },
+  {
+    "source": "/collections/rose-wine",
+    "destination": "/wine/rose",
+    "permanent": true
+  },
+  {
+    "source": "/collections/champagne",
+    "destination": "/wine/champagne-sparkling",
+    "permanent": true
+  },
+  {
+    "source": "/collections/sparkling-wine",
+    "destination": "/wine/champagne-sparkling",
+    "permanent": true
+  },
+  {
+    "source": "/collections/port",
+    "destination": "/wine/port-dessert",
+    "permanent": true
+  },
+  {
+    "source": "/collections/dessert-wine",
+    "destination": "/wine/port-dessert",
+    "permanent": true
+  },
+  {
+    "source": "/collections/whiskey",
+    "destination": "/wine/irish-whiskey",
+    "permanent": true
+  },
+  {
+    "source": "/collections/irish-whiskey",
+    "destination": "/wine/irish-whiskey",
+    "permanent": true
+  },
+  {
+    "source": "/collections/gin",
+    "destination": "/wine/gin-and-spirits",
+    "permanent": true
+  },
+  {
+    "source": "/collections/spirits",
+    "destination": "/wine/gin-and-spirits",
+    "permanent": true
+  },
+  {
+    "source": "/collections/candles",
+    "destination": "/gifts/candles-diffusers",
+    "permanent": true
+  },
+  {
+    "source": "/collections/diffusers",
+    "destination": "/gifts/candles-diffusers",
+    "permanent": true
+  },
+  {
+    "source": "/collections/chocolate",
+    "destination": "/gifts/chocolate-treats",
+    "permanent": true
+  },
+  {
+    "source": "/collections/crystal",
+    "destination": "/gifts/crystal-glassware",
+    "permanent": true
+  },
+  {
+    "source": "/collections/glassware",
+    "destination": "/gifts/crystal-glassware",
+    "permanent": true
+  },
+  {
+    "source": "/collections/gifts-for-her",
+    "destination": "/gifts-for/her",
+    "permanent": true
+  },
+  {
+    "source": "/collections/gifts-for-him",
+    "destination": "/gifts-for/him",
+    "permanent": true
+  },
+  {
+    "source": "/collections/new-baby",
+    "destination": "/occasions/new-baby",
+    "permanent": true
+  },
+  {
+    "source": "/collections/sympathy",
+    "destination": "/occasions/sympathy",
+    "permanent": true
+  },
+  {
+    "source": "/collections/wedding",
+    "destination": "/occasions/wedding-engagement",
+    "permanent": true
+  },
+  {
+    "source": "/collections/cards",
+    "destination": "/gifts/chocolate-treats",
+    "permanent": true
+  },
+  {
+    "source": "/collections/greeting-cards",
+    "destination": "/gifts/chocolate-treats",
+    "permanent": true
+  },
+  {
+    "source": "/collections/beauty",
+    "destination": "/hampers/pamper",
+    "permanent": true
+  },
+  {
+    "source": "/collections/skincare",
+    "destination": "/hampers/pamper",
+    "permanent": true
+  },
+  {
+    "source": "/collections/homeware",
+    "destination": "/gifts/crystal-glassware",
+    "permanent": true
+  },
+  {
+    "source": "/collections/jewellery",
+    "destination": "/gifts",
+    "permanent": true
+  },
+  {
+    "source": "/collections/malbec",
+    "destination": "/wine?grape=Malbec",
+    "permanent": true
+  },
+  {
+    "source": "/collections/merlot",
+    "destination": "/wine?grape=Merlot",
+    "permanent": true
+  },
+  {
+    "source": "/collections/chardonnay",
+    "destination": "/wine?grape=Chardonnay",
+    "permanent": true
+  },
+  {
+    "source": "/collections/sauvignon-blanc",
+    "destination": "/wine?grape=Sauvignon%20Blanc",
+    "permanent": true
+  },
+  {
+    "source": "/collections/pinot-noir",
+    "destination": "/wine?grape=Pinot%20Noir",
+    "permanent": true
+  },
+  {
+    "source": "/collections/tempranillo",
+    "destination": "/wine?grape=Tempranillo",
+    "permanent": true
+  },
+  {
+    "source": "/collections/nebbiolo",
+    "destination": "/wine?grape=Nebbiolo",
+    "permanent": true
+  },
+  {
+    "source": "/collections/albarino",
+    "destination": "/wine?grape=Albari%C3%B1o",
+    "permanent": true
+  },
+  {
+    "source": "/build-a-hamper",
+    "destination": "/build-your-own-hamper",
+    "permanent": true
+  },
+  {
+    "source": "/custom-hamper",
+    "destination": "/build-your-own-hamper",
+    "permanent": true
+  },
+  {
+    "source": "/pages/build-your-own",
+    "destination": "/build-your-own-hamper",
+    "permanent": true
+  },
+  {
+    "source": "/hampers/build-your-own-hamper",
+    "destination": "/build-your-own-hamper",
+    "permanent": true
+  },
+  {
+    "source": "/pages/shipping-policy",
+    "destination": "/delivery",
+    "permanent": true
+  },
+  {
+    "source": "/pages/delivery",
+    "destination": "/delivery",
+    "permanent": true
+  },
+  {
+    "source": "/pages/about-us",
+    "destination": "/about",
+    "permanent": true
+  },
+  {
+    "source": "/pages/contact-us",
+    "destination": "/contact",
+    "permanent": true
+  },
+  {
+    "source": "/pages/faq",
+    "destination": "/faq",
+    "permanent": true
+  },
+  {
+    "source": "/pages/corporate",
+    "destination": "/corporate-gifting",
+    "permanent": true
+  },
+  {
+    "source": "/policies/terms-of-service",
+    "destination": "/legal/terms",
+    "permanent": true
+  },
+  {
+    "source": "/policies/privacy-policy",
+    "destination": "/legal/privacy",
+    "permanent": true
+  },
+  {
+    "source": "/policies/refund-policy",
+    "destination": "/legal/returns",
+    "permanent": true
+  },
+  {
+    "source": "/products/the-meath-larder",
+    "destination": "/hampers/the-meath-larder",
+    "permanent": true
+  },
+  {
+    "source": "/products/the-whiskey-collector",
+    "destination": "/hampers/the-whiskey-collector",
+    "permanent": true
+  },
+  {
+    "source": "/products/bodegas-aldea-rioja-reserva",
+    "destination": "/wine/bodegas-aldea-rioja-reserva",
+    "permanent": true
+  },
+  {
+    "source": "/products/wild-gorse-soy-candle",
+    "destination": "/gifts/wild-gorse-soy-candle",
+    "permanent": true
+  }
+]

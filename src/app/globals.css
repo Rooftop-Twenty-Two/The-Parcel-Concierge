@@ -1,0 +1,201 @@
+@import 'tailwindcss';
+
+/*
+ * The Parcel Concierge design tokens.
+ *
+ * Colour values are taken verbatim from "The Parcel Concierge - Brand
+ * Guidelines" (updated October 2023), page 5. Do not invent new brand
+ * colours here. If a shade is needed that is not in the guidelines, it is a
+ * question for the client, not a local decision.
+ */
+@theme {
+  /* Primary */
+  --color-navy: #2c4349;
+  --color-green: #326a68;
+  --color-green-light: #9bb7a8;
+  --color-cream: #f5f2e9;
+  --color-gold: #d7b371;
+
+  /* Secondary */
+  --color-wine: #9f3226;
+  --color-red: #e1472f;
+  --color-orange: #f37a1f;
+  --color-purple: #70788d;
+  --color-yellow: #dec160;
+  --color-peach: #eeb28e;
+  --color-blue: #b3d1db;
+  --color-beige: #f5e4d2;
+
+  /* Derived neutrals, used for rules and muted text only. */
+  --color-ink: #2c4349;
+  --color-ink-muted: #5c7278;
+  --color-paper: #f5f2e9;
+  --color-paper-warm: #f5e4d2;
+  --color-rule: #d8d3c4;
+
+  /*
+   * Type. Licensed brand faces are Bebas Kai, Salfish, South Epic and
+   * Futura. None were supplied with the asset pack, so the stacks below
+   * lead with the brand face and fall back to the nearest available
+   * substitute. Dropping the licensed files in swaps them everywhere:
+   * see src/lib/brand/fonts.ts.
+   */
+  --font-display: var(--font-display-loaded), 'Bebas Kai', 'Bebas Neue', 'Oswald', sans-serif;
+  --font-serif: var(--font-serif-loaded), 'Salfish', 'Fraunces', Georgia, serif;
+  --font-body: var(--font-body-loaded), 'Futura', 'Jost', 'Century Gothic', sans-serif;
+
+  --text-hero: clamp(2.75rem, 8vw, 6rem);
+  --text-display: clamp(2rem, 5vw, 3.5rem);
+
+  --radius-card: 2px;
+
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.6;
+    text-rendering: optimizeLegibility;
+  }
+
+  /*
+   * WCAG 2.2 AA: focus must be visible and must not be removed. The offset
+   * keeps the ring clear of the perforated stamp borders.
+   */
+  :focus-visible {
+    outline: 3px solid var(--color-red);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background: var(--color-gold);
+    color: var(--color-navy);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    line-height: 1.05;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+}
+
+@layer components {
+  /*
+   * Postage stamp perforation. The brand's signature device (guidelines
+   * page 7, "stamp shapes"). Built as a mask so it works over photography
+   * and over flat colour, in one element, with no extra markup.
+   */
+  .stamp-edge {
+    --perf: 9px;
+    /* Spacing between hole centres. */
+    --perf-gap: calc(var(--perf) * 2.4);
+
+    /*
+     * Four mask layers, one per edge. Each is a strip that repeats along
+     * its own axis with a hole punched at the edge. Intersecting all four
+     * leaves the middle of the image untouched and takes bites only out of
+     * the border, which is what a postage stamp actually looks like.
+     *
+     * Compositing rather than stacking matters: stacked layers would tile
+     * holes across the whole image.
+     */
+    -webkit-mask:
+      radial-gradient(var(--perf) at 50% 0, #0000 97%, #000) 0 0 / var(--perf-gap) 100% repeat-x,
+      radial-gradient(var(--perf) at 50% 100%, #0000 97%, #000) 0 0 / var(--perf-gap) 100% repeat-x,
+      radial-gradient(var(--perf) at 0 50%, #0000 97%, #000) 0 0 / 100% var(--perf-gap) repeat-y,
+      radial-gradient(var(--perf) at 100% 50%, #0000 97%, #000) 0 0 / 100% var(--perf-gap) repeat-y;
+    mask:
+      radial-gradient(var(--perf) at 50% 0, #0000 97%, #000) 0 0 / var(--perf-gap) 100% repeat-x,
+      radial-gradient(var(--perf) at 50% 100%, #0000 97%, #000) 0 0 / var(--perf-gap) 100% repeat-x,
+      radial-gradient(var(--perf) at 0 50%, #0000 97%, #000) 0 0 / 100% var(--perf-gap) repeat-y,
+      radial-gradient(var(--perf) at 100% 50%, #0000 97%, #000) 0 0 / 100% var(--perf-gap) repeat-y;
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+  }
+
+  .stamp-edge-sm {
+    --perf: 6px;
+  }
+
+  /* Editorial body copy inside CMS-authored blocks. */
+  .prose-tpc {
+    max-width: 68ch;
+  }
+
+  .prose-tpc p + p {
+    margin-top: 1rem;
+  }
+
+  .prose-tpc a {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .prose-tpc h2,
+  .prose-tpc h3 {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    margin-top: 1.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .prose-tpc ul {
+    list-style: disc;
+    padding-left: 1.25rem;
+    margin-top: 0.75rem;
+  }
+
+  .prose-tpc li + li {
+    margin-top: 0.25rem;
+  }
+}
+
+/*
+ * Motion is restrained by brief: a page-load sequence on the hero and hover
+ * states on product cards, nothing else. All of it is disabled outright when
+ * the visitor asks for reduced motion.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes tpc-rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .animate-rise {
+    animation: tpc-rise 0.7s var(--ease-out-soft) both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

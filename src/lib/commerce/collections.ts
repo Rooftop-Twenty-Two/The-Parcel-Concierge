@@ -261,6 +261,46 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     parentPath: '/wine',
   },
   {
+    // 251 wines carry the shop's own "Fine Wines" tag. It is the closest
+    // thing the existing catalogue has to a considered selection, so it
+    // earns a route rather than a filter.
+    slug: 'fine-wines',
+    hub: 'wine',
+    path: '/wine/fine-wines',
+    title: 'Fine wines',
+    h1: 'Fine wines',
+    query: { ...WINE_BASE, wineFlags: ['fineWine'], first: 48 },
+    alcohol: true,
+    facets: ['grape', 'country', 'style', 'price'],
+    parentPath: '/wine',
+  },
+  {
+    slug: 'organic-biodynamic',
+    hub: 'wine',
+    path: '/wine/organic-biodynamic',
+    title: 'Organic and biodynamic',
+    h1: 'Organic and biodynamic wine',
+    query: { ...WINE_BASE, anyWineFlag: ['organic', 'biodynamic'], first: 48 },
+    alcohol: true,
+    facets: ['grape', 'country', 'price'],
+    parentPath: '/wine',
+  },
+  {
+    // The only wine listing where the age gate stays down. There is one
+    // de-alcoholised wine in the catalogue today, so the four-product floor
+    // keeps this route dark until the range grows. That is the rule doing
+    // its job, not a bug.
+    slug: 'alcohol-free',
+    hub: 'wine',
+    path: '/wine/alcohol-free',
+    title: 'Alcohol free',
+    h1: 'Alcohol free wine',
+    query: { ...WINE_BASE, wineFlags: ['isAlcoholFree'] },
+    alcohol: false,
+    facets: ['style'],
+    parentPath: '/wine',
+  },
+  {
     slug: 'champagne-sparkling',
     hub: 'wine',
     path: '/wine/champagne-sparkling',
@@ -310,7 +350,7 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     path: '/wine/port-dessert',
     title: 'Port and dessert wine',
     h1: 'Port and dessert wine',
-    query: { ...WINE_BASE, productTypes: ['Port', 'Dessert wine'] },
+    query: { ...WINE_BASE, productTypes: ['Port', 'Dessert wine', 'Sherry'] },
     alcohol: true,
     facets: ['country', 'price'],
     parentPath: '/wine',

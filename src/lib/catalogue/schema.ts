@@ -77,6 +77,12 @@ export type CatalogueWineFields = {
    * competitor's price. See docs/copy-style-guide.md.
    */
   rrpComparison?: string
+  /** Flags from the shop's own tagging. See the importer. */
+  isAlcoholFree?: boolean
+  organic?: boolean
+  biodynamic?: boolean
+  fineWine?: boolean
+  giftSet?: boolean
 }
 
 export type CatalogueProduct = {

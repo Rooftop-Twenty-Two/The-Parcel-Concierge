@@ -139,6 +139,10 @@ export function buildCart(state: FixtureCartState): Cart {
       unitPrice: variant.price,
       lineTotal,
       attributes: line.attributes,
+      // The fixture cart has no Shopify selling plans behind it, so a
+      // subscription line reads as a one-off here. Nothing in fixture mode
+      // can be subscribed to anyway.
+      sellingPlanName: null,
     })
   }
 

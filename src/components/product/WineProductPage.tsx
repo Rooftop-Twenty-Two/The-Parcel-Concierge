@@ -53,7 +53,8 @@ export function WineProductPage({
 
   return (
     <>
-      <AgeGate context="product" />
+      {/* Alcohol free wine is not alcohol, so it is not gated. */}
+      {wine?.isAlcoholFree ? null : <AgeGate context="product" />}
 
       <div className="mx-auto max-w-[1400px] px-4 py-8 lg:px-8">
         <nav aria-label="Breadcrumb" className="mb-6">
@@ -157,7 +158,7 @@ export function WineProductPage({
               </ul>
             ) : null}
 
-            <p className="mt-8 text-xs text-ink-muted">
+            <p className={`mt-8 text-xs text-ink-muted ${wine?.isAlcoholFree ? 'hidden' : ''}`}>
               You must be over 18 to buy alcohol. We may ask for proof of age on delivery, and there
               are addresses we cannot deliver alcohol to.{' '}
               <Link href="/delivery" className="underline underline-offset-2">

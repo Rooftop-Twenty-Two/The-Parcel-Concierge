@@ -256,6 +256,11 @@ function normaliseWine(raw: RawProduct, handle: string): WineMetafields | null {
     awards: list(raw.wineAwards, `wine.awards on ${handle}`),
     isExclusiveImport: bool(raw.wineIsExclusiveImport),
     rrpComparison: text(raw.wineRrpComparison),
+    isAlcoholFree: bool(raw.wineIsAlcoholFree),
+    organic: bool(raw.wineOrganic),
+    biodynamic: bool(raw.wineBiodynamic),
+    fineWine: bool(raw.wineFineWine),
+    giftSet: bool(raw.wineGiftSet),
   }
 }
 
@@ -294,6 +299,7 @@ type RawCart = {
       id: string
       quantity: number
       attributes: { key: string; value: string }[]
+      sellingPlanAllocation?: { sellingPlan: { id: string; name: string } } | null
       cost: {
         totalAmount: { amount: string; currencyCode: string }
         amountPerQuantity: { amount: string; currencyCode: string }
@@ -322,6 +328,7 @@ export function normaliseCart(raw: RawCart): Cart {
     unitPrice: money(node.cost.amountPerQuantity.amount, node.cost.amountPerQuantity.currencyCode),
     lineTotal: money(node.cost.totalAmount.amount, node.cost.totalAmount.currencyCode),
     attributes: node.attributes,
+    sellingPlanName: node.sellingPlanAllocation?.sellingPlan.name ?? null,
   }))
 
   const containsAlcohol = raw.lines.nodes.some((node) => {

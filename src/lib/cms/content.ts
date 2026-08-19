@@ -64,12 +64,16 @@ export const CONTENT: CmsData = {
       {
         kind: 'wine-vault',
         title: 'The Wine Vault',
-        body: 'Eight of the wines we list are not stocked by any other retailer in Ireland, because we import them ourselves.',
+        body: 'Over three hundred wines, chosen by us. Buy a bottle, or let us send you a case as often as you like.',
+        // Replaced with real handles from the catalogue. The exclusive
+        // import flag is not in the Shopify export yet, so the homepage does
+        // not claim the eight exclusives the June review found until
+        // somebody marks them: see docs/build-status.md.
         handles: [
-          'domaine-bellefont-chablis-premier-cru',
-          'bodegas-aldea-rioja-reserva',
-          'maison-vireau-champagne-brut',
-          'pazo-de-mino-albarino',
+          'krug-grand-cuvee',
+          'dom-perignon-champagne',
+          'taylors-classic-vintage-port-2003',
+          'billiecart-salmon-blanc-de-blancs-brut-champagne-grand-cru',
         ],
       },
       { kind: 'trustpilot' },
@@ -185,6 +189,40 @@ export const CONTENT: CmsData = {
       metaTitle: 'The Wine Vault: fine wine and Irish spirits',
       metaDescription:
         'Wine, Champagne and Irish spirits chosen by us, including eight exclusive imports no other Irish retailer stocks. Filter by grape, country, style or budget.',
+    },
+    {
+      path: '/wine/fine-wines',
+      intro:
+        'The part of the list we would put in front of somebody who knows what they are drinking. Growers rather than brands, a lot of it bought direct, and every bottle here is one we have opened ourselves.',
+      seoBlock:
+        '<p>Fine wine means something different in every shop that uses the phrase. Here it means the bottles we buy in small quantities from producers we deal with directly, plus the classics we keep because people ask for them by name. It is the widest part of our list and the part that changes most.</p><p>Use the filters. Grape, country and style are all filters on this page rather than separate sections, so you can start from Malbec, or from Italy, or from something full bodied under €40, and get to the same place. If you would rather we chose, the Wine Vault Club sends a case as often as you like.</p><p>Wine is alcohol, so we can only deliver it to somebody over 18 and there are addresses we cannot ship to at all.</p>',
+      metaTitle: 'Fine wine, chosen by us',
+      metaDescription:
+        'The considered part of our list: growers rather than brands, much of it bought direct. Filter by grape, country, style or budget.',
+    },
+    {
+      path: '/wine/organic-biodynamic',
+      intro:
+        'Wines made without synthetic chemicals in the vineyard, and in the biodynamic case to a calendar most of us do not pretend to understand. We list them together because people who want one usually want the other.',
+      seoBlock:
+        '<p>Organic certification covers what goes on the vines. Biodynamic goes further and treats the vineyard as one system, with a planting and picking calendar to match. Both take more work than farming conventionally, which is why these bottles are rarely the cheapest thing on a shelf.</p><p>We do not stock them because they are organic. We stock them because the growers who bother tend to be the growers who care about everything else too, and it shows in the glass. Avondale in South Africa is the clearest example on this page.</p><p>Over 18 only, and we may ask for proof on delivery.</p>',
+    },
+    {
+      path: '/wine/gift-sets',
+      intro:
+        'Boxed sets of two or three bottles, ready to send as they are. No hamper, no packing, just wine in a carton that looks like it was meant to be given.',
+      seoBlock:
+        '<p>A gift set is the middle ground between sending one bottle, which can look thin, and sending a hamper, which is a bigger gesture and a bigger price. Most of these are two or three bottles from the same producer in a printed carton.</p><p>If you want the wine in a proper box with food alongside it, the wine hampers do that instead, and the hamper builder will let you put any bottle on this site into a box with whatever else you like.</p><p>Over 18 only. Somebody over 18 has to take the delivery in.</p>',
+    },
+    {
+      path: '/wine/subscription',
+      intro:
+        'A case of wine, chosen by us from the list on this site, as often as you want it. You set the size, the budget per bottle and the style.',
+      seoBlock:
+        '<p>Everything about the club is built on the list we already sell. There is no separate subscription range bought in cheap: the bottles that turn up are the bottles on this site, chosen for you rather than by you.</p><p>You decide four things. How many bottles, roughly what per bottle, red or white or a mix, and how often it arrives. We do the rest, and every case comes with a card explaining each bottle and what to eat with it.</p><p>Pause, skip a case or cancel from your account, with no notice period. Over 18 only, and somebody over 18 has to take the delivery in.</p>',
+      metaTitle: 'The Wine Vault Club, a wine subscription from Co. Meath',
+      metaDescription:
+        'A case of wine chosen by us, as often as you want it. Set the size, the budget per bottle and the style. Pause or cancel any time.',
     },
     {
       path: '/wine/exclusive-to-us',

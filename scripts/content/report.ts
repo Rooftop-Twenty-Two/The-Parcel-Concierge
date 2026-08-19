@@ -21,9 +21,16 @@ import { CONTENT } from '../../src/lib/cms/content.ts'
 import { COLLECTIONS, MIN_PRODUCTS_PER_LISTING } from '../../src/lib/commerce/collections.ts'
 import type { Catalogue } from '../../src/lib/catalogue/schema.ts'
 
-const CATALOGUE = join(process.cwd(), 'data/catalogue/fixtures.json')
+const CATALOGUE_FILES = ['data/catalogue/wines.json', 'data/catalogue/fixtures.json']
 
-const catalogue = JSON.parse(readFileSync(CATALOGUE, 'utf8')) as Catalogue
+const CATALOGUE = CATALOGUE_FILES.join(' + ')
+const catalogue: Catalogue = {
+  source: CATALOGUE,
+  currencyCode: 'EUR',
+  products: CATALOGUE_FILES.flatMap(
+    (f) => (JSON.parse(readFileSync(join(process.cwd(), f), 'utf8')) as Catalogue).products,
+  ),
+}
 const handles = new Set(catalogue.products.map((p) => p.handle))
 const withCopy = new Set(CONTENT.listingCopy.map((c) => c.path))
 

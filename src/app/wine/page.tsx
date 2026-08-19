@@ -25,14 +25,24 @@ export default function WineHub() {
       }}
       query={{ kinds: ['wine', 'spirit'], sort: 'featured', first: 24 }}
       alcohol
+      promo={{
+        eyebrow: 'New',
+        title: 'The Wine Vault Club',
+        body: 'A case of wine, chosen by us from this list, as often as you want it. You set the size, the budget and the style.',
+        href: '/wine/subscription',
+        cta: 'See how it works',
+      }}
       featuredPaths={[
-        '/wine/exclusive-to-us',
-        '/wine/value-edit',
+        '/wine/fine-wines',
         '/wine/red',
         '/wine/white',
+        '/wine/rose',
         '/wine/champagne-sparkling',
-        '/wine/irish-whiskey',
+        '/wine/organic-biodynamic',
+        '/wine/port-dessert',
+        '/wine/gift-sets',
         '/wine/under-25',
+        '/wine/25-50',
         '/wine/50-plus',
       ]}
     />

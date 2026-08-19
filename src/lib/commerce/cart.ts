@@ -46,6 +46,12 @@ export type CartLineInput = {
   variantId: string
   quantity: number
   attributes?: CartLineAttribute[]
+  /**
+   * Shopify selling plan, for subscriptions. Set only by the wine club.
+   * Shopify owns the billing schedule from here: we hold no cards and run
+   * no renewals.
+   */
+  sellingPlanId?: string
 }
 
 export async function getCartId(): Promise<string | null> {
@@ -150,6 +156,7 @@ export async function addLines(lines: CartLineInput[]): Promise<Cart> {
     merchandiseId: l.variantId,
     quantity: l.quantity,
     attributes: l.attributes ?? [],
+    ...(l.sellingPlanId ? { sellingPlanId: l.sellingPlanId } : {}),
   }))
 
   if (!id) {

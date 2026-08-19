@@ -126,6 +126,11 @@ export const METAFIELD_DEFINITIONS: readonly MetafieldDefinition[] = [
     type: 'boolean',
     ownerType: 'PRODUCT',
   },
+  { namespace: 'wine', key: 'is_alcohol_free', name: 'Alcohol free', description: 'True for the de-alcoholised range. Suppresses the age gate.', type: 'boolean', ownerType: 'PRODUCT' },
+  { namespace: 'wine', key: 'organic', name: 'Organic', description: 'Certified organic.', type: 'boolean', ownerType: 'PRODUCT' },
+  { namespace: 'wine', key: 'biodynamic', name: 'Biodynamic', description: 'Certified biodynamic.', type: 'boolean', ownerType: 'PRODUCT' },
+  { namespace: 'wine', key: 'fine_wine', name: 'Fine wine', description: 'Part of the fine wine list.', type: 'boolean', ownerType: 'PRODUCT' },
+  { namespace: 'wine', key: 'gift_set', name: 'Gift set', description: 'Sold as a boxed multi-bottle set.', type: 'boolean', ownerType: 'PRODUCT' },
   {
     namespace: 'wine',
     key: 'rrp_comparison',

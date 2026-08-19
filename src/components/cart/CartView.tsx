@@ -90,6 +90,12 @@ export function CartView({ cart }: { cart: Cart }) {
                 <p className="text-sm text-ink-muted">{line.variantTitle}</p>
               ) : null}
 
+              {line.sellingPlanName ? (
+                <p className="mt-1 inline-block border border-green/40 bg-green/5 px-2 py-0.5 text-xs text-green">
+                  Subscription, {line.sellingPlanName.toLowerCase()}
+                </p>
+              ) : null}
+
               {/*
                 Personalisation is shown back to the shopper here, because
                 it travels to the packing bench on the order and this is

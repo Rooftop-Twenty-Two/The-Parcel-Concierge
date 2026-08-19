@@ -1,4 +1,5 @@
-import catalogueJson from '../../../data/catalogue/fixtures.json'
+import fixtureJson from '../../../data/catalogue/fixtures.json'
+import wineJson from '../../../data/catalogue/wines.json'
 import type { Catalogue, CatalogueProduct } from '../catalogue/schema'
 import { HIDDEN_FROM_LISTINGS } from './collections'
 import { money } from './money'
@@ -24,7 +25,29 @@ import type {
  * a shop that is open. See isFixtureMode in ./index.ts.
  */
 
-const catalogue = catalogueJson as Catalogue
+/**
+ * The catalogue is assembled from every interchange file.
+ *
+ * wines.json is the real thing, imported from the client's Shopify export.
+ * fixtures.json is the sample hampers and add-ons we wrote, which the real
+ * export does not usefully cover yet. Both are the same shape, so nothing
+ * downstream can tell them apart, and a handle collision resolves in favour
+ * of the real data.
+ */
+const sources = [wineJson as Catalogue, fixtureJson as Catalogue]
+
+const merged = new Map<string, CatalogueProduct>()
+for (const source of sources) {
+  for (const product of source.products) {
+    if (!merged.has(product.handle)) merged.set(product.handle, product)
+  }
+}
+
+const catalogue: Catalogue = {
+  source: sources.map((s) => s.source).join(' + '),
+  currencyCode: sources[0]?.currencyCode ?? 'EUR',
+  products: [...merged.values()],
+}
 
 function kindOf(product: CatalogueProduct): ProductKind {
   if (product.tags.includes('type:hamper')) return 'hamper'
@@ -109,6 +132,11 @@ function toProduct(product: CatalogueProduct): Product {
           awards: product.wine.awards ?? [],
           isExclusiveImport: product.wine.isExclusiveImport ?? false,
           rrpComparison: product.wine.rrpComparison ?? null,
+          isAlcoholFree: product.wine.isAlcoholFree ?? false,
+          organic: product.wine.organic ?? false,
+          biodynamic: product.wine.biodynamic ?? false,
+          fineWine: product.wine.fineWine ?? false,
+          giftSet: product.wine.giftSet ?? false,
         }
       : null,
     updatedAt: '2026-08-19T00:00:00Z',
@@ -187,6 +215,14 @@ function matches(product: Product, query: ProductQuery): boolean {
   }
   if (query.maxPriceMinor !== undefined && product.priceRange.min.amountMinor > query.maxPriceMinor) {
     return false
+  }
+  if (query.wineFlags?.length) {
+    if (!product.wine) return false
+    if (!query.wineFlags.every((f) => product.wine![f])) return false
+  }
+  if (query.anyWineFlag?.length) {
+    if (!product.wine) return false
+    if (!query.anyWineFlag.some((f) => product.wine![f])) return false
   }
   if (!query.includeOutOfStock && !product.availableForSale) return false
 

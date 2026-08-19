@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { ProductGrid } from '@/components/product/ProductCard'
 import { AgeGate } from '@/components/commerce/AgeGate'
+import { ButtonLink } from '@/components/ui/Button'
 import { InkWaves, StampFrame } from '@/components/ui/Stamp'
 import { getListingCopy } from '@/lib/cms'
 import { queryListing } from '@/lib/commerce'
@@ -26,6 +27,8 @@ export async function HubPage({
   alcohol,
   /** Sub-collections to feature as cards, by path. Defaults to all in hub. */
   featuredPaths,
+  /** Optional promoted band rendered under the collection cards. */
+  promo,
 }: {
   hub: CollectionHub
   path: string
@@ -34,6 +37,7 @@ export async function HubPage({
   query: ProductQuery
   alcohol: boolean
   featuredPaths?: string[]
+  promo?: { eyebrow: string; title: string; body: string; href: string; cta: string }
 }) {
   const [copy, result] = await Promise.all([getListingCopy(path), queryListing(path, query)])
 
@@ -95,6 +99,21 @@ export async function HubPage({
               </li>
             ))}
           </ul>
+        </section>
+      ) : null}
+
+      {promo ? (
+        <section className="bg-navy py-12 text-cream">
+          <div className="mx-auto flex max-w-[1400px] flex-wrap items-center justify-between gap-6 px-4 lg:px-8">
+            <div className="max-w-2xl">
+              <p className="mb-2 text-xs uppercase tracking-[0.24em] text-gold">{promo.eyebrow}</p>
+              <h2 className="font-display text-[length:var(--text-display)]">{promo.title}</h2>
+              <p className="mt-3 text-lg text-cream/85">{promo.body}</p>
+            </div>
+            <ButtonLink href={promo.href} size="large">
+              {promo.cta}
+            </ButtonLink>
+          </div>
         </section>
       ) : null}
 

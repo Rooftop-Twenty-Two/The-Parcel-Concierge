@@ -127,6 +127,35 @@ Gifts hero, and the shopfronts held for the seasonal pages.
   attributes. The reasoning is in that file.
 - **Not yet tested end to end through a real Shopify checkout.** No store.
 
+### The real wine catalogue
+
+The client's Shopify products export (3,040 products) has been imported.
+`npm run catalogue:import -- --input <export.csv>` reads it and writes
+`data/catalogue/wines.json`.
+
+**341 wines and spirits are on the site**, with their real prices, images,
+descriptions and stock. The export's tag field had been used for country,
+grape, style, occasion and merchandising all at once, so the importer reads
+that vocabulary and turns it into structured `wine.*` metafields. Grape and
+country are now real filters rather than string matching.
+
+What the importer will not do is invent. Twenty-seven wines have no
+description in the export and come through flagged, so the ingest tool
+refuses to publish them until somebody writes one. Not one of the 421
+published wines has image alt text, so the importer builds it from the
+title, which is true and useful, rather than guessing at the label.
+
+Three things came out of the import that need the client:
+
+1. **The eight exclusive imports are not flagged.** The June review found
+   eight wines no other Irish retailer stocks. Nothing in the export marks
+   them, so `/wine/exclusive-to-us` is empty and the homepage no longer
+   makes the claim. Tell us which eight and both turn back on.
+2. **Twenty-seven wines need copy** before they can be published.
+3. **Seven wines could not be classified** by style and default to plain
+   "Wine". They still render; they just do not appear in the red, white or
+   rosé listings.
+
 ### Phase 7, content
 
 - Listing copy written for 25 of the highest-value routes. `npm run
@@ -140,6 +169,21 @@ Gifts hero, and the shopfronts held for the seasonal pages.
   exist, are linked, are `noindex`, and say honestly that the text is being
   finalised. Filler that reads as real policy would be worse than the blank
   shipping page the review found.
+
+### The wine subscription
+
+Built, at `/wine/subscription`. The customer picks case size, budget per
+bottle, style and cadence, and the price follows.
+
+The recurrence is Shopify's, through selling plans: no cards are stored
+here and there is no billing schedule to run. **It cannot take a sign-up
+until a subscription app is installed on the store** and the selling plans
+exist. Until then the page renders in full and says so rather than showing
+a button that cannot work. `docs/wine-club.md` lists exactly what the store
+needs.
+
+Two pricing decisions are outstanding and are the client's: whether the
+first case is discounted, and whether to offer a prepaid gift subscription.
 
 ### Phase 8, trust and conversion
 

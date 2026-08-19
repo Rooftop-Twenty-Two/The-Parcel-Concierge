@@ -50,6 +50,7 @@ see [`docs/deployment.md`](docs/deployment.md).
 | `npm run redirects:build` | Generates `src/generated/redirects.json` from the CSV |
 | `npm run redirects:products` | Generates per-product redirect rows from a retain/remove list |
 | `npm run content:report` | What copy is still missing, and which listings fall below the floor |
+| `npm run catalogue:import` | Imports wines from a Shopify products export CSV |
 | `npm run fixtures:generate` | Regenerates the fixture catalogue |
 | `npm run photography:optimise` | Cuts web assets from the originals in `docs/reference/photography` (needs `npm i --no-save sharp`) |
 
@@ -66,6 +67,7 @@ see [`docs/deployment.md`](docs/deployment.md).
 | [`docs/copy-style-guide.md`](docs/copy-style-guide.md) | House style, templates, the banned-word list |
 | [`docs/redirects.md`](docs/redirects.md) | The migration process. The biggest single risk in the project |
 | [`docs/ingest.md`](docs/ingest.md) | How the ingest tool works and how to roll a run back |
+| [`docs/wine-club.md`](docs/wine-club.md) | The wine subscription, and what Shopify has to provide |
 | [`docs/analytics.md`](docs/analytics.md) | GA4 events, and how to prove purchase fires once across the handoff |
 | [`docs/design-direction.md`](docs/design-direction.md) | The visual language and where it came from |
 
@@ -97,7 +99,9 @@ public/
   photography/             Web assets cut from the supplied shoot
   placeholder/             Brand-styled stand-ins for un-photographed SKUs
 data/
-  catalogue/               Product interchange files
+  catalogue/
+    wines.json             The real wine list, imported from the Shopify export
+    fixtures.json          Sample hampers and add-ons we wrote
   redirects/redirects.csv  The redirect map. Source of truth.
 docs/reference/            The supplied brand guidelines, design and assets
 ```

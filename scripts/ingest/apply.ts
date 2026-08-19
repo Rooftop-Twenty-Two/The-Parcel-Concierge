@@ -213,6 +213,17 @@ function toProductSetInput(product: CatalogueProduct, existingId: string | null)
       type: 'boolean',
       value: String(w.isExclusiveImport ?? false),
     })
+    for (const [key, value] of [
+      ['is_alcohol_free', w.isAlcoholFree],
+      ['organic', w.organic],
+      ['biodynamic', w.biodynamic],
+      ['fine_wine', w.fineWine],
+      ['gift_set', w.giftSet],
+    ] as const) {
+      if (value !== undefined) {
+        metafields.push({ namespace: 'wine', key, type: 'boolean', value: String(value) })
+      }
+    }
   }
 
   return {

@@ -82,6 +82,16 @@ export type WineMetafields = {
    * competitor price: see docs/copy-style-guide.md.
    */
   rrpComparison: string | null
+  /**
+   * Flags carried by the real catalogue's own tagging. They drive
+   * collections and the age gate, so they are part of the model rather
+   * than something a component infers from a tag string.
+   */
+  isAlcoholFree: boolean
+  organic: boolean
+  biodynamic: boolean
+  fineWine: boolean
+  giftSet: boolean
 }
 
 export type ProductKind = 'hamper' | 'wine' | 'spirit' | 'addon'
@@ -135,6 +145,8 @@ export type CartLine = {
   unitPrice: Money
   lineTotal: Money
   attributes: CartLineAttribute[]
+  /** Set on subscription lines. Shopify's name for the plan, e.g. "Every 3 months". */
+  sellingPlanName: string | null
 }
 
 export type Cart = {
@@ -155,6 +167,14 @@ export type ProductQuery = {
   kinds?: ProductKind[]
   /** Shopify product_type values, ORed. Used by the add-on band. */
   productTypes?: string[]
+  /**
+   * wine.* boolean flags, ANDed. Drives the fine wine, organic and alcohol
+   * free listings, which are real distinctions in the catalogue rather than
+   * anything derivable from product type.
+   */
+  wineFlags?: ('fineWine' | 'organic' | 'biodynamic' | 'isAlcoholFree' | 'giftSet')[]
+  /** Any one of these flags is enough. Organic OR biodynamic, for instance. */
+  anyWineFlag?: ('fineWine' | 'organic' | 'biodynamic' | 'isAlcoholFree' | 'giftSet')[]
   /**
    * Explicit handles, in order. Set by CMS-curated listings, which are the
    * only listings where editorial ordering beats a query.

@@ -127,6 +127,21 @@ const WINE_METAFIELDS = /* GraphQL */ `
   wineRrpComparison: metafield(namespace: "wine", key: "rrp_comparison") {
     value
   }
+  wineIsAlcoholFree: metafield(namespace: "wine", key: "is_alcohol_free") {
+    value
+  }
+  wineOrganic: metafield(namespace: "wine", key: "organic") {
+    value
+  }
+  wineBiodynamic: metafield(namespace: "wine", key: "biodynamic") {
+    value
+  }
+  wineFineWine: metafield(namespace: "wine", key: "fine_wine") {
+    value
+  }
+  wineGiftSet: metafield(namespace: "wine", key: "gift_set") {
+    value
+  }
 `
 
 export const PRODUCT_BY_HANDLE = /* GraphQL */ `
@@ -270,6 +285,12 @@ const CART_FIELDS = /* GraphQL */ `
           amountPerQuantity {
             amount
             currencyCode
+          }
+        }
+        sellingPlanAllocation {
+          sellingPlan {
+            id
+            name
           }
         }
         merchandise {

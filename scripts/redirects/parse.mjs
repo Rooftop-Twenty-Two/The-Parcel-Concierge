@@ -3,30 +3,45 @@ import { readFileSync } from 'node:fs'
 /**
  * Reads data/redirects/redirects.csv.
  *
+ * Plain JavaScript on purpose. This module is on the production build path
+ * (`npm run build` generates the redirect map before `next build` runs), and
+ * TypeScript here would mean the build needs Node's type-stripping flag,
+ * which only exists on Node 22.6 and later. Hosts that default to an older
+ * Node then fail the build on `bad option: --experimental-strip-types`.
+ * Types are carried in JSDoc instead, and `npm run typecheck` still checks
+ * them.
+ *
  * Deliberately a tiny hand-rolled parser rather than a dependency: the file
  * is ours, the format is fixed, and comment lines starting with # are part
  * of the format because the notes in that file are for the client to read
  * at review.
  */
 
-export type RedirectRow = {
-  source: string
-  destination: string
-  permanent: boolean
-  note: string
-  /** 1-based line number in the CSV, for error messages. */
-  line: number
-}
+/**
+ * @typedef {object} RedirectRow
+ * @property {string} source
+ * @property {string} destination
+ * @property {boolean} permanent
+ * @property {string} note
+ * @property {number} line 1-based line number in the CSV, for error messages.
+ */
 
-export type ParseResult = {
-  rows: RedirectRow[]
-  errors: { line: number; message: string }[]
-}
+/**
+ * @typedef {object} ParseResult
+ * @property {RedirectRow[]} rows
+ * @property {{ line: number, message: string }[]} errors
+ */
 
-export function parseRedirects(path: string): ParseResult {
+/**
+ * @param {string} path
+ * @returns {ParseResult}
+ */
+export function parseRedirects(path) {
   const text = readFileSync(path, 'utf8')
-  const rows: RedirectRow[] = []
-  const errors: { line: number; message: string }[] = []
+  /** @type {RedirectRow[]} */
+  const rows = []
+  /** @type {{ line: number, message: string }[]} */
+  const errors = []
 
   const lines = text.split(/\r?\n/)
 
@@ -71,8 +86,13 @@ export function parseRedirects(path: string): ParseResult {
   return { rows, errors }
 }
 
-function splitCsvLine(line: string): string[] {
-  const cells: string[] = []
+/**
+ * @param {string} line
+ * @returns {string[]}
+ */
+function splitCsvLine(line) {
+  /** @type {string[]} */
+  const cells = []
   let current = ''
   let quoted = false
 

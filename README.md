@@ -32,6 +32,9 @@ through the same interface either way.
 
 Copy `.env.example` to `.env.local` for the full list of variables.
 
+It deploys to Netlify or Vercel. `netlify.toml` and `.nvmrc` are committed;
+see [`docs/deployment.md`](docs/deployment.md).
+
 ## Commands
 
 | Command | What it does |
@@ -54,6 +57,7 @@ Copy `.env.example` to `.env.local` for the full list of variables.
 | Document | What is in it |
 |---|---|
 | [`docs/build-status.md`](docs/build-status.md) | **Start here.** What is built, what is blocked, and what we need from the client |
+| [`docs/deployment.md`](docs/deployment.md) | Netlify and Vercel setup, and what a preview deploy looks like |
 | [`docs/architecture.md`](docs/architecture.md) | Layers, source-of-truth rules, caching, the decisions and why |
 | [`docs/ia-and-routes.md`](docs/ia-and-routes.md) | Sitemap, route list, the min-four rule, open IA questions. Phase 1 sign-off |
 | [`docs/metafields.md`](docs/metafields.md) | The product data model |

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { join } from 'node:path'
-import { parseRedirects } from '../scripts/redirects/parse.ts'
+import { parseRedirects } from '../scripts/redirects/parse.mjs'
 import { COLLECTIONS } from '../src/lib/commerce/collections.ts'
 
 const CSV = join(process.cwd(), 'data/redirects/redirects.csv')

@@ -7,13 +7,14 @@
  * generating from it means the config and the client's review copy can
  * never drift apart.
  *
- * Runs as part of `npm run build`, and validates first, so a broken map
- * cannot reach a deploy.
+ * Plain JavaScript, and it stays that way: this runs as part of
+ * `npm run build`, so it must work on whatever Node the host provides
+ * rather than needing Node 22.6's type-stripping flag.
  */
 
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
-import { parseRedirects } from './parse.ts'
+import { parseRedirects } from './parse.mjs'
 
 const CSV = join(process.cwd(), 'data/redirects/redirects.csv')
 const OUT = join(process.cwd(), 'src/generated/redirects.json')
@@ -36,4 +37,6 @@ mkdirSync(dirname(OUT), { recursive: true })
 writeFileSync(OUT, `${JSON.stringify(redirects, null, 2)}\n`, 'utf8')
 
 console.log(`Wrote ${redirects.length} redirects to ${OUT}`)
-console.log(`  ${redirects.filter((r) => r.permanent).length} permanent, ${redirects.filter((r) => !r.permanent).length} temporary`)
+console.log(
+  `  ${redirects.filter((r) => r.permanent).length} permanent, ${redirects.filter((r) => !r.permanent).length} temporary`,
+)

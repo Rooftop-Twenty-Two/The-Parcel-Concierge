@@ -11,7 +11,18 @@ import {
   CART_LINES_UPDATE,
   CART_QUERY,
 } from '../shopify/queries'
-import { fixtureCart } from './fixture-cart'
+import {
+  addLinesTo,
+  buildCart,
+  decodeState,
+  encodeState,
+  FIXTURE_CART_COOKIE,
+  MAX_COOKIE_BYTES,
+  removeLinesFrom,
+  setAttributesOn,
+  updateLineIn,
+  type FixtureCartState,
+} from './fixture-cart'
 import { isFixtureMode } from './index'
 import type { Cart, CartLineAttribute } from './types'
 
@@ -56,6 +67,42 @@ async function setCartId(id: string): Promise<void> {
 export async function clearCartId(): Promise<void> {
   const store = await cookies()
   store.delete(CART_COOKIE)
+  store.delete(FIXTURE_CART_COOKIE)
+}
+
+// ---------------------------------------------------------------------------
+// Fixture mode. The cart lives in a cookie, so it survives across serverless
+// invocations and across the separate bundles Next compiles for actions,
+// route handlers and pages. See ./fixture-cart.ts for why neither module
+// state nor server memory works here.
+// ---------------------------------------------------------------------------
+
+async function readFixtureState(): Promise<FixtureCartState> {
+  const store = await cookies()
+  return decodeState(store.get(FIXTURE_CART_COOKIE)?.value)
+}
+
+async function writeFixtureState(state: FixtureCartState): Promise<Cart> {
+  const encoded = encodeState(state)
+
+  if (Buffer.byteLength(encoded, 'utf8') > MAX_COOKIE_BYTES) {
+    // A silently truncated cookie is a corrupted cart, so refuse the write.
+    // Only reachable in fixture mode, where the cart is a stand-in.
+    throw new Error(
+      'This basket is too big for a preview cart. Remove a line, or connect a Shopify store.',
+    )
+  }
+
+  const store = await cookies()
+  store.set(FIXTURE_CART_COOKIE, encoded, {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    path: '/',
+    maxAge: CART_COOKIE_MAX_AGE,
+  })
+
+  return buildCart(state)
 }
 
 type CartMutationResult = { cart: Parameters<typeof normaliseCart>[0] | null; userErrors: { message: string }[] }
@@ -69,10 +116,13 @@ function unwrap(result: CartMutationResult, action: string): Cart {
 }
 
 export async function getCart(): Promise<Cart | null> {
+  if (isFixtureMode()) {
+    const state = await readFixtureState()
+    return state.lines.length ? buildCart(state) : null
+  }
+
   const id = await getCartId()
   if (!id) return null
-
-  if (isFixtureMode()) return fixtureCart.get(id)
 
   const data = await storefront<{ cart: Parameters<typeof normaliseCart>[0] | null }>({
     query: CART_QUERY,
@@ -93,9 +143,7 @@ export async function addLines(lines: CartLineInput[]): Promise<Cart> {
   const id = await getCartId()
 
   if (isFixtureMode()) {
-    const cart = id ? fixtureCart.addLines(id, lines) : fixtureCart.create(lines)
-    if (cart.id !== id) await setCartId(cart.id)
-    return cart
+    return writeFixtureState(addLinesTo(await readFixtureState(), lines))
   }
 
   const shopifyLines = lines.map((l) => ({
@@ -124,12 +172,14 @@ export async function addLines(lines: CartLineInput[]): Promise<Cart> {
 }
 
 export async function updateLine(lineId: string, quantity: number): Promise<Cart> {
+  if (isFixtureMode()) {
+    return writeFixtureState(updateLineIn(await readFixtureState(), lineId, quantity))
+  }
+
   const id = await getCartId()
   if (!id) throw new Error('No cart')
 
   if (quantity <= 0) return removeLines([lineId])
-
-  if (isFixtureMode()) return fixtureCart.updateLine(id, lineId, quantity)
 
   const data = await storefront<{ cartLinesUpdate: CartMutationResult }>({
     query: CART_LINES_UPDATE,
@@ -140,10 +190,12 @@ export async function updateLine(lineId: string, quantity: number): Promise<Cart
 }
 
 export async function removeLines(lineIds: string[]): Promise<Cart> {
+  if (isFixtureMode()) {
+    return writeFixtureState(removeLinesFrom(await readFixtureState(), lineIds))
+  }
+
   const id = await getCartId()
   if (!id) throw new Error('No cart')
-
-  if (isFixtureMode()) return fixtureCart.removeLines(id, lineIds)
 
   const data = await storefront<{ cartLinesRemove: CartMutationResult }>({
     query: CART_LINES_REMOVE,
@@ -159,10 +211,12 @@ export async function removeLines(lineIds: string[]): Promise<Cart> {
  * than to one line.
  */
 export async function setCartAttributes(attributes: CartLineAttribute[]): Promise<Cart> {
+  if (isFixtureMode()) {
+    return writeFixtureState(setAttributesOn(await readFixtureState(), attributes))
+  }
+
   const id = await getCartId()
   if (!id) throw new Error('No cart')
-
-  if (isFixtureMode()) return fixtureCart.setAttributes(id, attributes)
 
   const data = await storefront<{ cartAttributesUpdate: CartMutationResult }>({
     query: CART_ATTRIBUTES_UPDATE,

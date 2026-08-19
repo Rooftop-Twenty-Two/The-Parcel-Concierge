@@ -9,7 +9,7 @@ import {
   collectionsInHub,
   getCollectionByPath,
 } from '../src/lib/commerce/collections.ts'
-import { parseRedirects } from '../scripts/redirects/parse.ts'
+import { parseRedirects } from '../scripts/redirects/parse.mjs'
 import { productPathFor } from '../src/lib/routes.ts'
 import { ALL_TAGS } from '../src/lib/commerce/taxonomy.ts'
 

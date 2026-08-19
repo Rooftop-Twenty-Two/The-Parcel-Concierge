@@ -18,7 +18,7 @@
  */
 
 import { join } from 'node:path'
-import { parseRedirects, type RedirectRow } from './parse.ts'
+import { parseRedirects, type RedirectRow } from './parse.mjs'
 import { COLLECTIONS } from '../../src/lib/commerce/collections.ts'
 
 const CSV = join(process.cwd(), 'data/redirects/redirects.csv')

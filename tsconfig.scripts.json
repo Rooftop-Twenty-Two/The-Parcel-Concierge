@@ -6,6 +6,10 @@
     // relative imports must carry their .ts extension. The Next build uses
     // a bundler resolver and must not, hence the separate project.
     "allowImportingTsExtensions": true,
+    // The redirect parser is plain JS so it can run on the build path
+    // without Node's type-stripping flag. Its JSDoc types are still checked.
+    "allowJs": true,
+    "checkJs": true,
     "module": "esnext",
     "moduleResolution": "bundler",
     "jsx": "react-jsx",

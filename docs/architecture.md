@@ -9,7 +9,7 @@
 | Content | Headless CMS (Sanity recommended). Currently a local content store | Editorial copy, hub pages, gift guides, maker profiles, homepage slots, curation |
 | Search and filter | Storefront API product filters | Faceted browse |
 | Reviews | Trustpilot API | Ratings, review content, rich snippets |
-| Hosting | Vercel | ISR, edge middleware, redirects, image optimisation |
+| Hosting | Vercel or Netlify | ISR, redirects, image optimisation. See docs/deployment.md |
 
 ## Source-of-truth rules
 
@@ -59,6 +59,15 @@ page starts paying for metafields it never shows.
 **Cart API** for the cart, with `checkoutUrl` handing off to Shopify hosted
 checkout. The cart id is held in an httpOnly cookie. We hold nothing else.
 
+In fixture mode there is no Shopify cart to point at, so the stand-in cart
+is held in a cookie of its own. It cannot be held in server memory: Next
+compiles server actions, route handlers and pages into separate bundles
+with separate module instances, and on a serverless host each request can
+land on a different instance. Either one on its own is enough to make an
+in-memory cart read back empty. The cookie holds only variant ids,
+quantities and the personalisation the shopper typed; everything else is
+resolved from the catalogue on read.
+
 **Personalisation travels as cart line attributes**, so the gift message,
 the ribbon colour and the branded card survive into the Shopify order and
 reach the packing bench. They are not stored in a separate system that
@@ -98,7 +107,7 @@ returns every problem rather than the first.
 Reading a cookie in the root layout opts every page on the site out of
 static rendering. The cart badge and the age gate both need per-visitor
 state, so both resolve after hydration through `/api/cart` and
-`/api/age-check` instead. That keeps 126 pages static, which is what the LCP
+`/api/age-check` instead. That keeps the pages static, which is what the LCP
 budget needs.
 
 The age-gate cookie stays httpOnly. The client asks the server whether it is

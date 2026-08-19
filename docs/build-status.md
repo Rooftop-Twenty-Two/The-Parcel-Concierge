@@ -60,8 +60,11 @@ Everything else stands.
 - Routing, Storefront API layer, cart with Shopify hosted checkout handoff,
   cache tags, webhook revalidation, live stock and price verification at
   add-to-cart.
-- 126 pages prerendered at build. Product pages are static; listings are
+- 149 pages prerendered at build. Product pages are static; listings are
   server rendered because they read filter parameters.
+- Deploys to Vercel or Netlify. `netlify.toml` and `.nvmrc` are committed:
+  see `docs/deployment.md` for the two things that were breaking the
+  Netlify build and how they were fixed.
 - **Lighthouse has not been run.** There is no real photography yet and
   hamper photography is the heaviest asset on the site, so a score measured
   against placeholder PNGs would be meaningless. The budget work that can be

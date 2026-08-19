@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { StampFrame } from '@/components/ui/Stamp'
+import { VisitTheShop } from '@/components/VisitTheShop'
 import { getPage } from '@/lib/cms'
 
 export const revalidate = 3600
@@ -56,6 +57,11 @@ export default async function AboutPage() {
             className="aspect-3/2 w-full object-cover"
           />
         </StampFrame>
+      </div>
+
+      {/* The shop itself is the bigger half of the story. */}
+      <div className="mt-16 -mx-4 lg:-mx-8">
+        <VisitTheShop />
       </div>
     </div>
   )

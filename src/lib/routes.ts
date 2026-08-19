@@ -33,7 +33,33 @@ export function productPathFor(kind: ProductKind, handle: string): string {
 export const PRODUCT_HUBS = ['hampers', 'wine', 'gifts'] as const
 export type ProductHub = (typeof PRODUCT_HUBS)[number]
 
-export const NAV = [
+export type NavColumn = {
+  title: string
+  links: { label: string; href: string }[]
+  /**
+   * Optional photograph rendered under the column's links, clicking
+   * through to the column's first link. The old menu was a wall of text;
+   * the shop is a visual business and the menu should look like it.
+   */
+  image?: { src: string; alt: string }
+}
+
+export type NavPromo = {
+  title: string
+  body: string
+  href: string
+  imageSrc: string
+  imageAlt: string
+}
+
+export type NavItem = {
+  label: string
+  href: string
+  columns: NavColumn[]
+  promo: NavPromo | null
+}
+
+export const NAV: readonly NavItem[] = [
   {
     label: 'Hampers',
     href: '/hampers',
@@ -46,6 +72,10 @@ export const NAV = [
           { label: '€125 to €200', href: '/hampers/125-200' },
           { label: 'Luxury, €200 and over', href: '/hampers/luxury-200-plus' },
         ],
+        image: {
+          src: '/photography/tpc-09-full.jpg',
+          alt: 'An Irish food hamper packed with crisps, tea, preserves and coffee in a green gift box',
+        },
       },
       {
         title: 'By contents',
@@ -55,6 +85,10 @@ export const NAV = [
           { label: 'Whiskey hampers', href: '/hampers/whiskey' },
           { label: 'Pamper hampers', href: '/hampers/pamper' },
         ],
+        image: {
+          src: '/photography/tpc-02-full.jpg',
+          alt: 'Two bottles of wine, a preserve and a wooden serving board packed in a green gift box',
+        },
       },
       {
         title: 'By occasion',
@@ -65,6 +99,10 @@ export const NAV = [
           { label: 'Thank you', href: '/hampers/thank-you' },
           { label: 'Corporate', href: '/hampers/corporate' },
         ],
+        image: {
+          src: '/photography/tpc-01-full.jpg',
+          alt: 'A pink baby blanket, a small bottle of sparkling wine and a congratulations book in a gift box',
+        },
       },
     ],
     promo: {
@@ -88,6 +126,10 @@ export const NAV = [
           { label: 'Champagne and sparkling', href: '/wine/champagne-sparkling' },
           { label: 'Port and dessert', href: '/wine/port-dessert' },
         ],
+        image: {
+          src: '/photography/tpc-06-full.jpg',
+          alt: 'A bottle of Champagne, a glass and a notebook packed in a green gift box',
+        },
       },
       {
         title: 'Spirits',
@@ -105,6 +147,10 @@ export const NAV = [
           { label: '€25 to €50', href: '/wine/25-50' },
           { label: '€50 and over', href: '/wine/50-plus' },
         ],
+        image: {
+          src: '/photography/tpc-05-full.jpg',
+          alt: 'A bottle of red wine beside a box of Butlers chocolates in a green gift box',
+        },
       },
     ],
     promo: {
@@ -127,6 +173,10 @@ export const NAV = [
           { label: 'Make an enquiry', href: '/corporate-gifting/enquiry' },
           { label: 'Corporate hampers', href: '/hampers/corporate' },
         ],
+        image: {
+          src: '/photography/tpc-09-full.jpg',
+          alt: 'An Irish food hamper packed with crisps, tea, preserves and coffee in a green gift box',
+        },
       },
     ],
     promo: {
@@ -150,6 +200,10 @@ export const NAV = [
           { label: "Valentine's", href: '/occasions/valentines' },
           { label: 'Easter', href: '/occasions/easter' },
         ],
+        image: {
+          src: '/photography/tpc-christmas-11.jpg',
+          alt: 'The Parcel Concierge shopfront in Dunshaughlin dressed for Christmas, with the green delivery van outside',
+        },
       },
       {
         title: 'Life events',
@@ -159,6 +213,10 @@ export const NAV = [
           { label: 'Wedding and engagement', href: '/occasions/wedding-engagement' },
           { label: 'Get well', href: '/occasions/get-well' },
         ],
+        image: {
+          src: '/photography/tpc-10-full.jpg',
+          alt: 'A knitted toy, two bottles of sparkling rosé and a handwritten card in a green gift box',
+        },
       },
     ],
     promo: {
@@ -181,6 +239,10 @@ export const NAV = [
           { label: 'For couples', href: '/gifts-for/couples' },
           { label: 'For clients', href: '/gifts-for/clients' },
         ],
+        image: {
+          src: '/photography/tpc-07-full.jpg',
+          alt: 'A pamper hamper with sparkling wine, a floral mug, a notebook and a boxed candle',
+        },
       },
       {
         title: 'By budget',
@@ -199,9 +261,19 @@ export const NAV = [
           { label: 'Crystal and glassware', href: '/gifts/crystal-glassware' },
           { label: 'Gift card', href: '/gift-card' },
         ],
+        image: {
+          src: '/photography/tpc-may-9.jpg',
+          alt: 'The gift shop floor in Dunshaughlin, with candles, cards and small gifts on display',
+        },
       },
     ],
-    promo: null,
+    promo: {
+      title: 'Visit the shop',
+      body: 'The shelves in Dunshaughlin hold far more than the website. Come and see us.',
+      href: '/contact',
+      imageSrc: '/photography/tpc-may-18.jpg',
+      imageAlt: 'Shelves in the shop stacked with skincare, candles, diffusers and gifts',
+    },
   },
   { label: 'Guides', href: '/guides', columns: [], promo: null },
   {

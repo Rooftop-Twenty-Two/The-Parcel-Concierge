@@ -231,8 +231,8 @@ export function BuilderWizard({ parent }: { parent: Product }) {
             Build your own hamper
           </h1>
           <p className="mt-3 max-w-2xl text-cream/85">
-            Everything in the shop is on these shelves. Pick a box, fill it, write the card, and we
-            pack it by hand in Dunshaughlin.
+            Everything we sell online is on these shelves, and the shop in Dunshaughlin carries
+            even more. Pick a box, fill it, write the card, and we pack it by hand.
           </p>
         </div>
       </header>

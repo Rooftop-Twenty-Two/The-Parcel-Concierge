@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
-import { PostmarkRoundel } from '@/components/ui/Stamp'
+import { PostmarkRoundel, StampFrame } from '@/components/ui/Stamp'
 import { SITE } from '@/lib/site-config'
 
 export const metadata: Metadata = {
@@ -51,11 +52,24 @@ export default function ContactPage() {
         </section>
 
         <section>
-          <h2 className="font-serif text-2xl font-semibold text-navy">Where we are</h2>
+          <h2 className="font-serif text-2xl font-semibold text-navy">Come and see us</h2>
           <p className="mt-2 text-ink-muted">
-            {SITE.town}, {SITE.county}, Ireland. We hand deliver locally ourselves, which means one
-            of us is often out in the van rather than beside the phone.
+            {SITE.town}, {SITE.county}, Ireland. The shop carries far more than the website does:
+            jewellery, skincare, candles, homeware, cards and a wine room you can browse bottle by
+            bottle. If you are anywhere near, it is worth the trip, and one of us will help you
+            choose. We hand deliver locally ourselves, which means one of us is often out in the
+            van rather than beside the phone.
           </p>
+          <StampFrame className="mt-6 bg-beige">
+            <Image
+              src="/photography/tpc-may-1-2.jpg"
+              alt={`The Parcel Concierge shopfront in ${SITE.town}, with opening hours on the sign and wine barrel tables outside`}
+              width={1600}
+              height={1067}
+              sizes="(min-width: 1024px) 42rem, 92vw"
+              className="aspect-3/2 w-full object-cover"
+            />
+          </StampFrame>
         </section>
       </div>
     </div>

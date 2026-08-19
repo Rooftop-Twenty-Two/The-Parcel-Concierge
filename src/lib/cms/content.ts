@@ -88,6 +88,11 @@ export const CONTENT: CmsData = {
         body: 'We buy directly from small Irish producers, most of them within an hour of us. We are members of Guaranteed Irish.',
         makerSlugs: ['kilbeg-dairy', 'the-handmade-soap-company', 'skelligs-chocolate'],
       },
+      {
+        kind: 'visit-shop',
+        title: 'The shop holds far more than the website',
+        body: 'What you see online is the edit: our hampers, the wine, and everything you can put in a box you build. The shelves in Dunshaughlin go much further, with jewellery, skincare, candles, homeware, cards and a wine room you can browse bottle by bottle, and one of us on the floor to help you choose.',
+      },
       { kind: 'newsletter' },
     ],
   },

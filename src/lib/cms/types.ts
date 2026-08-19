@@ -35,6 +35,7 @@ export type HomepageSlot =
   | { kind: 'trustpilot' }
   | { kind: 'corporate'; title: string; body: string }
   | { kind: 'makers'; title: string; body: string; makerSlugs: string[] }
+  | { kind: 'visit-shop'; title: string; body: string }
   | { kind: 'newsletter' }
 
 export type Homepage = {

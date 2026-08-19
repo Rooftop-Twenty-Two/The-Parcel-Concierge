@@ -25,6 +25,13 @@ export function Footer() {
               Hampers packed by hand in {SITE.town}, {SITE.county}, from Irish producers we buy from
               directly. Run by {SITE.owners}.
             </p>
+            <p className="mt-3 max-w-xs text-sm text-cream/80">
+              The shop in {SITE.town} carries far more than the website.{' '}
+              <Link href="/contact" className="underline underline-offset-4 hover:text-cream">
+                Come and see us
+              </Link>
+              .
+            </p>
             <div className="mt-5">
               <TrustpilotStars variant="light" />
             </div>

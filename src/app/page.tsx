@@ -5,6 +5,7 @@ import { TrustpilotStars } from '@/components/trust/TrustpilotStars'
 import { ButtonLink } from '@/components/ui/Button'
 import { InkWaves, PostmarkRoundel, StampFrame } from '@/components/ui/Stamp'
 import { NewsletterSignup } from '@/components/marketing/NewsletterSignup'
+import { VisitTheShop } from '@/components/VisitTheShop'
 import { getHomepage, getMakers } from '@/lib/cms'
 import type { HomepageSlot } from '@/lib/cms/types'
 import { getProduct, queryProducts } from '@/lib/commerce'
@@ -61,6 +62,8 @@ async function Slot({
       return <CorporateBand slot={slot} />
     case 'makers':
       return <MakersBand slot={slot} />
+    case 'visit-shop':
+      return <VisitTheShop title={slot.title} body={slot.body} />
     case 'newsletter':
       return (
         <section className="mx-auto max-w-[1400px] px-4 py-16 lg:px-8">

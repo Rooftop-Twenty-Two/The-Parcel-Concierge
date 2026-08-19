@@ -70,6 +70,8 @@ test('every destination is a real route on the new site', () => {
     '/',
     '/hampers',
     '/wine',
+    '/wine-club',
+    '/wine-club/build',
     '/gifts',
     '/gift-card',
     '/build-your-own-hamper',

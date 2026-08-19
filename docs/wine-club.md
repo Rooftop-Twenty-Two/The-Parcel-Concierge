@@ -1,6 +1,8 @@
 # The Wine Vault Club
 
-A recurring case of wine, at `/wine/subscription`.
+A personalised wine subscription. The landing page is `/wine-club`, the
+guided builder is `/wine-club/build`, and the old `/wine/subscription`
+URL redirects permanently to the landing page.
 
 The commercial case for it is simple. A gifting business sells hard for six
 weeks a year and quietly for the rest. A club is the most direct fix for
@@ -9,19 +11,66 @@ so it needs no new buying.
 
 ---
 
-## How it is put together
+## The flow
 
-The customer makes four choices, all on one screen with the price updating
-as they change:
+We recommend first; the customer edits second. The builder walks:
+
+1. **First name** (optional, never sent anywhere)
+2. **Seven taste questions**, all about food and drink people already
+   know: chocolate, coffee, what sounds refreshing, comfort food, a
+   cocktail, food adventurousness, a flavour direction. Questions and
+   their attribute weightings are one data table in
+   `src/lib/wine-club/taste.ts`; rewording or reweighting is an edit
+   there, never a UI change.
+3. **A taste reveal** in words, never numbers.
+4. **Wine types** (red, white, rosé, sparkling, multi-select, or "you
+   choose"), **frequency**, **bottle count**, **the mix** (steppers that
+   must total the case), and **budget**.
+5. **The personalised box**: every bottle with a deterministic sentence
+   explaining why it was picked, generated from the same numbers that
+   scored it. Swap any bottle (three alternatives plus browse-all), open
+   details, then review and check out.
+
+The browser back button walks the flow backwards without losing answers,
+and the whole state survives a reload via localStorage.
+
+## The recommendation engine
+
+Deterministic and explainable, no model anywhere. Per-wine attribute
+profiles are derived from the catalogue (a grape table plus per-colour
+defaults) in `src/lib/wine-club/profiles.ts`; the weighted matcher with
+diversity caps (max 2 of a grape, 2 of a producer, 3 of a country per
+box) and a relaxation ladder (diversity tops up, then budget widens a
+fifth; type, exclusions and stock never bend) is
+`src/lib/wine-club/recommend.ts`, exercised through
+`POST /api/wine-recommendations`. Out-of-stock wines never appear.
+
+When the client wants per-wine control, the attribute numbers move into
+Shopify metafields (wine.body, wine.acidity, ...) and profiles.ts reads
+those instead; the shape is already theirs.
+
+## The choices
 
 | Choice | Options |
 |---|---|
 | Case size | 3, 6 or 12 bottles |
-| Budget per bottle | Everyday from €15, Considered from €25, Fine from €40 |
-| Style | A mix, reds only, whites and rosé |
-| How often | Monthly, every three months, twice a year |
+| Budget per bottle | Everyday discoveries from €15, Something special from €25, Premium picks from €40 |
+| Mix | Any combination of red, white, rosé and sparkling |
+| How often | Monthly, every two months, every three months |
 
-Configuration is in `src/lib/wine-club.ts`.
+Configuration is in `src/lib/wine-club.ts` and
+`src/lib/wine-club/recommend.ts` (BUDGET_TIERS, MATCH_WEIGHTS).
+
+## Analytics
+
+The funnel fires GA4 events via `trackWineClubEvent`:
+`wine_builder_started`, `wine_quiz_answered`, `wine_quiz_completed`,
+`wine_type_selected`, `subscription_frequency_selected`,
+`bottle_quantity_selected`, `wine_mix_completed`, `budget_selected`,
+`recommendations_generated`, `wine_details_viewed`, `wine_swap_started`,
+`wine_swapped`, `browse_all_wines_opened`, `subscription_review_viewed`,
+`subscription_checkout_started`. Nothing personally identifying is sent;
+the first name never leaves the browser.
 
 ### Why the price is per bottle
 
@@ -61,16 +110,18 @@ Before the club can take a single sign-up, the store needs:
    ```
 
    Price each variant at the band floor times the bottle count, which is
-   what the site quotes.
+   what the site quotes. The chosen bottles ride on the cart line as
+   attributes (Bottle 1..N), so the packing bench builds exactly the box
+   the customer saw.
 3. **A selling plan per cadence**, attached to that product: monthly, every
-   three months, twice a year.
+   two months, every three months.
 4. **These environment variables**, so the site can name the plans:
 
    ```
    NEXT_PUBLIC_WINE_CLUB_SELLING_PLAN_GROUP=gid://shopify/SellingPlanGroup/...
    WINE_CLUB_PLAN_MONTHLY=gid://shopify/SellingPlan/...
    WINE_CLUB_PLAN_QUARTERLY=gid://shopify/SellingPlan/...
-   WINE_CLUB_PLAN_TWICE_YEARLY=gid://shopify/SellingPlan/...
+   WINE_CLUB_PLAN_TWO_MONTHLY=gid://shopify/SellingPlan/...
    ```
 
 Until `NEXT_PUBLIC_WINE_CLUB_SELLING_PLAN_GROUP` is set, the page renders

@@ -97,6 +97,17 @@ export function trackCheckoutHandoff(items: AnalyticsItem[], value: Money): void
   })
 }
 
+/**
+ * Wine club funnel events, named per the club's analytics plan (see
+ * docs/wine-club.md): wine_builder_started, wine_quiz_answered,
+ * recommendations_generated, wine_swapped and so on. The event names are
+ * chosen by the caller so the funnel reads the same in GA4 as in the plan.
+ * Never pass anything personally identifying; the first name stays local.
+ */
+export function trackWineClubEvent(name: string, detail?: Record<string, unknown>): void {
+  send(name, detail ?? {})
+}
+
 export function trackHamperBuilderStep(step: string, detail?: Record<string, unknown>): void {
   send('hamper_builder_step', { step, ...detail })
 }

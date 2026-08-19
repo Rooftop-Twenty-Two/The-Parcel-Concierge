@@ -38,16 +38,16 @@ export const CADENCES: readonly ClubCadence[] = [
     description: 'A case a month. For a house that opens a bottle most weeks.',
   },
   {
+    id: 'every-two-months',
+    label: 'Every two months',
+    perYear: 6,
+    description: 'Six cases a year. The one we recommend.',
+  },
+  {
     id: 'quarterly',
     label: 'Every three months',
     perYear: 4,
-    description: 'Four cases a year, one a season. The one most people pick.',
-  },
-  {
-    id: 'twice-yearly',
-    label: 'Twice a year',
-    perYear: 2,
-    description: 'Two cases, one before the summer and one before Christmas.',
+    description: 'Four cases a year, one a season. For the occasional top-up.',
   },
 ]
 

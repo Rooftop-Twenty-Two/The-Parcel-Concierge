@@ -146,3 +146,4 @@ source,destination,type,note
 /products/the-whiskey-collector,/hampers/the-whiskey-collector,301,Retained hamper
 /products/bodegas-aldea-rioja-reserva,/wine/bodegas-aldea-rioja-reserva,301,Retained wine
 /products/wild-gorse-soy-candle,/gifts/wild-gorse-soy-candle,301,Retained add-on
+/wine/subscription,/wine-club,301,The club moved to its own top level route when the taste quiz landed

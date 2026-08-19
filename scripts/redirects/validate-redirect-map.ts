@@ -32,6 +32,8 @@ const STATIC_ROUTES = new Set([
   '/hampers',
   '/build-your-own-hamper',
   '/wine',
+  '/wine-club',
+  '/wine-club/build',
   '/corporate-gifting',
   '/corporate-gifting/bulk-orders',
   '/corporate-gifting/branding-personalisation',

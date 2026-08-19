@@ -215,7 +215,7 @@ export const CONTENT: CmsData = {
         '<p>A gift set is the middle ground between sending one bottle, which can look thin, and sending a hamper, which is a bigger gesture and a bigger price. Most of these are two or three bottles from the same producer in a printed carton.</p><p>If you want the wine in a proper box with food alongside it, the wine hampers do that instead, and the hamper builder will let you put any bottle on this site into a box with whatever else you like.</p><p>Over 18 only. Somebody over 18 has to take the delivery in.</p>',
     },
     {
-      path: '/wine/subscription',
+      path: '/wine-club',
       intro:
         'A case of wine, chosen by us from the list on this site, as often as you want it. You set the size, the budget per bottle and the style.',
       seoBlock:

@@ -172,18 +172,34 @@ Three things came out of the import that need the client:
 
 ### The wine subscription
 
-Built, at `/wine/subscription`. The customer picks case size, budget per
-bottle, style and cadence, and the price follows.
+Built, at `/wine-club` (the old `/wine/subscription` redirects there).
+It is now a personalised flow, not a form: a seven question taste quiz
+about food and drink, a taste reveal, wine types, frequency, bottle
+count, mix and budget, then a case chosen by a deterministic
+recommendation engine with a written reason on every bottle. Any bottle
+can be swapped from three alternatives or the full list. The browser back
+button works through the flow and a reload resumes it. The full funnel
+fires GA4 events. `docs/wine-club.md` has the detail.
 
 The recurrence is Shopify's, through selling plans: no cards are stored
 here and there is no billing schedule to run. **It cannot take a sign-up
 until a subscription app is installed on the store** and the selling plans
-exist. Until then the page renders in full and says so rather than showing
-a button that cannot work. `docs/wine-club.md` lists exactly what the store
-needs.
+exist. Until then the flow runs end to end and the review step says so
+rather than showing a button that cannot work. `docs/wine-club.md` lists
+exactly what the store needs.
 
 Two pricing decisions are outstanding and are the client's: whether the
 first case is discounted, and whether to offer a prepaid gift subscription.
+
+### The full catalogue, quarantined behind the hamper builder
+
+The main site sells hampers and wine. Everything else in the export,
+1,920 published, priced, photographed products, is imported as
+`builder-item`s: visible and buyable only inside /build-your-own-hamper,
+excluded from listings, search, the sitemap and product URLs by the query
+layer, with tests holding the promise. The builder itself is a five step
+wizard (delivery, box, fill it, finishing touches, review) with the whole
+shop behind a searchable, shelf-by-shelf picker.
 
 ### Phase 8, trust and conversion
 

@@ -303,5 +303,10 @@
     "source": "/products/wild-gorse-soy-candle",
     "destination": "/gifts/wild-gorse-soy-candle",
     "permanent": true
+  },
+  {
+    "source": "/wine/subscription",
+    "destination": "/wine-club",
+    "permanent": true
   }
 ]

@@ -95,7 +95,7 @@ export const NAV = [
           { label: 'Irish whiskey', href: '/wine/irish-whiskey' },
           { label: 'Gin and spirits', href: '/wine/gin-and-spirits' },
           { label: 'Wine gift sets', href: '/wine/gift-sets' },
-          { label: 'The Wine Vault Club', href: '/wine/subscription' },
+          { label: 'The Wine Vault Club', href: '/wine-club' },
         ],
       },
       {
@@ -110,7 +110,7 @@ export const NAV = [
     promo: {
       title: 'The Wine Vault Club',
       body: 'A case of wine, chosen by us, as often as you want it.',
-      href: '/wine/subscription',
+      href: '/wine-club',
       imageSrc: '/photography/tpc-may-13.jpg',
       imageAlt: 'The wine room in the shop in Dunshaughlin',
     },
@@ -231,7 +231,7 @@ export const FOOTER_LINKS = [
       { label: 'Build your own hamper', href: '/build-your-own-hamper' },
       { label: 'The Wine Vault', href: '/wine' },
       { label: 'Fine wines', href: '/wine/fine-wines' },
-      { label: 'The Wine Vault Club', href: '/wine/subscription' },
+      { label: 'The Wine Vault Club', href: '/wine-club' },
       { label: 'Gift card', href: '/gift-card' },
     ],
   },

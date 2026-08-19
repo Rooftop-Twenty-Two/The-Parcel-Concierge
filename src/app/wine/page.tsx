@@ -29,7 +29,7 @@ export default function WineHub() {
         eyebrow: 'New',
         title: 'The Wine Vault Club',
         body: 'A case of wine, chosen by us from this list, as often as you want it. You set the size, the budget and the style.',
-        href: '/wine/subscription',
+        href: '/wine-club',
         cta: 'See how it works',
       }}
       featuredPaths={[

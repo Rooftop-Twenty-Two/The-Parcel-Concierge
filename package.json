@@ -21,7 +21,8 @@
     "ingest:definitions": "node --experimental-strip-types scripts/ingest/cli.ts definitions",
     "content:report": "node --experimental-strip-types scripts/content/report.ts",
     "fixtures:generate": "node --experimental-strip-types scripts/fixtures/generate-catalogue.ts",
-    "redirects:products": "node --experimental-strip-types scripts/redirects/generate-product-redirects.ts"
+    "redirects:products": "node --experimental-strip-types scripts/redirects/generate-product-redirects.ts",
+    "photography:optimise": "node scripts/photography/optimise.mjs"
   },
   "dependencies": {
     "next": "15.5.4",

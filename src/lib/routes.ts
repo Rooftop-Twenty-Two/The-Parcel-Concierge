@@ -67,8 +67,8 @@ export const NAV = [
       title: 'Build your own hamper',
       body: 'Pick the box, pick what goes in it, write the card.',
       href: '/build-your-own-hamper',
-      imageSrc: '/placeholder/hamper-3.png',
-      imageAlt: 'A hamper boxed and hand tied with ribbon',
+      imageSrc: '/photography/tpc-03-full.jpg',
+      imageAlt: 'A new baby hamper with a teddy bear, a blanket and a bottle of sparkling rosé',
     },
   },
   {
@@ -106,8 +106,8 @@ export const NAV = [
       title: 'Exclusive to us',
       body: 'Eight wines no other Irish retailer stocks, because we import them ourselves.',
       href: '/wine/exclusive-to-us',
-      imageSrc: '/placeholder/wine-1.png',
-      imageAlt: 'A bottle of wine standing against a plain background',
+      imageSrc: '/photography/tpc-may-13.jpg',
+      imageAlt: 'The wine room in the shop in Dunshaughlin',
     },
   },
   {
@@ -128,8 +128,8 @@ export const NAV = [
       title: 'Client lists, handled',
       body: 'One address or two hundred. Send us the spreadsheet and we do the rest.',
       href: '/corporate-gifting/bulk-orders',
-      imageSrc: '/placeholder/hamper-2.png',
-      imageAlt: 'Everything inside a corporate hamper laid out flat',
+      imageSrc: '/photography/tpc-08-full.jpg',
+      imageAlt: 'A wooden herb growing box, a bottle of red wine and a hand lettered card in a gift box',
     },
   },
   {
@@ -160,8 +160,8 @@ export const NAV = [
       title: 'Shop by budget instead',
       body: 'If the number is set and the person is not, start here.',
       href: '/gifts-by-budget/50-100',
-      imageSrc: '/placeholder/hamper-1.png',
-      imageAlt: 'A hamper styled on a linen cloth with the lid open',
+      imageSrc: '/photography/tpc-06-full.jpg',
+      imageAlt: 'A bottle of Champagne, a glass and a notebook packed in a green gift box',
     },
   },
   {

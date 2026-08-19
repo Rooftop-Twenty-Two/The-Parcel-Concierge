@@ -77,8 +77,47 @@ Everything else stands.
 - Home with all ten required modules, hamper hub, hamper PDP, wine hub, wine
   PDP, add-on PDP, corporate flow, delivery page, cart, guides, about,
   makers, FAQ, 404.
-- **Needs design review**, and needs the real photography before the hero,
-  the hamper hub and the product template are signed off.
+- **Real photography is now in.** The hero, both hub heroes, the mega-menu
+  panels, the corporate page, the About page and ten product pages all run
+  on the supplied shots. Product framings moved from portrait to landscape
+  to suit the shoot, which is 3:2 throughout.
+- **Needs design review.**
+
+### The photography
+
+Sixteen photographs were supplied with no shot list. Originals are in
+`docs/reference/photography`; `npm run photography:optimise` cuts the web
+assets into `public/photography`. The originals are never served.
+
+**Ten studio shots.** Each is one 3:2 frame of a hamper on the same set.
+`scripts/photography/optimise.mjs` cuts four framings from every one: the
+full frame, a closer view of the contents, a view of the box, and a squarer
+detail crop. The product gallery uses all four.
+
+Three things need the client before this is finished:
+
+1. **Confirm which SKU each frame shows.** We mapped them by looking at
+   what is in each box: the two teddy bear frames to new baby hampers, the
+   Irish food frame to The Boyne Valley, the Champagne and journal frame to
+   The Toast, and so on. It is a reasonable reading, not a fact. The map is
+   at the top of `scripts/fixtures/generate-catalogue.ts`.
+2. **A genuine scale shot per SKU.** Four crops of one frame are four real
+   views, but none of them shows the box next to something that gives its
+   size. That cannot be cropped out of a frame that does not contain one.
+3. **The remaining SKUs.** Ten hampers of thirty-seven are photographed.
+   The rest still show the brand-styled placeholder cards, which is
+   deliberate: a placeholder that obviously is one beats reusing another
+   hamper's photograph.
+
+Note while reviewing: on a photographed product the "What is inside" list
+will not match what is visible in the shot. The contents lists are sample
+data we wrote; the photographs are of real hampers. Both are correct in
+isolation and they resolve against each other the moment the real catalogue
+is ingested.
+
+**Six lifestyle shots**, all in use: Karen and Ciaran outside the shop on
+the About page, the wine room as the Wine Vault hero, the shop floor as the
+Gifts hero, and the shopfronts held for the seasonal pages.
 
 ### Phase 6, hamper builder
 
@@ -132,7 +171,7 @@ currently blocking.
 | # | Item | Blocking |
 |---|---|---|
 | 1 | Brand asset pack: logo suite, colours, licensed fonts | **Part received.** Logos, colours and graphic devices arrived and are in use. The four licensed fonts (Bebas Kai, Salfish, South Epic, Futura) did not. We are running open substitutes; swapping in the real files is one file, `src/lib/brand/fonts.ts` |
-| 2 | The 12 hamper shots plus a shot list mapping images to SKUs | Design sign-off on the hero, hamper hub and product template. Also the Lighthouse pass, which is not worth measuring against placeholders |
+| 2 | The 12 hamper shots plus a shot list mapping images to SKUs | **Part received.** Sixteen photographs landed: ten studio hamper shots and six lifestyle shots of the shop and the owners. All sixteen are in use. **No shot list came with them**, so the image-to-SKU mapping is ours and needs confirming: see "The photography" below |
 | 3 | Final retain/remove decision on jewellery, crystal, homeware | The redirect map. `/collections/jewellery` currently has a provisional rule |
 | 4 | Free hand-delivery zone, by county or eircode | The delivery page names no zone and invites the shopper to check instead. Also the free-delivery cart nudge, which does not render without a threshold |
 | 5 | Corporate volume pricing tiers and lead times | The bulk orders page says pricing is quoted on enquiry rather than printing a table |

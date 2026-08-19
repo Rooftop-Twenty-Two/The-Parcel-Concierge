@@ -359,7 +359,7 @@ function ComponentTile({
             width={item.image.width}
             height={item.image.height}
             sizes="(min-width: 768px) 18vw, 40vw"
-            className="aspect-4/5 w-full object-cover"
+            className="aspect-4/3 w-full object-cover"
           />
         ) : null}
       </StampFrame>

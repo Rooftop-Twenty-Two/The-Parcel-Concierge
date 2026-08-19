@@ -27,8 +27,8 @@ export default function GiftsHub() {
       path="/gifts"
       h1="Add to a hamper"
       heroImage={{
-        src: '/placeholder/addon-1.png',
-        alt: 'A candle and a bar of chocolate photographed on a plain background',
+        src: '/photography/tpc-may-9.jpg',
+        alt: 'The gift shop floor in Dunshaughlin, with candles, cards and small gifts on display',
       }}
       query={{ kinds: ['addon'], sort: 'price-asc', first: 24 }}
       alcohol={false}

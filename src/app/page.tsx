@@ -129,10 +129,10 @@ async function Hero({
                 height={image.height}
                 priority={priority}
                 sizes="(min-width: 1024px) 46vw, 92vw"
-                className="aspect-4/5 w-full object-cover"
+                className="aspect-4/3 w-full object-cover"
               />
             ) : (
-              <div className="aspect-4/5 w-full bg-beige" />
+              <div className="aspect-4/3 w-full bg-beige" />
             )}
           </StampFrame>
 
@@ -226,8 +226,8 @@ function BuilderBand({ slot }: { slot: Extract<HomepageSlot, { kind: 'hamper-bui
 
         <StampFrame className="bg-beige">
           <Image
-            src="/placeholder/hamper-2.png"
-            alt="The contents of a hamper laid out flat before packing"
+            src="/photography/tpc-06-contents.jpg"
+            alt="A bottle of Champagne, a glass and a linen bound notebook packed into a green gift box"
             width={1200}
             height={1500}
             sizes="(min-width: 1024px) 40vw, 92vw"
@@ -309,7 +309,7 @@ function WineTile({ product }: { product: ProductCard }) {
             width={product.image.width}
             height={product.image.height}
             sizes="(min-width: 768px) 22vw, 45vw"
-            className="aspect-4/5 w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+            className="aspect-4/3 w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
           />
         ) : null}
       </StampFrame>
@@ -348,8 +348,8 @@ function CorporateBand({ slot }: { slot: Extract<HomepageSlot, { kind: 'corporat
       <div className="mx-auto grid max-w-[1400px] items-center gap-10 px-4 lg:grid-cols-2 lg:px-8">
         <StampFrame className="order-2 bg-cream lg:order-1">
           <Image
-            src="/placeholder/hamper-4.png"
-            alt="A corporate hamper boxed and hand tied, held to show its size"
+            src="/photography/tpc-08-full.jpg"
+            alt="A wooden herb growing box, a bottle of red wine and a hand lettered card in a green gift box"
             width={1200}
             height={1500}
             sizes="(min-width: 1024px) 46vw, 92vw"

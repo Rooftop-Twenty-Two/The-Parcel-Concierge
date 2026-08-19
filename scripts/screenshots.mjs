@@ -27,7 +27,8 @@ const pages = [
   ['/', '01-home', DESKTOP, true],
   ['/hampers', '02-hampers-hub', DESKTOP, true],
   ['/hampers/under-75', '03-hampers-under-75', DESKTOP, true],
-  ['/hampers/the-whiskey-collector', '04-hamper-pdp', DESKTOP, true],
+  ['/hampers/the-boyne-valley', '04-hamper-pdp', DESKTOP, true],
+  ['/hampers/the-new-arrival', '04b-hamper-pdp-baby', DESKTOP, true],
   ['/wine', '05-wine-hub', DESKTOP, true],
   ['/wine/red', '06-wine-listing-filters', DESKTOP, true],
   ['/wine/bodegas-aldea-rioja-reserva', '07-wine-pdp', DESKTOP, true],
@@ -40,9 +41,27 @@ const pages = [
   ['/about/our-makers', '14-makers', DESKTOP, true],
   ['/faq', '15-faq', DESKTOP, true],
   ['/', '16-mobile-home', MOBILE, true],
-  ['/hampers/the-whiskey-collector', '17-mobile-pdp', MOBILE, true],
+  ['/hampers/the-boyne-valley', '17-mobile-pdp', MOBILE, true],
   ['/build-your-own-hamper', '18-mobile-builder', MOBILE, false],
 ]
+
+/**
+ * Images below the fold are lazy loaded, so a full-page screenshot taken
+ * without scrolling captures empty frames. Walk the page down and back up
+ * first, then let the decodes settle.
+ */
+async function loadEverything(page) {
+  await page.evaluate(async () => {
+    const step = window.innerHeight
+    for (let y = 0; y < document.body.scrollHeight; y += step) {
+      window.scrollTo(0, y)
+      await new Promise((r) => setTimeout(r, 120))
+    }
+    window.scrollTo(0, 0)
+  })
+  await page.waitForLoadState('networkidle').catch(() => {})
+  await page.waitForTimeout(600)
+}
 
 const browser = await chromium.launch({ ...(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {}) })
 const context = await browser.newContext({ deviceScaleFactor: 1 })
@@ -56,7 +75,7 @@ for (const [path, name, viewport, fullPage] of pages) {
   const page = await context.newPage()
   await page.setViewportSize(viewport)
   await page.goto('http://localhost:3100' + path, { waitUntil: 'load', timeout: 60000 })
-  await page.waitForTimeout(1200)
+  await loadEverything(page)
   await page.screenshot({ path: `${OUT}/${name}.png`, fullPage })
   console.log('shot', name)
   await page.close()
@@ -66,13 +85,13 @@ for (const [path, name, viewport, fullPage] of pages) {
 {
   const page = await context.newPage()
   await page.setViewportSize(DESKTOP)
-  await page.goto('http://localhost:3100/hampers/the-whiskey-collector', { waitUntil: 'load', timeout: 60000 })
-  await page.fill('#personalisation-gift-message', 'Happy retirement Dad. Enjoy every drop. Love from all of us.')
+  await page.goto('http://localhost:3100/hampers/the-boyne-valley', { waitUntil: 'load', timeout: 60000 })
+  await page.fill('#personalisation-gift-message', 'Happy retirement Dad. Enjoy every bit of it. Love from all of us.')
   await page.selectOption('#personalisation-ribbon-colour', { label: 'Gold' })
   await page.locator('form button[type="submit"]').filter({ hasText: 'Add to cart' }).first().click()
   await page.waitForTimeout(1500)
   await page.goto('http://localhost:3100/cart', { waitUntil: 'load', timeout: 60000 })
-  await page.waitForTimeout(1200)
+  await loadEverything(page)
   await page.screenshot({ path: `${OUT}/19-cart.png`, fullPage: true })
   console.log('shot 19-cart')
   await page.close()

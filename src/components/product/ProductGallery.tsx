@@ -21,7 +21,7 @@ export function ProductGallery({ images, title }: { images: ProductImage[]; titl
   const current = images[active] ?? images[0]
 
   if (!current) {
-    return <div className="aspect-4/5 w-full bg-beige" role="presentation" />
+    return <div className="aspect-3/2 w-full bg-beige" role="presentation" />
   }
 
   return (
@@ -35,7 +35,7 @@ export function ProductGallery({ images, title }: { images: ProductImage[]; titl
           height={current.height}
           priority
           sizes="(min-width: 1024px) 52vw, 92vw"
-          className="aspect-4/5 w-full object-cover"
+          className="aspect-3/2 w-full object-cover"
         />
       </StampFrame>
 
@@ -55,9 +55,9 @@ export function ProductGallery({ images, title }: { images: ProductImage[]; titl
                   src={image.url}
                   alt={image.alt}
                   width={300}
-                  height={375}
+                  height={200}
                   sizes="14vw"
-                  className="aspect-4/5 w-full object-cover"
+                  className="aspect-3/2 w-full object-cover"
                 />
               </button>
             </li>

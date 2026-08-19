@@ -20,8 +20,8 @@ export default function WineHub() {
       path="/wine"
       h1="The Wine Vault"
       heroImage={{
-        src: '/placeholder/wine-1.png',
-        alt: 'A bottle of wine standing against a plain background',
+        src: '/photography/tpc-may-13.jpg',
+        alt: 'The wine room in the shop in Dunshaughlin, shelved floor to ceiling on both sides',
       }}
       query={{ kinds: ['wine', 'spirit'], sort: 'featured', first: 24 }}
       alcohol

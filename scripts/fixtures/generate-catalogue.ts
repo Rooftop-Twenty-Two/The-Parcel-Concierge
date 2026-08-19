@@ -34,6 +34,86 @@ const PLACEHOLDER = (kind: string, n: number) => ({
   height: 1500,
 })
 
+/**
+ * The supplied photography, mapped to the hampers it matches.
+ *
+ * TEN OF THE TWELVE SHOTS HAVE LANDED AND NO SHOT LIST CAME WITH THEM.
+ * This mapping is ours, made by looking at what is visibly in each frame
+ * and pairing it with the hamper it fits: the two teddy bear boxes go to
+ * new baby hampers, the Irish food box to the Boyne Valley, the Champagne
+ * and journal box to The Toast, and so on.
+ *
+ * It is a reasonable reading, not a fact. The client has to confirm which
+ * SKU each frame actually shows before launch, and the alt text has to be
+ * checked against that. See outstanding item 2 in docs/build-status.md.
+ *
+ * Alt text below describes what is genuinely visible in each frame rather
+ * than repeating the hamper's contents list, because the two are not yet
+ * confirmed to be the same thing.
+ */
+const PHOTOGRAPHY: Record<string, { slug: string; subject: string }> = {
+  'the-little-one': {
+    slug: 'tpc-01',
+    subject: 'a pink baby blanket, a small bottle of sparkling wine and a congratulations book',
+  },
+  'the-ruby-anniversary': {
+    slug: 'tpc-02',
+    subject: 'two bottles of wine, a jar of preserve and a wooden serving board with a slate top',
+  },
+  'the-new-arrival': {
+    slug: 'tpc-03',
+    subject: 'a pink teddy bear, a bottle of sparkling rosé, a pink blanket and two boxed soaps',
+  },
+  'the-nursery-gift': {
+    slug: 'tpc-04',
+    subject: 'a blue teddy bear, a bottle of sparkling wine and two boxed gifts in blue',
+  },
+  'the-big-thank-you': {
+    slug: 'tpc-05',
+    subject: 'a bottle of red wine beside a box of Butlers chocolates',
+  },
+  'the-toast': {
+    slug: 'tpc-06',
+    subject: 'a bottle of Champagne, a glass and a linen bound notebook',
+  },
+  'the-pamper-parcel': {
+    slug: 'tpc-07',
+    subject: 'a bottle of sparkling wine, a floral mug, a notebook and a boxed candle',
+  },
+  'the-cook': {
+    slug: 'tpc-08',
+    subject: 'a wooden herb growing box, a bottle of red wine and a hand lettered card',
+  },
+  'the-boyne-valley': {
+    slug: 'tpc-09',
+    subject:
+      'Irish food including Keogh’s crisps, McEntee’s tea, Filligans preserves, coffee bags and a bar of chocolate',
+  },
+  'the-new-parents-box': {
+    slug: 'tpc-10',
+    subject: 'a knitted toy, two bottles of sparkling rosé and a handwritten card',
+  },
+}
+
+/**
+ * Four framings are cut from each supplied frame by
+ * scripts/photography/optimise.mjs. They are genuinely different views and
+ * the gallery uses all four, but they all come from one exposure: a real
+ * scale shot per SKU is still outstanding.
+ */
+function photography(handle: string, title: string) {
+  const shot = PHOTOGRAPHY[handle]
+  if (!shot) return null
+
+  const inBox = `${shot.subject}, arranged in a green Parcel Concierge gift box`
+  return [
+    { src: `/photography/${shot.slug}-full.jpg`, alt: `${title}: ${inBox}`, width: 1800, height: 1200 },
+    { src: `/photography/${shot.slug}-contents.jpg`, alt: `Close view of ${shot.subject}`, width: 1800, height: 1266 },
+    { src: `/photography/${shot.slug}-packaging.jpg`, alt: `The green gift box ${title} arrives in, with the contents packed in wood wool`, width: 1800, height: 1114 },
+    { src: `/photography/${shot.slug}-detail.jpg`, alt: `${title} photographed square on`, width: 1566, height: 1530 },
+  ]
+}
+
 function slug(title: string): string {
   return (
     title
@@ -132,7 +212,7 @@ function hamper(seed: HamperSeed): CatalogueProduct {
     productType: seed.productType,
     vendor: 'The Parcel Concierge',
     tags,
-    images: [
+    images: photography(handle, seed.title) ?? [
       { ...PLACEHOLDER('hamper', 1), alt: `${seed.title} styled on a linen cloth with the lid open` },
       { ...PLACEHOLDER('hamper', 2), alt: `Everything inside ${seed.title} laid out flat` },
       { ...PLACEHOLDER('hamper', 3), alt: `${seed.title} boxed and hand tied with ribbon` },

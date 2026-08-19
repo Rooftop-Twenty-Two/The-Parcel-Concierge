@@ -47,12 +47,13 @@ export default async function AboutPage() {
 
         <StampFrame className="bg-beige">
           <Image
-            src="/placeholder/hamper-1.png"
-            alt="A hamper being packed by hand on a workbench"
-            width={1200}
-            height={1500}
+            src="/photography/tpc-christmas-6.jpg"
+            alt="Karen and Ciaran McBride outside The Parcel Concierge in Dunshaughlin"
+            width={2200}
+            height={1239}
+            priority
             sizes="(min-width: 1024px) 42vw, 92vw"
-            className="aspect-4/5 w-full object-cover"
+            className="aspect-3/2 w-full object-cover"
           />
         </StampFrame>
       </div>

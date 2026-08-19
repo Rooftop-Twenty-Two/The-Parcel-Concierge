@@ -35,10 +35,10 @@ export function ProductCardTile({
               height={product.image.height}
               sizes="(min-width: 1280px) 22vw, (min-width: 768px) 30vw, 45vw"
               priority={priority}
-              className="aspect-4/5 w-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
+              className="aspect-4/3 w-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
             />
           ) : (
-            <div className="aspect-4/5 w-full bg-beige" />
+            <div className="aspect-4/3 w-full bg-beige" />
           )}
 
           {badge ? (

@@ -51,6 +51,7 @@ see [`docs/deployment.md`](docs/deployment.md).
 | `npm run redirects:products` | Generates per-product redirect rows from a retain/remove list |
 | `npm run content:report` | What copy is still missing, and which listings fall below the floor |
 | `npm run fixtures:generate` | Regenerates the fixture catalogue |
+| `npm run photography:optimise` | Cuts web assets from the originals in `docs/reference/photography` (needs `npm i --no-save sharp`) |
 
 ## Documentation
 
@@ -92,6 +93,9 @@ scripts/
   redirects/               Redirect map build and validation
   content/                 Content integrity report
   fixtures/                Fixture catalogue generator
+public/
+  photography/             Web assets cut from the supplied shoot
+  placeholder/             Brand-styled stand-ins for un-photographed SKUs
 data/
   catalogue/               Product interchange files
   redirects/redirects.csv  The redirect map. Source of truth.

@@ -53,10 +53,10 @@ export default async function CorporateGiftingPage() {
 
           <StampFrame className="bg-beige">
             <Image
-              src="/placeholder/hamper-3.png"
-              alt="A corporate hamper boxed and hand tied with ribbon"
-              width={1200}
-              height={1500}
+              src="/photography/tpc-02-full.jpg"
+              alt="Two bottles of wine, a preserve and a wooden serving board packed in a green gift box"
+              width={1800}
+              height={1200}
               priority
               sizes="(min-width: 1024px) 46vw, 92vw"
               className="aspect-4/3 w-full object-cover"

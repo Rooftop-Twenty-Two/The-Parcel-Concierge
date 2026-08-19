@@ -20,8 +20,8 @@ export default function HampersHub() {
       path="/hampers"
       h1="Hampers, packed by hand"
       heroImage={{
-        src: '/placeholder/hamper-1.png',
-        alt: 'A hamper styled on a linen cloth with the lid open',
+        src: '/photography/tpc-09-full.jpg',
+        alt: 'An Irish food hamper packed with crisps, tea, preserves and coffee in a green gift box',
       }}
       query={{ kinds: ['hamper'], sort: 'featured', first: 24 }}
       alcohol

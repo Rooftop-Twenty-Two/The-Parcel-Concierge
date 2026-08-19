@@ -25,21 +25,21 @@
     "photography:optimise": "node scripts/photography/optimise.mjs"
   },
   "dependencies": {
-    "next": "15.5.4",
-    "react": "19.1.1",
-    "react-dom": "19.1.1",
-    "server-only": "^0.0.1"
-  },
-  "devDependencies": {
-    "@eslint/eslintrc": "^3.3.6",
-    "@netlify/plugin-nextjs": "^5.15.13",
     "@tailwindcss/postcss": "4.1.13",
     "@types/node": "22.15.3",
     "@types/react": "19.1.9",
     "@types/react-dom": "19.1.7",
-    "eslint": "9.34.0",
-    "eslint-config-next": "15.5.4",
+    "next": "15.5.4",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "server-only": "^0.0.1",
     "tailwindcss": "4.1.13",
     "typescript": "5.9.2"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.6",
+    "@netlify/plugin-nextjs": "^5.15.13",
+    "eslint": "9.34.0",
+    "eslint-config-next": "15.5.4"
   }
 }

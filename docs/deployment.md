@@ -50,19 +50,61 @@ and restarted.
 None of this affects a connected store: there the cart lives in Shopify and
 we hold only its id.
 
+**3. Netlify was pointed at a branch with no application on it.**
+
+This is the one that actually stopped it. The site lives on
+`claude/parcel-concierge-website-j1dyr6`. `main` holds only the supplied
+PDFs, the asset zip and the photography: no `package.json`, no
+`next.config.ts`, no `netlify.toml`, no `src`. A Netlify site building
+`main` has nothing to build, and no amount of fixing the code changes that.
+
+Either set the production branch to the feature branch, or merge the branch
+into `main`. Nothing in the code needs to change for either.
+
+**4. `NODE_ENV=production` dropping the packages the build needs.**
+
+Netlify sets `NODE_ENV=production`, and `npm ci` then omits
+`devDependencies`. That took `typescript`, `tailwindcss` and
+`@tailwindcss/postcss` out of the install, and the build died looking for
+them.
+
+`NPM_FLAGS = "--include=dev"` in `netlify.toml` fixes it, but that variable
+is deprecated on newer build images, so the build no longer relies on it:
+the packages `next build` genuinely needs are ordinary `dependencies` now.
+Only ESLint and the Netlify plugin remain devDependencies, and neither is
+needed to produce a build.
+
+Verified by cloning the branch clean and running
+`NODE_ENV=production npm ci && NODE_ENV=production npm run build` with no
+flags at all, which is Netlify's worst case.
+
 ### If a Netlify build still fails
 
-Send the build log. The likely remaining causes, in order:
+Send the build log. What is left:
 
 1. **Environment variables not set on the branch being built.** None are
    required, and the site falls back to fixture mode, but a half-set
    Shopify pair (domain without token, or the reverse) puts it in fixture
    mode silently rather than failing. Check both are present.
-2. **Netlify's `NODE_ENV=production` skipping devDependencies.**
-   `NPM_FLAGS = "--include=dev"` in `netlify.toml` covers it. Next needs
-   `typescript`, `tailwindcss` and `eslint-config-next` at build time.
-3. **A stale build cache** holding an old `.next` or an old Node. Clear
+2. **A stale build cache** holding an old `.next` or an old Node. Clear
    cache and deploy.
+3. **A base directory set on the site** pointing at a subfolder. The app is
+   at the repository root.
+
+### Reproducing a Netlify build locally
+
+This is what to do before blaming the host. It is exactly Netlify's
+sequence:
+
+```bash
+git clone --branch <branch> <repo> /tmp/cleanroom
+cd /tmp/cleanroom
+NODE_ENV=production npm ci
+NODE_ENV=production npm run build
+```
+
+A local `npm run build` can pass while Netlify fails, because your
+`node_modules` already has devDependencies in it and Netlify's does not.
 
 ## Vercel
 

@@ -96,24 +96,17 @@ detail crop. The product gallery uses all four.
 
 Three things need the client before this is finished:
 
-1. **Confirm which SKU each frame shows.** We mapped them by looking at
-   what is in each box: the two teddy bear frames to new baby hampers, the
-   Irish food frame to The Boyne Valley, the Champagne and journal frame to
-   The Toast, and so on. It is a reasonable reading, not a fact. The map is
-   at the top of `scripts/fixtures/generate-catalogue.ts`.
+1. **Confirm which SKU each frame shows.** The studio shots are no longer
+   attached to products at all: the real hampers use their own Shopify
+   images, and mapping studio frames to real SKUs without a shot list would
+   be a guess. Send the shot list and the studio photography goes onto the
+   product pages it belongs to.
 2. **A genuine scale shot per SKU.** Four crops of one frame are four real
    views, but none of them shows the box next to something that gives its
    size. That cannot be cropped out of a frame that does not contain one.
-3. **The remaining SKUs.** Ten hampers of thirty-seven are photographed.
-   The rest still show the brand-styled placeholder cards, which is
-   deliberate: a placeholder that obviously is one beats reusing another
-   hamper's photograph.
-
-Note while reviewing: on a photographed product the "What is inside" list
-will not match what is visible in the shot. The contents lists are sample
-data we wrote; the photographs are of real hampers. Both are correct in
-isolation and they resolve against each other the moment the real catalogue
-is ingested.
+3. **The remaining SKUs.** Sixteen real hampers are live, each on its own
+   Shopify photography. The ten studio frames are a quality upgrade waiting
+   on the shot list.
 
 **Six lifestyle shots**, all in use: Karen and Ciaran outside the shop on
 the About page, the wine room as the Wine Vault hero, the shop floor as the

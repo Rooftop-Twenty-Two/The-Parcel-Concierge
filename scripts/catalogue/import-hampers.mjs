@@ -133,6 +133,8 @@ for (const [handle, group] of byHandle) {
   const containsAlcohol = ALCOHOL_SIGNAL.test(`${title} ${body}`)
 
   const productTags = ['type:hamper', priceTag(cheapest)]
+  // The age gate and the corporate "alcohol-free" filter both key off this.
+  if (containsAlcohol) productTags.push('contains:alcohol')
   for (const tag of lower) {
     const mapped = TAG_MAP[tag]
     if (mapped && !productTags.includes(mapped)) productTags.push(mapped)

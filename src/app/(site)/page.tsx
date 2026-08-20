@@ -385,11 +385,11 @@ function CorporateBand({ slot }: { slot: Extract<HomepageSlot, { kind: 'corporat
           <h2 className="font-display text-[length:var(--text-display)] text-navy">{slot.title}</h2>
           <p className="mt-4 max-w-lg text-lg text-ink-muted">{slot.body}</p>
           <div className="mt-8 flex flex-wrap gap-4">
-            <ButtonLink href="/corporate-gifting" variant="secondary">
-              Corporate gifting
+            <ButtonLink href="/corporate-gifting/new" variant="secondary">
+              Create a corporate gift campaign
             </ButtonLink>
-            <ButtonLink href="/corporate-gifting/enquiry" variant="ghost">
-              Send us your list
+            <ButtonLink href="/corporate-gifting" variant="ghost">
+              How it works
             </ButtonLink>
           </div>
         </div>

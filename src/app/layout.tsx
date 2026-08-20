@@ -1,14 +1,7 @@
 import type { Metadata } from 'next'
-import { Analytics } from '@/components/analytics/Analytics'
-import { Footer } from '@/components/layout/Footer'
-import { Header } from '@/components/layout/Header'
-import { FixtureModeBanner } from '@/components/layout/FixtureModeBanner'
-import { JsonLd } from '@/components/seo/JsonLd'
 import { fontVariables } from '@/lib/brand/fonts'
 import { isFixtureMode } from '@/lib/commerce'
-import { localBusinessJsonLd } from '@/lib/seo/structured-data'
 import { SITE } from '@/lib/site-config'
-import { getTrustSummary } from '@/lib/trustpilot'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -24,16 +17,18 @@ export const metadata: Metadata = {
     locale: 'en_IE',
     siteName: SITE.name,
   },
-  // Fixture mode must never be indexed: the products are invented.
+  // Until the live store is connected, prices and stock are a snapshot;
+  // the preview must never be indexed as if it were the shop.
   robots: isFixtureMode() ? { index: false, follow: false } : undefined,
 }
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  // Deliberately no cookie reads in here. The cart badge and the age gate
-  // both resolve after hydration, so every page below stays statically
-  // renderable and the LCP budget survives.
-  const trust = await getTrustSummary()
-
+/**
+ * The bare shell: html, body, fonts, skip link. The shop's chrome (banner,
+ * header, footer, analytics) lives in the (site) group so that recipient
+ * gifting pages under /gift and the fulfilment admin can render without a
+ * shop wrapped around them.
+ */
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en-IE" className={fontVariables}>
       <body className="flex min-h-screen flex-col">
@@ -43,19 +38,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         >
           Skip to main content
         </a>
-
-        {isFixtureMode() ? <FixtureModeBanner /> : null}
-
-        <Header />
-
-        <main id="main" className="flex-1">
-          {children}
-        </main>
-
-        <Footer />
-
-        <JsonLd data={localBusinessJsonLd(trust)} />
-        <Analytics />
+        {children}
       </body>
     </html>
   )

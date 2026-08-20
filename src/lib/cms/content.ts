@@ -80,8 +80,8 @@ export const CONTENT: CmsData = {
       { kind: 'trustpilot' },
       {
         kind: 'corporate',
-        title: 'Corporate gifting',
-        body: 'Client and staff hampers with your branding on the card, sent to one address or two hundred. We handle the address list.',
+        title: 'Corporate gifting made easy',
+        body: 'Rewarding your team should not involve spreadsheets, addresses and hundreds of separate orders. Choose your gifts, share one private link and we take care of the rest.',
       },
       {
         kind: 'makers',

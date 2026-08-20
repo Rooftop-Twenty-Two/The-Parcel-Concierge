@@ -43,7 +43,8 @@
       "vendor": "Parcel Concierge",
       "tags": [
         "type:hamper",
-        "price:150-plus"
+        "price:150-plus",
+        "contains:alcohol"
       ],
       "images": [
         {
@@ -180,6 +181,7 @@
       "tags": [
         "type:hamper",
         "price:100-150",
+        "contains:alcohol",
         "recipient:him"
       ],
       "images": [
@@ -214,6 +216,7 @@
       "tags": [
         "type:hamper",
         "price:100-150",
+        "contains:alcohol",
         "recipient:her"
       ],
       "images": [
@@ -248,6 +251,7 @@
       "tags": [
         "type:hamper",
         "price:100-150",
+        "contains:alcohol",
         "occasion:new-baby",
         "recipient:her"
       ],
@@ -283,6 +287,7 @@
       "tags": [
         "type:hamper",
         "price:under-50",
+        "contains:alcohol",
         "recipient:her"
       ],
       "images": [
@@ -317,6 +322,7 @@
       "tags": [
         "type:hamper",
         "price:150-plus",
+        "contains:alcohol",
         "occasion:christmas",
         "recipient:her"
       ],
@@ -351,7 +357,8 @@
       "vendor": "Parcel Concierge",
       "tags": [
         "type:hamper",
-        "price:50-100"
+        "price:50-100",
+        "contains:alcohol"
       ],
       "images": [
         {
@@ -385,6 +392,7 @@
       "tags": [
         "type:hamper",
         "price:100-150",
+        "contains:alcohol",
         "recipient:her"
       ],
       "images": [
@@ -452,6 +460,7 @@
       "tags": [
         "type:hamper",
         "price:50-100",
+        "contains:alcohol",
         "recipient:client",
         "recipient:her"
       ],
@@ -520,6 +529,7 @@
       "tags": [
         "type:hamper",
         "price:50-100",
+        "contains:alcohol",
         "recipient:client",
         "recipient:her",
         "recipient:him"

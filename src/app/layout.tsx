@@ -7,11 +7,11 @@ import './globals.css'
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: {
-    default: 'The Parcel Concierge, fine wine and Irish hampers from Co. Meath',
+    default: 'The Parcel Concierge, Irish hampers packed by hand in Co. Meath',
     template: '%s | The Parcel Concierge',
   },
   description:
-    'Over three hundred wines chosen by us, and hampers built from Irish producers, packed by hand in Dunshaughlin, Co. Meath. Free hand delivery locally, €7.95 anywhere else in Ireland.',
+    'Hampers built from Irish producers and packed by hand in Dunshaughlin, Co. Meath. Free hand delivery locally, €7.95 anywhere else in Ireland.',
   openGraph: {
     type: 'website',
     locale: 'en_IE',

@@ -21,32 +21,12 @@ export const CONTENT: CmsData = {
     slots: [
       {
         kind: 'hero',
-        headline: 'Over three hundred wines, chosen by us',
+        headline: 'Hampers, packed by hand in Meath',
         subhead:
-          'We drink what we sell and we buy direct from estates where we can. Send a bottle on its own, or let us pack it into a hamper by hand. Free hand delivery locally, €7.95 anywhere else in Ireland.',
-        ctaLabel: 'Shop the Wine Vault',
-        ctaHref: '/wine',
-        imageHandle: 'krug-grand-cuvee',
-      },
-      {
-        kind: 'wine-vault',
-        title: 'The Wine Vault',
-        body: 'Weeknight bottles, fine wine, Champagne and Irish whiskey, chosen by us. Buy a bottle, send a gift set, or let us send you a case as often as you like.',
-        // A spread across styles and prices rather than a Champagne shelf,
-        // so the band reads as a wine list and not a trophy cabinet. The
-        // exclusive import flag is still not in the Shopify export, so the
-        // homepage does not claim the eight exclusives the June review found
-        // until somebody marks them: see docs/build-status.md.
-        handles: [
-          'dom-perignon-champagne',
-          'chateau-mont-redon-chateauneuf-du-pape',
-          'cyclus',
-          'minuty-rose',
-          'bourgogne-pinot-noir',
-          'la-bascula-albarino',
-          'lanson-champagne',
-          'taylors-classic-vintage-port-2003',
-        ],
+          'We build every hamper ourselves from Irish producers we buy from directly. Free hand delivery locally, €7.95 anywhere else in Ireland.',
+        ctaLabel: 'Shop all hampers',
+        ctaHref: '/hampers',
+        imageHandle: 'for-my-valentine',
       },
       { kind: 'budget-bands' },
       {
@@ -80,6 +60,21 @@ export const CONTENT: CmsData = {
           '/hampers/anniversary',
           '/hampers/thank-you',
           '/occasions/wedding-engagement',
+        ],
+      },
+      {
+        kind: 'wine-vault',
+        title: 'The Wine Vault',
+        body: 'Over three hundred wines, chosen by us. Buy a bottle, or let us send you a case as often as you like.',
+        // Replaced with real handles from the catalogue. The exclusive
+        // import flag is not in the Shopify export yet, so the homepage does
+        // not claim the eight exclusives the June review found until
+        // somebody marks them: see docs/build-status.md.
+        handles: [
+          'krug-grand-cuvee',
+          'dom-perignon-champagne',
+          'taylors-classic-vintage-port-2003',
+          'billiecart-salmon-blanc-de-blancs-brut-champagne-grand-cru',
         ],
       },
       { kind: 'trustpilot' },

@@ -151,4 +151,5 @@ export const TAG_LABELS: Record<string, string> = {
   'badge:irish-made': 'Irish made',
   'badge:guaranteed-irish': 'Guaranteed Irish',
   'badge:hand-delivered': 'Hand delivered',
+  ...Object.fromEntries(PRICE_BANDS.map((band) => [band.tag, band.label])),
 }

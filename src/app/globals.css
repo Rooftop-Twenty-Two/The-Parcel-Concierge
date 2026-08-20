@@ -187,6 +187,24 @@
   .animate-rise {
     animation: tpc-rise 0.7s var(--ease-out-soft) both;
   }
+
+  /*
+   * The postmark's outer ring turns like a slow rubber stamp. Only the
+   * ring and the curved lettering move; GIFT DELIVERY stays level so the
+   * badge is always readable mid-turn. Off entirely under reduced motion,
+   * with the blanket rule below.
+   */
+  @keyframes tpc-postmark-turn {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .postmark-turn {
+    animation: tpc-postmark-turn 28s linear infinite;
+    transform-origin: 50% 50%;
+    transform-box: fill-box;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

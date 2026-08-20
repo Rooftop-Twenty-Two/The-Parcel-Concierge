@@ -139,7 +139,7 @@ async function Hero({
             )}
           </StampFrame>
 
-          <PostmarkRoundel className="absolute -bottom-6 -left-6 hidden h-32 w-32 text-gold lg:block" />
+          <PostmarkRoundel className="absolute -bottom-9 -left-9 hidden h-48 w-48 text-gold lg:block" />
         </div>
       </div>
 

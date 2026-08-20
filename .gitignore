@@ -1,7 +1,9 @@
 node_modules/
 .next/
-out/
-build/
+/out/
+# Root only. An unanchored build/ silently swallowed the app route at
+# src/app/wine-club/build, which shipped everywhere except production.
+/build/
 .env*.local
 .DS_Store
 *.tsbuildinfo

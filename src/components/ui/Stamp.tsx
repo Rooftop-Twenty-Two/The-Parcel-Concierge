@@ -28,13 +28,20 @@ export function StampFrame({
 /**
  * The "Premier Gift Delivery Ireland" roundel, redrawn as text on a path so
  * it stays crisp at any size and reads to a screen reader.
+ *
+ * The ring and its curved lettering turn slowly, like a rubber stamp being
+ * lined up; GIFT DELIVERY stays level so the badge is readable at any point
+ * of the turn. The motion lives in a CSS class (globals.css) so
+ * prefers-reduced-motion stops it dead with everything else.
  */
 export function PostmarkRoundel({
   label = 'Premier gift delivery Ireland',
   className = '',
+  spin = true,
 }: {
   label?: string
   className?: string
+  spin?: boolean
 }) {
   return (
     <svg
@@ -48,18 +55,30 @@ export function PostmarkRoundel({
         <path id="postmark-top" d="M 30 100 A 70 70 0 0 1 170 100" fill="none" />
         <path id="postmark-bottom" d="M 34 100 A 66 66 0 0 0 166 100" fill="none" />
       </defs>
-      <circle cx="100" cy="100" r="82" fill="none" stroke="currentColor" strokeWidth="3" />
-      <circle cx="100" cy="100" r="72" fill="none" stroke="currentColor" strokeWidth="1" />
-      <text
-        fontSize="17"
-        letterSpacing="4"
-        fill="currentColor"
-        style={{ fontFamily: 'var(--font-serif)' }}
-      >
-        <textPath href="#postmark-top" startOffset="50%" textAnchor="middle">
-          PREMIER
-        </textPath>
-      </text>
+      <g className={spin ? 'postmark-turn' : undefined}>
+        <circle cx="100" cy="100" r="82" fill="none" stroke="currentColor" strokeWidth="3" />
+        <circle cx="100" cy="100" r="72" fill="none" stroke="currentColor" strokeWidth="1" />
+        <text
+          fontSize="17"
+          letterSpacing="4"
+          fill="currentColor"
+          style={{ fontFamily: 'var(--font-serif)' }}
+        >
+          <textPath href="#postmark-top" startOffset="50%" textAnchor="middle">
+            PREMIER
+          </textPath>
+        </text>
+        <text
+          fontSize="17"
+          letterSpacing="4"
+          fill="currentColor"
+          style={{ fontFamily: 'var(--font-serif)' }}
+        >
+          <textPath href="#postmark-bottom" startOffset="50%" textAnchor="middle">
+            IRELAND
+          </textPath>
+        </text>
+      </g>
       <text
         x="100"
         y="94"
@@ -81,16 +100,6 @@ export function PostmarkRoundel({
         style={{ fontFamily: 'var(--font-serif)' }}
       >
         DELIVERY
-      </text>
-      <text
-        fontSize="17"
-        letterSpacing="4"
-        fill="currentColor"
-        style={{ fontFamily: 'var(--font-serif)' }}
-      >
-        <textPath href="#postmark-bottom" startOffset="50%" textAnchor="middle">
-          IRELAND
-        </textPath>
       </text>
     </svg>
   )

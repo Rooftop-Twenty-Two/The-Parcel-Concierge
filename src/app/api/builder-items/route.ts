@@ -63,8 +63,17 @@ export async function GET(request: NextRequest) {
       total: result.totalKnown,
     },
     // The catalogue moves slowly; the picker does not need to be fresher
-    // than the listings are.
-    { headers: { 'Cache-Control': 'public, max-age=0, s-maxage=900, stale-while-revalidate=3600' } },
+    // than the listings are. Netlify-Vary is load bearing: Netlify's CDN
+    // does not key cached function responses on the query string unless
+    // told to, so without it every shelf and search was served whichever
+    // response got cached first and the filters appeared dead in
+    // production while working everywhere else.
+    {
+      headers: {
+        'Cache-Control': 'public, max-age=0, s-maxage=900, stale-while-revalidate=3600',
+        'Netlify-Vary': 'query',
+      },
+    },
   )
 }
 

@@ -143,36 +143,6 @@ export const NAV = [
       imageAlt: 'A bottle of Champagne, a glass and a notebook packed in a green gift box',
     },
   },
-  {
-    label: 'Gifts',
-    href: '/gifts-by-budget',
-    columns: [
-      {
-        title: 'By recipient',
-        links: [
-          { label: 'For her', href: '/gifts-for/her' },
-          { label: 'For him', href: '/gifts-for/him' },
-        ],
-      },
-      {
-        title: 'By budget',
-        links: [
-          { label: 'Under €50', href: '/gifts-by-budget/under-50' },
-          { label: '€50 to €100', href: '/gifts-by-budget/50-100' },
-          { label: '€100 to €150', href: '/gifts-by-budget/100-150' },
-          { label: '€150 and over', href: '/gifts-by-budget/150-plus' },
-        ],
-      },
-      {
-        title: 'Something else',
-        links: [
-          { label: 'Build your own hamper', href: '/build-your-own-hamper' },
-          { label: 'Gift card', href: '/gift-card' },
-        ],
-      },
-    ],
-    promo: null,
-  },
   { label: 'Guides', href: '/guides', columns: [], promo: null },
   {
     label: 'About',

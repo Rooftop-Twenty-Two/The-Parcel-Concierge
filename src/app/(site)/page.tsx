@@ -18,9 +18,10 @@ export const revalidate = 1800
 /**
  * Home.
  *
- * The hero is a thesis and the thesis is hampers. Module order comes from
- * the CMS so the client can weight the page seasonally without a deploy,
- * which is the whole reason the ordering lives there rather than here.
+ * The hero is a thesis and the thesis is wine, with the hampers close
+ * behind. Module order comes from the CMS so the client can weight the page
+ * seasonally without a deploy, which is the whole reason the ordering lives
+ * there rather than here.
  */
 export default async function HomePage() {
   const [homepage, trust] = await Promise.all([getHomepage(), getTrustSummary()])
@@ -126,10 +127,10 @@ async function Hero({
               {slot.ctaLabel}
             </ButtonLink>
             <Link
-              href="/build-your-own-hamper"
+              href="/hampers"
               className="text-cream underline underline-offset-4 hover:text-gold"
             >
-              Or build your own
+              Or shop the hampers
             </Link>
           </div>
 
@@ -298,13 +299,23 @@ async function WineVault({ slot }: { slot: Extract<HomepageSlot, { kind: 'wine-v
       <div className="mx-auto max-w-[1400px] px-4 lg:px-8">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div className="max-w-xl">
-            <p className="mb-3 text-xs uppercase tracking-[0.24em] text-gold">The second pillar</p>
+            <p className="mb-3 text-xs uppercase tracking-[0.24em] text-gold">
+              The heart of the shop
+            </p>
             <h2 className="font-display text-[length:var(--text-display)]">{slot.title}</h2>
             <p className="mt-4 text-lg text-cream/85">{slot.body}</p>
           </div>
-          <ButtonLink href="/wine/exclusive-to-us" variant="primary">
-            See what only we have
-          </ButtonLink>
+          <div className="flex flex-wrap items-center gap-4">
+            <ButtonLink href="/wine" variant="primary">
+              Browse all wines
+            </ButtonLink>
+            <Link
+              href="/wine-club"
+              className="text-cream underline underline-offset-4 hover:text-gold"
+            >
+              Join the Wine Vault Club
+            </Link>
+          </div>
         </div>
 
         {items.length ? (

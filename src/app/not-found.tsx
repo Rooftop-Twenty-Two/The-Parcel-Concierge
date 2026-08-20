@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { PostmarkRoundel } from '@/components/ui/Stamp'
+import Image from 'next/image'
 
 /**
  * 404.
@@ -12,7 +12,15 @@ import { PostmarkRoundel } from '@/components/ui/Stamp'
 export default function NotFound() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-20 text-center lg:px-8">
-      <PostmarkRoundel className="mx-auto h-24 w-24 text-green" />
+      {/* The gift boy from the brand asset pack. Somebody has to break the news. */}
+      <Image
+        src="/brand/graphic-element-2.svg"
+        alt=""
+        aria-hidden="true"
+        width={247}
+        height={219}
+        className="mx-auto h-40 w-auto"
+      />
       <h1 className="mt-8 font-display text-[length:var(--text-hero)] text-navy">
         We could not find that
       </h1>

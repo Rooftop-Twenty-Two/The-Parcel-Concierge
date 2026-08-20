@@ -21,7 +21,7 @@ import { CONTENT } from '../../src/lib/cms/content.ts'
 import { COLLECTIONS, MIN_PRODUCTS_PER_LISTING } from '../../src/lib/commerce/collections.ts'
 import type { Catalogue } from '../../src/lib/catalogue/schema.ts'
 
-const CATALOGUE_FILES = ['data/catalogue/wines.json', 'data/catalogue/fixtures.json']
+const CATALOGUE_FILES = ['data/catalogue/wines.json', 'data/catalogue/hampers.json', 'data/catalogue/mechanisms.json']
 
 const CATALOGUE = CATALOGUE_FILES.join(' + ')
 const catalogue: Catalogue = {

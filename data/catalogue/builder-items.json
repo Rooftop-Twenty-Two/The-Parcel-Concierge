@@ -1,5 +1,5 @@
 {
-  "source": "Shopify export, builder items, imported 2026-08-19",
+  "source": "Shopify export, builder items, imported 2026-08-20",
   "currencyCode": "EUR",
   "products": [
     {
@@ -54887,6 +54887,33 @@
       ]
     },
     {
+      "handle": "the-cocktail-box",
+      "title": "The Cocktail Box",
+      "descriptionHtml": "<p>The Cocktail Box is a curated collection of luxury ingredients and glassware that lets you make like the pros. We’ve taken care to include only the best-of-the-best luxury ingredients, which makes creating an elegant cocktail quick and easy. You will find all the tools you need: Villa Conchi Cava, Newgrange Coupe Glasses and Chamboard Black Raspberry &amp; St Germain Elderflower Liqueur's.</p>\n<ul>\n<li>Villa Conchi Cava</li>\n<li>Newgrange Coupe Glasses</li>\n<li>Chamboard Black Raspberry Liqueur</li>\n<li>St Germain Elderflower Liqueur</li>\n</ul>\n<p><span>* for orders over 5 hampers please contact us directly to order by email hello@theparcelconcierge.com </span></p>",
+      "productType": "Gift",
+      "vendor": "Parcel Concierge",
+      "tags": [
+        "type:builder-item",
+        "aisle:everything-else"
+      ],
+      "images": [
+        {
+          "src": "https://cdn.shopify.com/s/files/1/0544/1411/5009/files/PCQxAvGw.jpg?v=1700063533",
+          "alt": "The Cocktail Box",
+          "width": 1200,
+          "height": 1200
+        }
+      ],
+      "variants": [
+        {
+          "sku": "PARC-1967",
+          "title": "Default Title",
+          "price": "115.00",
+          "inventoryQuantity": 0
+        }
+      ]
+    },
+    {
       "handle": "the-county-quack-collection-by-lucky-ducks",
       "title": "The Quack Collection",
       "descriptionHtml": "<p>Experience the unique Irish pride with The Quack Collection. Each piece is hand-crafted out of bamboo root to replicate the traditional Irish duck shape, making it an eco-friendly addition to any celebration. Add a special touch to weddings and other celebrations with The Quack Collection Wedding Ducks.</p>\n<p>From €39.95 </p>\n<p>County Ducks are photographed x 3 for photo purposes only . Sold x 1 unit . </p>",
@@ -57145,6 +57172,33 @@
           "title": "Default Title",
           "price": "3.50",
           "inventoryQuantity": 4
+        }
+      ]
+    },
+    {
+      "handle": "thinking-of-you",
+      "title": "Thinking of You - Ag smaoineamh ort",
+      "descriptionHtml": "<div class=\"header-bar__module header-bar__message\" data-mce-fragment=\"1\">\n<p data-mce-fragment=\"1\">Thinking of You cards are incredibly eco-friendly and perfect for any occasion. Each card is printed on 350gsm carbon balanced silk card, A6 size, and comes with its own 100% post-consumer waste envelope. Reach for Thinking of You when you want to make someone smile with a thoughtful, environment-friendly surprise.</p>\n</div>",
+      "productType": "greeting card",
+      "vendor": "Prints of Ireland",
+      "tags": [
+        "type:builder-item",
+        "aisle:cards-stationery"
+      ],
+      "images": [
+        {
+          "src": "https://cdn.shopify.com/s/files/1/0544/1411/5009/files/thinking-of-you-card_1024x1024_2x_4ef87890-30ec-4736-bb25-1e87339af45e.webp?v=1683546337",
+          "alt": "Thinking of You - Ag smaoineamh ort",
+          "width": 1200,
+          "height": 1200
+        }
+      ],
+      "variants": [
+        {
+          "sku": "PRIN-1999",
+          "title": "Default Title",
+          "price": "3.50",
+          "inventoryQuantity": -4
         }
       ]
     },

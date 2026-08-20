@@ -140,7 +140,7 @@ function parseArgs(argv) {
   const args = {
     input: '',
     output: 'data/catalogue/builder-items.json',
-    exclude: 'data/catalogue/wines.json,data/catalogue/fixtures.json',
+    exclude: 'data/catalogue/wines.json,data/catalogue/hampers.json,data/catalogue/mechanisms.json',
   }
   for (let i = 0; i < argv.length; i += 1) {
     if (argv[i] === '--input' || argv[i] === '-i') args.input = argv[++i] ?? ''

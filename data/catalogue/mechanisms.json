@@ -1,0 +1,113 @@
+{
+  "source": "Mechanism products: real Shopify products that exist to make a flow work, never to be browsed. The builder box product is priced per box size; the ingest tool creates it.",
+  "currencyCode": "EUR",
+  "products": [
+    {
+      "handle": "build-your-own-hamper",
+      "title": "Build your own hamper",
+      "descriptionHtml": "<p>The box, the tissue, the ribbon and the hand written card. Whatever you choose to go in it is added separately, so you can see exactly what you are paying for.</p>",
+      "productType": "Custom hamper",
+      "vendor": "The Parcel Concierge",
+      "tags": [
+        "type:hamper",
+        "price:under-50"
+      ],
+      "images": [
+        {
+          "src": "/placeholder/hamper-3.png",
+          "alt": "An empty kraft gift box, tissue lined and tied with ribbon",
+          "width": 1200,
+          "height": 1500
+        },
+        {
+          "src": "/placeholder/hamper-1.png",
+          "alt": "A finished custom hamper with the lid open, showing the tissue lining",
+          "width": 1200,
+          "height": 1500
+        },
+        {
+          "src": "/placeholder/hamper-4.png",
+          "alt": "The four box sizes side by side to show the difference between them",
+          "width": 1200,
+          "height": 1500
+        }
+      ],
+      "variants": [
+        {
+          "sku": "TPC-BOX-SMALL",
+          "title": "The small box",
+          "price": "8.00",
+          "inventoryQuantity": null,
+          "options": [
+            {
+              "name": "Box",
+              "value": "The small box"
+            }
+          ]
+        },
+        {
+          "sku": "TPC-BOX-STANDARD",
+          "title": "The standard box",
+          "price": "12.00",
+          "inventoryQuantity": null,
+          "options": [
+            {
+              "name": "Box",
+              "value": "The standard box"
+            }
+          ]
+        },
+        {
+          "sku": "TPC-BOX-LARGE",
+          "title": "The large box",
+          "price": "18.00",
+          "inventoryQuantity": null,
+          "options": [
+            {
+              "name": "Box",
+              "value": "The large box"
+            }
+          ]
+        },
+        {
+          "sku": "TPC-BOX-WICKER",
+          "title": "The wicker hamper",
+          "price": "35.00",
+          "inventoryQuantity": null,
+          "options": [
+            {
+              "name": "Box",
+              "value": "The wicker hamper"
+            }
+          ]
+        }
+      ],
+      "hamper": {
+        "contents": [],
+        "allergens": "Allergens depend on what you put in it. Every item you add lists its own allergens on its product page.",
+        "containsAlcohol": false,
+        "packaging": "Tissue lined, hand tied with ribbon, with your message written by hand on a card inside the lid.",
+        "personalisation": [
+          {
+            "kind": "gift-message",
+            "label": "Gift message",
+            "maxLength": 250
+          },
+          {
+            "kind": "ribbon-colour",
+            "label": "Ribbon colour",
+            "choices": [
+              "Forest green",
+              "Gold",
+              "Cream",
+              "Wine red"
+            ]
+          }
+        ],
+        "dimensionsWeight": "Depends on the box you choose. Sizes are listed beside each one.",
+        "occasionTags": [],
+        "recipientTags": []
+      }
+    }
+  ]
+}

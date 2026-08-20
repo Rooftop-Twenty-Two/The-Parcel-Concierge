@@ -9,11 +9,11 @@
 export function FixtureModeBanner() {
   return (
     <div className="bg-red px-4 py-2 text-center text-sm text-cream">
-      <strong className="font-semibold">Preview build.</strong> No Shopify store is connected, so
-      the products, prices and stock on this site are sample data and nothing can be bought. Set{' '}
+      <strong className="font-semibold">Preview build.</strong> The products are the shop&apos;s
+      own catalogue, but prices and stock are a snapshot and nothing can be bought until the
+      Shopify store is connected. Set{' '}
       <code className="font-mono text-[13px]">SHOPIFY_STORE_DOMAIN</code> and{' '}
-      <code className="font-mono text-[13px]">SHOPIFY_STOREFRONT_TOKEN</code> to connect the real
-      catalogue.
+      <code className="font-mono text-[13px]">SHOPIFY_STOREFRONT_TOKEN</code>.
     </div>
   )
 }

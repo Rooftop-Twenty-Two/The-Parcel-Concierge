@@ -67,8 +67,19 @@ async function Slot({
     case 'newsletter':
       return (
         <section className="mx-auto max-w-[1400px] px-4 py-16 lg:px-8">
-          <div className="border border-rule bg-beige px-6 py-12 lg:px-12">
-            <NewsletterSignup />
+          <div className="flex items-center gap-8 border border-rule bg-beige px-6 py-12 lg:px-12">
+            {/* The gift boy from the brand asset pack. */}
+            <Image
+              src="/brand/graphic-element-2.svg"
+              alt=""
+              aria-hidden="true"
+              width={247}
+              height={219}
+              className="hidden h-36 w-auto shrink-0 md:block"
+            />
+            <div className="min-w-0 flex-1">
+              <NewsletterSignup />
+            </div>
           </div>
         </section>
       )
@@ -91,7 +102,16 @@ async function Hero({
 
   return (
     <section className="relative overflow-hidden bg-green">
-      <div className="mx-auto grid max-w-[1400px] items-center gap-10 px-4 py-14 lg:grid-cols-2 lg:gap-16 lg:px-8 lg:py-20">
+      {/* The brand monogram as an oversized watermark, from the asset pack. */}
+      <Image
+        src="/brand/graphic-element-5.svg"
+        alt=""
+        aria-hidden="true"
+        width={767}
+        height={1054}
+        className="pointer-events-none absolute -right-24 -top-24 hidden w-[560px] opacity-[0.07] lg:block"
+      />
+      <div className="relative mx-auto grid max-w-[1400px] items-center gap-10 px-4 py-14 lg:grid-cols-2 lg:gap-16 lg:px-8 lg:py-20">
         <div className="animate-rise text-cream">
           <p className="mb-4 text-xs uppercase tracking-[0.24em] text-gold">
             Dunshaughlin, Co. Meath

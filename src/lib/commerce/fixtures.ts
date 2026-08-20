@@ -1,5 +1,6 @@
 import builderItemsJson from '../../../data/catalogue/builder-items.json'
-import fixtureJson from '../../../data/catalogue/fixtures.json'
+import hampersJson from '../../../data/catalogue/hampers.json'
+import mechanismsJson from '../../../data/catalogue/mechanisms.json'
 import wineJson from '../../../data/catalogue/wines.json'
 import type { Catalogue, CatalogueProduct } from '../catalogue/schema'
 import { HIDDEN_FROM_LISTINGS } from './collections'
@@ -29,15 +30,21 @@ import type {
 /**
  * The catalogue is assembled from every interchange file.
  *
- * wines.json is the real thing, imported from the client's Shopify export.
- * builder-items.json is the rest of that export: everything the shop
- * carries that is not on the main site, sold only through the hamper
- * builder. fixtures.json is the sample hampers and add-ons we wrote, which
- * the real export does not usefully cover yet. All three are the same
- * shape, so nothing downstream can tell them apart, and a handle collision
- * resolves in favour of the real data.
+ * EVERY PRODUCT IS REAL. wines.json and hampers.json are the client's own
+ * Shopify export; builder-items.json is the rest of that export, sold only
+ * through the hamper builder; mechanisms.json holds the builder's box
+ * product, which exists to make a flow work rather than to be browsed.
+ * There is no sample data anywhere in the catalogue: a product the client
+ * does not sell does not appear. All the files are the same shape, so
+ * nothing downstream can tell them apart, and a handle collision resolves
+ * in favour of the earlier source.
  */
-const sources = [wineJson as Catalogue, builderItemsJson as Catalogue, fixtureJson as Catalogue]
+const sources = [
+  wineJson as Catalogue,
+  hampersJson as Catalogue,
+  builderItemsJson as Catalogue,
+  mechanismsJson as Catalogue,
+]
 
 const merged = new Map<string, CatalogueProduct>()
 for (const source of sources) {

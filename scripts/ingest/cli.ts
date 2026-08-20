@@ -3,7 +3,7 @@
  * The Shopify ingest tool.
  *
  * Usage:
- *   npm run ingest -- --input data/catalogue/fixtures.json
+ *   npm run ingest -- --input data/catalogue/hampers.json
  *       Dry run. Validates, plans, prints the diff. Writes nothing.
  *
  *   npm run ingest -- --input <file> --write
@@ -52,7 +52,7 @@ type Args = {
 function parseArgs(argv: string[]): Args {
   const args: Args = {
     command: argv[0] === 'definitions' ? 'definitions' : 'ingest',
-    input: 'data/catalogue/fixtures.json',
+    input: 'data/catalogue/hampers.json',
     write: false,
     reportDir: 'data/ingest-reports',
     offline: false,

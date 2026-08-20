@@ -24,7 +24,8 @@ function load(file: string): CatalogueFile {
 
 const builderItems = load('builder-items.json')
 const wines = load('wines.json')
-const fixtures = load('fixtures.json')
+const hampers = load('hampers.json')
+const mechanisms = load('mechanisms.json')
 
 test('every builder item carries the quarantine tag', () => {
   for (const p of builderItems.products) {
@@ -44,7 +45,8 @@ test('every builder item is in exactly one aisle, and the aisle is known', () =>
 test('no builder item shares a handle with a product that has a URL', () => {
   const taken = new Set([
     ...wines.products.map((p) => p.handle),
-    ...fixtures.products.map((p) => p.handle),
+    ...hampers.products.map((p) => p.handle),
+    ...mechanisms.products.map((p) => p.handle),
   ])
   for (const p of builderItems.products) {
     assert.ok(!taken.has(p.handle), `${p.handle} exists on the main site too`)

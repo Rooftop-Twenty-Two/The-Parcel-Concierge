@@ -27,8 +27,8 @@ const pages = [
   ['/', '01-home', DESKTOP, true],
   ['/hampers', '02-hampers-hub', DESKTOP, true],
   ['/hampers/under-75', '03-hampers-under-75', DESKTOP, true],
-  ['/hampers/the-boyne-valley', '04-hamper-pdp', DESKTOP, true],
-  ['/hampers/the-new-arrival', '04b-hamper-pdp-baby', DESKTOP, true],
+  ['/hampers/for-my-valentine', '04-hamper-pdp', DESKTOP, true],
+  ['/hampers/baby-boy', '04b-hamper-pdp-baby', DESKTOP, true],
   ['/wine', '05-wine-hub', DESKTOP, true],
   ['/wine/red', '06-wine-listing-filters', DESKTOP, true],
   ['/wine/fine-wines', '06b-fine-wines', DESKTOP, true],
@@ -43,7 +43,7 @@ const pages = [
   ['/about/our-makers', '14-makers', DESKTOP, true],
   ['/faq', '15-faq', DESKTOP, true],
   ['/', '16-mobile-home', MOBILE, true],
-  ['/hampers/the-boyne-valley', '17-mobile-pdp', MOBILE, true],
+  ['/hampers/for-my-valentine', '17-mobile-pdp', MOBILE, true],
   ['/build-your-own-hamper', '18-mobile-builder', MOBILE, false],
 ]
 
@@ -87,7 +87,7 @@ for (const [path, name, viewport, fullPage] of pages) {
 {
   const page = await context.newPage()
   await page.setViewportSize(DESKTOP)
-  await page.goto('http://localhost:3100/hampers/the-boyne-valley', { waitUntil: 'load', timeout: 60000 })
+  await page.goto('http://localhost:3100/hampers/for-my-valentine', { waitUntil: 'load', timeout: 60000 })
   await page.fill('#personalisation-gift-message', 'Happy retirement Dad. Enjoy every bit of it. Love from all of us.')
   await page.selectOption('#personalisation-ribbon-colour', { label: 'Gold' })
   await page.locator('form button[type="submit"]').filter({ hasText: 'Add to cart' }).first().click()

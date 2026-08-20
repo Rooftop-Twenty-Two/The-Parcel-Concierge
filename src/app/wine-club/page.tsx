@@ -86,7 +86,16 @@ export default async function WineClubLanding() {
       </section>
 
       <section className="mx-auto max-w-[1400px] px-4 py-16 lg:px-8">
-        <h2 className="font-display text-[length:var(--text-display)] text-navy">How it works</h2>
+        {/* The stamped waves from the brand asset pack. */}
+        <Image
+          src="/brand/graphic-element-7.svg"
+          alt=""
+          aria-hidden="true"
+          width={420}
+          height={215}
+          className="h-8 w-auto opacity-60"
+        />
+        <h2 className="mt-4 font-display text-[length:var(--text-display)] text-navy">How it works</h2>
         <ol className="mt-8 grid gap-6 md:grid-cols-4">
           {[
             ['Tell us your taste', 'Seven quick questions about food and drink you already know.'],

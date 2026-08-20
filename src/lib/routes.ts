@@ -37,33 +37,17 @@ export const NAV = [
   {
     label: 'Hampers',
     href: '/hampers',
+    // The menu lists only listings the real catalogue can fill: sixteen
+    // hampers today, so the thin sub-listings stay out of the nav until
+    // the range grows (the routes themselves redirect to /hampers).
     columns: [
       {
-        title: 'By budget',
+        title: 'Hampers',
         links: [
+          { label: 'All hampers', href: '/hampers' },
           { label: 'Under €75', href: '/hampers/under-75' },
           { label: '€75 to €125', href: '/hampers/75-125' },
-          { label: '€125 to €200', href: '/hampers/125-200' },
-          { label: 'Luxury, €200 and over', href: '/hampers/luxury-200-plus' },
-        ],
-      },
-      {
-        title: 'By contents',
-        links: [
-          { label: 'Wine hampers', href: '/hampers/wine' },
-          { label: 'Food hampers', href: '/hampers/food' },
-          { label: 'Whiskey hampers', href: '/hampers/whiskey' },
-          { label: 'Pamper hampers', href: '/hampers/pamper' },
-        ],
-      },
-      {
-        title: 'By occasion',
-        links: [
-          { label: 'New baby', href: '/hampers/new-baby' },
-          { label: 'Sympathy', href: '/hampers/sympathy' },
-          { label: 'Anniversary', href: '/hampers/anniversary' },
-          { label: 'Thank you', href: '/hampers/thank-you' },
-          { label: 'Corporate', href: '/hampers/corporate' },
+          { label: 'Build your own hamper', href: '/build-your-own-hamper' },
         ],
       },
     ],
@@ -90,10 +74,10 @@ export const NAV = [
         ],
       },
       {
-        title: 'Spirits',
+        title: 'More from the vault',
         links: [
-          { label: 'Irish whiskey', href: '/wine/irish-whiskey' },
-          { label: 'Gin and spirits', href: '/wine/gin-and-spirits' },
+          { label: 'Fine wines', href: '/wine/fine-wines' },
+          { label: 'Organic and biodynamic', href: '/wine/organic-biodynamic' },
           { label: 'Wine gift sets', href: '/wine/gift-sets' },
           { label: 'The Wine Vault Club', href: '/wine-club' },
         ],
@@ -125,7 +109,6 @@ export const NAV = [
           { label: 'Bulk orders', href: '/corporate-gifting/bulk-orders' },
           { label: 'Branding and personalisation', href: '/corporate-gifting/branding-personalisation' },
           { label: 'Make an enquiry', href: '/corporate-gifting/enquiry' },
-          { label: 'Corporate hampers', href: '/hampers/corporate' },
         ],
       },
     ],
@@ -142,22 +125,13 @@ export const NAV = [
     href: '/occasions',
     columns: [
       {
-        title: 'Seasonal',
+        title: 'Occasions',
         links: [
           { label: 'Christmas', href: '/occasions/christmas' },
           { label: "Mother's Day", href: '/occasions/mothers-day' },
           { label: "Father's Day", href: '/occasions/fathers-day' },
           { label: "Valentine's", href: '/occasions/valentines' },
-          { label: 'Easter', href: '/occasions/easter' },
-        ],
-      },
-      {
-        title: 'Life events',
-        links: [
-          { label: 'New baby', href: '/occasions/new-baby' },
-          { label: 'Sympathy', href: '/occasions/sympathy' },
-          { label: 'Wedding and engagement', href: '/occasions/wedding-engagement' },
-          { label: 'Get well', href: '/occasions/get-well' },
+          { label: 'Get well soon', href: '/occasions/get-well' },
         ],
       },
     ],
@@ -171,15 +145,13 @@ export const NAV = [
   },
   {
     label: 'Gifts',
-    href: '/gifts',
+    href: '/gifts-by-budget',
     columns: [
       {
         title: 'By recipient',
         links: [
           { label: 'For her', href: '/gifts-for/her' },
           { label: 'For him', href: '/gifts-for/him' },
-          { label: 'For couples', href: '/gifts-for/couples' },
-          { label: 'For clients', href: '/gifts-for/clients' },
         ],
       },
       {
@@ -192,11 +164,9 @@ export const NAV = [
         ],
       },
       {
-        title: 'Add to a hamper',
+        title: 'Something else',
         links: [
-          { label: 'Candles and diffusers', href: '/gifts/candles-diffusers' },
-          { label: 'Chocolate and treats', href: '/gifts/chocolate-treats' },
-          { label: 'Crystal and glassware', href: '/gifts/crystal-glassware' },
+          { label: 'Build your own hamper', href: '/build-your-own-hamper' },
           { label: 'Gift card', href: '/gift-card' },
         ],
       },

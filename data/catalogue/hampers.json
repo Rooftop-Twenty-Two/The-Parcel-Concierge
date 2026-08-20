@@ -1,0 +1,551 @@
+{
+  "source": "Shopify export, hampers, imported 2026-08-20",
+  "currencyCode": "EUR",
+  "products": [
+    {
+      "handle": "2",
+      "title": "The Ultimate Pamper Hamper",
+      "descriptionHtml": "<p data-mce-fragment=\"1\">The Ultimate Jo Browne Pamper Hamper comes with everything you need to relax and treat yourself. It includes bamboo pillow cases, a sleep mask, cleansing balm and bamboo facecloth, day and night body oils, a facial serum, a facial roller, and a herb  candle for an added touch of luxury. Plus, a 75g  milk chocolate bar to satisfy your sweet tooth. Pamper yourself today!</p>",
+      "productType": "Hamper",
+      "vendor": "Parcel Concierge",
+      "tags": [
+        "type:hamper",
+        "price:150-plus"
+      ],
+      "images": [
+        {
+          "src": "https://cdn.shopify.com/s/files/1/0544/1411/5009/files/VZmytF7A.jpg?v=1700068342",
+          "alt": "The Ultimate Pamper Hamper, a Parcel Concierge hamper",
+          "width": 1200,
+          "height": 1200
+        }
+      ],
+      "variants": [
+        {
+          "sku": "P0017S",
+          "title": "Default Title",
+          "price": "247.95",
+          "inventoryQuantity": 2
+        }
+      ],
+      "hamper": {
+        "contents": [],
+        "allergens": "",
+        "containsAlcohol": false
+      },
+      "needsReview": "Contents list and allergen statement are not in the Shopify export and must be written before ingest."
+    },
+    {
+      "handle": "4",
+      "title": "Bubbles & Dreams",
+      "descriptionHtml": "<p data-mce-fragment=\"1\">Introducing Bubbles &amp; Dreams, a luxurious gift set designed to pamper and delight. Featuring a Max Benjamin Clove and Cinnamon Diffuser, a bottle of Louis Roederer Blanc de Blanc, Jo Browne's Gift of Sleep with Bamboo Pillowcases and Eye mask, and Handmade Chocolate Truffles from The Chocolate Garden of Ireland. Enjoy the perfect combination of scent, taste, and relaxation all in one!</p>\n<p data-mce-fragment=\"1\"> </p>\n<p data-mce-fragment=\"1\">If a product is not in stock you will be made aware that an alternative in the same brand or same will be in its place </p>",
+      "productType": "Hamper",
+      "vendor": "Parcel Concierge",
+      "tags": [
+        "type:hamper",
+        "price:150-plus"
+      ],
+      "images": [
+        {
+          "src": "https://cdn.shopify.com/s/files/1/0544/1411/5009/files/v95fERhA.jpg?v=1700068115",
+          "alt": "Bubbles & Dreams, a Parcel Concierge hamper",
+          "width": 1200,
+          "height": 1200
+        }
+      ],
+      "variants": [
+        {
+          "sku": "P0019S",
+          "title": "Default Title",
+          "price": "210.00",
+          "inventoryQuantity": 2
+        }
+      ],
+      "hamper": {
+        "contents": [],
+        "allergens": "",
+        "containsAlcohol": true
+      },
+      "needsReview": "Contents list and allergen statement are not in the Shopify export and must be written before ingest."
+    },
+    {
+      "handle": "5",
+      "title": "Has the Friday feeling",
+      "descriptionHtml": "<p>Enjoy a taste of the finer things with this Friday Feeling hamper. It includes top-quality Macon Uchizy Chardonnay, Obra Prima Malbec, and savory Filligans of Donegal cheeseboard chutney. Enjoy Gourmet Soda toasts and Piedmont Hazelnuts in Caramel Chocolate from the Chocolate Garden of Ireland. Just add cheese for the perfect Friday Feeling.</p>\n<p> </p>\n<p><span>* for orders over 5 hampers please contact us directly to order by email hello@theparcelconcierge.com </span></p>\n<p> </p>",
+      "productType": "Hamper",
+      "vendor": "Parcel Concierge",
+      "tags": [
+        "type:hamper",
+        "price:100-150",
+        "recipient:her"
+      ],
+      "images": [
+        {
+          "src": "https://cdn.shopify.com/s/files/1/0544/1411/5009/files/PUQJkaPA.jpg?v=1700068181",
+          "alt": "Has the Friday feeling, a Parcel Concierge hamper",
+          "width": 1200,
+          "height": 1200
+        }
+      ],
+      "variants": [
+        {
+          "sku": "P0020S",
+          "title": "Default Title",
+          "price": "105.00",
+          "inventoryQuantity": 1
+        }
+      ],
+      "hamper": {
+        "contents": [],
+        "allergens": "",
+        "containsAlcohol": false
+      },
+      "needsReview": "Contents list and allergen statement are not in the Shopify export and must be written before ingest."
+    },
+    {
+      "handle": "7",
+      "title": "It’s all about the Man !",
+      "descriptionHtml": "<p data-mce-fragment=\"1\">Treat the man in your life to an exquisite gift package containing a bottle of Football Special, an Eoin o Connor Mug, McEntees Tea, Dark Chocolate Apple Thins from Lismore Food Company, Guinness Truffles, and an ultra-soft Lambswool Scarf from the renowned McNutt of Donegal. The perfect indulgence for any special day!</p>",
+      "productType": "Hamper",
+      "vendor": "Parcel Concierge",
+      "tags": [
+        "type:hamper",
+        "price:50-100",
+        "recipient:him"
+      ],
+      "images": [
+        {
+          "src": "https://cdn.shopify.com/s/files/1/0544/1411/5009/files/NUvKcrLw.jpg?v=1700069134",
+          "alt": "It’s all about the Man !, a Parcel Concierge hamper",
+          "width": 1200,
+          "height": 1200
+        }
+      ],
+      "variants": [
+        {
+          "sku": "P0022S",
+          "title": "Default Title",
+          "price": "95.00",
+          "inventoryQuantity": 1
+        }
+      ],
+      "hamper": {
+        "contents": [],
+        "allergens": "",
+        "containsAlcohol": false
+      },
+      "needsReview": "Contents list and allergen statement are not in the Shopify export and must be written before ingest."
+    },
+    {
+      "handle": "a-gift-for-him",
+      "title": "A  Gift for Him",
+      "descriptionHtml": "<p>The perfect gift for the man who has everything. A stylish lambswool scarf by McNutt Of Donegal and a box of delicious Guinness Chocolate Truffles &amp; Ricasoli Chianti will be sure to put a smile on his face</p>",
+      "productType": "Hamper",
+      "vendor": "Parcel Concierge",
+      "tags": [
+        "type:hamper",
+        "price:50-100",
+        "occasion:christmas",
+        "recipient:him"
+      ],
+      "images": [
+        {
+          "src": "https://cdn.shopify.com/s/files/1/0544/1411/5009/files/ParcelConcierge-Nov152023-087.jpg?v=1700053295",
+          "alt": "A  Gift for Him, a Parcel Concierge hamper",
+          "width": 1200,
+          "height": 1200
+        }
+      ],
+      "variants": [
+        {
+          "sku": "PARC-1245",
+          "title": "Default Title",
+          "price": "78.95",
+          "inventoryQuantity": 2
+        }
+      ],
+      "hamper": {
+        "contents": [],
+        "allergens": "",
+        "containsAlcohol": false
+      },
+      "needsReview": "Contents list and allergen statement are not in the Shopify export and must be written before ingest."
+    },
+    {
+      "handle": "baby-boy",
+      "title": "Baby Boy Gift",
+      "descriptionHtml": "<p>This Baby Boy Gift set is sure to make any new parents smile. It comes with a Picture Frame Bog Buddies Little Feet, a Bottle of Cava for the parents to enjoy, and a cuddly teddy bear to keep the baby boy company. Perfect for celebrating the arrival of a new family member!</p>\n<ul>\n<ul></ul>\n</ul>\n<br>",
+      "productType": "Hamper",
+      "vendor": "Parcel Concierge",
+      "tags": [
+        "type:hamper",
+        "price:100-150",
+        "recipient:him"
+      ],
+      "images": [
+        {
+          "src": "https://cdn.shopify.com/s/files/1/0544/1411/5009/files/ParcelConcierge-Nov152023-091.jpg?v=1700054378",
+          "alt": "Baby Boy Gift, a Parcel Concierge hamper",
+          "width": 1200,
+          "height": 1200
+        }
+      ],
+      "variants": [
+        {
+          "sku": "PARC-1700",
+          "title": "Default Title",
+          "price": "105.00",
+          "inventoryQuantity": 1
+        }
+      ],
+      "hamper": {
+        "contents": [],
+        "allergens": "",
+        "containsAlcohol": true
+      },
+      "needsReview": "Contents list and allergen statement are not in the Shopify export and must be written before ingest."
+    },
+    {
+      "handle": "because-you-are-amazing",
+      "title": "Because you are Amazing",
+      "descriptionHtml": "<div>\n<p>Give your loved one a special treat with this amazing gift set! It contains all the essentials for a pampering experience, including Handmade Soap Company shower gel, hand cream, and body lotion, plus three of our top-selling Herb candles in a beautiful presentation box. This delightful package also includes a bottle of Bosco Prosecco and delicious Artisan Chocolate from The Chocolate Garden. Give the gift of indulgence - they're sure to love it!</p>\n</div>\n<p data-mce-fragment=\"1\"><br></p>",
+      "productType": "Hamper",
+      "vendor": "Parcel Concierge",
+      "tags": [
+        "type:hamper",
+        "price:100-150",
+        "recipient:her"
+      ],
+      "images": [
+        {
+          "src": "https://cdn.shopify.com/s/files/1/0544/1411/5009/files/JQddKIxg.jpg?v=1700054638",
+          "alt": "Because you are Amazing, a Parcel Concierge hamper",
+          "width": 1200,
+          "height": 1200
+        }
+      ],
+      "variants": [
+        {
+          "sku": "PARC-1409",
+          "title": "Default Title",
+          "price": "125.00",
+          "inventoryQuantity": 1
+        }
+      ],
+      "hamper": {
+        "contents": [],
+        "allergens": "",
+        "containsAlcohol": true
+      },
+      "needsReview": "Contents list and allergen statement are not in the Shopify export and must be written before ingest."
+    },
+    {
+      "handle": "coffee-chocolate",
+      "title": "Baby Girl Gift",
+      "descriptionHtml": "<p><span>This Baby Girl Gift set is sure to make any new parents smile. It comes with a Picture Frame Bog Buddies Little Feet, a Bottle of Prosecco for the parents to enjoy, and a cuddly teddy bear to keep the baby girl company. Perfect for celebrating the arrival of a new family member!</span></p>\n<ul>\n<ul></ul>\n</ul>\n<br>",
+      "productType": "Hamper",
+      "vendor": "Parcel Concierge",
+      "tags": [
+        "type:hamper",
+        "price:100-150",
+        "occasion:new-baby",
+        "recipient:her"
+      ],
+      "images": [
+        {
+          "src": "https://cdn.shopify.com/s/files/1/0544/1411/5009/files/ASBX8kew.jpg?v=1700054427",
+          "alt": "Baby Girl Gift, a Parcel Concierge hamper",
+          "width": 1200,
+          "height": 1200
+        }
+      ],
+      "variants": [
+        {
+          "sku": "PARC-0020",
+          "title": "Default Title",
+          "price": "105.00",
+          "inventoryQuantity": 0
+        }
+      ],
+      "hamper": {
+        "contents": [],
+        "allergens": "",
+        "containsAlcohol": true
+      },
+      "needsReview": "Contents list and allergen statement are not in the Shopify export and must be written before ingest."
+    },
+    {
+      "handle": "congratulations",
+      "title": "For Someone Special",
+      "descriptionHtml": "<p> </p>\n<p>Santa Margarita Prosecco 750ml, 75g Milk Chocolate Bar, and Strawberry &amp; Champagne Chocolate Truffles make the perfect gift for someone special</p>\n<p> </p>\n<p><span>* for orders over 5 hampers please contact us directly to order by email hello@theparcelconcierge.com </span></p>",
+      "productType": "Hamper",
+      "vendor": "Parcel Concierge",
+      "tags": [
+        "type:hamper",
+        "price:under-50",
+        "recipient:her"
+      ],
+      "images": [
+        {
+          "src": "https://cdn.shopify.com/s/files/1/0544/1411/5009/files/ParcelConcierge-Nov152023-096.jpg?v=1700060878",
+          "alt": "For Someone Special, a Parcel Concierge hamper",
+          "width": 1200,
+          "height": 1200
+        }
+      ],
+      "variants": [
+        {
+          "sku": "PARC-0048",
+          "title": "Default Title",
+          "price": "49.95",
+          "inventoryQuantity": 1
+        }
+      ],
+      "hamper": {
+        "contents": [],
+        "allergens": "",
+        "containsAlcohol": true
+      },
+      "needsReview": "Contents list and allergen statement are not in the Shopify export and must be written before ingest."
+    },
+    {
+      "handle": "for-my-valentine",
+      "title": "The Luxury Gift Box",
+      "descriptionHtml": "<p style=\"font-size: 0.875rem; display: inline !important;\">Let's face it, we all love getting gifts. Especially when the gifts are useful and feel very personal to us, as opposed to generic items that could be given to anyone. The most satisfying of gifts are often ones that we didn't feel like we needed, but instead felt like a treat or indulgence.</p>\n<p style=\"font-size: 0.875rem; display: inline !important;\"> </p>\n<p style=\"font-size: 0.875rem; display: inline !important;\"> </p>\n<p style=\"font-size: 0.875rem;\">This  Luxury Gift Box Set is just such a gift. It contains 4 items , luxury items in themselves, but also very special and unique to you and your lifestyle.</p>\n<p style=\"font-size: 0.875rem;\">A gorgeous box arrives with the following:</p>\n<ul>\n<li><span style=\"font-size: 0.875rem;\"><strong>Louis Roederer Blanc de Blanc Champagne</strong> . With a very delicate and pure bouquet,  the bubbles are slow , gentle and steady. The most perfect champagne .</span></li>\n<li><span style=\"font-size: 0.875rem;\"><strong>The Jo Browne Gift of Sleep</strong> including two luxury bamboo pillow cases and bamboo sleep mask . </span></li>\n<li><span style=\"font-size: 0.875rem;\">Butlers Chocolates or <strong>GF</strong>  Chocolate Garden of Ireland 260g handmade chocolates  </span></li>\n<li>Luxury Scented Reed Diffuser </li>\n</ul>\n<p style=\"font-size: 0.875rem;\"><strong data-mce-fragment=\"1\">** Some items mentioned may be  out of stock due to unprecedented demand but we will use other similar luxury food items in their place .</strong></p>",
+      "productType": "Hamper",
+      "vendor": "Parcel Concierge",
+      "tags": [
+        "type:hamper",
+        "price:150-plus",
+        "occasion:christmas",
+        "recipient:her"
+      ],
+      "images": [
+        {
+          "src": "https://cdn.shopify.com/s/files/1/0544/1411/5009/files/L1ouReAw.jpg?v=1700065086",
+          "alt": "The Luxury Gift Box, a Parcel Concierge hamper",
+          "width": 1200,
+          "height": 1200
+        }
+      ],
+      "variants": [
+        {
+          "sku": "PARC-1035",
+          "title": "Default Title",
+          "price": "215.00",
+          "inventoryQuantity": 1
+        }
+      ],
+      "hamper": {
+        "contents": [],
+        "allergens": "",
+        "containsAlcohol": true
+      },
+      "needsReview": "Contents list and allergen statement are not in the Shopify export and must be written before ingest."
+    },
+    {
+      "handle": "just-add-cheese",
+      "title": "Just add Cheese",
+      "descriptionHtml": "<p>Just add cheese. This set perfectly combines with a Coto de Imaz Reserve Rioja wine ,   Sheridans Irish mixed Seed Crackers  and a  yummy Cheeseboard Chutney from Filligans of Donegal aswell a perfectly sized cheeseboard and knive set from Newgrange Living. A perfect gift for the most discerning guests or fellow wine lovers. Just add cheese* !</p>\n<p> </p>\n<p>*** Selection of Cheese available instore if you wish to add cheese to this hamper </p>\n<p> </p>\n<p><span> * for orders over 5 hampers please contact us directly to order by email hello@theparcelconcierge.com </span></p>",
+      "productType": "Hamper",
+      "vendor": "Parcel Concierge",
+      "tags": [
+        "type:hamper",
+        "price:50-100"
+      ],
+      "images": [
+        {
+          "src": "https://cdn.shopify.com/s/files/1/0544/1411/5009/files/yqrhud1A.jpg?v=1700060960",
+          "alt": "Just add Cheese, a Parcel Concierge hamper",
+          "width": 1200,
+          "height": 1200
+        }
+      ],
+      "variants": [
+        {
+          "sku": "PARC-1968",
+          "title": "Default Title",
+          "price": "90.00",
+          "inventoryQuantity": 2
+        }
+      ],
+      "hamper": {
+        "contents": [],
+        "allergens": "",
+        "containsAlcohol": true
+      },
+      "needsReview": "Contents list and allergen statement are not in the Shopify export and must be written before ingest."
+    },
+    {
+      "handle": "mellow-yellow",
+      "title": "Mellow Yellow Gift Set",
+      "descriptionHtml": "<p data-mce-fragment=\"1\">This Mellow Yellow Gift Set includes a bottle of Lafage white wine, strawberry &amp; chocolate truffles from The Chocolate Garden , a set of lemongrass and cedarwood handwash and hand lotion from The Handmade Soap Company, a herb candle trio and a Max Benjamin Lemongrass and Ginger Diffuser. Perfect for any occasion, this indulgent selection of goodies is sure to delight.</p>",
+      "productType": "Hamper",
+      "vendor": "Parcel Concierge",
+      "tags": [
+        "type:hamper",
+        "price:100-150",
+        "recipient:her"
+      ],
+      "images": [
+        {
+          "src": "https://cdn.shopify.com/s/files/1/0544/1411/5009/files/IMG-0550.jpg?v=1700087281",
+          "alt": "Mellow Yellow Gift Set, a Parcel Concierge hamper",
+          "width": 1200,
+          "height": 1200
+        }
+      ],
+      "variants": [
+        {
+          "sku": "P0029S",
+          "title": "Default Title",
+          "price": "125.00",
+          "inventoryQuantity": 1
+        }
+      ],
+      "hamper": {
+        "contents": [],
+        "allergens": "",
+        "containsAlcohol": true
+      },
+      "needsReview": "Contents list and allergen statement are not in the Shopify export and must be written before ingest."
+    },
+    {
+      "handle": "new-home-gift",
+      "title": "The Perfect New Home Gift",
+      "descriptionHtml": "<p>Treat someone to the most relaxing, indulgent sleep one will ever had with some of the most luxurious bamboo products on the market! These bamboo pillowcases and luxury eye mask will feel as if sleeping in a luxurious hotel room &amp; love it so much that you'll never want to leave your bed again. With the addition of Handmade Chocolates and an Irish Made Candle from Home its the perfect Gift for the New Home Owner. </p>\n<p>Contains:<br></p>\n<p>– Set of two Jo Browne  Bamboo Pillowcases</p>\n<p>– Jo Browne Bamboo Luxury Eye mask</p>\n<p>- The Chocolate Garden of Ireland Artisan Chocolates</p>\n<p>- Home New Beginnings Soy Wax Candle</p>\n<p><br></p>",
+      "productType": "Hamper",
+      "vendor": "Parcel Concierge",
+      "tags": [
+        "type:hamper",
+        "price:50-100"
+      ],
+      "images": [
+        {
+          "src": "https://cdn.shopify.com/s/files/1/0544/1411/5009/files/ZUBUv0Tw.jpg?v=1700065439",
+          "alt": "The Perfect New Home Gift, a Parcel Concierge hamper",
+          "width": 1200,
+          "height": 1200
+        }
+      ],
+      "variants": [
+        {
+          "sku": "PARC-1540",
+          "title": "Default Title",
+          "price": "93.50",
+          "inventoryQuantity": 2
+        }
+      ],
+      "hamper": {
+        "contents": [],
+        "allergens": "",
+        "containsAlcohol": false
+      },
+      "needsReview": "Contents list and allergen statement are not in the Shopify export and must be written before ingest."
+    },
+    {
+      "handle": "pamper-her",
+      "title": "A Little Gift",
+      "descriptionHtml": "<p>A Little Gift offers a luxurious spa experience that's perfect for pampering yourself or a loved one. Enjoy a relaxing bath with a nice Prosecco, Bath Salts, and finish with a gentle exfoliating scrub. As a special treat, handmade chocolates complete the package.</p>\n<p>. Prosecco 200ml Brut </p>\n<p>. Donegal Natural Soap Company Soap Exfoliator Loofah Bar</p>\n<p>. Herb Dublin Healing Bath Salts</p>\n<p>. The Chocolate Garden of Ireland Handmade Chocolates </p>\n<p><br></p>",
+      "productType": "Hamper",
+      "vendor": "Parcel Concierge",
+      "tags": [
+        "type:hamper",
+        "price:50-100",
+        "recipient:client",
+        "recipient:her"
+      ],
+      "images": [
+        {
+          "src": "https://cdn.shopify.com/s/files/1/0544/1411/5009/files/ParcelConcierge-Nov152023-097.jpg?v=1700053695",
+          "alt": "A Little Gift, a Parcel Concierge hamper",
+          "width": 1200,
+          "height": 1200
+        }
+      ],
+      "variants": [
+        {
+          "sku": "PARC-0022",
+          "title": "Default Title",
+          "price": "55.00",
+          "inventoryQuantity": 0
+        }
+      ],
+      "hamper": {
+        "contents": [],
+        "allergens": "",
+        "containsAlcohol": true
+      },
+      "needsReview": "Contents list and allergen statement are not in the Shopify export and must be written before ingest."
+    },
+    {
+      "handle": "sweet-angel",
+      "title": "Sweet Angel",
+      "descriptionHtml": "<p>Indulge in the ultimate self-care package with our Sweet Angel gift set. Savour a bottle of crisp Whispering Angel rosé, complemented by a Max Benjamin Pink Pepper scented candle for a relaxing ambiance. And for the perfect sweet treat, indulge in artisan chocolates from The Chocolate Garden. Treat yourself or someone special to heavenly bliss.</p>",
+      "productType": "Hamper",
+      "vendor": "Parcel Concierge",
+      "tags": [
+        "type:hamper",
+        "price:50-100"
+      ],
+      "images": [
+        {
+          "src": "https://cdn.shopify.com/s/files/1/0544/1411/5009/files/sweetangel.jpg?v=1726052284",
+          "alt": "Sweet Angel, a Parcel Concierge hamper",
+          "width": 1200,
+          "height": 1200
+        }
+      ],
+      "variants": [
+        {
+          "sku": "P0822S",
+          "title": "Default Title",
+          "price": "69.00",
+          "inventoryQuantity": 1
+        }
+      ],
+      "hamper": {
+        "contents": [],
+        "allergens": "",
+        "containsAlcohol": false
+      },
+      "needsReview": "Contents list and allergen statement are not in the Shopify export and must be written before ingest."
+    },
+    {
+      "handle": "today-is-all-about-you",
+      "title": "For that Special Person",
+      "descriptionHtml": "<p>Treat someone special to this luxurious gift set featuring a Handmade Soap Company Candle,-For Someone Special Milk Chocolate Bar, two Prosecco snipes, and three miniature Five Farms Liqueurs. The perfect indulgent treat!</p>",
+      "productType": "Hamper",
+      "vendor": "Parcel Concierge",
+      "tags": [
+        "type:hamper",
+        "price:50-100",
+        "recipient:client",
+        "recipient:her",
+        "recipient:him"
+      ],
+      "images": [
+        {
+          "src": "https://cdn.shopify.com/s/files/1/0544/1411/5009/files/4T1WBFAA.jpg?v=1700065840",
+          "alt": "For that Special Person, a Parcel Concierge hamper",
+          "width": 1200,
+          "height": 1200
+        }
+      ],
+      "variants": [
+        {
+          "sku": "PARC-0722",
+          "title": "Default Title",
+          "price": "66.50",
+          "inventoryQuantity": 2
+        }
+      ],
+      "hamper": {
+        "contents": [],
+        "allergens": "",
+        "containsAlcohol": true
+      },
+      "needsReview": "Contents list and allergen statement are not in the Shopify export and must be written before ingest."
+    }
+  ]
+}

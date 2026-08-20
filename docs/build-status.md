@@ -191,6 +191,20 @@ exactly what the store needs.
 Two pricing decisions are outstanding and are the client's: whether the
 first case is discounted, and whether to offer a prepaid gift subscription.
 
+### No invented products anywhere
+
+Every product on the site now comes from the client's Shopify export: 341
+wines and spirits, 16 published hampers, and 1,920 builder items. The
+sample catalogue (fixtures.json and its generator) is deleted. The
+builder's box product survives in mechanisms.json because it is a
+mechanism, not a listing. The 16 hampers ship without structured contents
+or allergen statements because the export does not carry them: they render
+fine and are flagged needsReview, and the ingest validator blocks
+publishing them until the client supplies both. Curated occasion lists,
+the homepage, the nav and all listing prose now reference only real
+products, and listings the real range cannot fill stay dark behind the
+four-product floor.
+
 ### The full catalogue, quarantined behind the hamper builder
 
 The main site sells hampers and wine. Everything else in the export,

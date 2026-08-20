@@ -45,6 +45,15 @@ export function VisitTheShop({
             {SITE.town}, {SITE.county}
           </p>
           <h2 className="font-display text-[length:var(--text-display)] leading-[0.95]">{title}</h2>
+          {/* The red cancellation waves from the brand asset pack. */}
+          <Image
+            src="/brand/graphic-element-1.svg"
+            alt=""
+            aria-hidden="true"
+            width={304}
+            height={156}
+            className="mt-4 h-10 w-auto"
+          />
           <p className="mt-4 max-w-xl text-lg text-cream/90">
             {body ??
               'What you see online is the edit: our hampers, the wine, and everything you can put in a box you build. The shelves in Dunshaughlin go much further, with jewellery, skincare, candles, homeware, cards and a wine room you can browse bottle by bottle, and one of us on the floor to help you choose.'}

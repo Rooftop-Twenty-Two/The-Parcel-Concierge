@@ -24,11 +24,12 @@ export const SITE = {
 
 export const DELIVERY = {
   /**
-   * Verified in the June 2026 review.
+   * €8.95 confirmed by the client, August 2026. The June 2026 review
+   * verified the previous €7.95 rate.
    */
   national: {
-    priceMinor: 795,
-    label: '€7.95 delivery anywhere in Ireland',
+    priceMinor: 895,
+    label: '€8.95 delivery anywhere in Ireland',
   },
   localHandDelivery: {
     priceMinor: 0,
@@ -49,10 +50,10 @@ export const DELIVERY = {
    */
   shipsOutsideIreland: false,
   /**
-   * Free-delivery threshold for the cart progress nudge. Null until the
-   * client sets one, and the nudge does not render while it is null.
+   * Free delivery on orders of €100 or more. Confirmed by the client,
+   * August 2026; the cart progress nudge renders now that this is set.
    */
-  freeDeliveryThresholdMinor: null as number | null,
+  freeDeliveryThresholdMinor: 10000 as number | null,
   cutOff: {
     /** Daily order cut-off for next-working-day dispatch. Not confirmed. */
     dailyOrderCutOff: null as string | null,

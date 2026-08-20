@@ -61,7 +61,7 @@ export async function HubPage({
             <h1 className="font-display text-[length:var(--text-hero)] leading-[0.92]">{h1}</h1>
             {copy ? <p className="mt-5 max-w-xl text-lg text-cream/90">{copy.intro}</p> : null}
             <p className="mt-6 text-sm text-cream/75">
-              Free hand delivery in our local area. €7.95 anywhere else in Ireland.
+              Free hand delivery in our local area. €8.95 anywhere else in Ireland, free over €100.
             </p>
           </div>
 

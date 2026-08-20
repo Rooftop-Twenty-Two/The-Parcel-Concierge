@@ -10,7 +10,7 @@ import { DELIVERY } from '@/lib/site-config'
 export const metadata: Metadata = {
   title: 'Delivery',
   description:
-    'Free hand delivery in our local area, €7.95 anywhere else in the Republic of Ireland. Cut-off times, alcohol restrictions and what happens if nobody is home.',
+    'Free hand delivery in our local area, €8.95 anywhere else in the Republic of Ireland and free on orders over €100. Cut-off times, alcohol restrictions and what happens if nobody is home.',
   alternates: { canonical: '/delivery' },
 }
 
@@ -30,11 +30,14 @@ export const metadata: Metadata = {
 export default function DeliveryPage() {
   const zone = DELIVERY.localHandDelivery
   const cutOff = DELIVERY.cutOff
+  const threshold = DELIVERY.freeDeliveryThresholdMinor
 
   const faqs = [
     {
       question: 'How much is delivery in Ireland?',
-      answer: `${formatMinor(DELIVERY.national.priceMinor)} anywhere in the Republic of Ireland. Hand delivery in our local area is free.`,
+      answer: `${formatMinor(DELIVERY.national.priceMinor)} anywhere in the Republic of Ireland${
+        threshold === null ? '' : `, and free on orders over ${formatMinor(threshold)}`
+      }. Hand delivery in our local area is free.`,
     },
     {
       question: 'Do you deliver alcohol?',
@@ -80,7 +83,11 @@ export default function DeliveryPage() {
           <RateCard
             title="Rest of Ireland"
             price={formatMinor(DELIVERY.national.priceMinor)}
-            body="By courier, anywhere in the Republic of Ireland."
+            body={`By courier, anywhere in the Republic of Ireland.${
+              threshold === null
+                ? ''
+                : ` Free on orders over ${formatMinor(threshold)}.`
+            }`}
           />
           <RateCard
             title="Outside Ireland"

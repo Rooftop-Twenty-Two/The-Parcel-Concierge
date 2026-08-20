@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     template: '%s | The Parcel Concierge',
   },
   description:
-    'Hampers built from Irish producers and packed by hand in Dunshaughlin, Co. Meath. Free hand delivery locally, €7.95 anywhere else in Ireland.',
+    'Hampers built from Irish producers and packed by hand in Dunshaughlin, Co. Meath. Free hand delivery locally, €8.95 anywhere else in Ireland and free over €100.',
   openGraph: {
     type: 'website',
     locale: 'en_IE',

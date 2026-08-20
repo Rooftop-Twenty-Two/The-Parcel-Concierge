@@ -52,6 +52,9 @@ export function DeliveryPromise({
           </span>
           <span>
             {formatMinor(DELIVERY.national.priceMinor)} delivery anywhere else in Ireland
+            {DELIVERY.freeDeliveryThresholdMinor === null
+              ? ''
+              : `, free over ${formatMinor(DELIVERY.freeDeliveryThresholdMinor)}`}
           </span>
         </li>
         <li className="flex gap-2">

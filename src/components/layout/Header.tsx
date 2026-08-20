@@ -132,9 +132,9 @@ function MegaPanel({ item, onClose }: { item: NavItem; onClose: () => void }) {
       className="absolute inset-x-0 top-full border-b border-rule bg-cream shadow-[0_18px_40px_-28px_rgba(44,67,73,0.5)]"
       onMouseLeave={onClose}
     >
-      <div className="mx-auto grid max-w-[1400px] gap-10 px-8 pb-6 pt-9 lg:grid-cols-[1fr_1fr_1fr_320px]">
+      <div className="mx-auto grid max-w-[1400px] gap-10 px-8 py-9 lg:grid-cols-[1fr_1fr_1fr_320px]">
         {item.columns.map((column) => (
-          <div key={column.title} className="flex flex-col">
+          <div key={column.title}>
             <h2 className="mb-3 text-xs uppercase tracking-[0.18em] text-ink-muted">
               {column.title}
             </h2>
@@ -147,35 +147,11 @@ function MegaPanel({ item, onClose }: { item: NavItem; onClose: () => void }) {
                 </li>
               ))}
             </ul>
-
-            {/*
-              The column's photograph sits under the links, so column tops
-              stay aligned for scanning and a column without one loses
-              nothing. It clicks through to the column's first link.
-            */}
-            {column.image && column.links[0] ? (
-              <Link
-                href={column.links[0].href}
-                onClick={onClose}
-                className="group/col mt-5 block"
-                aria-label={column.title}
-              >
-                <span className="stamp-edge stamp-edge-sm block overflow-hidden bg-beige">
-                  <Image
-                    src={column.image.src}
-                    alt={column.image.alt}
-                    width={480}
-                    height={320}
-                    className="aspect-3/2 w-full object-cover transition-transform duration-500 group-hover/col:scale-[1.03]"
-                  />
-                </span>
-              </Link>
-            ) : null}
           </div>
         ))}
 
         {/*
-          Every panel carries a promoted listing with a large image.
+          Every panel carries one hamper image and one promoted listing.
           A wall of links is what the old menu was.
         */}
         {item.promo ? (
@@ -196,38 +172,6 @@ function MegaPanel({ item, onClose }: { item: NavItem; onClose: () => void }) {
           </Link>
         ) : null}
       </div>
-
-      {/*
-        The standing invitation. The website is the narrow end of the
-        business; the shop carries far more, and every menu says so. Panels
-        whose promo already sells the visit skip it rather than saying it
-        twice.
-      */}
-      {item.promo?.href !== '/contact' ? (
-        <div className="border-t border-rule bg-beige">
-          <Link
-            href="/contact"
-            onClick={onClose}
-            className="group mx-auto flex max-w-[1400px] items-center gap-4 px-8 py-3"
-          >
-            <Image
-              src="/photography/tpc-may-1-2.jpg"
-              alt=""
-              width={120}
-              height={80}
-              className="h-10 w-16 shrink-0 object-cover"
-            />
-            <p className="text-sm text-ink-muted">
-              <span className="font-medium text-navy">The shop in Dunshaughlin carries far more
-              than the website.</span>{' '}
-              Come and see us.
-            </p>
-            <span className="ml-auto shrink-0 text-sm text-navy underline-offset-4 group-hover:underline">
-              Plan a visit
-            </span>
-          </Link>
-        </div>
-      ) : null}
     </div>
   )
 }

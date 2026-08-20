@@ -59,9 +59,9 @@ export function DeliveryPromise({
             ✓
           </span>
           <span>
-            {DELIVERY.unitedKingdom.label}.{' '}
+            Republic of Ireland only.{' '}
             <Link href="/delivery" className="underline underline-offset-2">
-              Rates and times
+              Delivery details
             </Link>
           </span>
         </li>

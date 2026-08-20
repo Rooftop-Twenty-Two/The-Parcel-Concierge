@@ -43,14 +43,11 @@ export const DELIVERY = {
     counties: null as readonly string[] | null,
   },
   /**
-   * UK rates and times are not confirmed. The delivery page says we ship to
-   * the UK and routes the shopper to contact rather than quoting a price we
-   * do not have.
+   * Confirmed by the client, August 2026: THERE IS NO UK DELIVERY. The
+   * site deliberately says "Republic of Ireland only" rather than staying
+   * silent, so a UK buyer finds out before the checkout does.
    */
-  unitedKingdom: {
-    priceMinor: null as number | null,
-    label: 'UK delivery available',
-  },
+  shipsOutsideIreland: false,
   /**
    * Free-delivery threshold for the cart progress nudge. Null until the
    * client sets one, and the nudge does not render while it is null.

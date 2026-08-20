@@ -11,34 +11,29 @@ import { Button } from '@/components/ui/Button'
 import { trackHamperBuilderStep } from '@/lib/analytics/events'
 import { formatMinor } from '@/lib/commerce/money'
 import type { Product } from '@/lib/commerce/types'
-import {
-  BOX_OPTIONS,
-  DELIVERY_COUNTRIES,
-  RIBBON_COLOURS,
-  boxById,
-  type DeliveryCountryId,
-} from '@/lib/hamper-builder'
+import { BOX_OPTIONS, RIBBON_COLOURS, boxById } from '@/lib/hamper-builder'
 import { AGE_GATE } from '@/lib/site-config'
 
 /**
- * The builder, as a five step wizard.
+ * The builder, as a four step wizard.
  *
- * Delivery, box, items, extras, review: the same order the shop walks a
- * customer through at the counter. The running total never leaves the
+ * Box, items, extras, review: the same order the shop walks a customer
+ * through at the counter. There used to be a delivery-country step, but we
+ * deliver within the Republic of Ireland only, and a question with one
+ * answer is not a question. The running total never leaves the
  * screen; it lives in a bar pinned to the bottom, with the step controls,
  * so the two things a buyer actually watches (what it costs, what is
  * next) are always in the same place.
  *
- * The whole shop is behind step three. Everything the client publishes
+ * The whole shop is behind the fill-it step. Everything the client publishes
  * that is not a hamper is either on the main site (wine) or a quarantined
  * builder item, and the picker serves both from one API.
  *
- * State survives a reload via sessionStorage: five steps is enough
+ * State survives a reload via sessionStorage: four steps is enough
  * invested time that losing it to a stray swipe would be rude.
  */
 
 const STEPS = [
-  { id: 'delivery', label: 'Delivery' },
   { id: 'box', label: 'Your box' },
   { id: 'items', label: 'Fill it' },
   { id: 'extras', label: 'Finishing touches' },
@@ -51,7 +46,6 @@ type Chosen = { item: PickerItem; quantity: number }
 
 type PersistedState = {
   step: StepId
-  deliverTo: DeliveryCountryId | null
   boxId: string
   chosen: Record<string, Chosen>
   giftMessage: string
@@ -77,8 +71,7 @@ export function BuilderWizard({ parent }: { parent: Product }) {
   const router = useRouter()
   const [pending, startTransition] = useTransition()
 
-  const [step, setStep] = useState<StepId>('delivery')
-  const [deliverTo, setDeliverTo] = useState<DeliveryCountryId | null>(null)
+  const [step, setStep] = useState<StepId>('box')
   const [boxId, setBoxId] = useState(BOX_OPTIONS[1]?.id ?? BOX_OPTIONS[0]!.id)
   const [chosen, setChosen] = useState<Record<string, Chosen>>({})
   const [giftMessage, setGiftMessage] = useState('')
@@ -102,7 +95,6 @@ export function BuilderWizard({ parent }: { parent: Product }) {
     const persisted = loadPersisted()
     if (persisted) {
       setStep(persisted.step)
-      setDeliverTo(persisted.deliverTo)
       setBoxId(persisted.boxId)
       setChosen(persisted.chosen)
       setGiftMessage(persisted.giftMessage)
@@ -116,12 +108,12 @@ export function BuilderWizard({ parent }: { parent: Product }) {
     try {
       window.sessionStorage.setItem(
         STORAGE_KEY,
-        JSON.stringify({ step, deliverTo, boxId, chosen, giftMessage, ribbonColour }),
+        JSON.stringify({ step, boxId, chosen, giftMessage, ribbonColour }),
       )
     } catch {
       // A full store loses persistence, not the builder.
     }
-  }, [hydrated, step, deliverTo, boxId, chosen, giftMessage, ribbonColour])
+  }, [hydrated, step, boxId, chosen, giftMessage, ribbonColour])
 
   const box = boxById(boxId) ?? BOX_OPTIONS[0]!
   const boxVariant = parent.variants.find((v) => v.title === box.variantTitle) ?? parent.variants[0]
@@ -163,8 +155,6 @@ export function BuilderWizard({ parent }: { parent: Product }) {
   /** Why Continue is disabled, or null when it is not. */
   const blocked: string | null = (() => {
     switch (step) {
-      case 'delivery':
-        return deliverTo ? null : 'Choose a country'
       case 'box':
         return null
       case 'items':
@@ -192,7 +182,6 @@ export function BuilderWizard({ parent }: { parent: Product }) {
         components: chosenList.map((c) => ({ variantId: c.item.variantId!, quantity: c.quantity })),
         giftMessage,
         ribbonColour,
-        deliverTo: DELIVERY_COUNTRIES.find((c) => c.id === deliverTo)?.label,
       })
 
       if (result.ok) {
@@ -241,23 +230,6 @@ export function BuilderWizard({ parent }: { parent: Product }) {
 
       {/* pb clears the sticky bar. */}
       <main className="mx-auto max-w-[1400px] px-4 pb-44 pt-10 lg:px-8">
-        {step === 'delivery' ? (
-          <StepShell title="Where is it going?" lede="Delivery decides what we can promise, so it comes first.">
-            <ul className="grid gap-4 sm:grid-cols-2">
-              {DELIVERY_COUNTRIES.map((country) => (
-                <li key={country.id}>
-                  <CardChoice
-                    selected={deliverTo === country.id}
-                    onSelect={() => setDeliverTo(country.id)}
-                    title={country.label}
-                    body={country.note}
-                  />
-                </li>
-              ))}
-            </ul>
-          </StepShell>
-        ) : null}
-
         {step === 'box' ? (
           <StepShell title="Choose your box" lede="Every size is packed the same way: tissue lined, hand tied, built so nothing moves.">
             <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -339,7 +311,6 @@ export function BuilderWizard({ parent }: { parent: Product }) {
           <StepShell title="Look it over" lede="Change anything before it goes in the cart.">
             <div className="grid gap-10 lg:grid-cols-[1fr_360px]">
               <div>
-                <ReviewRow label="Going to" value={DELIVERY_COUNTRIES.find((c) => c.id === deliverTo)?.label ?? 'Not chosen'} onEdit={() => goTo('delivery')} />
                 <ReviewRow
                   label="The box"
                   value={`${box.variantTitle}${boxVariant ? `, ${formatMinor(boxVariant.price.amountMinor)}` : ''}`}

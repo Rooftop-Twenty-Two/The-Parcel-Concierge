@@ -93,7 +93,6 @@ export const BUNDLE_ATTRIBUTES = {
   box: 'Box',
   giftMessage: 'Gift message',
   ribbon: 'Ribbon colour',
-  deliverTo: 'Deliver to',
   componentOf: '_partOfHamper',
 } as const
 
@@ -154,22 +153,7 @@ export const PICKER_SHELVES: readonly PickerShelf[] = [
   { id: 'other', label: 'Everything else', query: { kind: 'aisle', aisle: 'everything-else' }, alcohol: false },
 ]
 
-/**
- * Where the hamper is going. Step one of the wizard, the same way a
- * hamper order starts in the shop: it decides what we can promise about
- * delivery, and it travels on the cart line so the bench sees it.
- */
-export const DELIVERY_COUNTRIES = [
-  {
-    id: 'ireland',
-    label: 'Ireland',
-    note: 'Free hand delivery in our local area, €7.95 anywhere else in Ireland.',
-  },
-  {
-    id: 'uk',
-    label: 'United Kingdom',
-    note: 'We deliver to the UK. Some fresh items may not travel; we will confirm before packing.',
-  },
-] as const
-
-export type DeliveryCountryId = (typeof DELIVERY_COUNTRIES)[number]['id']
+// There is no delivery-country choice: we deliver within the Republic of
+// Ireland only (confirmed by the client, August 2026). The wizard used to
+// open with a country step; a question with one answer is not a question,
+// so the flow now starts at the box.

@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 const FAQS = [
   {
     question: 'How much is delivery?',
-    answer: `Free hand delivery in our local area, ${formatMinor(DELIVERY.national.priceMinor)} anywhere else in the Republic of Ireland, and we deliver to the UK. Full details are on the delivery page.`,
+    answer: `Free hand delivery in our local area, ${formatMinor(DELIVERY.national.priceMinor)} anywhere else in the Republic of Ireland. We do not deliver outside Ireland. Full details are on the delivery page.`,
   },
   {
     question: 'Can I send a hamper straight to the person it is for?',

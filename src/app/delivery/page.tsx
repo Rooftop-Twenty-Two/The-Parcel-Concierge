@@ -10,7 +10,7 @@ import { DELIVERY } from '@/lib/site-config'
 export const metadata: Metadata = {
   title: 'Delivery',
   description:
-    'Free hand delivery in our local area, €7.95 anywhere else in Ireland, and UK delivery. Cut-off times, alcohol restrictions and what happens if nobody is home.',
+    'Free hand delivery in our local area, €7.95 anywhere else in the Republic of Ireland. Cut-off times, alcohol restrictions and what happens if nobody is home.',
   alternates: { canonical: '/delivery' },
 }
 
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
  * one of the strongest things about this business and it was invisible.
  *
  * The rule for this page is that it states only what has been confirmed.
- * Where a fact is outstanding (the hand-delivery zone, UK rates, cut-off
+ * Where a fact is outstanding (the hand-delivery zone, cut-off
  * times) the page says plainly that it is not published yet and routes the
  * shopper to a person, rather than inventing a number that somebody will
  * later have to honour.
@@ -83,13 +83,9 @@ export default function DeliveryPage() {
             body="By courier, anywhere in the Republic of Ireland."
           />
           <RateCard
-            title="United Kingdom"
-            price={DELIVERY.unitedKingdom.priceMinor ? formatMinor(DELIVERY.unitedKingdom.priceMinor) : 'On request'}
-            body={
-              DELIVERY.unitedKingdom.priceMinor
-                ? 'By courier, to mainland UK addresses.'
-                : 'We do deliver to the UK. Rates and times are not published yet, so contact us with the address and we will quote you.'
-            }
+            title="Outside Ireland"
+            price="Not available"
+            body="We deliver within the Republic of Ireland only. If you are abroad and sending to an Irish address, that works perfectly: order as normal and put their address on it."
           />
         </div>
 

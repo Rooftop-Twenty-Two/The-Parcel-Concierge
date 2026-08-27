@@ -104,9 +104,46 @@ Three things need the client before this is finished:
 2. **A genuine scale shot per SKU.** Four crops of one frame are four real
    views, but none of them shows the box next to something that gives its
    size. That cannot be cropped out of a frame that does not contain one.
-3. **The remaining SKUs.** Sixteen real hampers are live, each on its own
+3. **The remaining SKUs.** Twenty real hampers are live, each on its own
    Shopify photography. The ten studio frames are a quality upgrade waiting
    on the shot list.
+
+### The August 2026 hamper shoot
+
+The whole twenty-hamper range has now been shot, one frame each, on the
+same set as the studio work above. **All twenty are registered by handle in
+`SUPPLIED_PHOTOGRAPHY` in `scripts/catalogue/import-hampers.mjs`**, which is
+the shot list this document has been asking for since the first delivery.
+The registry lives in the importer rather than in the JSON because the JSON
+is regenerated from the CSV, so hand-editing it would lose the photography
+on the next import.
+
+**The importer only uses a frame that is actually on disk.** A registered
+name with no file behind it is reported and skipped, so a missing photo can
+never put a 404 at the top of a product gallery. Adding one is a file copy,
+not a code change:
+
+```bash
+cp <frame>.jpg public/photography/<registered-name>.jpg
+node scripts/catalogue/import-hampers.mjs --input <export>.csv --all
+```
+
+The run prints how many frames are in place and names every one still
+outstanding. Four are in as of this writing: A Taste of Luxury, Hello Baby
+Boy, Hello Baby Girl and The Italian Job. The other sixteen are shot and
+identified but the files have not reached the repository yet, so those
+hampers still run on the export's Shopify CDN images.
+
+Two things to hold onto about this set:
+
+- **It is styled for Christmas** (a wreath, a dried orange garland,
+  baubles, fairy lights). The boxes and their contents are untouched, which
+  is the client's own direction, but the styling dates the frames. They
+  need neutral replacements in January, and A Taste of Luxury is the
+  homepage Christmas band image for the same reason.
+- **One frame per hamper is not four.** Ingest wants four views and a scale
+  shot per SKU, so these frames improve the galleries without on their own
+  clearing that rule.
 
 **Six lifestyle shots**, all in use: Karen and Ciaran outside the shop on
 the About page, the wine room as the Wine Vault hero, the shop floor as the

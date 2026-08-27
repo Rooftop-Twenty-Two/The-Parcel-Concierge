@@ -34,9 +34,33 @@
  * publishes.
  */
 
-import { mkdirSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { readCsv } from './csv.mjs'
+
+/**
+ * Width and height straight out of the JPEG's own SOF marker.
+ *
+ * The supplied frames are not all the same shape, and next/image needs the
+ * true aspect ratio or the product gallery jumps on load. Reading the file
+ * beats maintaining a table of numbers by hand that nobody will update
+ * when a frame is re-shot.
+ */
+function jpegSize(path) {
+  const data = readFileSync(path)
+  let i = 2
+  while (i < data.length) {
+    if (data[i] !== 0xff) { i += 1; continue }
+    const marker = data[i + 1]
+    // SOF0..SOF15, skipping the four that are not frame headers.
+    if (marker >= 0xc0 && marker <= 0xcf && ![0xc4, 0xc8, 0xcc].includes(marker)) {
+      return { height: data.readUInt16BE(i + 5), width: data.readUInt16BE(i + 7) }
+    }
+    if (marker === 0xd8 || marker === 0xd9 || (marker >= 0xd0 && marker <= 0xd7)) { i += 2; continue }
+    i += 2 + data.readUInt16BE(i + 2)
+  }
+  return null
+}
 
 /** Export tag (lowercased) → locked taxonomy tag. */
 const TAG_MAP = {
@@ -57,6 +81,104 @@ const TAG_MAP = {
   'gifts for employees gifts for employees': 'recipient:client',
   'gifts for employees': 'recipient:client',
   'corporate gifts': 'occasion:corporate',
+}
+
+/**
+ * Studio photography the client supplied directly, by handle.
+ *
+ * The export's own image URLs point at the Shopify CDN. These frames were
+ * shot for the August 2026 range and sent to us as files, so they are
+ * served from our own domain and lead the gallery, with the export's CDN
+ * images kept behind them. The map lives here rather than in the JSON
+ * because the JSON is regenerated from the CSV: hand-editing it would
+ * lose the photography on the next import.
+ *
+ * SEASONAL. These frames are styled for Christmas (a wreath, a dried
+ * orange garland, baubles). The box and its contents are untouched, which
+ * is the client's own direction, but the styling dates them: they want
+ * replacing with neutral frames in January. See docs/build-status.md.
+ */
+const SUPPLIED_PHOTOGRAPHY = {
+  'large-basket': {
+    file: 'hamper-the-grand-indulgence.jpg',
+    alt: 'A lidded wicker hamper with Butlers chocolates and Hassetts luxury biscuits on the lid, ringed by Baron de Ley Rioja, Louis Roederer Champagne, Chateau Les Moutins red and white, Rathbornes candles, Crossogues preserves and a Max Benjamin fragrance',
+  },
+  '2-1': {
+    file: 'hamper-a-taste-of-luxury.jpg',
+    alt: 'A wicker hamper holding Messer del Fauno red and white wine, Prosecco, Hassetts biscuits, a Ballymaloe relish set, a Herb Dublin board and a La Bougie Mission Fig candle and diffuser',
+  },
+  3: {
+    file: 'hamper-hello-baby-boy.jpg',
+    alt: 'A blue bedtime bear holding its comforter beside a bottle of Freixenet Prosecco, Julie Clarke hand wash and lotion and a folded lambswool blanket, packed in a green Parcel Concierge tray',
+  },
+  '4-1': {
+    file: 'hamper-hello-baby-girl.jpg',
+    alt: 'A pink bedtime bear holding its comforter beside a bottle of Freixenet sparkling rose, Julie Clarke hand wash and lotion and a folded lambswool blanket, packed in a green Parcel Concierge tray',
+  },
+  '5-2': {
+    file: 'hamper-the-italian-job.jpg',
+    alt: 'Doppio Passo red and Messer del Fauno Pinot Grigio packed beside Sheridans crackers, a Filligan\u2019s jar and a Chocolate Garden of Ireland box, with a Caulfield Country walnut board and slate alongside',
+  },
+  'new-mum-and-baby-girl-luxury-hamper': {
+    file: 'hamper-new-mum-and-baby-girl.jpg',
+    alt: 'A pink teddy cushion blanket, a bottle of Moet and Chandon rose Champagne, a round box of Butlers truffles and a Jo Browne Gift of Sleep set, packed in a green Parcel Concierge tray',
+  },
+  'new-mum-and-baby-girl-luxury-hamper-copy': {
+    file: 'hamper-birdy-awesome.jpg',
+    alt: 'A Tipperary Crystal robin mug and matching gift box beside a bottle of Freixenet Prosecco, a Chocolate Garden of Ireland box, a chocolate bar and a Handmade Soap Company candle',
+  },
+  'because-you-re-amazing-hamper': {
+    file: 'hamper-because-youre-amazing.jpg',
+    alt: 'A Herb Dublin candle trio in a wooden crate beside a bottle of Bosco Prosecco, a Chocolate Garden of Ireland box and the Handmade Soap Company Because You are Amazing set',
+  },
+  'all-ireland-food-hamper': {
+    file: 'hamper-all-ireland-food.jpg',
+    alt: 'An Irish food box holding McEntee\u2019s tea, Keogh\u2019s crisps, Coffee Perfection coffee bags, Hassetts biscuits and crackers, Butlers chocolates, McDaid\u2019s minerals, Hadji Bey fruit jellies and three Filligan\u2019s preserves',
+  },
+  'the-rose-crystal-celebration-hamper': {
+    file: 'hamper-rose-and-crystal-celebration.jpg',
+    alt: 'A bottle of Freixenet sparkling rose beside a boxed pair of Tipperary Crystal Champagne flutes, a box of Mienas Turkish delight and a bottle of St-Germain elderflower liqueur',
+  },
+  'the-perfect-duo': {
+    file: 'hamper-the-perfect-duo.jpg',
+    alt: 'A bottle of Baie d\u2019Azur rose wine beside a tube of Baileys strawberries and cream chocolate truffles, packed in a red gift box',
+  },
+  'the-classic-gentleman-s-hamper': {
+    file: 'hamper-the-classic-gentlemans.jpg',
+    alt: 'A McNutt of Donegal lambswool scarf in its kraft tube, standing beside a bottle of Messer del Fauno Nero d\u2019Avola and a tube of Guinness chocolate truffles',
+  },
+  'for-the-guinness-lover': {
+    file: 'hamper-for-the-guinness-lover.jpg',
+    alt: 'A gold box holding Guinness chocolates, Guinness caramel fudge, a Guinness enamel mug, a bag of coffee bags and a boxed set of Guinness mini pint chocolates',
+  },
+  'bubbles-bliss-hamper': {
+    file: 'hamper-bubbles-and-bliss.jpg',
+    alt: 'Two bottles of Prosecco either side of a Jo Browne day and night body oil gift set, packed in a green Parcel Concierge tray',
+  },
+  'bubbles-bliss-luxury-hamper': {
+    file: 'hamper-bubbles-and-bliss-luxury.jpg',
+    alt: 'Two small bottles of Moet and Chandon Champagne either side of a Jo Browne day and night body oil gift set, packed in a green Parcel Concierge tray',
+  },
+  'luxury-home-amp-indulgence-hamper': {
+    file: 'hamper-luxury-home-and-indulgence.jpg',
+    alt: 'A fluted Tipperary Crystal vase flanked by a La Bougie Pomelo 1830 candle and diffuser, a Chocolate Garden of Ireland box and Handmade Soap Company hand wash and lotion',
+  },
+  'new-baby-celebration': {
+    file: 'hamper-new-baby-celebration.jpg',
+    alt: 'A plush bunny and a rolled Nancy D\u2019s baby blanket beside a Pestle and Mortar skincare tube, a Chocolate Garden of Ireland box, a congratulations chocolate bar and a bottle of Cremant',
+  },
+  'taste-of-ireland-gluten-free-hamper': {
+    file: 'hamper-taste-of-ireland-gluten-free.jpg',
+    alt: 'A gluten free Irish box holding Keogh\u2019s crisps, Blanco Nino tortilla chips, gourmet sodabread toasts, Hadji Bey fruit jellies, a Ballymaloe relish set, Coffee Perfection coffee bags and Chocolate Garden of Ireland chocolates and hot chocolate',
+  },
+  'new-home-luxury-hamper': {
+    file: 'hamper-new-home-luxury.jpg',
+    alt: 'A bottle of Henriot Champagne beside a Rathbornes diffuser, a framed Ogham print and a boxed pair of Galway Crystal Champagne flutes',
+  },
+  'french-wine-port-christmas-trio': {
+    file: 'hamper-french-wine-and-port-trio.jpg',
+    alt: 'Three bottles, two Chateau Les Moulins and a Quinta port, seated in a patterned insert inside a navy Parcel Concierge gift box with the shop address printed on the front',
+  },
 }
 
 /**
@@ -117,6 +239,9 @@ for (const row of rows) {
 const products = []
 const skipped = { unpublished: 0, notHamper: 0, noPrice: 0, noImage: 0 }
 const takenSkus = new Set()
+const photographed = []
+const awaitingPhoto = []
+const unreadable = []
 
 for (const [handle, group] of byHandle) {
   const head = group.find((r) => (r.Title || '').trim())
@@ -155,7 +280,7 @@ for (const [handle, group] of byHandle) {
     .filter(Boolean)
   if (!variants.length) { skipped.noPrice += 1; continue }
 
-  const images = group
+  const exportImages = group
     .filter((r) => (r['Image Src'] || '').trim())
     .sort((a, b) => Number(a['Image Position'] || 0) - Number(b['Image Position'] || 0))
     .map((r) => ({
@@ -164,6 +289,33 @@ for (const [handle, group] of byHandle) {
       width: 1200,
       height: 1200,
     }))
+
+  // The supplied frame leads, because it is ours, it is served from our
+  // own domain and it was shot for this range. The export's CDN images
+  // follow it rather than being thrown away.
+  //
+  // Every hamper in the range has a registered frame, but only the files
+  // that have actually landed are used: a registered name with no file
+  // behind it would put a 404 at the top of the gallery. Drop the JPEG
+  // into public/photography under its registered name, re-run this
+  // importer, and it appears. Nothing here needs editing.
+  const supplied = SUPPLIED_PHOTOGRAPHY[handle]
+  const suppliedPath = supplied && join(process.cwd(), 'public/photography', supplied.file)
+  let images = exportImages
+  if (supplied && existsSync(suppliedPath)) {
+    const size = jpegSize(suppliedPath)
+    if (size) {
+      images = [
+        { src: `/photography/${supplied.file}`, alt: supplied.alt, width: size.width, height: size.height },
+        ...exportImages,
+      ]
+      photographed.push(handle)
+    } else {
+      unreadable.push(supplied.file)
+    }
+  } else if (supplied) {
+    awaitingPhoto.push(`${supplied.file}  (${handle})`)
+  }
   if (!images.length) { skipped.noImage += 1; continue }
 
   const body = (head['Body (HTML)'] || '').trim()
@@ -223,6 +375,17 @@ writeFileSync(
 
 console.log(`Wrote ${products.length} hampers to ${args.output}`)
 console.log('Skipped:', skipped)
+
+console.log(`\nSupplied photography: ${photographed.length} of ${Object.keys(SUPPLIED_PHOTOGRAPHY).length} frames in place.`)
+if (unreadable.length) {
+  console.log('\n  Could not read as JPEG, so not used:')
+  for (const file of unreadable) console.log(`    ${file}`)
+}
+if (awaitingPhoto.length) {
+  console.log('\n  Still waiting on these files. Drop each one into')
+  console.log('  public/photography under exactly this name and re-run:')
+  for (const line of awaitingPhoto.sort()) console.log(`    ${line}`)
+}
 for (const p of products) {
   console.log(
     ` €${Math.min(...p.variants.map((v) => Number(v.price))).toFixed(2).padStart(7)}`,

@@ -40,10 +40,13 @@ export const CONTENT: CmsData = {
       {
         kind: 'christmas',
         title: 'Christmas, sorted early',
-        body: 'Our full Christmas collection is being prepared now. You do not have to wait for it: every hamper on the site is ready to send, the French Wine and Port Christmas Trio is here already, and corporate Christmas campaigns are open.',
+        body: 'Our full Christmas collection is being prepared now. You do not have to wait for it: every hamper on the site is ready to send today, and corporate Christmas campaigns are open.',
         ctaLabel: 'Shop Christmas',
         ctaHref: '/occasions/christmas',
-        imageHandle: 'french-wine-port-christmas-trio',
+        // A Taste of Luxury. The client shot this range styled for
+        // Christmas, so the seasonal band shows a seasonal frame rather
+        // than a summer one with tinsel written around it.
+        imageHandle: '2-1',
       },
       { kind: 'budget-bands' },
       {

@@ -129,10 +129,10 @@ node scripts/catalogue/import-hampers.mjs --input <export>.csv --all
 ```
 
 The run prints how many frames are in place and names every one still
-outstanding. Four are in as of this writing: A Taste of Luxury, Hello Baby
-Boy, Hello Baby Girl and The Italian Job. The other sixteen are shot and
-identified but the files have not reached the repository yet, so those
-hampers still run on the export's Shopify CDN images.
+outstanding. **All twenty are in**, so every hamper on the site now leads
+its gallery with a frame served from our own domain, with the export's
+Shopify CDN images kept behind it. The Guinness Lover frame is the client's
+own V2 re-shoot.
 
 Two things to hold onto about this set:
 

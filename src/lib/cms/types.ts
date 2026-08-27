@@ -27,6 +27,12 @@ export type CuratedListing = {
 
 export type HomepageSlot =
   | { kind: 'hero'; headline: string; subhead: string; ctaLabel: string; ctaHref: string; imageHandle: string | null }
+  /**
+   * The seasonal band. Understated by design: type, one product
+   * photograph and a CTA, no seasonal clip art. Remove the slot from the
+   * list when the season ends.
+   */
+  | { kind: 'christmas'; title: string; body: string; ctaLabel: string; ctaHref: string; imageHandle: string | null }
   | { kind: 'budget-bands' }
   | { kind: 'featured-hampers'; title: string; handles: string[] }
   | { kind: 'hamper-builder'; title: string; body: string }

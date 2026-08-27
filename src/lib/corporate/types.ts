@@ -156,17 +156,19 @@ export function campaignValueMinor(recipientLimit: number, allowanceMinor: numbe
  * admin change is one edit, and nothing in a component repeats them. The
  * discount applies to the invoice we raise, never silently to a price a
  * recipient sees.
+ *
+ * UNPUBLISHED until the client formally confirms the numbers (August 2026
+ * brief). The tiers discussed were 25+ at 5%, 50+ at 7.5%, 100+ at 10%
+ * and 250+ custom quoted; when they are signed off, restore them here and
+ * every page, the wizard and the dashboard pick them up in one edit.
+ * Until then everything renders as quoted-on-enquiry.
  */
 export const VOLUME_TIERS: readonly {
   minRecipients: number
   discountPercent: number
   label: string
 }[] = [
-  { minRecipients: 250, discountPercent: 0, label: 'Custom pricing, quoted' },
-  { minRecipients: 100, discountPercent: 10, label: '10% corporate discount' },
-  { minRecipients: 50, discountPercent: 7.5, label: '7.5% corporate discount' },
-  { minRecipients: 25, discountPercent: 5, label: '5% corporate discount' },
-  { minRecipients: 1, discountPercent: 0, label: 'Standard pricing' },
+  { minRecipients: 1, discountPercent: 0, label: 'Volume pricing quoted with your campaign' },
 ]
 
 export function volumeTierFor(recipients: number) {

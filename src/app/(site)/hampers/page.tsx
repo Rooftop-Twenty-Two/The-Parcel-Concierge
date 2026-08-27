@@ -25,15 +25,12 @@ export default function HampersHub() {
       }}
       query={{ kinds: ['hamper'], sort: 'featured', first: 24 }}
       alcohol
+      // Only the bands the twenty-hamper range can fill: the thin listings
+      // redirect here, so a card for one would send the shopper in a loop.
       featuredPaths={[
-        '/hampers/under-75',
         '/hampers/75-125',
         '/hampers/125-200',
-        '/hampers/luxury-200-plus',
-        '/hampers/food',
-        '/hampers/wine',
-        '/hampers/whiskey',
-        '/hampers/pamper',
+        '/hampers/new-baby',
       ]}
     />
   )

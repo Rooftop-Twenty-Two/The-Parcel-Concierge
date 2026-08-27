@@ -18,37 +18,85 @@ import type { CmsData } from './types'
  */
 export const CONTENT: CmsData = {
   homepage: {
+    /**
+     * Slot order carries the August 2026 launch brief: the site is a
+     * gifting, hamper and wine business with a real shop, not a hamper
+     * catalogue. Hampers keep the hero (the wine-led hero was tried and
+     * reverted), Christmas gets the second band because it is the
+     * immediate commercial priority, and the Wine Vault, the builder, the
+     * corporate service and the physical shop all sit above the fold-adjacent
+     * bands they used to trail behind.
+     */
     slots: [
       {
         kind: 'hero',
-        headline: 'Hampers, packed by hand in Meath',
+        headline: 'Hampers, wine and gifts, packed by hand in Meath',
         subhead:
-          'We build every hamper ourselves from Irish producers we buy from directly. Free hand delivery locally, €8.95 anywhere else in Ireland.',
+          'We build every hamper ourselves in Dunshaughlin, and the Wine Vault holds over three hundred bottles we chose. Free hand delivery locally, €8.95 anywhere else in Ireland, free over €100.',
         ctaLabel: 'Shop all hampers',
         ctaHref: '/hampers',
-        imageHandle: 'for-my-valentine',
+        imageHandle: 'large-basket',
+      },
+      {
+        kind: 'christmas',
+        title: 'Christmas, sorted early',
+        body: 'Our full Christmas collection is being prepared now. You do not have to wait for it: every hamper on the site is ready to send, the French Wine and Port Christmas Trio is here already, and corporate Christmas campaigns are open.',
+        ctaLabel: 'Shop Christmas',
+        ctaHref: '/occasions/christmas',
+        imageHandle: 'french-wine-port-christmas-trio',
       },
       { kind: 'budget-bands' },
       {
         kind: 'featured-hampers',
         title: 'Hampers to start with',
-        // Every handle is a real hamper from the client's export. The
-        // selection covers the price range; the client can reorder it here.
+        // Every handle is a real hamper from the client's August 2026
+        // range. The selection covers the price range; the client can
+        // reorder it here.
         handles: [
-          'for-my-valentine',
-          '2',
-          '4',
-          'mellow-yellow',
-          'because-you-are-amazing',
-          'just-add-cheese',
-          'baby-boy',
-          'new-home-gift',
+          'the-perfect-duo',
+          'for-the-guinness-lover',
+          'all-ireland-food-hamper',
+          '5-2',
+          'because-you-re-amazing-hamper',
+          'luxury-home-amp-indulgence-hamper',
+          '3',
+          'large-basket',
+        ],
+      },
+      {
+        kind: 'wine-vault',
+        title: 'The Wine Vault',
+        body: 'Weeknight bottles, fine wine and Champagne, chosen by us. Buy a bottle, send a gift set, or join the Wine Vault Club and we will build a case around your own taste.',
+        // A spread across styles and prices rather than a Champagne shelf,
+        // so the band reads as a wine list and not a trophy cabinet. The
+        // exclusive import flag is still not in the Shopify export, so the
+        // homepage does not claim the eight exclusives the June review found
+        // until somebody marks them: see docs/build-status.md.
+        handles: [
+          'dom-perignon-champagne',
+          'chateau-mont-redon-chateauneuf-du-pape',
+          'cyclus',
+          'minuty-rose',
+          'bourgogne-pinot-noir',
+          'la-bascula-albarino',
+          'lanson-champagne',
+          'taylors-classic-vintage-port-2003',
         ],
       },
       {
         kind: 'hamper-builder',
         title: 'Build your own hamper',
         body: 'Pick the box, pick what goes in it, write the card. We pack it by hand and send it out the same way we send everything else.',
+      },
+      {
+        kind: 'corporate',
+        title: 'Reward your team without collecting a single address',
+        body: 'Choose the gifts and the budget, share one private link, and everyone picks their own gift and enters their own delivery details. No spreadsheets, no chasing home addresses, one invoice. Whether you are sending 30 gifts or 2,000, we have you covered.',
+      },
+      {
+        kind: 'visit-shop',
+        title: 'There is much more in store',
+        body: 'What you see online is the edit: our hampers, the wine, and everything you can put in a box you build. The shelves in Dunshaughlin go much further, with jewellery, skincare, candles, homeware, cards and a wine room you can browse bottle by bottle, and one of us on the floor to help you choose.',
       },
       {
         kind: 'occasions',
@@ -62,37 +110,12 @@ export const CONTENT: CmsData = {
           '/occasions/wedding-engagement',
         ],
       },
-      {
-        kind: 'wine-vault',
-        title: 'The Wine Vault',
-        body: 'Over three hundred wines, chosen by us. Buy a bottle, or let us send you a case as often as you like.',
-        // Replaced with real handles from the catalogue. The exclusive
-        // import flag is not in the Shopify export yet, so the homepage does
-        // not claim the eight exclusives the June review found until
-        // somebody marks them: see docs/build-status.md.
-        handles: [
-          'krug-grand-cuvee',
-          'dom-perignon-champagne',
-          'taylors-classic-vintage-port-2003',
-          'billiecart-salmon-blanc-de-blancs-brut-champagne-grand-cru',
-        ],
-      },
       { kind: 'trustpilot' },
-      {
-        kind: 'corporate',
-        title: 'Corporate gifting made easy',
-        body: 'Rewarding your team should not involve spreadsheets, addresses and hundreds of separate orders. Choose your gifts, share one private link and we take care of the rest.',
-      },
       {
         kind: 'makers',
         title: 'The people who make what is in the box',
-        body: 'We buy directly from small Irish producers, most of them within an hour of us. We are members of Guaranteed Irish.',
-        makerSlugs: ['kilbeg-dairy', 'the-handmade-soap-company', 'skelligs-chocolate'],
-      },
-      {
-        kind: 'visit-shop',
-        title: 'The shop holds far more than the website',
-        body: 'What you see online is the edit: our hampers, the wine, and everything you can put in a box you build. The shelves in Dunshaughlin go much further, with jewellery, skincare, candles, homeware, cards and a wine room you can browse bottle by bottle, and one of us on the floor to help you choose.',
+        body: 'We buy directly from small Irish producers and we are members of Guaranteed Irish.',
+        makerSlugs: ['the-handmade-soap-company', 'skelligs-chocolate', 'bean-and-goose'],
       },
       { kind: 'newsletter' },
     ],
@@ -102,40 +125,40 @@ export const CONTENT: CmsData = {
     {
       path: '/hampers',
       intro:
-        'Every hamper on this page is packed by hand in Dunshaughlin, from producers we buy from directly. Most of them are within an hour of us. Pick by budget, by occasion or by what is in the box, and we will write the card by hand before it goes out.',
+        'Every hamper on this page is packed by hand in Dunshaughlin. Pick by budget, by occasion or by what is in the box, and we will write the card by hand before it goes out.',
       seoBlock:
-        '<p>We have been building hampers in Co. Meath since we opened, and the range on this page is the part of the business we care most about. Each one starts with a producer rather than a theme. Kilbeg Dairy make cheddar three miles from our door. The Handmade Soap Company work out of Slane. Skelligs make their chocolate in Kerry and have done since 1996. We buy from all of them directly, which is why the boxes cost what they cost and why we can tell you where everything came from.</p><p>Hampers start at €49.95 and run past €200. If you are buying to a budget, the four bands above will get you there faster than scrolling. If you know the occasion but not the person, the occasion pages are a better starting point. And if nothing here is right, you can build your own box from scratch.</p><p>Free hand delivery in our local area, €8.95 anywhere else in the Republic of Ireland.</p>',
+        '<p>We have been building hampers in Co. Meath since we opened, and the range on this page is the part of the business we care most about. Each box is put together in the shop by one of us, from makers we choose ourselves: Hassetts biscuits, chocolate from The Chocolate Garden of Ireland, preserves from Filligan’s of Donegal, lambswool from McNutt of Donegal, and hand wash from The Handmade Soap Company in Slane.</p><p>Hampers start at €55 and run to €495. If you are buying to a budget, the four bands above will get you there faster than scrolling. If you know the occasion but not the person, the occasion pages are a better starting point. And if nothing here is right, you can build your own box from scratch.</p><p>Free hand delivery in our local area, €8.95 anywhere else in the Republic of Ireland, free on orders over €100.</p>',
       metaTitle: 'Irish hampers, hand packed in Co. Meath',
       metaDescription:
-        'Hampers built from Irish producers and packed by hand in Dunshaughlin. Shop by budget, occasion or contents. Free local hand delivery, €8.95 nationwide.',
+        'Hampers packed by hand in Dunshaughlin, from makers we choose ourselves. Shop by budget, occasion or contents. Free local hand delivery, €8.95 nationwide.',
     },
     {
       path: '/hampers/under-75',
       intro:
-        'Hampers under €75, which is where most people start. Everything here is still hand packed and still built from Irish producers, and none of it looks like a budget gift when the lid comes off.',
+        'Hampers under €75, which is where most people start. Everything here is still hand packed, and none of it looks like a budget gift when the lid comes off.',
       seoBlock:
-        '<p>Under €75 is the band we sell most of, and it is the one we work hardest on. The temptation at this price is to pad a box out with filler. We would rather send four things worth having than eight things nobody wants, so the boxes in this band are smaller and better rather than bigger and thinner.</p><p>For Someone Special at €49.95 is the one we send when the gesture matters more than the size. A Little Gift at €55 is exactly what it says. For that Special Person at €66.50 and Sweet Angel at €69 round out the band.</p><p>All of them arrive tissue lined and hand tied, with your message written on a card inside the lid. Free hand delivery locally, €8.95 anywhere else in Ireland.</p>',
+        '<p>The temptation at this price is to pad a box out with filler. We would rather send four things worth having than eight things nobody wants, so the boxes in this band are smaller and better rather than bigger and thinner.</p><p>The Perfect Duo at €55 is a bottle of rosé and a box of Baileys chocolates, and it does exactly what it needs to. For the Guinness Lover at €68 packs Guinness chocolates, caramel fudge and coffee around an enamel mug he will keep.</p><p>Both arrive tissue lined and hand tied, with your message written on a card inside the lid. Free hand delivery locally, €8.95 anywhere else in Ireland.</p>',
     },
     {
       path: '/hampers/75-125',
       intro:
         'Hampers from €75 to €125. This is the band for a gift that has to carry a bit of weight: a proper thank you, a milestone birthday, a client you want to keep.',
       seoBlock:
-        '<p>Between €75 and €125 a hamper stops being a nice gesture and starts being a real present. There is room in the box for something with a name on it, whether that is a bottle worth keeping, a candle poured in Ireland or something from the wine room.</p><p>Just add Cheese at €90 does what it promises. The Perfect New Home Gift at €93.50 is the housewarming answer. Baby Boy and Baby Girl at €105 cover the newest arrivals, and Mellow Yellow at €125 is the brightest box we pack.</p><p>Every box in this band is packed by hand, tissue lined and hand tied with ribbon, with a card written by hand. Free hand delivery locally, €8.95 anywhere else in Ireland.</p>',
+        '<p>Between €75 and €125 a hamper stops being a nice gesture and starts being a real present. There is room in the box for a bottle worth opening, a full Irish spread or a proper bit of knitwear.</p><p>Bubbles and Bliss at €80 pairs two bottles of Prosecco with Jo Browne body oils. The All Ireland Food Hamper at €105.95 holds McEntee’s tea, Keogh’s crisps, Hassetts biscuits and three jars from Filligan’s of Donegal. The Classic Gentleman’s Hamper at €105 wraps a McNutt lambswool scarf around a Sicilian red, and the Taste of Ireland Gluten Free Hamper at €92 feeds the house nobody can usually buy for.</p><p>Every box in this band is packed by hand, tissue lined and hand tied with ribbon. Free hand delivery locally, €8.95 anywhere else in Ireland, free over €100.</p>',
     },
     {
       path: '/hampers/125-200',
       intro:
-        'Hampers from €125 to €200. Bigger boxes, better bottles, and the glassware to go with them. This is the band for an anniversary, a wedding, or a client list where the names matter.',
+        'Hampers from €125 to €200. Bigger boxes, better bottles, and gifts that stay in the house after the food is gone. This is the band for an anniversary, a new arrival, or a client list where the names matter.',
       seoBlock:
-        '<p>At this level the box is built around one or two things worth talking about rather than a longer list of small ones. Glassware that outlives the wine, a bottle chosen from the fine wine shelf, and food that earns its place.</p><p>The range at this band is growing; if nothing here fits, the hamper builder will let you put exactly the right things in a box, and we will pack it the same way we pack everything else.</p>',
+        '<p>At this level the box is built around one or two things worth talking about rather than a longer list of small ones. The Italian Job at €134.95 sets two Italian wines beside a Caulfield Country walnut serving board. Because You’re Amazing at €139 is the pamper answer: Prosecco, chocolates, a Herb Dublin candle trio and a body care set from The Handmade Soap Company.</p><p>Hello Baby Boy and Hello Baby Girl, both €189.95, welcome the newest arrivals with a McNutt of Donegal lambswool blanket, a bedtime bear and a bottle for the parents. If nothing here fits, the hamper builder will let you put exactly the right things in a box, and we will pack it the same way we pack everything else.</p><p>Free hand delivery locally, €8.95 anywhere else in Ireland, free over €100.</p>',
     },
     {
       path: '/hampers/luxury-200-plus',
       intro:
-        'Hampers at €200 and over. Single cask whiskey, vintage Champagne, magnums and wooden cases. These are packed to order, so allow a couple of working days before they ship.',
+        'Hampers at €200 and over. Champagne, Rioja, crystal and the biggest baskets we pack.',
       seoBlock:
-        '<p>Above €200 we stop assembling and start sourcing. The Collector Reserve is a single cask Irish whiskey, which means one barrel, one bottling run and a number written on the label. The Fine Wine Cellar is six bottles, four of which no other Irish retailer stocks because we import them ourselves. The Anniversary Magnum is a magnum of Rioja Reserva from a bodega we buy direct from.</p><p>Boxes at this level are built rather than filled. Bottles are bedded in wood wool in a fitted case, the glassware sits either side, and the whole thing is sealed with wax. Each one carries a lead time on its page because we pack it after you order it, not before.</p><p>Free hand delivery locally, €8.95 anywhere else in Ireland, and we can deliver to a business address if that is easier.</p>',
+        '<p>Above €200 the boxes get deeper rather than louder. The New Home Luxury Hamper at €216 marks a move properly, with Henriot Champagne, Galway Crystal flutes, a Rathbournes diffuser and an Ogham print for the wall. A Taste of Luxury at €280 fills a basket with Italian wine, Prosecco, Shines pâté, chocolates and a La Bougie candle and diffuser.</p><p>The Grand Indulgence at €495 is the biggest thing we pack: Louis Roederer Champagne, Bordeaux and Rioja, Butlers chocolates, Mienas nougat, and fragrance for the house and the car, all in one basket.</p><p>Free delivery on these anywhere in Ireland, and we can deliver to a business address if that is easier.</p>',
     },
     {
       path: '/hampers/wine',
@@ -147,16 +170,9 @@ export const CONTENT: CmsData = {
     {
       path: '/hampers/food',
       intro:
-        'Food hampers built from Irish producers, most of them within an hour of Dunshaughlin. Cheese, breakfast, store cupboard and the full Christmas box.',
+        'Food hampers built around Irish makers. Tea, coffee, crisps, biscuits, chocolate and preserves, boxed and hand tied.',
       seoBlock:
-        '<p>Our food hampers start from a producer rather than a theme. Kilbeg Dairy make their cheddar three miles from us. Sheridans have been selling cheese in Meath since 1995. Ballymakenny Farm grow and fry their own crisps in Louth. Achill Island Sea Salt is dried in a shed on the Atlantic coast. We buy from all of them directly.</p><p>That means the boxes change a little with what is available, and it means we can tell you exactly where everything came from. Every hamper lists its full contents and its allergens on the product page, because a food gift where the allergens are a mystery is not much of a gift.</p><p>Free hand delivery locally, €8.95 anywhere else in Ireland.</p>',
-    },
-    {
-      path: '/hampers/whiskey',
-      intro:
-        'Irish whiskey hampers, from a two bottle tasting box up to a single cask reserve with a decanter. Glassware included in all of them.',
-      seoBlock:
-        '<p>Whiskey is the easiest gift to get slightly wrong. Buy the well known bottle and it looks like you did not think about it. Buy the obscure one and you are gambling on taste that is not your own.</p><p>Our whiskey boxes pair a bottle we would drink with the glassware and something to eat alongside it. The range is small and growing; the hamper builder carries the whiskey shelf if you would rather choose the bottle yourself.</p><p>Alcohol, so over 18s only.</p>',
+        '<p>Our food hampers start from the maker rather than a theme. The All Ireland box holds McEntee’s tea, Keogh’s crisps, Hassetts biscuits, Butlers chocolates and three jars from Filligan’s of Donegal. The gluten free box leans on The Foods of Athenry, Blanco Niño and The Chocolate Garden of Ireland, so the house that usually gets flowers can get fed instead.</p><p>The boxes change a little with what is available, and we can tell you where everything came from. If somebody in the house has an allergy, ring us before you order and we will go through the box with you.</p><p>Free hand delivery locally, €8.95 anywhere else in Ireland.</p>',
     },
     {
       path: '/hampers/pamper',
@@ -175,9 +191,9 @@ export const CONTENT: CmsData = {
     {
       path: '/hampers/new-baby',
       intro:
-        'New baby hampers with something in them for the parents as well. Merino blankets, cotton sleepsuits, and coffee that does not need a machine.',
+        'New baby hampers with something in them for the parents as well. Lambswool blankets, bedtime bears, and a bottle to wet the baby’s head.',
       seoBlock:
-        '<p>Every other new baby gift forgets the two people who have not slept. Ours do not: there is always something in the box for the parents as well as the baby.</p><p>Baby Boy Gift and Baby Girl Gift, both €105, are the two we pack most. For anything else, the baby shelf in the hamper builder has the blankets, teddies and keepsakes.</p>',
+        '<p>Every other new baby gift forgets the two people who have not slept. Ours do not: the baby gets a McNutt of Donegal lambswool blanket and a bedtime bear, and the parents get a bottle worth opening once the house is quiet.</p><p>Hello Baby Boy and Hello Baby Girl are both €189.95. The New Baby Celebration at €190 adds Pestle and Mortar skincare for Mum, and the New Mum and Baby Girl hamper at €195 is built around her rather than the baby, with Moët Rosé and a Jo Browne sleep set. For anything else, the baby shelf in the hamper builder has the blankets, teddies and keepsakes.</p><p>The bottle makes these alcohol deliveries, so somebody over 18 has to take one in.</p>',
     },
     {
       path: '/hampers/corporate',
@@ -189,12 +205,12 @@ export const CONTENT: CmsData = {
     {
       path: '/wine',
       intro:
-        'The Wine Vault. Over three hundred bottles, chosen by us, from weeknight reds to Champagne and Irish whiskey. Filter by grape, country, style or budget.',
+        'The Wine Vault. Over three hundred bottles, chosen by us, from weeknight reds to Champagne. Filter by grape, country, style or budget.',
       seoBlock:
         '<p>We are a gifting business that takes wine seriously, which is an unusual combination and the reason this list looks the way it does. We buy directly from estates where we can. Everything else on the list is here because we drank it and wanted to sell it.</p><p>Grape, region and style are filters on this page rather than separate sections, so you can start from Malbec, or from Spain, or from "something full bodied under €25", and get to the same place. If you would rather start from the money, the three budget pages will do it faster.</p><p>Wine is alcohol, so we can only deliver to somebody over 18 and there are places we cannot ship to. The delivery page sets out exactly where.</p>',
-      metaTitle: 'The Wine Vault: fine wine and Irish spirits',
+      metaTitle: 'The Wine Vault: wine and Champagne, chosen by us',
       metaDescription:
-        'Over three hundred wines, Champagnes and Irish spirits chosen by us. Filter by grape, country, style or budget.',
+        'Over three hundred wines and Champagnes chosen by us. Filter by grape, country, style or budget.',
     },
     {
       path: '/wine/fine-wines',
@@ -245,39 +261,32 @@ export const CONTENT: CmsData = {
         '<p>We compared our list against the other Irish retailers stocking the same wines, bottle for bottle and vintage for vintage. On the matches we could verify, we were at or below the cheapest Irish price about seven times out of ten. This page is the part of that we can stand over.</p><p>A wine only appears here when we hold a dated, verified comparison for it, and it comes off the page when the comparison goes stale. We do not name other retailers or quote their prices, because prices move and a claim that was true last month is a problem this month.</p><p>Everything on this page is also in the main list, filtered and sorted the usual way.</p>',
     },
     {
-      path: '/wine/irish-whiskey',
-      intro:
-        'Irish whiskey from distilleries small enough that somebody signs the label. Single pot still, single cask, and a coffee liqueur made twenty minutes from us.',
-      seoBlock:
-        '<p>Irish whiskey has got very good and very crowded at the same time. We list the bottles we would drink, mostly from distilleries working at a scale where the stillman knows the batch, and we say what each one actually tastes like rather than repeating the label.</p><p>Single pot still is the style that is particular to Ireland: malted and unmalted barley in the same mash, which gives you that thick, oily texture. Single cask means one barrel and one bottling run, so the bottle is numbered and cannot be repeated.</p><p>If it is a gift, the whiskey hampers put the glassware and the tasting notes in the box with the bottle. Over 18 only.</p>',
-    },
-    {
       path: '/gifts-by-budget/under-50',
       intro:
         'Everything we sell under €50, hampers and bottles together. This is the page for a Kris Kringle, a thank you, or a gift where the budget was set by somebody else.',
       seoBlock:
-        '<p>Buying to a ceiling is the most common way people shop for a gift and the hardest thing to do on most websites. This page exists so you can start from the number rather than working backwards from a category.</p><p>Under €50 gets you For Someone Special at €49.95, a very good bottle of wine, or a Champagne in a half bottle. Sorted from the top of the band down, so the most you can get for the money is first.</p><p>Free hand delivery locally, €8.95 anywhere else in Ireland.</p>',
+        '<p>Buying to a ceiling is the most common way people shop for a gift and the hardest thing to do on most websites. This page exists so you can start from the number rather than working backwards from a category.</p><p>Under €50 is bottle territory: a very good red, a crisp white, or Champagne in a half bottle. The hampers pick up one band above, starting with The Perfect Duo at €55.</p><p>Sorted from the top of the band down, so the most you can get for the money is first. Free hand delivery locally, €8.95 anywhere else in Ireland.</p>',
     },
     {
       path: '/gifts-by-budget/50-100',
       intro:
         'Gifts from €50 to €100, hampers and bottles together. The widest band we have and the one most people land in.',
       seoBlock:
-        '<p>This is the band where a gift stops needing an apology. Around €50 you are into a full food hamper from Irish producers. Around €80 you are into a pamper box or a whiskey and chocolate pairing. Around €100 you are into a cocktail box with the glassware included.</p><p>Because it covers so much, the filters on this page earn their keep. Narrow by occasion if you know what it is for, or by recipient if you know who it is for, and the list gets manageable quickly.</p><p>Everything here is hand packed and hand tied, with a card written by hand. Free hand delivery locally, €8.95 anywhere else in Ireland.</p>',
+        '<p>This is the band where a gift stops needing an apology. The Perfect Duo at €55 is rosé and chocolates in one box. For the Guinness Lover at €68 covers the man who has everything and drinks coffee. Bubbles and Bliss at €80 pairs two Proseccos with Jo Browne body oils, and the Taste of Ireland Gluten Free Hamper at €92 feeds the house nobody can usually buy for.</p><p>Because the band covers so much, the filters on this page earn their keep. Narrow by occasion if you know what it is for, or by recipient if you know who it is for, and the list gets manageable quickly.</p><p>Everything here is hand packed and hand tied, with a card written by hand. Free hand delivery locally, €8.95 anywhere else in Ireland.</p>',
     },
     {
       path: '/gifts-by-budget/100-150',
       intro:
         'Gifts from €100 to €150. Bigger hampers, better bottles, and the glassware to go with them.',
       seoBlock:
-        '<p>At this level you are buying something with a name on it. A single pot still whiskey with cut crystal tumblers. A wooden crate with Prosecco, a white and a red in it. A pamper box with a linen robe. The box is built around one thing worth talking about rather than lots of things worth nothing.</p><p>This is also where our corporate range starts, so if you are buying more than ten of anything on this page it is worth looking at the corporate gifting section first for volume pricing.</p><p>Free hand delivery locally, €8.95 anywhere else in Ireland.</p>',
+        '<p>At this level you are buying something with a name on it. A McNutt of Donegal lambswool scarf beside a Sicilian red. Two Italian wines with a Caulfield Country walnut board to serve on. A Tipperary Crystal robin mug with Prosecco and chocolate. The box is built around one thing worth talking about rather than lots of things worth nothing.</p><p>This is also where our corporate range starts, so if you are buying more than ten of anything on this page it is worth looking at the corporate gifting section first for volume pricing.</p><p>Free hand delivery locally, €8.95 anywhere else in Ireland, free over €100.</p>',
     },
     {
       path: '/gifts-by-budget/150-plus',
       intro:
-        'Gifts at €150 and over. Magnums, vintage Champagne, single cask whiskey and six bottle wooden cases. Most of these are packed to order.',
+        'Gifts at €150 and over. Champagne with the crystal to drink it from, lambswool, and the biggest baskets we pack.',
       seoBlock:
-        '<p>Above €150 we source rather than assemble, and several of the boxes carry a lead time because we pack them after you order. That is deliberate. A magnum bedded in wood wool in a fitted case is not something that sits on a shelf waiting.</p><p>Four of the six bottles in The Fine Wine Cellar are exclusive imports. The Collector Reserve is a numbered single cask bottling. The Anniversary Magnum is a magnum of Rioja Reserva that will keep for years if they want to put it away.</p><p>Sorted from the bottom of the band up. Free hand delivery locally, €8.95 anywhere else in Ireland.</p>',
+        '<p>Above €150 the boxes are built around things that stay in the house. Galway Crystal flutes with Henriot Champagne for a new home. A Tipperary Crystal vase beside a La Bougie diffuser. A lambswool blanket for a new baby, with a bottle for the parents.</p><p>The Grand Indulgence at €495 tops the range: Louis Roederer Champagne, Bordeaux, Rioja and a basket of food and fragrance to carry them.</p><p>Sorted from the bottom of the band up. Free delivery anywhere in Ireland at this level.</p>',
     },
     {
       path: '/gifts-for/her',
@@ -289,9 +298,9 @@ export const CONTENT: CmsData = {
     {
       path: '/gifts-for/him',
       intro:
-        'Gifts for him, across whiskey, wine and the food hampers. Filter by occasion or budget to narrow it down.',
+        'Gifts for him, across red wine, Guinness treats and the food hampers. Filter by occasion or budget to narrow it down.',
       seoBlock:
-        '<p>Mostly whiskey, mostly red wine, and the food hampers that lean savoury. That is an honest description of what people buy from this page rather than a claim about what men like.</p><p>The whiskey boxes are the strongest thing we do in this part of the range, because they put the glassware and the tasting notes in with the bottle. The Cook is the one to look at for somebody who actually cooks.</p><p>If you know the occasion or the budget, those pages will narrow it faster than this one. Free hand delivery locally, €8.95 anywhere else in Ireland.</p>',
+        '<p>Mostly red wine, Guinness chocolate and the food hampers that lean savoury. That is an honest description of what people buy from this page rather than a claim about what men like.</p><p>The Classic Gentleman’s Hamper wraps a McNutt of Donegal lambswool scarf around a bottle of Nero d’Avola and a box of Guinness truffles. For the Guinness Lover does the same job at a smaller budget, with an enamel mug he will actually use.</p><p>If you know the occasion or the budget, those pages will narrow it faster than this one. Free hand delivery locally, €8.95 anywhere else in Ireland.</p>',
     },
     {
       path: '/gifts-for/clients',
@@ -303,16 +312,16 @@ export const CONTENT: CmsData = {
     {
       path: '/occasions/christmas',
       intro:
-        'Christmas hampers and gifts. Order early: December cut-offs are tighter than people expect, and the larger boxes are packed to order.',
+        'Christmas hampers and gifts. The full Christmas collection is being prepared now; everything on this page is ready to send today. Order early: December cut-offs are tighter than people expect.',
       seoBlock:
-        '<p>Christmas is most of our year, and the boxes we build for it are the ones we put the most work into. The Grand Christmas Hamper has fourteen things in it, nearly all Irish, and the cake in it is made in Meath in October so it has time to mature before it ships.</p><p>If you are buying for a list rather than a person, the corporate section has volume pricing and will take your address list in one go. If you are buying one box for one house, the budget bands are the fastest way in.</p><p>Christmas delivery cut-offs are published on the delivery page as soon as An Post and our couriers confirm them. Order ahead of the cut-off rather than on it, because the last week is the week things go wrong.</p>',
+        '<p>If you are buying for a list rather than a person, the corporate section has volume pricing and will take your address list in one go. If you are buying one box for one house, the budget bands are the fastest way in.</p><p>Christmas delivery cut-offs are published on the delivery page as soon as An Post and our couriers confirm them. Order ahead of the cut-off rather than on it, because the last week is the week things go wrong.</p>',
     },
     {
       path: '/gifts',
       intro:
         'Small things to add to a hamper. Candles, chocolate, crystal and boards. These are here to finish a gift rather than to be the gift.',
       seoBlock:
-        '<p>This is a deliberately small section. It exists because people building a hamper often want one more thing in the box, not because we are trying to be a general gift shop. Everything here is something we already put in our own hampers, sold separately.</p><p>The candles and diffusers are poured in Ireland. The chocolate is from Skelligs in Kerry and Bean and Goose in Wexford. The crystal is the same glassware that goes in our whiskey and wine boxes.</p><p>Add any of it at the cart, or build a hamper from scratch and put it in there.</p>',
+        '<p>This is a deliberately small section. It exists because people building a hamper often want one more thing in the box, not because we are trying to be a general gift shop. Everything here is something we already put in our own hampers, sold separately.</p><p>The candles and diffusers are poured in Ireland. The chocolate is from Skelligs in Kerry and Bean and Goose in Wexford. The crystal is the same glassware that goes in our wine boxes.</p><p>Add any of it at the cart, or build a hamper from scratch and put it in there.</p>',
     },
   ],
 
@@ -326,34 +335,52 @@ export const CONTENT: CmsData = {
       handles: [],
     },
     {
+      // Curated while the full Christmas range lands: the trio is the one
+      // hamper that names Christmas, and the rest are the boxes that suit
+      // a December list. Swap in the Christmas collection as it arrives.
+      path: '/occasions/christmas',
+      handles: [
+        'french-wine-port-christmas-trio',
+        'large-basket',
+        '2-1',
+        'luxury-home-amp-indulgence-hamper',
+        'all-ireland-food-hamper',
+        'the-classic-gentleman-s-hamper',
+        'taste-of-ireland-gluten-free-hamper',
+        'because-you-re-amazing-hamper',
+        'lanson-champagne',
+        'taylors-classic-vintage-port-2003',
+      ],
+    },
+    {
       path: '/occasions/mothers-day',
       handles: [
-        'pamper-her',
-        'mellow-yellow',
-        'because-you-are-amazing',
-        'sweet-angel',
-        '5',
+        'because-you-re-amazing-hamper',
+        'bubbles-bliss-hamper',
+        'the-rose-crystal-celebration-hamper',
+        'bubbles-bliss-luxury-hamper',
+        'the-perfect-duo',
         'chateau-minuty-rose-et-or',
       ],
     },
     {
       path: '/occasions/fathers-day',
       handles: [
-        'a-gift-for-him',
-        '7',
-        'silkie-irish-whiskey-320g',
-        'galway-crystal-liffey-dof-whiskey-pair',
-        'five-farms-irish-cream-liquer',
-        'gin-stones',
+        'the-classic-gentleman-s-hamper',
+        'for-the-guinness-lover',
+        '5-2',
+        'all-ireland-food-hamper',
+        'chateau-mont-redon-chateauneuf-du-pape',
+        'dows-ruby-port',
       ],
     },
     {
       path: '/occasions/valentines',
       handles: [
-        'for-my-valentine',
-        '4',
-        '2',
-        'congratulations',
+        'the-rose-crystal-celebration-hamper',
+        'the-perfect-duo',
+        'bubbles-bliss-luxury-hamper',
+        'because-you-re-amazing-hamper',
         'moet-chandon-rose-375ml',
         'veuve-clicquot-rose',
       ],
@@ -366,43 +393,38 @@ export const CONTENT: CmsData = {
       handles: [],
     },
     {
+      // Get well is a no-alcohol listing, so only the alcohol-free boxes
+      // appear here.
       path: '/occasions/get-well',
       handles: [
-        'sweet-angel',
-        'pamper-her',
-        'today-is-all-about-you',
-        'congratulations',
+        'luxury-home-amp-indulgence-hamper',
+        'all-ireland-food-hamper',
+        'taste-of-ireland-gluten-free-hamper',
+        'for-the-guinness-lover',
       ],
     },
   ],
 
   makers: [
     {
-      slug: 'kilbeg-dairy',
-      name: 'Kilbeg Dairy',
-      county: 'Meath',
-      body: '<p>Kilbeg make farmhouse cheddar three miles from our door, from the milk of their own herd. They have been at it since 2015 and they still make it in batches small enough that the wheels are turned by hand.</p><p>Their cheddar is in most of our food hampers. It is the thing people write to us about afterwards.</p>',
-      productHandles: [],
-    },
-    {
       slug: 'the-handmade-soap-company',
       name: 'The Handmade Soap Company',
       county: 'Meath',
-      body: '<p>Based in Slane, ten minutes up the road. They make everything in small batches without synthetic fragrance or parabens, and they were doing it long before it was a selling point.</p><p>Their bath salts, hand cream and body oil are the base of every pamper box we build.</p>',
+      body: '<p>Based in Slane, ten minutes up the road. They make everything in small batches without synthetic fragrance or parabens, and they were doing it long before it was a selling point.</p><p>Their hand wash, lotion and body care sets are the base of the pamper boxes we build.</p>',
       productHandles: [],
     },
     {
       slug: 'skelligs-chocolate',
       name: 'Skelligs Chocolate',
       county: 'Kerry',
-      body: '<p>Skelligs have been making chocolate on the Ring of Kerry road since 1996, in a factory you can walk into and watch. It is about as far from Dunshaughlin as you can get and still be in Ireland, and it is worth the drive.</p><p>Their sea salt bar is in most of our boxes because it stands up next to a heavy whiskey, which is not true of most chocolate.</p>',
+      body: '<p>Skelligs have been making chocolate on the Ring of Kerry road since 1996, in a factory you can walk into and watch. It is about as far from Dunshaughlin as you can get and still be in Ireland, and it is worth the drive.</p><p>Their sea salt bar stands up next to a heavy red, which is not true of most chocolate.</p>',
       productHandles: [],
     },
     {
       slug: 'bean-and-goose',
       name: 'Bean and Goose',
       county: 'Wexford',
-      body: '<p>Two sisters making chocolate in a Wexford forest, which sounds like marketing and is not. They work in small batches with Irish ingredients and they change the range with the season.</p><p>Their praline selection goes into our celebration and anniversary boxes.</p>',
+      body: '<p>Two sisters making chocolate in a Wexford forest, which sounds like marketing and is not. They work in small batches with Irish ingredients and they change the range with the season.</p><p>Their pralines are what we reach for when a box needs proper chocolate.</p>',
       productHandles: [],
     },
   ],
@@ -413,7 +435,7 @@ export const CONTENT: CmsData = {
       title: 'How to choose a hamper',
       summary:
         'Start from the budget, not the category. A short guide to picking a hamper that lands, written by the people who pack them.',
-      body: '<p>Most people start from a category and work towards a price, which is backwards. Start from what you want to spend, because that decides everything else, and work out from there.</p><h2>Under €75</h2><p>You are buying four or five good things rather than ten average ones. A cheese board set, a breakfast box, a small pamper box. Do not expect a bottle of wine in this band unless it is a small box built around one.</p><h2>€75 to €125</h2><p>Room for a bottle with a name on it, or for glassware. This is the band where a gift stops needing an apology.</p><h2>€125 to €200</h2><p>The box is built around one or two things worth talking about. Cut crystal, a six bottle case, a single pot still whiskey.</p><h2>Over €200</h2><p>Sourced rather than assembled, usually packed to order, usually with a lead time. Magnums, vintage Champagne, single cask whiskey.</p><h2>Then check three things</h2><p>Does it contain alcohol, and can it? Are there allergies in the house? And when does it need to arrive? The last one catches more people than the other two put together, especially in December.</p>',
+      body: '<p>Most people start from a category and work towards a price, which is backwards. Start from what you want to spend, because that decides everything else, and work out from there.</p><h2>Under €75</h2><p>You are buying a gesture done properly. A bottle of rosé with chocolates, or a mug and a bar for the Guinness fan, boxed and tied so it lands like more than the sum of it.</p><h2>€75 to €125</h2><p>Room for a bottle with a name on it, a full Irish food spread or a pamper set. This is the band where a gift stops needing an apology.</p><h2>€125 to €200</h2><p>The box is built around one or two things worth talking about. Crystal, Italian wine with a board to serve on, a lambswool blanket.</p><h2>Over €200</h2><p>Champagne with the glasses to drink it from, and the biggest baskets we pack.</p><h2>Then check three things</h2><p>Does it contain alcohol, and can it? Are there allergies in the house? And when does it need to arrive? The last one catches more people than the other two put together, especially in December.</p>',
       publishedAt: '2026-08-01',
       updatedAt: '2026-08-01',
       productHandles: [],
@@ -449,7 +471,7 @@ export const CONTENT: CmsData = {
       title: 'About us',
       intro:
         'We are Karen and Ciaran McBride. We run The Parcel Concierge from Dunshaughlin in Co. Meath, and we pack every hamper ourselves.',
-      body: '<p>We started because we could not find a hamper we actually wanted to send. The ones in the shops were full of things nobody eats, wrapped in cellophane, from producers nobody could name. We thought we could do better by buying from small Irish producers directly and packing the boxes by hand.</p><p>That is still how it works. Most of what goes in our boxes comes from within an hour of us. Kilbeg Dairy make their cheddar three miles away. The Handmade Soap Company are in Slane. We drive to a lot of these places ourselves.</p><p>We are members of Guaranteed Irish. We hand deliver locally, which means one of us gets in the van, and we send everything else by courier at €8.95 anywhere in Ireland.</p>',
+      body: '<p>We pack every box ourselves in the shop in Dunshaughlin, from makers we know. The Handmade Soap Company are up the road in Slane, the preserves come from Filligan’s of Donegal, and the wine room is chosen bottle by bottle by us.</p><p>We are members of Guaranteed Irish. We hand deliver locally, which means one of us gets in the van, and we send everything else by courier at €8.95 anywhere in Ireland, free on orders over €100.</p>',
       updatedAt: '2026-08-01',
     },
     {

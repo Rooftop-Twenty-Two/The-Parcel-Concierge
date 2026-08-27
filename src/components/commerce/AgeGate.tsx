@@ -7,7 +7,7 @@ import { AGE_GATE } from '@/lib/site-config'
 /**
  * Age verification for alcohol routes.
  *
- * Rendered on wine, spirits and any listing or product that can contain
+ * Rendered on wine and any listing or product that can contain
  * alcohol, and again at the checkout handoff.
  *
  * The check runs after hydration rather than on the server. The cookie is

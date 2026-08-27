@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { verifyLines } from '@/lib/commerce'
 import { addLines } from '@/lib/commerce/cart'
 import type { CartLineAttribute } from '@/lib/commerce/types'
-import { BOX_OPTIONS, BUNDLE_ATTRIBUTES } from '@/lib/hamper-builder'
+import { BOW_LABEL, BOX_OPTIONS, BUNDLE_ATTRIBUTES } from '@/lib/hamper-builder'
 
 /**
  * Adds a built hamper to the cart as a parent line plus component lines.
@@ -37,6 +37,8 @@ export async function addBuiltHamperAction(input: {
   components: { variantId: string; quantity: number }[]
   giftMessage: string
   ribbonColour: string
+  /** Variant id of the gift-bow product, when the €1.50 bow was added. */
+  bowVariantId?: string | null
 }): Promise<BuilderResult> {
   const box = BOX_OPTIONS.find((b) => b.id === input.boxId)
   if (!box) return { ok: false, message: 'Pick a box before you add the hamper to your cart.' }
@@ -55,6 +57,7 @@ export async function addBuiltHamperAction(input: {
 
   const problems = await verifyLines([
     { variantId: input.boxVariantId, quantity: 1 },
+    ...(input.bowVariantId ? [{ variantId: input.bowVariantId, quantity: 1 }] : []),
     ...input.components,
   ])
 
@@ -86,6 +89,9 @@ export async function addBuiltHamperAction(input: {
   if (input.ribbonColour.trim()) {
     parentAttributes.push({ key: BUNDLE_ATTRIBUTES.ribbon, value: input.ribbonColour.trim() })
   }
+  if (input.bowVariantId) {
+    parentAttributes.push({ key: BUNDLE_ATTRIBUTES.bow, value: BOW_LABEL })
+  }
 
   const componentAttributes: CartLineAttribute[] = [
     { key: BUNDLE_ATTRIBUTES.id, value: bundleId },
@@ -97,6 +103,9 @@ export async function addBuiltHamperAction(input: {
 
   const cart = await addLines([
     { variantId: input.boxVariantId, quantity: 1, attributes: parentAttributes },
+    ...(input.bowVariantId
+      ? [{ variantId: input.bowVariantId, quantity: 1, attributes: componentAttributes }]
+      : []),
     ...input.components.map((component) => ({
       variantId: component.variantId,
       quantity: component.quantity,

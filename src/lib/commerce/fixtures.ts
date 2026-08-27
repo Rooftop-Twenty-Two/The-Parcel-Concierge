@@ -183,7 +183,10 @@ export function fixtureProduct(handle: string): Product | null {
 
 export function fixtureAllHandles(): string[] {
   // The sitemap must never learn a builder item exists: they have no URL.
-  return PRODUCTS.filter((p) => p.kind !== 'builder-item').map((p) => p.handle)
+  // Hidden mechanism products (the builder's box and bow) stay out too.
+  return PRODUCTS.filter((p) => p.kind !== 'builder-item' && !HIDDEN_FROM_LISTINGS.has(p.handle)).map(
+    (p) => p.handle,
+  )
 }
 
 /**

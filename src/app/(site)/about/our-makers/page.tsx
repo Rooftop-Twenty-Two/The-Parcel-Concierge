@@ -8,7 +8,7 @@ export const revalidate = 3600
 export const metadata: Metadata = {
   title: 'Our makers',
   description:
-    'The small Irish producers whose work goes into our hampers. Kilbeg Dairy in Meath, The Handmade Soap Company in Slane, Skelligs Chocolate in Kerry and more.',
+    'The small Irish producers whose work goes into our hampers. The Handmade Soap Company in Slane, Skelligs Chocolate in Kerry, Bean and Goose in Wexford and more.',
   alternates: { canonical: '/about/our-makers' },
 }
 

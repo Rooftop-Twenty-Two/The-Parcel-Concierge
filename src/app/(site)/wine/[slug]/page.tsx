@@ -60,9 +60,11 @@ export default async function WineSlugPage({ params, searchParams }: Props) {
     getTrustSummary(),
     // Cross-sell into hampers rather than into more bottles: the point of
     // this site is that a bottle becomes a gift when it arrives in a box.
+    // The current range types every hamper as plain "Hamper", so the
+    // nearest thing to a wine hamper is one that carries a bottle.
     queryProducts({
       kinds: ['hamper'],
-      productTypes: product.kind === 'spirit' ? ['Whiskey hamper'] : ['Wine hamper'],
+      tags: ['contains:alcohol'],
       first: 4,
     }),
   ])

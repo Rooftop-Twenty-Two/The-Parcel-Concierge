@@ -108,6 +108,33 @@
         "occasionTags": [],
         "recipientTags": []
       }
+    },
+    {
+      "handle": "gift-bow",
+      "title": "Hand tied bow",
+      "descriptionHtml": "<p>A hand tied bow on top of the ribbon, tied when the box is packed. An optional finishing touch for a built hamper.</p>",
+      "productType": "Custom hamper",
+      "vendor": "The Parcel Concierge",
+      "tags": [
+        "type:addon",
+        "price:under-50"
+      ],
+      "images": [
+        {
+          "src": "/placeholder/hamper-3.png",
+          "alt": "A gift box tied with ribbon and finished with a hand tied bow",
+          "width": 1200,
+          "height": 1500
+        }
+      ],
+      "variants": [
+        {
+          "sku": "TPC-BOW",
+          "title": "Default Title",
+          "price": "1.50",
+          "inventoryQuantity": null
+        }
+      ]
     }
   ]
 }

@@ -20,7 +20,18 @@
  * Usage:
  *   node scripts/catalogue/import-hampers.mjs \
  *     --input /path/to/products_export_1.csv \
- *     [--output data/catalogue/hampers.json]
+ *     [--output data/catalogue/hampers.json] \
+ *     [--all]
+ *
+ * --all is for a curated, hampers-only export: every product in the file
+ * is a hamper to be used on the site, so the Type/tag test and the
+ * Published filter are skipped. The August 2026 range arrived this way:
+ * a fresh store where every product is still a draft, with no Type, no
+ * tags and no live stock counts. Under --all the placeholder inventory
+ * numbers are imported as untracked (null) rather than as literal zeros,
+ * because a draft store's zeros would render the entire range sold out
+ * and hide it from every listing. Real counts arrive when the store
+ * publishes.
  */
 
 import { mkdirSync, writeFileSync } from 'node:fs'
@@ -49,11 +60,28 @@ const TAG_MAP = {
 }
 
 /**
+ * Occasions read from the shop's own product titles, for exports that
+ * carry no merchandising tags at all (the August 2026 range). Same
+ * discipline as the alcohol signal below: the title is the client's own
+ * description of the box, so "Hello Baby Boy" earning occasion:new-baby
+ * is reading their words, not inventing merchandising. Deliberately
+ * conservative: a title that names no occasion gets no occasion tag.
+ */
+const TITLE_OCCASION_SIGNALS = [
+  [/\b(baby|new mum)\b/i, 'occasion:new-baby'],
+  [/\bchristmas\b/i, 'occasion:christmas'],
+  [/\bwedding\b/i, 'occasion:wedding'],
+  [/\banniversary\b/i, 'occasion:anniversary'],
+  [/\bbirthday\b/i, 'occasion:birthday'],
+  [/\bthank[- ]you\b/i, 'occasion:thank-you'],
+]
+
+/**
  * Whether the box contains alcohol, read from the shop's own words. This
  * drives the age gate, so it errs towards true: a gate on an alcohol-free
  * box is a wasted click, a missing gate on a Champagne box is a problem.
  */
-const ALCOHOL_SIGNAL = /\b(wine|champagne|prosecco|cava|bubbles|gin|whiskey|whisky|vodka|liqueur|baileys|beer|rum|brandy|aperol|cocktail)\b/i
+const ALCOHOL_SIGNAL = /\b(wine|champagne|prosecco|cava|cr[eé]mant|sparkling|port|sherry|bubbles|gin|whiskey|whisky|vodka|liqueur|baileys|beer|rum|brandy|aperol|cocktail|nero d['’]avola)\b/i
 
 function priceTag(price) {
   if (price < 50) return 'price:under-50'
@@ -63,13 +91,14 @@ function priceTag(price) {
 }
 
 function parseArgs(argv) {
-  const args = { input: '', output: 'data/catalogue/hampers.json' }
+  const args = { input: '', output: 'data/catalogue/hampers.json', all: false }
   for (let i = 0; i < argv.length; i += 1) {
     if (argv[i] === '--input' || argv[i] === '-i') args.input = argv[++i] ?? ''
     else if (argv[i] === '--output' || argv[i] === '-o') args.output = argv[++i] ?? args.output
+    else if (argv[i] === '--all') args.all = true
   }
   if (!args.input) {
-    console.error('Usage: import-hampers.mjs --input <export.csv> [--output <file.json>]')
+    console.error('Usage: import-hampers.mjs --input <export.csv> [--output <file.json>] [--all]')
     process.exit(1)
   }
   return args
@@ -87,6 +116,7 @@ for (const row of rows) {
 
 const products = []
 const skipped = { unpublished: 0, notHamper: 0, noPrice: 0, noImage: 0 }
+const takenSkus = new Set()
 
 for (const [handle, group] of byHandle) {
   const head = group.find((r) => (r.Title || '').trim())
@@ -94,9 +124,9 @@ for (const [handle, group] of byHandle) {
 
   const tags = (head.Tags || '').split(',').map((t) => t.trim()).filter(Boolean)
   const lower = tags.map((t) => t.toLowerCase())
-  const isHamper = /^hamper$/i.test((head.Type || '').trim()) || lower.includes('hampers')
+  const isHamper = args.all || /^hamper$/i.test((head.Type || '').trim()) || lower.includes('hampers')
   if (!isHamper) { skipped.notHamper += 1; continue }
-  if (head.Published !== 'true') { skipped.unpublished += 1; continue }
+  if (!args.all && head.Published !== 'true') { skipped.unpublished += 1; continue }
 
   const title = head.Title.trim()
 
@@ -107,11 +137,19 @@ for (const [handle, group] of byHandle) {
       if (!Number.isFinite(price) || price <= 0) return null
       const qtyRaw = (r['Variant Inventory Qty'] || '').trim()
       const tracked = (r['Variant Inventory Tracker'] || '').trim() !== ''
+      // The synthesised SKU keeps the whole handle: a 22-character prefix
+      // collided the moment the export held two handles differing only in
+      // a "-copy" suffix, and SKU is the ingest idempotency key.
+      let sku = (r['Variant SKU'] || '').trim() || `TPC-H-${handle.toUpperCase().replace(/-/g, '').slice(0, 40)}`
+      while (takenSkus.has(sku)) sku += '-2'
+      takenSkus.add(sku)
       return {
-        sku: (r['Variant SKU'] || '').trim() || `TPC-H-${handle.toUpperCase().replace(/-/g, '').slice(0, 22)}`,
+        sku,
         title: (r['Option1 Value'] || 'Default Title').trim() || 'Default Title',
         price: price.toFixed(2),
-        inventoryQuantity: tracked ? Number(qtyRaw || 0) : null,
+        // See --all in the header: a draft store's zeros are placeholders,
+        // not stock decisions.
+        inventoryQuantity: args.all || !tracked ? null : Number(qtyRaw || 0),
       }
     })
     .filter(Boolean)
@@ -139,6 +177,10 @@ for (const [handle, group] of byHandle) {
     const mapped = TAG_MAP[tag]
     if (mapped && !productTags.includes(mapped)) productTags.push(mapped)
   }
+  for (const [signal, occasionTag] of TITLE_OCCASION_SIGNALS) {
+    if (signal.test(title) && !productTags.includes(occasionTag)) productTags.push(occasionTag)
+  }
+  const occasionTags = productTags.filter((t) => t.startsWith('occasion:'))
 
   products.push({
     handle,
@@ -153,6 +195,7 @@ for (const [handle, group] of byHandle) {
       contents: [],
       allergens: '',
       containsAlcohol,
+      ...(occasionTags.length ? { occasionTags } : {}),
     },
     // The export has no structured contents or allergens. The site renders
     // without them; ingest refuses to publish until they are filled in.

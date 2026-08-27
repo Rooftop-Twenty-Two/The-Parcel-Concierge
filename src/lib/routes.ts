@@ -37,7 +37,7 @@ export const NAV = [
   {
     label: 'Hampers',
     href: '/hampers',
-    // The menu lists only listings the real catalogue can fill: sixteen
+    // The menu lists only listings the real catalogue can fill: twenty
     // hampers today, so the thin sub-listings stay out of the nav until
     // the range grows (the routes themselves redirect to /hampers).
     columns: [
@@ -45,8 +45,9 @@ export const NAV = [
         title: 'Hampers',
         links: [
           { label: 'All hampers', href: '/hampers' },
-          { label: 'Under €75', href: '/hampers/under-75' },
           { label: '€75 to €125', href: '/hampers/75-125' },
+          { label: '€125 to €200', href: '/hampers/125-200' },
+          { label: 'New baby', href: '/hampers/new-baby' },
           { label: 'Build your own hamper', href: '/build-your-own-hamper' },
         ],
       },
@@ -60,7 +61,7 @@ export const NAV = [
     },
   },
   {
-    label: 'Wine & Spirits',
+    label: 'Wine',
     href: '/wine',
     columns: [
       {
@@ -120,6 +121,9 @@ export const NAV = [
       imageAlt: 'A wooden herb growing box, a bottle of red wine and a hand lettered card in a gift box',
     },
   },
+  // Seasonal: the Christmas entry point gets its own top-level item while
+  // the season runs. Remove this row in January.
+  { label: 'Christmas', href: '/occasions/christmas', columns: [], promo: null },
   {
     label: 'Occasions',
     href: '/occasions',

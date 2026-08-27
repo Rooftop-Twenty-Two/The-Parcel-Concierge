@@ -129,18 +129,21 @@ export default function CorporateGiftingPage() {
           <div className="max-w-xl">
             <h2 className="font-display text-3xl text-navy">Volume pricing</h2>
             <p className="mt-2 text-sm text-ink-muted">
-              Corporate discounts apply to the campaign invoice automatically. For 250 recipients
-              and up, pricing is quoted.
+              {VOLUME_TIERS.some((tier) => tier.discountPercent > 0)
+                ? 'Corporate discounts apply to the campaign invoice automatically. For 250 recipients and up, pricing is quoted.'
+                : 'We price every campaign on its own numbers: tell us how many people and the budget per person, and the quote comes back with your campaign. The bigger the list, the better the price.'}
             </p>
           </div>
-          <ul className="flex flex-wrap gap-3 text-sm">
-            {[...VOLUME_TIERS].reverse().map((tier) => (
-              <li key={tier.minRecipients} className="border border-navy/20 bg-cream px-4 py-3">
-                <span className="block font-serif text-lg text-navy">{tier.minRecipients}+</span>
-                <span className="text-ink-muted">{tier.label}</span>
-              </li>
-            ))}
-          </ul>
+          {VOLUME_TIERS.some((tier) => tier.discountPercent > 0) ? (
+            <ul className="flex flex-wrap gap-3 text-sm">
+              {[...VOLUME_TIERS].reverse().map((tier) => (
+                <li key={tier.minRecipients} className="border border-navy/20 bg-cream px-4 py-3">
+                  <span className="block font-serif text-lg text-navy">{tier.minRecipients}+</span>
+                  <span className="text-ink-muted">{tier.label}</span>
+                </li>
+              ))}
+            </ul>
+          ) : null}
         </div>
       </section>
 

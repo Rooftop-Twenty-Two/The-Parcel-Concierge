@@ -83,9 +83,7 @@ function shelfQuery(query: (typeof PICKER_SHELVES)[number]['query']): ProductQue
       return { kinds: ['builder-item'], tags: [`aisle:${query.aisle}`] }
     case 'wine':
       return { kinds: ['wine'] }
-    case 'spirits':
-      return { kinds: ['spirit'] }
     case 'all':
-      return { kinds: ['builder-item', 'wine', 'spirit'] }
+      return { kinds: ['builder-item', 'wine'] }
   }
 }

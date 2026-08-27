@@ -1,5 +1,5 @@
 {
-  "source": "Shopify products export, imported by scripts/catalogue/import-shopify-export.mjs from /tmp/export/products_export_1.csv",
+  "source": "Shopify products export, imported by scripts/catalogue/import-shopify-export.mjs from /tmp/export/products_export_1.csv; spirits removed August 2026, the shop does not stock them",
   "currencyCode": "EUR",
   "products": [
     {
@@ -390,43 +390,10 @@
       "needsReview": "No description in the export. Needs copy before it can be published."
     },
     {
-      "handle": "follain-raspberry-pink-gin",
-      "title": "Folláin Raspberry & Pink Gin",
-      "descriptionHtml": "",
-      "productType": "Spirit",
-      "vendor": "Taste the View",
-      "tags": [
-        "type:spirit",
-        "price:under-50"
-      ],
-      "images": [
-        {
-          "src": "https://cdn.shopify.com/s/files/1/0544/1411/5009/files/thumbnail_Follain-PinkGin-02.png?v=1775216410",
-          "alt": "Bottle of Folláin Raspberry & Pink Gin",
-          "width": 1200,
-          "height": 1200
-        }
-      ],
-      "variants": [
-        {
-          "sku": "P2785S",
-          "title": "Default Title",
-          "price": "3.95",
-          "inventoryQuantity": 8
-        }
-      ],
-      "wine": {
-        "producer": "Taste the View",
-        "grape": [],
-        "isExclusiveImport": false
-      },
-      "needsReview": "No description in the export. Needs copy before it can be published."
-    },
-    {
       "handle": "idda-sicilia",
       "title": "IDDA Sicilia Bianco",
       "descriptionHtml": "",
-      "productType": "Wine",
+      "productType": "White wine",
       "vendor": "Cassidy Wines",
       "tags": [
         "type:wine",
@@ -491,38 +458,6 @@
         "isExclusiveImport": false
       },
       "needsReview": "No description in the export. Needs copy before it can be published."
-    },
-    {
-      "handle": "galway-crystal-liffey-dof-whiskey-pair",
-      "title": "Galway Crystal Liffey DOF/Whiskey Pair",
-      "descriptionHtml": "<p><span>Indulge in the rich aromas and flavours of your favourite whiskey with our Liffey pair of double old fashioned tumblers. Crafted with precision and elegance, these glasses are designed to enhance your sipping experience, whether you're enjoying a solitary moment of relaxation or entertaining guests with sophistication.</span></p>\n<ul>\n<li>Come as a set of 2</li>\n<li>Come in a gift box</li>\n<li>Measure 9cmD x 10cmH x 200mlC</li>\n</ul>",
-      "productType": "Spirit",
-      "vendor": "Belleek Group",
-      "tags": [
-        "type:spirit",
-        "price:under-50"
-      ],
-      "images": [
-        {
-          "src": "https://cdn.shopify.com/s/files/1/0544/1411/5009/files/G800012_ar_01.webp?v=1771689616",
-          "alt": "Bottle of Galway Crystal Liffey DOF/Whiskey Pair",
-          "width": 1200,
-          "height": 1200
-        }
-      ],
-      "variants": [
-        {
-          "sku": "P2676S",
-          "title": "Default Title",
-          "price": "24.95",
-          "inventoryQuantity": 2
-        }
-      ],
-      "wine": {
-        "producer": "Belleek Group",
-        "grape": [],
-        "isExclusiveImport": false
-      }
     },
     {
       "handle": "moet-chandon-rose-375ml",
@@ -2066,71 +2001,6 @@
       }
     },
     {
-      "handle": "gin-stones",
-      "title": "Gin stones",
-      "descriptionHtml": "",
-      "productType": "Spirit",
-      "vendor": "gentlemenshardware",
-      "tags": [
-        "type:spirit",
-        "price:under-50"
-      ],
-      "images": [
-        {
-          "src": "https://cdn.shopify.com/s/files/1/0544/1411/5009/files/EED828D1-5A25-4C88-ACD1-60CBC0D78EE9.jpg?v=1739617498",
-          "alt": "Bottle of Gin stones",
-          "width": 1200,
-          "height": 1200
-        }
-      ],
-      "variants": [
-        {
-          "sku": "P1365S",
-          "title": "Default Title",
-          "price": "13.00",
-          "inventoryQuantity": 2
-        }
-      ],
-      "wine": {
-        "producer": "gentlemenshardware",
-        "grape": [],
-        "isExclusiveImport": false
-      },
-      "needsReview": "No description in the export. Needs copy before it can be published."
-    },
-    {
-      "handle": "whiskey-chillers",
-      "title": "Whiskey Chillers",
-      "descriptionHtml": "<p>This set of 6 Whiskey Chillers is perfect for keeping your beverages cool without diluting them. Made from high-quality granite and soapstone, these chillers are a must-have for any whisky connoisseur. Plus, they come with a convenient velvet pouch for easy storage. Upgrade your drinking experience with Whiskey Chillers.</p>",
-      "productType": "Spirit",
-      "vendor": "gentlemenshardware",
-      "tags": [
-        "type:spirit",
-        "price:under-50"
-      ],
-      "images": [
-        {
-          "src": "https://cdn.shopify.com/s/files/1/0544/1411/5009/files/GEN360_PRO_WhiskyChillers_01_HI.jpg?v=1739442092",
-          "alt": "Bottle of Whiskey Chillers",
-          "width": 1200,
-          "height": 1200
-        }
-      ],
-      "variants": [
-        {
-          "sku": "P1353S",
-          "title": "Default Title",
-          "price": "11.95",
-          "inventoryQuantity": 0
-        }
-      ],
-      "wine": {
-        "producer": "gentlemenshardware",
-        "grape": [],
-        "isExclusiveImport": false
-      }
-    },
-    {
       "handle": "astoria-fashion-victim-rose-spumante",
       "title": "Astoria Fashion Victim Rosé Spumante",
       "descriptionHtml": "<p>Discover the refreshing flavor of Astoria Fashion Victim Rosé Spumante Extra Dry. Made with the finest ingredients, this wine boasts a perfect balance of sweetness and acidity. Savor the elegant notes of red berries and flowers while indulging in a luxurious experience. Perfect for any occasion!</p>",
@@ -2235,48 +2105,6 @@
         "grape": [],
         "isExclusiveImport": false,
         "giftSet": true
-      }
-    },
-    {
-      "handle": "whiskey-stackable-set-2-pce",
-      "title": "Whiskey Stackable Set 3 pce",
-      "descriptionHtml": "<p>Whether for special occasions such as a wedding gift or simply for everyday use no home is complete without a quality Whiskey Set.</p>\n<p>The Adare 3-piece Whiskey Stackable Set makes the perfect gift whatever the occasion.</p>\n<p>Enjoy the light catch and highlight the distinctive crystal cuts that makes our whiskey set so special.</p>\n<p>When stacked the 3 Glasses and Decanter make a striking centre piece to your home.</p>\n<p>This whiskey set comes presented beautifully in a stylish gift box.</p>",
-      "productType": "Spirit",
-      "vendor": "Newgrange Living",
-      "tags": [
-        "type:spirit",
-        "price:under-50",
-        "occasion:christmas",
-        "recipient:couple",
-        "recipient:family",
-        "recipient:him"
-      ],
-      "images": [
-        {
-          "src": "https://cdn.shopify.com/s/files/1/0544/1411/5009/files/2016323-adare-whiskey-stackable-set-3piece-n2.jpg?v=1736349215",
-          "alt": "Bottle of Whiskey Stackable Set 3 pce",
-          "width": 1200,
-          "height": 1200
-        },
-        {
-          "src": "https://cdn.shopify.com/s/files/1/0544/1411/5009/files/2016323-adare-whiskey-stackable-set-3piece-n.jpg?v=1736349234",
-          "alt": "Bottle of Whiskey Stackable Set 3 pce",
-          "width": 1200,
-          "height": 1200
-        }
-      ],
-      "variants": [
-        {
-          "sku": "P1025S",
-          "title": "Default Title",
-          "price": "39.95",
-          "inventoryQuantity": 0
-        }
-      ],
-      "wine": {
-        "producer": "Newgrange Living",
-        "grape": [],
-        "isExclusiveImport": false
       }
     },
     {
@@ -2463,7 +2291,7 @@
       "handle": "las-mulas-sauvignon-blanc",
       "title": "Las Mulas Sauvignon Blanc",
       "descriptionHtml": "<p>Discover the crisp, refreshing taste of Las Mulas Sauvignon Blanc. Made with sustainably grown grapes, this wine boasts a bright acidity and notes of citrus and tropical fruits. Enjoy on its own or pair with seafood or light salads.</p>",
-      "productType": "Red wine",
+      "productType": "White wine",
       "vendor": "Findlater Wines",
       "tags": [
         "type:wine",
@@ -4018,7 +3846,7 @@
       "handle": "festive-bubbles-and-wine",
       "title": "Luxury Festive Bubbles & Wine",
       "descriptionHtml": "<p data-mce-fragment=\"1\">Introducing Festive luxury Bubbles and Wine—the perfect combination of sparkling champagne and premium red &amp; white wines to make your celebration special. Enjoy the festive fizz and the intense, velvety flavors of the best wines, for an unforgettable experience.</p>\n<ul>\n<li>Louis Michel Chablis 1er Cru Butteaux</li>\n<li>Chateau Pontac Lynch Margaux </li>\n<li>\n<p>Moët &amp; Chandon Brut Impérial NV</p>\n</li>\n</ul>",
-      "productType": "Wine",
+      "productType": "Wine gift set",
       "vendor": "Parcel Concierge",
       "tags": [
         "type:wine",
@@ -5665,78 +5493,10 @@
       }
     },
     {
-      "handle": "chambord-black-raspberry-liquer",
-      "title": "Chambord Black Raspberry Liquer Gift Box",
-      "descriptionHtml": "<h4 class=\"margin-top--xs aos-init aos-animate\" data-aos-duration=\"1000\" data-aos=\"fade-in\">Chambord the finest premium Black Raspberry Liqueur </h4>",
-      "productType": "Wine gift set",
-      "vendor": "Edward Dillon",
-      "tags": [
-        "type:spirit",
-        "price:under-50"
-      ],
-      "images": [
-        {
-          "src": "https://cdn.shopify.com/s/files/1/0544/1411/5009/files/OIP.jpg?v=1708684433",
-          "alt": "Bottle of Chambord Black Raspberry Liquer Gift Box",
-          "width": 1200,
-          "height": 1200
-        }
-      ],
-      "variants": [
-        {
-          "sku": "EDWA-1826",
-          "title": "Default Title",
-          "price": "25.95",
-          "inventoryQuantity": 12
-        }
-      ],
-      "wine": {
-        "producer": "Edward Dillon",
-        "grape": [],
-        "isExclusiveImport": false,
-        "fineWine": true
-      }
-    },
-    {
-      "handle": "st-germain",
-      "title": "St‑Germain 50cl",
-      "descriptionHtml": "<span data-mce-fragment=\"1\">St‑Germain is a French liqueur made with fresh elderflowers, handpicked in full bloom every spring. Up to one thousand carefully selected flowers to fill every bottle! The result: a finely crafted, perfectly balanced liqueur that leaves a lasting memory.</span>",
-      "productType": "Wine",
-      "vendor": "Edward Dillon",
-      "tags": [
-        "type:wine",
-        "price:under-50",
-        "occasion:christmas"
-      ],
-      "images": [
-        {
-          "src": "https://cdn.shopify.com/s/files/1/0544/1411/5009/files/9ECDD765-E0DB-4BC3-B26B-3A9068F4D381.jpg?v=1700085088",
-          "alt": "Bottle of St‑Germain 50cl",
-          "width": 1200,
-          "height": 1200
-        }
-      ],
-      "variants": [
-        {
-          "sku": "EDWA-1825",
-          "title": "Default Title",
-          "price": "36.00",
-          "inventoryQuantity": 9
-        }
-      ],
-      "wine": {
-        "producer": "Edward Dillon",
-        "grape": [],
-        "volume": "50cl",
-        "isExclusiveImport": false,
-        "fineWine": true
-      }
-    },
-    {
       "handle": "polvorete-godelo",
       "title": "Polvorete Godelo",
       "descriptionHtml": "<p>Polvorete Godelo is an exquisite white wine from northern Portugal. Made from the indigenous Godelo grape, it has enticing aromas of green apples and white flowers, as well as a long and refreshing finish. Its bright and balanced acidity makes it an ideal partner to a wide range of dishes and cuisines.</p>",
-      "productType": "Wine",
+      "productType": "White wine",
       "vendor": "Cassidy Wines",
       "tags": [
         "type:wine",
@@ -5766,7 +5526,9 @@
       ],
       "wine": {
         "producer": "Cassidy Wines",
-        "grape": [],
+        "grape": [
+          "Godello"
+        ],
         "isExclusiveImport": false,
         "fineWine": true
       }
@@ -6985,45 +6747,6 @@
       }
     },
     {
-      "handle": "valentia-island-vermouth",
-      "title": "Valentia Island Vermouth ÓR",
-      "descriptionHtml": "<div class=\"l7ghb35v kjdc1dyq kmwttqpk gh25dzvf jikcssrz n3t5jt4f\" data-mce-fragment=\"1\">\n<div dir=\"auto\" data-mce-fragment=\"1\">Valentia Island Vermouth ÓR ….</div>\n<div dir=\"auto\" data-mce-fragment=\"1\"></div>\n</div>\n<div class=\"l7ghb35v kjdc1dyq kmwttqpk gh25dzvf jikcssrz n3t5jt4f\" data-mce-fragment=\"1\">\n<div dir=\"auto\" data-mce-fragment=\"1\">….which is brought to you by wife and wife team Anna &amp; Orla Snook O’Carroll on Valentia Island Co Kerry .</div>\n<div dir=\"auto\" data-mce-fragment=\"1\"></div>\n</div>\n<div class=\"l7ghb35v kjdc1dyq kmwttqpk gh25dzvf jikcssrz n3t5jt4f\" data-mce-fragment=\"1\">\n<div dir=\"auto\" data-mce-fragment=\"1\">It Is Irelands 1st Vermouth 19% alc made by local island plants and herbs along the Wild Atlantic Way , blended with wines from the mountains near Madrid in Spain and handmade caramel for a sweet artisanal flavour and golden colour .</div>\n<div dir=\"auto\" data-mce-fragment=\"1\"></div>\n</div>\n<div class=\"l7ghb35v kjdc1dyq kmwttqpk gh25dzvf jikcssrz n3t5jt4f\" data-mce-fragment=\"1\">\n<div dir=\"auto\" data-mce-fragment=\"1\">Serve well chilled , neat over ice , a great tonic or try your hand at a Negroni . Sláinte</div>\n</div>",
-      "productType": "Spirit",
-      "vendor": "Valentia Island Vermouth",
-      "tags": [
-        "type:spirit",
-        "price:under-50"
-      ],
-      "images": [
-        {
-          "src": "https://cdn.shopify.com/s/files/1/0544/1411/5009/files/B954F228-56D1-46AF-A388-BB75051F3DC0.jpg?v=1700082822",
-          "alt": "Bottle of Valentia Island Vermouth ÓR",
-          "width": 1200,
-          "height": 1200
-        },
-        {
-          "src": "https://cdn.shopify.com/s/files/1/0544/1411/5009/products/valentiaislandvermouth.jpg?v=1700082820",
-          "alt": "Bottle of Valentia Island Vermouth ÓR",
-          "width": 1200,
-          "height": 1200
-        }
-      ],
-      "variants": [
-        {
-          "sku": "VALE-1420",
-          "title": "Default Title",
-          "price": "34.95",
-          "inventoryQuantity": 1
-        }
-      ],
-      "wine": {
-        "producer": "Valentia Island Vermouth",
-        "grape": [],
-        "isExclusiveImport": false,
-        "fineWine": true
-      }
-    },
-    {
       "handle": "lowlands-sauvignion-blanc",
       "title": "Lowlands Sauvignon Blanc",
       "descriptionHtml": "<p>James Holdaway arrived in Nelson in 1842. He was only 17 years old when, in 1853, he began working as a bullock driver in Marlborough. In 1864, Holdaway purchased land in Dillons Point on the lower Wairau Plains and named it Lowlands. His descendants now grow Sauvignon Blanc grapes on this land.</p>\n<p><em>This wine has layers of powerful flavours, with intense blackcurrant, and passionfruit, complemented with hints of ripe lime, nettles and boxwood.</em><br></p>\n<p><em>The palate has a refreshing but elegant acidity, with full and rich palate from concentrated fruit weight and an appealing salty minerality and chalkiness that leads through to a long finish.</em></p>",
@@ -7089,9 +6812,7 @@
       "wine": {
         "producer": "Findlater Wines",
         "country": "Spain",
-        "grape": [
-          "Tempranillo"
-        ],
+        "grape": [],
         "isExclusiveImport": false,
         "fineWine": true
       }
@@ -7667,7 +7388,7 @@
       "handle": "mirabeau-pure",
       "title": "Mirabeau Pure",
       "descriptionHtml": "<p>Mirabeau Pure is a remarkable rosé from the Côte d’Azur. Its brilliant pink hue, with violet reflections, has a tantalizing nose with aromas of pink grapefruit, lychee, blackcurrant buds, mandarine, and kumquat. Its bold and well-balanced thiols provide a pleasingly tense mouthfeel, finished with a lasting touch of delicate red berries. Enjoy a glass of this superbly crafted and seductive rosé for any special occasion.</p>",
-      "productType": "Wine",
+      "productType": "Rosé wine",
       "vendor": "Findlater Wines",
       "tags": [
         "type:wine",
@@ -8353,7 +8074,7 @@
       "handle": "louis-jadot-gift-pack",
       "title": "Louis Jadot gift pack",
       "descriptionHtml": "<p>This Louis Jadot Gift Pack includes two bottles of the finest French wines from renowned winemaker Louis Jadot. Enjoy this stylish gift pack and sample the best from one of France's most acclaimed winemakers. An ideal present for any wine enthusiast.</p>\n<p>2 bottle gift set</p>\n<ul>\n<li>Chablis </li>\n<li>Fleurie </li>\n</ul>",
-      "productType": "Wine",
+      "productType": "Wine gift set",
       "vendor": "Cassidy Wines",
       "tags": [
         "type:wine",
@@ -9290,7 +9011,7 @@
       "handle": "la-fleur-de-chateau-haut-piquat",
       "title": "La Fleur De Chateau Haut-Piquat 2018 1500ml",
       "descriptionHtml": "<p><span><br>La Fleur De Chateau Haut-Piquat 2018 is the perfect wine for both connoisseurs and beginners. Its ideal location allows for a deep purple color and complex nose of red fruits and vanilla. Its balanced and harmonious aromas are confirmed by the palate with excellent length. Enjoy a fine and generous good-keeping wine that will leave a lasting impression.</span></p>",
-      "productType": "Wine",
+      "productType": "Red wine",
       "vendor": "John Rafter",
       "tags": [
         "type:wine",
@@ -11311,40 +11032,6 @@
       }
     },
     {
-      "handle": "five-farms-irish-cream-liquer",
-      "title": "Five Farms Irish Cream Liqueur",
-      "descriptionHtml": "<meta charset=\"UTF-8\">\n<p><span>Five Farms Irish Cream Liqueur is a premium Irish cream made from the milk of five family-owned farms. Each farm provides the highest quality, non-homogenized cream to ensure the utmost creaminess in the finished product. Enjoy this smooth and balanced liqueur as an aperitif or as a flavorful addition to your favorite dessert.</span></p>\n<p><span>“An inviting nose of butterscotch, caramel fondue, and vanilla bean jumps from the glass. The lush palate coats the mouth with flavors of coffee with fresh cream, dulce de leche, coconut, maple, and Belgian waffles. An intensely satisfying after dinner sipper in place of dessert.”</span></p>\n<p><br></p>",
-      "productType": "Spirit",
-      "vendor": "Dalcassian",
-      "tags": [
-        "type:spirit",
-        "price:under-50",
-        "occasion:christmas"
-      ],
-      "images": [
-        {
-          "src": "https://cdn.shopify.com/s/files/1/0544/1411/5009/products/image_aa17bb7d-d305-412e-b3e0-8cd4d0bd30c7.jpg?v=1649371066",
-          "alt": "Bottle of Five Farms Irish Cream Liqueur",
-          "width": 1200,
-          "height": 1200
-        }
-      ],
-      "variants": [
-        {
-          "sku": "DALC-0412",
-          "title": "Default Title",
-          "price": "33.00",
-          "inventoryQuantity": 16
-        }
-      ],
-      "wine": {
-        "producer": "Dalcassian",
-        "grape": [],
-        "isExclusiveImport": false,
-        "fineWine": true
-      }
-    },
-    {
       "handle": "bortolotti-prosecco-docg",
       "title": "Bortolotti Prosecco DOCG",
       "descriptionHtml": "<p> </p>\n<p>Bortolotti Prosecco DOCG is a premium Italian sparkling wine made from Glera grapes. It has a light and fruity taste with a dry finish and notes of apple and pear. The DOCG designation ensures consistent high quality and forms of grape cultivation and wine production. Enjoy this exquisite Italian sparkling wine for special occasions.</p>\n<p><br></p>",
@@ -12557,38 +12244,6 @@
         ],
         "isExclusiveImport": false,
         "fineWine": true
-      }
-    },
-    {
-      "handle": "silkie-irish-whiskey-320g",
-      "title": "Filligans Silkie Irish Whiskey 320g",
-      "descriptionHtml": "<p>Filligans' small-batch Silkie Irish Whiskey Marmalade is crafted from Donegal's exclusive Sliabh Liag Whiskey and uses traditional farmhouse methods to offer a unique and authentic taste experience. Crafted in 1997, this 320g marmalade is a true original that has been perfected through research, experimentation, and taste-testing.</p>\n<p> </p>\n<p class=\"p1\"> </p>",
-      "productType": "Spirit",
-      "vendor": "filligans",
-      "tags": [
-        "type:spirit",
-        "price:under-50"
-      ],
-      "images": [
-        {
-          "src": "https://cdn.shopify.com/s/files/1/0544/1411/5009/files/98036DA7-4CB5-471C-BC8C-150B784CDFC5.jpg?v=1700081594",
-          "alt": "Bottle of Filligans Silkie Irish Whiskey 320g",
-          "width": 1200,
-          "height": 1200
-        }
-      ],
-      "variants": [
-        {
-          "sku": "FILL-0148",
-          "title": "Default Title",
-          "price": "4.50",
-          "inventoryQuantity": 11
-        }
-      ],
-      "wine": {
-        "producer": "filligans",
-        "grape": [],
-        "isExclusiveImport": false
       }
     }
   ]

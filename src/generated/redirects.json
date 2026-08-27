@@ -81,22 +81,22 @@
   },
   {
     "source": "/collections/whiskey",
-    "destination": "/wine/irish-whiskey",
+    "destination": "/wine",
     "permanent": true
   },
   {
     "source": "/collections/irish-whiskey",
-    "destination": "/wine/irish-whiskey",
+    "destination": "/wine",
     "permanent": true
   },
   {
     "source": "/collections/gin",
-    "destination": "/wine/gin-and-spirits",
+    "destination": "/wine",
     "permanent": true
   },
   {
     "source": "/collections/spirits",
-    "destination": "/wine/gin-and-spirits",
+    "destination": "/wine",
     "permanent": true
   },
   {

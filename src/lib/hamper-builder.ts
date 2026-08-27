@@ -86,6 +86,13 @@ export const BOX_OPTIONS: readonly BoxOption[] = [
 
 export const RIBBON_COLOURS = ['Forest green', 'Gold', 'Cream', 'Wine red'] as const
 
+/**
+ * The optional hand tied bow. The charge rides on the gift-bow mechanism
+ * product (see BUILDER_BOW_HANDLE), so the price lives on that product and
+ * never here.
+ */
+export const BOW_LABEL = 'Hand tied bow'
+
 /** Cart line attribute keys. Underscore prefixed keys are hidden by Shopify. */
 export const BUNDLE_ATTRIBUTES = {
   id: '_bundleId',
@@ -93,6 +100,7 @@ export const BUNDLE_ATTRIBUTES = {
   box: 'Box',
   giftMessage: 'Gift message',
   ribbon: 'Ribbon colour',
+  bow: 'Bow',
   componentOf: '_partOfHamper',
 } as const
 
@@ -102,6 +110,8 @@ export type BuilderSelection = {
   components: { variantId: string; quantity: number }[]
   giftMessage: string
   ribbonColour: string
+  /** Variant id of the gift-bow product when the bow is added. */
+  bowVariantId: string | null
 }
 
 export function boxById(id: string): BoxOption | undefined {
@@ -131,7 +141,6 @@ export type PickerShelf = {
   query:
     | { kind: 'aisle'; aisle: string }
     | { kind: 'wine' }
-    | { kind: 'spirits' }
     | { kind: 'all' }
   /** True when everything on the shelf is alcohol. */
   alcohol: boolean
@@ -142,7 +151,6 @@ export const PICKER_SHELVES: readonly PickerShelf[] = [
   { id: 'food', label: 'Food and larder', query: { kind: 'aisle', aisle: 'food-larder' }, alcohol: false },
   { id: 'chocolate', label: 'Chocolate and sweet things', query: { kind: 'aisle', aisle: 'chocolate-sweets' }, alcohol: false },
   { id: 'wine', label: 'Wine and Champagne', query: { kind: 'wine' }, alcohol: true },
-  { id: 'spirits', label: 'Whiskey and spirits', query: { kind: 'spirits' }, alcohol: true },
   { id: 'cellar', label: 'More from the cellar', query: { kind: 'aisle', aisle: 'wine-cellar-extras' }, alcohol: true },
   { id: 'candles', label: 'Candles and fragrance', query: { kind: 'aisle', aisle: 'candles-fragrance' }, alcohol: false },
   { id: 'beauty', label: 'Beauty and bath', query: { kind: 'aisle', aisle: 'beauty-bath' }, alcohol: false },

@@ -10,6 +10,13 @@ import type { ProductQuery } from './types'
 export const BUILDER_PARENT_HANDLE = 'build-your-own-hamper'
 
 /**
+ * The builder's optional hand tied bow (€1.50). A mechanism product like
+ * the box: it exists so the charge can ride into Shopify checkout as a
+ * line, never to be browsed.
+ */
+export const BUILDER_BOW_HANDLE = 'gift-bow'
+
+/**
  * Products that exist in Shopify but must never appear in a listing, in a
  * grid, in the sitemap, or at a product URL of their own.
  *
@@ -22,7 +29,10 @@ export const BUILDER_PARENT_HANDLE = 'build-your-own-hamper'
  * Enforced in the query layer rather than per listing, so a new listing
  * cannot forget it.
  */
-export const HIDDEN_FROM_LISTINGS: ReadonlySet<string> = new Set([BUILDER_PARENT_HANDLE])
+export const HIDDEN_FROM_LISTINGS: ReadonlySet<string> = new Set([
+  BUILDER_PARENT_HANDLE,
+  BUILDER_BOW_HANDLE,
+])
 
 /**
  * The listing-route registry.
@@ -154,17 +164,8 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     facets: ['price', 'occasion'],
     parentPath: '/hampers',
   },
-  {
-    slug: 'whiskey',
-    hub: 'hampers',
-    path: '/hampers/whiskey',
-    title: 'Whiskey hampers',
-    h1: 'Whiskey hampers',
-    query: { ...HAMPER_BASE, productTypes: ['Whiskey hamper'] },
-    alcohol: true,
-    facets: ['price', 'occasion'],
-    parentPath: '/hampers',
-  },
+  // There is no whiskey listing: the shop does not stock spirits
+  // (confirmed by the client, August 2026).
   {
     slug: 'pamper',
     hub: 'hampers',
@@ -183,7 +184,9 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     title: 'New baby hampers',
     h1: 'New baby hampers',
     query: { ...HAMPER_BASE, tags: ['occasion:new-baby'] },
-    alcohol: false,
+    // The August 2026 baby hampers carry Prosecco or Champagne for the
+    // parents, so this listing arms the age gate.
+    alcohol: true,
     facets: ['price'],
     parentPath: '/hampers',
   },
@@ -355,28 +358,9 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     facets: ['country', 'price'],
     parentPath: '/wine',
   },
-  {
-    slug: 'irish-whiskey',
-    hub: 'wine',
-    path: '/wine/irish-whiskey',
-    title: 'Irish whiskey',
-    h1: 'Irish whiskey',
-    query: { kinds: ['spirit'], productTypes: ['Irish whiskey'], sort: 'featured', first: 24 },
-    alcohol: true,
-    facets: ['price'],
-    parentPath: '/wine',
-  },
-  {
-    slug: 'gin-and-spirits',
-    hub: 'wine',
-    path: '/wine/gin-and-spirits',
-    title: 'Gin and spirits',
-    h1: 'Gin and spirits',
-    query: { kinds: ['spirit'], productTypes: ['Gin', 'Vodka', 'Rum', 'Liqueur'], sort: 'featured', first: 24 },
-    alcohol: true,
-    facets: ['price'],
-    parentPath: '/wine',
-  },
+  // No whiskey or gin listings: the shop does not stock spirits
+  // (confirmed by the client, August 2026). The old /collections/whiskey
+  // and /collections/gin URLs redirect to /wine.
   {
     slug: 'gift-sets',
     hub: 'wine',
@@ -437,7 +421,11 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     path: '/occasions/christmas',
     title: 'Christmas gifts and hampers',
     h1: 'Christmas gifts and hampers',
-    query: { tags: ['occasion:christmas'], sort: 'featured', first: 24 },
+    query: { sort: 'featured', first: 24 },
+    // Curated while the full Christmas collection is being prepared: one
+    // hamper carries the christmas tag today, and the client wants a
+    // Christmas entry point that sells now rather than a dark route.
+    curated: true,
     alcohol: true,
     facets: ['price', 'recipient'],
     parentPath: '/occasions',
@@ -497,7 +485,9 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     title: 'New baby gifts',
     h1: 'New baby gifts',
     query: { tags: ['occasion:new-baby'], sort: 'featured', first: 24 },
-    alcohol: false,
+    // See /hampers/new-baby: the current baby hampers include a bottle
+    // for the parents.
+    alcohol: true,
     facets: ['price'],
     parentPath: '/occasions',
   },

@@ -260,7 +260,7 @@ function hubLabel(hub: CollectionDef['hub']): string {
     case 'hampers':
       return 'Hampers'
     case 'wine':
-      return 'Wine and spirits'
+      return 'The Wine Vault'
     case 'occasions':
       return 'Occasions'
     case 'gifts-for':

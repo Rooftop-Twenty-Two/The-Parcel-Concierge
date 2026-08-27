@@ -46,6 +46,8 @@ async function Slot({
   switch (slot.kind) {
     case 'hero':
       return <Hero slot={slot} trust={trust} priority={first} />
+    case 'christmas':
+      return <ChristmasBand slot={slot} />
     case 'budget-bands':
       return <BudgetBands />
     case 'featured-hampers':
@@ -164,6 +166,59 @@ async function Hero({
       </div>
 
       <InkWaves className="h-16 w-full text-cream/25" lines={4} />
+    </section>
+  )
+}
+
+/**
+ * The Christmas band. Premium and quiet: deep red ground, gold type, one
+ * real product in a stamp frame. No snow, no clip art, and nothing in the
+ * photograph that is not in the box, so the product stays the hero.
+ */
+async function ChristmasBand({ slot }: { slot: Extract<HomepageSlot, { kind: 'christmas' }> }) {
+  const product = slot.imageHandle ? await getProduct(slot.imageHandle) : null
+  const image = product?.images[0] ?? null
+
+  return (
+    <section className="relative overflow-hidden bg-wine text-cream">
+      <div className="relative mx-auto grid max-w-[1400px] items-center gap-10 px-4 py-14 lg:grid-cols-[1.2fr_1fr] lg:px-8">
+        <div>
+          <p className="mb-3 text-xs uppercase tracking-[0.24em] text-gold">Christmas 2026</p>
+          <h2 className="font-display text-[length:var(--text-display)]">{slot.title}</h2>
+          <p className="mt-4 max-w-xl text-lg text-cream/90">{slot.body}</p>
+          <div className="mt-8 flex flex-wrap items-center gap-4">
+            <ButtonLink href={slot.ctaHref} size="large">
+              {slot.ctaLabel}
+            </ButtonLink>
+            <Link
+              href="/corporate-gifting"
+              className="text-cream underline underline-offset-4 hover:text-gold"
+            >
+              Corporate Christmas gifting
+            </Link>
+          </div>
+        </div>
+
+        {image && product ? (
+          <Link href={`/hampers/${product.handle}`} className="group relative block">
+            <StampFrame className="bg-beige">
+              <Image
+                src={image.url}
+                alt={image.alt}
+                width={image.width}
+                height={image.height}
+                sizes="(min-width: 1024px) 38vw, 92vw"
+                className="aspect-4/3 w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+              />
+            </StampFrame>
+            <p className="mt-3 font-serif text-lg text-cream group-hover:underline">
+              {product.title}
+            </p>
+          </Link>
+        ) : null}
+      </div>
+
+      <InkWaves className="h-12 w-full text-gold/30" lines={3} />
     </section>
   )
 }

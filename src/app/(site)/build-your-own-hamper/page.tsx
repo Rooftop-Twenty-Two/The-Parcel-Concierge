@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { BuilderWizard } from '@/components/builder/BuilderWizard'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { getProduct } from '@/lib/commerce'
+import { BUILDER_BOW_HANDLE } from '@/lib/commerce/collections'
 import { BUILDER_PARENT_HANDLE } from '@/lib/hamper-builder'
 import { breadcrumbJsonLd } from '@/lib/seo/structured-data'
 
@@ -30,7 +31,10 @@ export const metadata: Metadata = {
  * page itself ships only the box options.
  */
 export default async function BuildYourOwnHamperPage() {
-  const parent = await getProduct(BUILDER_PARENT_HANDLE)
+  const [parent, bowProduct] = await Promise.all([
+    getProduct(BUILDER_PARENT_HANDLE),
+    getProduct(BUILDER_BOW_HANDLE),
+  ])
   if (!parent) {
     // Without the parent product there is no box to sell, and half a
     // builder is worse than none. This is a data problem, not a routing
@@ -38,9 +42,15 @@ export default async function BuildYourOwnHamperPage() {
     notFound()
   }
 
+  // The bow is optional twice over: an optional extra for the shopper, and
+  // an optional product for the store. If it is missing the builder simply
+  // does not offer it.
+  const bowVariant = bowProduct?.variants[0] ?? null
+  const bow = bowVariant ? { variantId: bowVariant.id, priceMinor: bowVariant.price.amountMinor } : null
+
   return (
     <>
-      <BuilderWizard parent={parent} />
+      <BuilderWizard parent={parent} bow={bow} />
       <JsonLd
         data={breadcrumbJsonLd([
           { name: 'Home', path: '/' },

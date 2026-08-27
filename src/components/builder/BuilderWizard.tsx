@@ -50,6 +50,8 @@ type PersistedState = {
   chosen: Record<string, Chosen>
   giftMessage: string
   ribbonColour: string
+  /** Optional so a state persisted before the bow existed still restores. */
+  bowAdded?: boolean
 }
 
 const STORAGE_KEY = 'tpc-builder-wizard'
@@ -67,7 +69,14 @@ function loadPersisted(): PersistedState | null {
   }
 }
 
-export function BuilderWizard({ parent }: { parent: Product }) {
+export function BuilderWizard({
+  parent,
+  bow,
+}: {
+  parent: Product
+  /** The gift-bow product's buyable variant, or null when the store has none. */
+  bow: { variantId: string; priceMinor: number } | null
+}) {
   const router = useRouter()
   const [pending, startTransition] = useTransition()
 
@@ -76,6 +85,7 @@ export function BuilderWizard({ parent }: { parent: Product }) {
   const [chosen, setChosen] = useState<Record<string, Chosen>>({})
   const [giftMessage, setGiftMessage] = useState('')
   const [ribbonColour, setRibbonColour] = useState('')
+  const [bowAdded, setBowAdded] = useState(false)
   const [status, setStatus] = useState<{ kind: 'ok' | 'error'; message: string } | null>(null)
   const [showAgeGate, setShowAgeGate] = useState(false)
   const [ageConfirmed, setAgeConfirmed] = useState(false)
@@ -99,6 +109,7 @@ export function BuilderWizard({ parent }: { parent: Product }) {
       setChosen(persisted.chosen)
       setGiftMessage(persisted.giftMessage)
       setRibbonColour(persisted.ribbonColour)
+      setBowAdded(Boolean(persisted.bowAdded))
     }
     setHydrated(true)
   }, [])
@@ -108,12 +119,12 @@ export function BuilderWizard({ parent }: { parent: Product }) {
     try {
       window.sessionStorage.setItem(
         STORAGE_KEY,
-        JSON.stringify({ step, boxId, chosen, giftMessage, ribbonColour }),
+        JSON.stringify({ step, boxId, chosen, giftMessage, ribbonColour, bowAdded }),
       )
     } catch {
       // A full store loses persistence, not the builder.
     }
-  }, [hydrated, step, boxId, chosen, giftMessage, ribbonColour])
+  }, [hydrated, step, boxId, chosen, giftMessage, ribbonColour, bowAdded])
 
   const box = boxById(boxId) ?? BOX_OPTIONS[0]!
   const boxVariant = parent.variants.find((v) => v.title === box.variantTitle) ?? parent.variants[0]
@@ -124,7 +135,8 @@ export function BuilderWizard({ parent }: { parent: Product }) {
   )
   const itemCount = chosenList.reduce((sum, c) => sum + c.quantity, 0)
   const contentsMinor = chosenList.reduce((sum, c) => sum + c.item.priceMinor * c.quantity, 0)
-  const totalMinor = contentsMinor + (boxVariant?.price.amountMinor ?? 0)
+  const bowMinor = bowAdded && bow ? bow.priceMinor : 0
+  const totalMinor = contentsMinor + bowMinor + (boxVariant?.price.amountMinor ?? 0)
   const overCapacity = itemCount > box.capacity
   const containsAlcohol = chosenList.some((c) => c.item.alcohol)
 
@@ -182,6 +194,7 @@ export function BuilderWizard({ parent }: { parent: Product }) {
         components: chosenList.map((c) => ({ variantId: c.item.variantId!, quantity: c.quantity })),
         giftMessage,
         ribbonColour,
+        bowVariantId: bowAdded && bow ? bow.variantId : null,
       })
 
       if (result.ok) {
@@ -267,7 +280,7 @@ export function BuilderWizard({ parent }: { parent: Product }) {
           <StepShell title="Finishing touches" lede="The card is free and hand written. If you would rather send a printed card, they are on the Cards shelf.">
             <div className="max-w-2xl space-y-8">
               <fieldset>
-                <legend className="font-serif text-xl text-navy">Ribbon</legend>
+                <legend className="font-serif text-xl text-navy">Personal Concierge ribbon</legend>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {RIBBON_COLOURS.map((colour) => (
                     <button
@@ -286,6 +299,27 @@ export function BuilderWizard({ parent }: { parent: Product }) {
                   ))}
                 </div>
               </fieldset>
+
+              {bow ? (
+                <div>
+                  <h3 className="font-serif text-xl text-navy">Bow</h3>
+                  <button
+                    type="button"
+                    onClick={() => setBowAdded(!bowAdded)}
+                    aria-pressed={bowAdded}
+                    className={`mt-3 border px-4 py-2 text-sm transition-colors ${
+                      bowAdded
+                        ? 'border-navy bg-navy text-cream'
+                        : 'border-navy/25 text-navy hover:border-navy'
+                    }`}
+                  >
+                    Hand tied bow, {formatMinor(bow.priceMinor)}
+                  </button>
+                  <p className="mt-2 text-sm text-ink-muted">
+                    Tied on top of the ribbon when the box is packed.
+                  </p>
+                </div>
+              ) : null}
 
               <label className="block">
                 <span className="font-serif text-xl text-navy">Gift message</span>
@@ -318,7 +352,13 @@ export function BuilderWizard({ parent }: { parent: Product }) {
                 />
                 <ReviewRow
                   label="Ribbon and card"
-                  value={[ribbonColour || 'No ribbon', giftMessage ? 'Gift message written' : 'No gift message'].join('. ')}
+                  value={[
+                    ribbonColour || 'No ribbon',
+                    bowAdded && bow ? `Hand tied bow, ${formatMinor(bow.priceMinor)}` : null,
+                    giftMessage ? 'Gift message written' : 'No gift message',
+                  ]
+                    .filter(Boolean)
+                    .join('. ')}
                   onEdit={() => goTo('extras')}
                 />
 
@@ -379,6 +419,12 @@ export function BuilderWizard({ parent }: { parent: Product }) {
                     </dt>
                     <dd className="text-navy">{formatMinor(contentsMinor)}</dd>
                   </div>
+                  {bowMinor > 0 ? (
+                    <div className="flex justify-between">
+                      <dt className="text-ink-muted">Hand tied bow</dt>
+                      <dd className="text-navy">{formatMinor(bowMinor)}</dd>
+                    </div>
+                  ) : null}
                 </dl>
                 <div className="mt-4 flex items-baseline justify-between border-t border-rule pt-4">
                   <span className="font-serif text-lg text-navy">Total</span>

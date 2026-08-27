@@ -62,10 +62,10 @@ source,destination,type,note
 /collections/sparkling-wine,/wine/champagne-sparkling,301,Merged with Champagne
 /collections/port,/wine/port-dessert,301,Merged with dessert wine
 /collections/dessert-wine,/wine/port-dessert,301,Merged with port
-/collections/whiskey,/wine/irish-whiskey,301,Direct equivalent
-/collections/irish-whiskey,/wine/irish-whiskey,301,Direct equivalent
-/collections/gin,/wine/gin-and-spirits,301,Merged into gin and spirits
-/collections/spirits,/wine/gin-and-spirits,301,Merged into gin and spirits
+/collections/whiskey,/wine,301,Spirits range discontinued. The Wine Vault is the nearest home
+/collections/irish-whiskey,/wine,301,Spirits range discontinued. The Wine Vault is the nearest home
+/collections/gin,/wine,301,Spirits range discontinued. The Wine Vault is the nearest home
+/collections/spirits,/wine,301,Spirits range discontinued. The Wine Vault is the nearest home
 /collections/candles,/gifts/candles-diffusers,301,Now part of the add-on band
 /collections/diffusers,/gifts/candles-diffusers,301,Now part of the add-on band
 /collections/chocolate,/gifts/chocolate-treats,301,Now part of the add-on band

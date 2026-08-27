@@ -12,7 +12,7 @@ import type { Product, ProductCard } from '@/lib/commerce/types'
 import { breadcrumbJsonLd, productJsonLd } from '@/lib/seo/structured-data'
 
 /**
- * Wine and spirits product page.
+ * Wine product page.
  *
  * The exclusivity line only renders where `is_exclusive_import` is set, and
  * the value line only where a verified comparison exists. Neither is ever
@@ -34,7 +34,7 @@ export function WineProductPage({
 
   const crumbs = [
     { name: 'Home', path: '/' },
-    { name: 'Wine and spirits', path: '/wine' },
+    { name: 'The Wine Vault', path: '/wine' },
     { name: product.title, path: `/wine/${product.handle}` },
   ]
 

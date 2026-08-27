@@ -351,8 +351,6 @@ export const CONTENT: CmsData = {
         'the-classic-gentleman-s-hamper',
         'taste-of-ireland-gluten-free-hamper',
         'because-you-re-amazing-hamper',
-        'lanson-champagne',
-        'taylors-classic-vintage-port-2003',
       ],
     },
     {

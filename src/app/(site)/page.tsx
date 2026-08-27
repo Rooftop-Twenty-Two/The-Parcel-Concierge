@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { ProductGrid } from '@/components/product/ProductCard'
 import { TrustpilotStars } from '@/components/trust/TrustpilotStars'
 import { ButtonLink } from '@/components/ui/Button'
+import { Snowfall } from '@/components/ui/Snowfall'
 import { InkWaves, PostmarkRoundel, StampFrame } from '@/components/ui/Stamp'
 import { NewsletterSignup } from '@/components/marketing/NewsletterSignup'
 import { VisitTheShop } from '@/components/VisitTheShop'
@@ -25,10 +26,22 @@ export const revalidate = 1800
 export default async function HomePage() {
   const [homepage, trust] = await Promise.all([getHomepage(), getTrustSummary()])
 
+  // One switch for the whole seasonal treatment: the snow on the hero is
+  // on only while the Christmas band is in the slot list, so pulling that
+  // band in January takes the snow with it and nobody has to remember a
+  // second place.
+  const festive = homepage.slots.some((slot) => slot.kind === 'christmas')
+
   return (
     <>
       {homepage.slots.map((slot, index) => (
-        <Slot key={`${slot.kind}-${index}`} slot={slot} trust={trust} first={index === 0} />
+        <Slot
+          key={`${slot.kind}-${index}`}
+          slot={slot}
+          trust={trust}
+          first={index === 0}
+          festive={festive}
+        />
       ))}
     </>
   )
@@ -38,14 +51,16 @@ async function Slot({
   slot,
   trust,
   first,
+  festive,
 }: {
   slot: HomepageSlot
   trust: { rating: number; reviewCount: number }
   first: boolean
+  festive: boolean
 }) {
   switch (slot.kind) {
     case 'hero':
-      return <Hero slot={slot} trust={trust} priority={first} />
+      return <Hero slot={slot} trust={trust} priority={first} festive={festive} />
     case 'christmas':
       return <ChristmasBand slot={slot} />
     case 'budget-bands':
@@ -94,10 +109,12 @@ async function Hero({
   slot,
   trust,
   priority,
+  festive,
 }: {
   slot: Extract<HomepageSlot, { kind: 'hero' }>
   trust: { rating: number; reviewCount: number }
   priority: boolean
+  festive: boolean
 }) {
   const product = slot.imageHandle ? await getProduct(slot.imageHandle) : null
   const image = product?.images[0] ?? null
@@ -113,6 +130,8 @@ async function Hero({
         height={1054}
         className="pointer-events-none absolute -right-24 -top-24 hidden w-[560px] opacity-[0.07] lg:block"
       />
+
+      {festive ? <Snowfall className="z-0 text-cream" /> : null}
       <div className="relative mx-auto grid max-w-[1400px] items-center gap-10 px-4 py-14 lg:grid-cols-2 lg:gap-16 lg:px-8 lg:py-20">
         <div className="animate-rise text-cream">
           <p className="mb-4 text-xs uppercase tracking-[0.24em] text-gold">
@@ -430,9 +449,12 @@ function CorporateBand({ slot }: { slot: Extract<HomepageSlot, { kind: 'corporat
     <section className="bg-beige py-16">
       <div className="mx-auto grid max-w-[1400px] items-center gap-10 px-4 lg:grid-cols-2 lg:px-8">
         <StampFrame className="order-2 bg-cream lg:order-1">
+          {/* The shop and the van, not a hamper. A product shot here reads
+              as "this is the box your team gets", which is the opposite of
+              the proposition: the recipient picks their own. */}
           <Image
-            src="/photography/tpc-08-full.jpg"
-            alt="A wooden herb growing box, a bottle of red wine and a hand lettered card in a green gift box"
+            src="/photography/tpc-christmas-11.jpg"
+            alt="The Parcel Concierge shop in Dunshaughlin dressed for Christmas, with the delivery van outside and corporate gifts listed in the window"
             width={1200}
             height={1500}
             sizes="(min-width: 1024px) 46vw, 92vw"

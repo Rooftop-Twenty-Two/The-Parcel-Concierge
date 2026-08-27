@@ -56,9 +56,11 @@ export default function CorporateGiftingPage() {
           </div>
 
           <StampFrame className="animate-rise bg-beige">
+            {/* The shop and the van rather than one hamper: recipients
+                choose their own gift, so a single box misrepresents it. */}
             <Image
-              src="/photography/tpc-08-full.jpg"
-              alt="A wooden herb growing box, a bottle of red wine and a hand lettered card in a gift box"
+              src="/photography/tpc-christmas-11.jpg"
+              alt="The Parcel Concierge shop in Dunshaughlin dressed for Christmas, with the delivery van outside and corporate gifts listed in the window"
               width={1200}
               height={800}
               priority

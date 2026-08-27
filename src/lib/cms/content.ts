@@ -30,7 +30,7 @@ export const CONTENT: CmsData = {
     slots: [
       {
         kind: 'hero',
-        headline: 'Hampers, wine and gifts, packed by hand in Meath',
+        headline: 'Hampers, wine and gifts, chosen and sent with care',
         subhead:
           'We build every hamper ourselves in Dunshaughlin, and the Wine Vault holds over three hundred bottles we chose. Free hand delivery locally, €8.95 anywhere else in Ireland, free over €100.',
         ctaLabel: 'Shop all hampers',

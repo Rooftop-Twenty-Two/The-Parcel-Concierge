@@ -117,8 +117,8 @@ export const NAV = [
       title: 'Client lists, handled',
       body: 'One address or two hundred. Send us the spreadsheet and we do the rest.',
       href: '/corporate-gifting/bulk-orders',
-      imageSrc: '/photography/tpc-08-full.jpg',
-      imageAlt: 'A wooden herb growing box, a bottle of red wine and a hand lettered card in a gift box',
+      imageSrc: '/photography/tpc-christmas-11.jpg',
+      imageAlt: 'The Parcel Concierge shop in Dunshaughlin dressed for Christmas, with the delivery van outside and corporate gifts listed in the window',
     },
   },
   // Seasonal: the Christmas entry point gets its own top-level item while

@@ -187,9 +187,14 @@ async function ChristmasBand({ slot }: { slot: Extract<HomepageSlot, { kind: 'ch
           <h2 className="font-display text-[length:var(--text-display)]">{slot.title}</h2>
           <p className="mt-4 max-w-xl text-lg text-cream/90">{slot.body}</p>
           <div className="mt-8 flex flex-wrap items-center gap-4">
-            <ButtonLink href={slot.ctaHref} size="large">
+            {/* Not ButtonLink: its red fill and wine hover both disappear
+                into this band's wine ground. Cream on wine, gold on hover. */}
+            <Link
+              href={slot.ctaHref}
+              className="inline-flex items-center justify-center rounded-[2px] bg-cream px-8 py-4 text-lg font-medium tracking-wide text-wine transition-colors duration-200 hover:bg-gold hover:text-navy"
+            >
               {slot.ctaLabel}
-            </ButtonLink>
+            </Link>
             <Link
               href="/corporate-gifting"
               className="text-cream underline underline-offset-4 hover:text-gold"

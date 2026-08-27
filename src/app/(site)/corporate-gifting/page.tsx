@@ -47,7 +47,10 @@ export default function CorporateGiftingPage() {
                 Speak to our corporate team
               </ButtonLink>
             </div>
-            <p className="mt-6 text-sm text-cream/75">
+            <p className="mt-6 text-sm text-gold">
+              Christmas campaigns are open. December slots go early.
+            </p>
+            <p className="mt-2 text-sm text-cream/75">
               100 recipients. One payment. One link. Zero address spreadsheets.
             </p>
           </div>

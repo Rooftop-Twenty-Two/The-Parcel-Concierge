@@ -99,16 +99,20 @@ export function CartView({ cart }: { cart: Cart }) {
               {/*
                 Personalisation is shown back to the shopper here, because
                 it travels to the packing bench on the order and this is
-                their last chance to notice a typo in it.
+                their last chance to notice a typo in it. Underscore keys
+                are bundle plumbing: Shopify hides them at checkout and we
+                hide them here.
               */}
-              {line.attributes.length ? (
+              {line.attributes.some((a) => !a.key.startsWith('_')) ? (
                 <dl className="mt-2 space-y-0.5 text-sm text-ink-muted">
-                  {line.attributes.map((attribute) => (
-                    <div key={attribute.key} className="flex gap-2">
-                      <dt className="text-navy">{attribute.key}:</dt>
-                      <dd className="min-w-0 break-words">{attribute.value}</dd>
-                    </div>
-                  ))}
+                  {line.attributes
+                    .filter((attribute) => !attribute.key.startsWith('_'))
+                    .map((attribute) => (
+                      <div key={attribute.key} className="flex gap-2">
+                        <dt className="text-navy">{attribute.key}:</dt>
+                        <dd className="min-w-0 break-words">{attribute.value}</dd>
+                      </div>
+                    ))}
                 </dl>
               ) : null}
 

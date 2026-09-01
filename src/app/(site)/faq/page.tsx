@@ -47,7 +47,7 @@ const FAQS = [
   },
   {
     question: 'Do you deliver alcohol?',
-    answer: `Yes, to anyone over ${AGE_GATE.minimumAge}. We may ask for proof of age on delivery, and the courier will not leave alcohol with a neighbour or in a safe place.`,
+    answer: `Yes, to anyone over ${AGE_GATE.minimumAge}. We may ask for proof of age on delivery, and ${DELIVERY.carrier} will not leave alcohol with a neighbour or in a safe place.`,
   },
   {
     question: 'Can you do a hamper that is not on the site?',
@@ -62,7 +62,7 @@ const FAQS = [
   {
     question: 'What if something arrives damaged?',
     answer:
-      'Email us a photo within 48 hours and we will replace it or refund it. We pack glass and bottles in fitted boxes, but couriers are couriers.',
+      'Email us a photo within 48 hours and we will replace it or refund it. We pack glass and bottles in fitted boxes, but a box out of our hands is out of our hands.',
   },
   {
     question: 'Are you actually Irish?',

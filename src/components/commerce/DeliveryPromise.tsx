@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { DELIVERY } from '@/lib/site-config'
+import { DELIVERY, handDeliveryZone } from '@/lib/site-config'
 import { formatMinor } from '@/lib/commerce/money'
 
 /**
@@ -10,11 +10,9 @@ import { formatMinor } from '@/lib/commerce/money'
  * things about this business, appeared nowhere and the shipping policy page
  * was blank.
  *
- * Only confirmed facts render. The free hand-delivery zone has not been
- * supplied yet (outstanding item 4), so rather than naming counties we have
- * not confirmed, this invites the shopper to check. That is honest, and it
- * turns into a stated zone the day the client confirms one, with no code
- * change beyond site-config.
+ * Only confirmed facts render. The hand-delivery area comes from
+ * site-config: it names the area where the client has confirmed one, and
+ * invites the shopper to check where they have not.
  */
 export function DeliveryPromise({
   leadTime = null,
@@ -23,7 +21,7 @@ export function DeliveryPromise({
   leadTime?: string | null
   compact?: boolean
 }) {
-  const zone = DELIVERY.localHandDelivery.counties
+  const zone = handDeliveryZone()
 
   return (
     <div className={compact ? 'text-sm' : 'border-y border-rule py-5 text-sm'}>
@@ -34,7 +32,7 @@ export function DeliveryPromise({
           </span>
           <span>
             <strong className="font-medium text-navy">
-              {zone ? `Free hand delivery in ${zone.join(', ')}` : 'Free hand delivery locally'}
+              {zone ? `Free hand delivery in ${zone}` : 'Free hand delivery locally'}
             </strong>
             {zone ? null : (
               <>

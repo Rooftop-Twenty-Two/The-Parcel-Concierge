@@ -53,7 +53,7 @@ those instead; the shape is already theirs.
 
 | Choice | Options |
 |---|---|
-| Case size | 3, 6 or 12 bottles |
+| Case size | 3 or 6 bottles |
 | Budget per bottle | Everyday discoveries from €15, Something special from €25, Premium picks from €40 |
 | Mix | Any combination of red, white, rosé and sparkling |
 | How often | Monthly, every two months, every three months |
@@ -104,9 +104,9 @@ Before the club can take a single sign-up, the store needs:
    the store and is matched exactly:
 
    ```
-   3 bottles, Everyday       6 bottles, Everyday       12 bottles, Everyday
-   3 bottles, Considered     6 bottles, Considered     12 bottles, Considered
-   3 bottles, Fine           6 bottles, Fine           12 bottles, Fine
+   3 bottles, Everyday       6 bottles, Everyday
+   3 bottles, Considered     6 bottles, Considered
+   3 bottles, Fine           6 bottles, Fine
    ```
 
    Price each variant at the band floor times the bottle count, which is
@@ -149,7 +149,7 @@ common subscription complaint.
 ## Age verification
 
 The club is alcohol, so the page is behind the age gate and the usual
-delivery rules apply: somebody over 18 has to take it in, and the courier
+delivery rules apply: somebody over 18 has to take it in, and An Post
 cannot leave it with a neighbour. The same legal sign-off that covers the
 rest of the alcohol range covers this.
 

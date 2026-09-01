@@ -61,7 +61,7 @@ export const BOX_OPTIONS: readonly BoxOption[] = [
   {
     id: 'small',
     variantTitle: 'The small box',
-    description: 'Shallow kraft box, tissue lined and hand tied. Room for up to four things.',
+    description: 'Shallow kraft box, packed and hand tied by us. Room for up to four things.',
     capacity: 4,
   },
   {

@@ -8,6 +8,7 @@ import {
   type RecommendRequest,
 } from '@/lib/wine-club/recommend'
 import { emptyProfile, type TasteProfile } from '@/lib/wine-club/taste'
+import { SIZES } from '@/lib/wine-club'
 
 export const dynamic = 'force-dynamic'
 
@@ -27,6 +28,9 @@ export const dynamic = 'force-dynamic'
  */
 
 const WINE_TYPES: WineType[] = ['red', 'white', 'rose', 'sparkling']
+
+/** The largest case we sell, read from the club sizes rather than typed twice. */
+const MAX_BOTTLES = Math.max(...SIZES.map((s) => s.bottles))
 
 type Body = {
   mode?: 'box' | 'alternatives' | 'browse'
@@ -57,8 +61,11 @@ export async function POST(request: NextRequest) {
     case 'box': {
       const mix = sanitiseMix(body.mix)
       const total = Object.values(mix).reduce((s, n) => s + (n ?? 0), 0)
-      if (total < 1 || total > 12) {
-        return NextResponse.json({ error: 'The box holds 1 to 12 bottles.' }, { status: 400 })
+      if (total < 1 || total > MAX_BOTTLES) {
+        return NextResponse.json(
+          { error: `The box holds 1 to ${MAX_BOTTLES} bottles.` },
+          { status: 400 },
+        )
       }
       return NextResponse.json(recommend({ ...base, mix }, WINE_PROFILES))
     }

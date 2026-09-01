@@ -7,7 +7,7 @@ export const revalidate = 3600
 export const metadata: Metadata = {
   title: 'Guides',
   description:
-    'Practical notes on choosing a hamper, sending something after a bereavement, and corporate gifting that does not embarrass anyone.',
+    'Practical notes on choosing a hamper and on corporate gifting that does not embarrass anyone, written by the people who pack the boxes.',
   alternates: { canonical: '/guides' },
 }
 

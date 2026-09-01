@@ -277,7 +277,7 @@ currently blocking.
 | 1 | Brand asset pack: logo suite, colours, licensed fonts | **Part received.** Logos, colours and graphic devices arrived and are in use. The four licensed fonts (Bebas Kai, Salfish, South Epic, Futura) did not. We are running open substitutes; swapping in the real files is one file, `src/lib/brand/fonts.ts` |
 | 2 | The 12 hamper shots plus a shot list mapping images to SKUs | **Part received.** Sixteen photographs landed: ten studio hamper shots and six lifestyle shots of the shop and the owners. All sixteen are in use. **No shot list came with them**, so the image-to-SKU mapping is ours and needs confirming: see "The photography" below |
 | 3 | Final retain/remove decision on jewellery, crystal, homeware | The redirect map. `/collections/jewellery` currently has a provisional rule |
-| 4 | Free hand-delivery zone, by county or eircode | The delivery page names no zone and invites the shopper to check instead. Also the free-delivery cart nudge, which does not render without a threshold |
+| 4 | Free hand-delivery zone, by county or eircode | **Received, September 2026: the A85 eircode area and nothing beyond it.** Set in `src/lib/site-config.ts`; the delivery page, the delivery promise and the about page all name it |
 | 5 | Corporate volume pricing tiers and lead times | The bulk orders page says pricing is quoted on enquiry rather than printing a table |
 | 6 | Search Console and GA4 access | The redirect map is built from what actually gets traffic, not from what we assume exists. This is the biggest risk item |
 | 7 | Trustpilot account access | Stars use the verified June figures rather than live ones |
@@ -285,6 +285,25 @@ currently blocking.
 
 Also needed, and not on the section 13 list:
 
+- **Counties for four makers.** The September 2026 review replaced Skelligs
+  and Bean and Goose with Filligan's of Donegal, McNutt of Donegal, Julie
+  Clarke, Pestle and Mortar, Kybalion Jewellery and Jo Browne. We have
+  confirmed counties for the two Donegal names only, so the other four
+  render without the county line rather than with a guessed one. Send us
+  four counties and they turn on.
+- **Replacement photography for the studio hamper set.** The client flagged
+  the A Taste of Luxury frame in September 2026: the Butlers box in it reads
+  "Hassetts Concierge" and several other labels in the shot are garbled the
+  same way (`Rassetts`, `NDNO D'AVOLA`, `POESECCO BRC`). The homepage
+  Christmas band no longer uses it, but the same file is still the lead
+  image on the A Taste of Luxury product page and in every listing that
+  carries the hamper, and the rest of the twenty-shot set has not been
+  audited for the same problem. This needs either replacement shots or a
+  frame-by-frame check.
+- **The gift card product in Shopify.** Gift cards are sold, by email and as
+  a physical card over the counter, but no gift card product is in the
+  catalogue export. `/gift-card` says how to buy one and shows the buy
+  button automatically once the product exists.
 - **Legal sign-off on the age gate.** It is a self-declared check, which is
   the common pattern for online alcohol retail in Ireland and the UK, but
   the acceptable standard is a legal question and it differs between the two

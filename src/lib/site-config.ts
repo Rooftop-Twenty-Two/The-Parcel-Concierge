@@ -31,16 +31,22 @@ export const DELIVERY = {
     priceMinor: 895,
     label: '€8.95 delivery anywhere in Ireland',
   },
+  /**
+   * Everything outside the hand-delivery area goes with An Post.
+   * Confirmed by the client, September 2026: we do not use a courier, so
+   * the site names the carrier rather than saying "courier".
+   */
+  carrier: 'An Post',
   localHandDelivery: {
     priceMinor: 0,
     label: 'Free hand delivery in our local area',
     /**
-     * Outstanding client item 4: the free hand-delivery zone stated by
-     * county or eircode. Until this is supplied the delivery page invites
-     * the shopper to check their address rather than naming a zone we have
-     * not confirmed.
+     * Confirmed by the client, September 2026: free hand delivery covers
+     * the A85 eircode area and nothing beyond it. Stated as the routing
+     * key rather than as a county, because A85 is the actual boundary and
+     * "Co. Meath" would be a promise we could not keep.
      */
-    eircodeRoutingKeys: null as readonly string[] | null,
+    eircodeRoutingKeys: ['A85'] as readonly string[] | null,
     counties: null as readonly string[] | null,
   },
   /**
@@ -61,6 +67,22 @@ export const DELIVERY = {
     christmas: null as string | null,
   },
 } as const
+
+/**
+ * How the free hand-delivery area is described in copy.
+ *
+ * Counties where the client has confirmed them, otherwise the eircode
+ * routing keys, otherwise null so the pages invite the shopper to check
+ * rather than naming an area we cannot stand over.
+ */
+export function handDeliveryZone(): string | null {
+  const { counties, eircodeRoutingKeys } = DELIVERY.localHandDelivery
+  if (counties && counties.length) return counties.join(', ')
+  if (eircodeRoutingKeys && eircodeRoutingKeys.length) {
+    return `the ${eircodeRoutingKeys.join(' and ')} eircode area`
+  }
+  return null
+}
 
 export const TRUSTPILOT = {
   /**

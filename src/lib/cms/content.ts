@@ -40,13 +40,18 @@ export const CONTENT: CmsData = {
       {
         kind: 'christmas',
         title: 'Christmas, sorted early',
-        body: 'Our full Christmas collection is being prepared now. You do not have to wait for it: every hamper on the site is ready to send today, and corporate Christmas campaigns are open.',
+        body: 'We are working on more Christmas hampers now, and they will be ready to go from November once all the Christmas stock has arrived. Every hamper on the site is ready to send today, and corporate Christmas campaigns are open.',
         ctaLabel: 'Shop Christmas',
         ctaHref: '/occasions/christmas',
-        // A Taste of Luxury. The client shot this range styled for
-        // Christmas, so the seasonal band shows a seasonal frame rather
-        // than a summer one with tinsel written around it.
-        imageHandle: '2-1',
+        // The shop dressed for Christmas rather than a hamper shot. The
+        // hamper frame that used to sit here carried distorted packaging
+        // text ("Hassetts Concierge" across a Butlers box), which the
+        // client flagged in the September 2026 review.
+        imageHandle: null,
+        image: {
+          src: '/photography/tpc-christmas-11.jpg',
+          alt: 'The Parcel Concierge shop in Dunshaughlin dressed for Christmas, the window full of lights and gifts',
+        },
       },
       { kind: 'budget-bands' },
       {
@@ -118,7 +123,7 @@ export const CONTENT: CmsData = {
         kind: 'makers',
         title: 'The people who make what is in the box',
         body: 'We buy directly from small Irish producers and we are members of Guaranteed Irish.',
-        makerSlugs: ['the-handmade-soap-company', 'skelligs-chocolate', 'bean-and-goose'],
+        makerSlugs: ['the-handmade-soap-company', 'filligans-of-donegal', 'mcnutt-of-donegal'],
       },
       { kind: 'newsletter' },
     ],
@@ -140,14 +145,14 @@ export const CONTENT: CmsData = {
       intro:
         'Hampers under €75, which is where most people start. Everything here is still hand packed, and none of it looks like a budget gift when the lid comes off.',
       seoBlock:
-        '<p>The temptation at this price is to pad a box out with filler. We would rather send four things worth having than eight things nobody wants, so the boxes in this band are smaller and better rather than bigger and thinner.</p><p>The Perfect Duo at €55 is a bottle of rosé and a box of Baileys chocolates, and it does exactly what it needs to. For the Guinness Lover at €68 packs Guinness chocolates, caramel fudge and coffee around an enamel mug he will keep.</p><p>Both arrive tissue lined and hand tied, with your message written on a card inside the lid. Free hand delivery locally, €8.95 anywhere else in Ireland.</p>',
+        '<p>The temptation at this price is to pad a box out with filler. We would rather send four things worth having than eight things nobody wants, so the boxes in this band are smaller and better rather than bigger and thinner.</p><p>The Perfect Duo at €55 is a bottle of rosé and a box of Baileys chocolates, and it does exactly what it needs to. For the Guinness Lover at €68 packs Guinness chocolates, caramel fudge and coffee around an enamel mug he will keep.</p><p>Both arrive hand packed and hand tied, with your message written on a card inside the lid. Free hand delivery locally, €8.95 anywhere else in Ireland.</p>',
     },
     {
       path: '/hampers/75-125',
       intro:
         'Hampers from €75 to €125. This is the band for a gift that has to carry a bit of weight: a proper thank you, a milestone birthday, a client you want to keep.',
       seoBlock:
-        '<p>Between €75 and €125 a hamper stops being a nice gesture and starts being a real present. There is room in the box for a bottle worth opening, a full Irish spread or a proper bit of knitwear.</p><p>Bubbles and Bliss at €80 pairs two bottles of Prosecco with Jo Browne body oils. The All Ireland Food Hamper at €105.95 holds McEntee’s tea, Keogh’s crisps, Hassetts biscuits and three jars from Filligan’s of Donegal. The Classic Gentleman’s Hamper at €105 wraps a McNutt lambswool scarf around a Sicilian red, and the Taste of Ireland Gluten Free Hamper at €92 feeds the house nobody can usually buy for.</p><p>Every box in this band is packed by hand, tissue lined and hand tied with ribbon. Free hand delivery locally, €8.95 anywhere else in Ireland, free over €100.</p>',
+        '<p>Between €75 and €125 a hamper stops being a nice gesture and starts being a real present. There is room in the box for a bottle worth opening, a full Irish spread or a proper bit of knitwear.</p><p>Bubbles and Bliss at €80 pairs two bottles of Prosecco with Jo Browne body oils. The All Ireland Food Hamper at €105.95 holds McEntee’s tea, Keogh’s crisps, Hassetts biscuits and three jars from Filligan’s of Donegal. The Classic Gentleman’s Hamper at €105 wraps a McNutt lambswool scarf around a Sicilian red, and the Taste of Ireland Gluten Free Hamper at €92 feeds the house nobody can usually buy for.</p><p>Every box in this band is packed by hand and hand tied with ribbon. Free hand delivery locally, €8.95 anywhere else in Ireland, free over €100.</p>',
     },
     {
       path: '/hampers/125-200',
@@ -315,16 +320,16 @@ export const CONTENT: CmsData = {
     {
       path: '/occasions/christmas',
       intro:
-        'Christmas hampers and gifts. The full Christmas collection is being prepared now; everything on this page is ready to send today. Order early: December cut-offs are tighter than people expect.',
+        'Christmas hampers and gifts. We are working on more Christmas hampers now and they will be ready to go from November, once all the Christmas stock has arrived. Everything on this page is ready to send today.',
       seoBlock:
-        '<p>If you are buying for a list rather than a person, the corporate section has volume pricing and will take your address list in one go. If you are buying one box for one house, the budget bands are the fastest way in.</p><p>Christmas delivery cut-offs are published on the delivery page as soon as An Post and our couriers confirm them. Order ahead of the cut-off rather than on it, because the last week is the week things go wrong.</p>',
+        '<p>If you are buying for a list rather than a person, the corporate section has volume pricing and will take your address list in one go. If you are buying one box for one house, the budget bands are the fastest way in.</p><p>Christmas delivery dates are published on the delivery page as soon as An Post confirm them. Order ahead of the last posting date rather than on it, because the last week is the week things go wrong.</p>',
     },
     {
       path: '/gifts',
       intro:
         'Small things to add to a hamper. Candles, chocolate, crystal and boards. These are here to finish a gift rather than to be the gift.',
       seoBlock:
-        '<p>This is a deliberately small section. It exists because people building a hamper often want one more thing in the box, not because we are trying to be a general gift shop. Everything here is something we already put in our own hampers, sold separately.</p><p>The candles and diffusers are poured in Ireland. The chocolate is from Skelligs in Kerry and Bean and Goose in Wexford. The crystal is the same glassware that goes in our wine boxes.</p><p>Add any of it at the cart, or build a hamper from scratch and put it in there.</p>',
+        '<p>This is a deliberately small section. It exists because people building a hamper often want one more thing in the box, not because we are trying to be a general gift shop. Everything here is something we already put in our own hampers, sold separately.</p><p>The candles and diffusers are poured in Ireland, including the Aran Candle range from Julie Clarke. The chocolate is from The Chocolate Garden of Ireland and Butlers. The crystal is the same glassware that goes in our wine boxes.</p><p>Add any of it at the cart, or build a hamper from scratch and put it in there.</p>',
     },
   ],
 
@@ -415,17 +420,44 @@ export const CONTENT: CmsData = {
       productHandles: [],
     },
     {
-      slug: 'skelligs-chocolate',
-      name: 'Skelligs Chocolate',
-      county: 'Kerry',
-      body: '<p>Skelligs have been making chocolate on the Ring of Kerry road since 1996, in a factory you can walk into and watch. It is about as far from Dunshaughlin as you can get and still be in Ireland, and it is worth the drive.</p><p>Their sea salt bar stands up next to a heavy red, which is not true of most chocolate.</p>',
+      slug: 'filligans-of-donegal',
+      name: 'Filligan’s of Donegal',
+      county: 'Donegal',
+      body: '<p>Filligan’s have been making preserves in Donegal since 1990, in small batches and in season rather than to a year round recipe. Their marmalade, blackcurrant preserve and chilli jam are in more of our food hampers than anything else we buy.</p><p>They also make the balsamic and olive oil dressing that goes into the Irish food boxes.</p>',
       productHandles: [],
     },
     {
-      slug: 'bean-and-goose',
-      name: 'Bean and Goose',
-      county: 'Wexford',
-      body: '<p>Two sisters making chocolate in a Wexford forest, which sounds like marketing and is not. They work in small batches with Irish ingredients and they change the range with the season.</p><p>Their pralines are what we reach for when a box needs proper chocolate.</p>',
+      slug: 'mcnutt-of-donegal',
+      name: 'McNutt of Donegal',
+      county: 'Donegal',
+      body: '<p>McNutt have been weaving in Donegal since 1953. Their lambswool throws, blankets and scarves are the things in our hampers that are still in the house years later, which is the whole point of putting one in a box.</p><p>The lambswool blanket in Hello Baby Boy and Hello Baby Girl is theirs, as is the scarf in the Classic Gentleman’s Hamper.</p>',
+      productHandles: [],
+    },
+    {
+      slug: 'julie-clarke',
+      // County outstanding: the client has not confirmed where Julie
+      // Clarke works from, so the page leaves the line off rather than
+      // guessing. See docs/build-status.md.
+      name: 'Julie Clarke',
+      body: '<p>Julie Clarke makes the Aran Candle range, poured in Ireland and scented after the places they are named for: Atlantic Shores, Connemara Turf Smoke, Celtic Honeysuckle, Aran Meadow.</p><p>They are the candles we reach for when a box needs something for the house rather than something to eat.</p>',
+      productHandles: [],
+    },
+    {
+      slug: 'pestle-and-mortar',
+      name: 'Pestle and Mortar',
+      body: '<p>Irish skincare, made without the long ingredient lists most of the shelf carries. The hyaluronic serum and the balm cleanser are the two people come back for.</p><p>Their sets are the base of the pamper boxes we build for somebody who already knows what they use.</p>',
+      productHandles: [],
+    },
+    {
+      slug: 'kybalion',
+      name: 'Kybalion Jewellery',
+      body: '<p>Irish designed jewellery, and the part of the shop that surprises people who came in for a hamper. Celtic knots, evil eye pieces and everyday chains, at prices that work as a gift rather than as an occasion.</p><p>Ask us in the shop if you want a piece put into a box with something else.</p>',
+      productHandles: [],
+    },
+    {
+      slug: 'jo-browne',
+      name: 'Jo Browne',
+      body: '<p>Natural Irish body care, built around bamboo rather than plastic. The body oils, the facecloths and the bamboo bedding all come from them.</p><p>Their body oils are in Bubbles and Bliss, and the sleep set is what goes into the New Mum hamper.</p>',
       productHandles: [],
     },
   ],
@@ -441,17 +473,6 @@ export const CONTENT: CmsData = {
       updatedAt: '2026-08-01',
       productHandles: [],
       relatedPaths: ['/gifts-by-budget/under-50', '/hampers/under-75', '/hampers/125-200'],
-    },
-    {
-      slug: 'what-to-send-after-a-bereavement',
-      title: 'What to send after a bereavement',
-      summary:
-        'Practical notes on sending food to a house in the days after a death, from a business that packs a lot of these boxes.',
-      body: '<p>People ask us this more than anything else, and the answer is less about the box than about the timing and the wrapping.</p><h2>Send food that needs no cooking</h2><p>Nobody in that house is cooking. Bread, cheese, soup in a jar, biscuits, tea. Something that feeds whoever calls in without anybody having to think about it.</p><h2>Send it plain</h2><p>We send sympathy boxes in unbranded packaging with no logo on the outer wrap and no marketing insert. A box that arrives looking like a promotion is worse than no box.</p><h2>Write something short</h2><p>We write the card by hand, and if you tell us exactly what to write we will write exactly that. Short is better than clever.</p><h2>The second week matters more</h2><p>The house is full for a few days and then it empties. A box that arrives ten days later often lands better than one that arrives with everybody else.</p>',
-      publishedAt: '2026-08-05',
-      updatedAt: '2026-08-05',
-      productHandles: [],
-      relatedPaths: ['/hampers/sympathy', '/occasions/sympathy'],
     },
     {
       slug: 'corporate-gifting-that-does-not-embarrass-anyone',
@@ -471,8 +492,8 @@ export const CONTENT: CmsData = {
       slug: 'about',
       title: 'About us',
       intro:
-        'We are Karen and Ciaran McBride. We run The Parcel Concierge from Dunshaughlin in Co. Meath, and we pack every hamper ourselves.',
-      body: '<p>We pack every box ourselves in the shop in Dunshaughlin, from makers we know. The Handmade Soap Company are up the road in Slane, the preserves come from Filligan’s of Donegal, and the wine room is chosen bottle by bottle by us.</p><p>We are members of Guaranteed Irish. We hand deliver locally, which means one of us gets in the van, and we send everything else by courier at €8.95 anywhere in Ireland, free on orders over €100.</p>',
+        'We are Karen and Ciaran McBride, and with our amazing team we run The Parcel Concierge from Dunshaughlin in Co. Meath, packing every hamper ourselves.',
+      body: '<p>We pack every box ourselves in the shop in Dunshaughlin, from makers we know. The Handmade Soap Company are up the road in Slane, the preserves come from Filligan’s of Donegal, and the wine room is chosen bottle by bottle by us.</p><p>We are members of Guaranteed Irish. We hand deliver in the A85 eircode area ourselves, which means one of us gets in the van, and everything else goes with An Post at €8.95 anywhere in Ireland, free on orders over €100.</p>',
       updatedAt: '2026-08-01',
     },
     {

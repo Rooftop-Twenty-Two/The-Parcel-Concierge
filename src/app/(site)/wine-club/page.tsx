@@ -23,10 +23,16 @@ export const metadata: Metadata = {
 /**
  * The club's front door.
  *
- * The page sells one action: start the taste quiz. Everything on it is
- * checkable against the real list: the wine count, the per-band counts and
+ * The page sells one action: start the taste quiz. The per-band counts and
  * the prices are computed from the catalogue at build time, so the page
- * cannot claim a range the shop does not carry.
+ * cannot claim a price level the shop does not carry.
+ *
+ * The headline number is the Wine Vault's own, "three hundred and more",
+ * the same figure the hero and /wine use. It used to render
+ * WINE_PROFILES.length, which is the club-eligible subset (in stock, and
+ * red, white, rosé or sparkling) and so read lower than the vault the rest
+ * of the site describes. Two different true numbers on one site reads as
+ * one wrong one.
  */
 export default async function WineClubLanding() {
   const copy = await getListingCopy('/wine-club')
@@ -51,7 +57,7 @@ export default async function WineClubLanding() {
             </h1>
             <p className="mt-5 max-w-xl text-lg text-cream/90">
               Answer a few questions about food and drink, no wine jargon involved, and we choose a
-              case for you from the {WINE_PROFILES.length} wines in the shop. You can swap any
+              case for you from the three hundred and more wines in the shop. You can swap any
               bottle before it ships.
             </p>
 
@@ -99,7 +105,7 @@ export default async function WineClubLanding() {
         <ol className="mt-8 grid gap-6 md:grid-cols-4">
           {[
             ['Tell us your taste', 'Seven quick questions about food and drink you already know.'],
-            ['Shape the box', 'Red, white, rosé or sparkling. Three, six or twelve bottles. Your budget.'],
+            ['Shape the box', 'Red, white, rosé or sparkling. Three or six bottles. Your budget.'],
             ['See your wines', 'We pick the case and tell you why each bottle is there. Swap anything.'],
             ['It arrives', 'Packed by hand in Dunshaughlin, as often as you chose. Change it any time.'],
           ].map(([title, body], index) => (

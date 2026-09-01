@@ -28,11 +28,23 @@ export type CuratedListing = {
 export type HomepageSlot =
   | { kind: 'hero'; headline: string; subhead: string; ctaLabel: string; ctaHref: string; imageHandle: string | null }
   /**
-   * The seasonal band. Understated by design: type, one product
-   * photograph and a CTA, no seasonal clip art. Remove the slot from the
-   * list when the season ends.
+   * The seasonal band. Understated by design: type, one photograph and a
+   * CTA, no seasonal clip art. Remove the slot from the list when the
+   * season ends.
+   *
+   * `image` is a photograph from /public; `imageHandle` puts a product
+   * shot in the frame and links it to that product. Set one or the
+   * other. `image` wins where both are set.
    */
-  | { kind: 'christmas'; title: string; body: string; ctaLabel: string; ctaHref: string; imageHandle: string | null }
+  | {
+      kind: 'christmas'
+      title: string
+      body: string
+      ctaLabel: string
+      ctaHref: string
+      imageHandle: string | null
+      image?: { src: string; alt: string }
+    }
   | { kind: 'budget-bands' }
   | { kind: 'featured-hampers'; title: string; handles: string[] }
   | { kind: 'hamper-builder'; title: string; body: string }
@@ -55,7 +67,12 @@ export type Homepage = {
 export type Maker = {
   slug: string
   name: string
-  county: string
+  /**
+   * Omitted where the county has not been confirmed by the client. The
+   * pages render the line only when it is set rather than guessing a
+   * county for a maker: see docs/build-status.md.
+   */
+  county?: string
   /** HTML. */
   body: string
   /** Products from this maker, by handle. */

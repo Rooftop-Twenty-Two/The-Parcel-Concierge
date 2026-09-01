@@ -191,11 +191,14 @@ async function Hero({
 
 /**
  * The Christmas band. Premium and quiet: deep red ground, gold type, one
- * real product in a stamp frame. No snow, no clip art, and nothing in the
- * photograph that is not in the box, so the product stays the hero.
+ * photograph in a stamp frame. No snow, no clip art.
+ *
+ * The frame takes either a photograph from /public or a product shot that
+ * links to its product. It is a photograph today because the seasonal
+ * hamper range is still being packed, so there is no one box to point at.
  */
 async function ChristmasBand({ slot }: { slot: Extract<HomepageSlot, { kind: 'christmas' }> }) {
-  const product = slot.imageHandle ? await getProduct(slot.imageHandle) : null
+  const product = slot.image || !slot.imageHandle ? null : await getProduct(slot.imageHandle)
   const image = product?.images[0] ?? null
 
   return (
@@ -223,7 +226,18 @@ async function ChristmasBand({ slot }: { slot: Extract<HomepageSlot, { kind: 'ch
           </div>
         </div>
 
-        {image && product ? (
+        {slot.image ? (
+          <StampFrame className="bg-beige">
+            <Image
+              src={slot.image.src}
+              alt={slot.image.alt}
+              width={1200}
+              height={800}
+              sizes="(min-width: 1024px) 38vw, 92vw"
+              className="aspect-4/3 w-full object-cover"
+            />
+          </StampFrame>
+        ) : image && product ? (
           <Link href={`/hampers/${product.handle}`} className="group relative block">
             <StampFrame className="bg-beige">
               <Image
@@ -264,7 +278,7 @@ function BudgetBands() {
       <SectionHeading
         eyebrow="The fastest way in"
         title="Shop by budget"
-        body="Most people start from the number. These are real pages, so you can send the link to whoever set the budget."
+        body="Most people start with a figure in mind. Pick yours and see everything we can do for it, hampers and wine together."
       />
 
       <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -381,8 +395,8 @@ async function WineVault({ slot }: { slot: Extract<HomepageSlot, { kind: 'wine-v
             <h2 className="font-display text-[length:var(--text-display)]">{slot.title}</h2>
             <p className="mt-4 text-lg text-cream/85">{slot.body}</p>
           </div>
-          <ButtonLink href="/wine/exclusive-to-us" variant="primary">
-            See what only we have
+          <ButtonLink href="/wine" variant="primary">
+            Browse the Wine Vault
           </ButtonLink>
         </div>
 
@@ -496,7 +510,11 @@ async function MakersBand({ slot }: { slot: Extract<HomepageSlot, { kind: 'maker
         {shown.map((maker) => (
           <li key={maker.slug} className="border-l-2 border-gold pl-5">
             <h3 className="font-serif text-xl font-semibold text-navy">{maker.name}</h3>
-            <p className="text-sm uppercase tracking-[0.16em] text-ink-muted">Co. {maker.county}</p>
+            {maker.county ? (
+              <p className="text-sm uppercase tracking-[0.16em] text-ink-muted">
+                Co. {maker.county}
+              </p>
+            ) : null}
           </li>
         ))}
       </ul>

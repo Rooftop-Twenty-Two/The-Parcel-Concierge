@@ -5,7 +5,7 @@ import { Accordion } from '@/components/ui/Accordion'
 import { PostmarkRoundel } from '@/components/ui/Stamp'
 import { formatMinor } from '@/lib/commerce/money'
 import { breadcrumbJsonLd, faqJsonLd } from '@/lib/seo/structured-data'
-import { DELIVERY } from '@/lib/site-config'
+import { DELIVERY, handDeliveryZone } from '@/lib/site-config'
 
 export const metadata: Metadata = {
   title: 'Delivery',
@@ -22,13 +22,17 @@ export const metadata: Metadata = {
  * one of the strongest things about this business and it was invisible.
  *
  * The rule for this page is that it states only what has been confirmed.
- * Where a fact is outstanding (the hand-delivery zone, cut-off
- * times) the page says plainly that it is not published yet and routes the
- * shopper to a person, rather than inventing a number that somebody will
- * later have to honour.
+ * Where a fact is outstanding (cut-off times) the page says plainly that
+ * it is not published yet and routes the shopper to a person, rather than
+ * inventing a number that somebody will later have to honour.
+ *
+ * We do not use a courier. Everything outside the hand-delivery area goes
+ * with An Post, and this page names them, because "our courier" is both
+ * wrong and vaguer than the truth.
  */
 export default function DeliveryPage() {
-  const zone = DELIVERY.localHandDelivery
+  const zone = handDeliveryZone()
+  const carrier = DELIVERY.carrier
   const cutOff = DELIVERY.cutOff
   const threshold = DELIVERY.freeDeliveryThresholdMinor
 
@@ -41,13 +45,11 @@ export default function DeliveryPage() {
     },
     {
       question: 'Do you deliver alcohol?',
-      answer:
-        'Yes, to anyone over 18. We may ask for proof of age on delivery, and the courier will not leave alcohol with a neighbour or in a safe place.',
+      answer: `Yes, to anyone over 18. We may ask for proof of age on delivery, and ${carrier} will not leave alcohol with a neighbour or in a safe place.`,
     },
     {
       question: 'What happens if nobody is home?',
-      answer:
-        'For a standard delivery the courier leaves a card and tries again the next working day, or leaves it with a neighbour if you have said that is fine. Anything containing alcohol has to be handed to somebody over 18, so it will come back to the depot instead.',
+      answer: `For a standard delivery ${carrier} leave a card and try again the next working day, or leave it with a neighbour if you have said that is fine. Anything containing alcohol has to be handed to somebody over 18, so it will come back to the depot instead.`,
     },
     {
       question: 'Can I send a hamper straight to the person it is for?',
@@ -64,7 +66,7 @@ export default function DeliveryPage() {
             <h1 className="font-display text-[length:var(--text-hero)] text-navy">Delivery</h1>
             <p className="mt-4 max-w-2xl text-lg text-ink-muted">
               We hand deliver locally ourselves, which means one of us gets in the van. Everything
-              else goes by courier. Here is exactly what that costs and when it arrives.
+              else goes with {carrier}. Here is exactly what that costs and when it arrives.
             </p>
           </div>
           <PostmarkRoundel className="hidden h-40 w-40 text-green lg:block" />
@@ -75,15 +77,15 @@ export default function DeliveryPage() {
             title="Local hand delivery"
             price="Free"
             body={
-              zone.counties
-                ? `We deliver by hand in ${zone.counties.join(', ')}.`
+              zone
+                ? `We deliver by hand in ${zone}, and only there. If your eircode starts with anything else, your order goes with ${carrier} at the rate beside this.`
                 : 'We deliver by hand around Dunshaughlin ourselves. The exact area is not published yet, so contact us with your eircode and we will confirm the same day.'
             }
           />
           <RateCard
             title="Rest of Ireland"
             price={formatMinor(DELIVERY.national.priceMinor)}
-            body={`By courier, anywhere in the Republic of Ireland.${
+            body={`With ${carrier}, anywhere in the Republic of Ireland.${
               threshold === null
                 ? ''
                 : ` Free on orders over ${formatMinor(threshold)}.`
@@ -116,8 +118,8 @@ export default function DeliveryPage() {
                 <p>Christmas cut-off: {cutOff.christmas}.</p>
               ) : (
                 <p>
-                  Christmas cut-offs go up on this page as soon as An Post and our couriers confirm
-                  them, usually in early November. Order ahead of the cut-off rather than on it. The
+                  Christmas last posting dates go up on this page as soon as {carrier} confirm
+                  them, usually in early November. Order ahead of the date rather than on it. The
                   last week before Christmas is the week things go wrong.
                 </p>
               )}
@@ -130,7 +132,7 @@ export default function DeliveryPage() {
             <Accordion title="Alcohol deliveries">
               <p>
                 You must be over 18 to buy alcohol from us. We may ask for proof of age on delivery,
-                and the courier cannot leave anything containing alcohol with a neighbour or in a
+                and {carrier} cannot leave anything containing alcohol with a neighbour or in a
                 safe place.
               </p>
               <p>
@@ -141,7 +143,7 @@ export default function DeliveryPage() {
 
             <Accordion title="If nobody is home">
               <p>
-                For a standard delivery the courier leaves a card and tries again the next working
+                For a standard delivery {carrier} leave a card and try again the next working
                 day. If you have told us it is fine to leave the box with a neighbour, they will.
               </p>
               <p>
@@ -168,7 +170,7 @@ export default function DeliveryPage() {
             <Accordion title="Something arrived damaged">
               <p>
                 Email us a photo within 48 hours and we will replace it or refund it. We pack glass
-                and bottles in fitted boxes, but couriers are couriers.
+                and bottles in fitted boxes, but a box out of our hands is out of our hands.
               </p>
               <p>
                 Full details are in our{' '}

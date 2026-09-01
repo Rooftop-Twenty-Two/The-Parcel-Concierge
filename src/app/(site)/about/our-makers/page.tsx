@@ -8,7 +8,7 @@ export const revalidate = 3600
 export const metadata: Metadata = {
   title: 'Our makers',
   description:
-    'The small Irish producers whose work goes into our hampers. The Handmade Soap Company in Slane, Skelligs Chocolate in Kerry, Bean and Goose in Wexford and more.',
+    'The small Irish producers whose work goes into our hampers. The Handmade Soap Company in Slane, Filligan’s and McNutt of Donegal, Julie Clarke, Pestle and Mortar, Kybalion and Jo Browne.',
   alternates: { canonical: '/about/our-makers' },
 }
 
@@ -37,7 +37,9 @@ export default async function MakersPage() {
               <h2 className="font-display text-[length:var(--text-display)] text-navy">
                 {maker.name}
               </h2>
-              <p className="text-sm uppercase tracking-[0.18em] text-green">Co. {maker.county}</p>
+              {maker.county ? (
+                <p className="text-sm uppercase tracking-[0.18em] text-green">Co. {maker.county}</p>
+              ) : null}
             </div>
 
             <div

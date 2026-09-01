@@ -260,8 +260,8 @@ export function RecipientFlow({
                     This is a business address
                   </label>
                   <p className="text-xs text-ink-muted">
-                    Delivery within the Republic of Ireland. Your mobile number is only used by the
-                    courier on the day.
+                    Delivery within the Republic of Ireland. Your mobile number is only used for
+                    the delivery itself.
                   </p>
                   {campaign.giftMessagesAllowed ? (
                     <label className="block">

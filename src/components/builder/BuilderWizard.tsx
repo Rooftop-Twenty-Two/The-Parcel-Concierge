@@ -244,7 +244,7 @@ export function BuilderWizard({
       {/* pb clears the sticky bar. */}
       <main className="mx-auto max-w-[1400px] px-4 pb-44 pt-10 lg:px-8">
         {step === 'box' ? (
-          <StepShell title="Choose your box" lede="Every size is packed the same way: tissue lined, hand tied, built so nothing moves.">
+          <StepShell title="Choose your box" lede="Every size is packed the same way: by hand, hand tied, built so nothing moves.">
             <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {BOX_OPTIONS.map((option) => {
                 const variant = parent.variants.find((v) => v.title === option.variantTitle)

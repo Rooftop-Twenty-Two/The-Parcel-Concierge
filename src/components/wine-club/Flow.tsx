@@ -340,7 +340,7 @@ export function WineClubFlow({ clubBuyable }: { clubBuyable: boolean }) {
               id: s.id,
               label: s.label,
               detail: s.description,
-              flag: s.id === '6' ? 'Most popular' : s.id === '12' ? 'Best value' : undefined,
+              flag: s.id === '6' ? 'Our standard case' : undefined,
             }))}
             selected={state.sizeId}
             onPick={(sizeId) => {

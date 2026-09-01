@@ -29,9 +29,9 @@ export const BRANDING_OPTIONS = [
     leadTime: 'Artwork needed five working days before dispatch.',
   },
   {
-    title: 'Ribbon in your colours',
-    body: 'We hand tie every box. If your brand colour is close to one of ours we will match it, and if it is not we will source the ribbon.',
-    leadTime: 'Allow an extra week if we have to source ribbon.',
+    title: 'Your own branded ribbon',
+    body: 'We hand tie every box. Send us your own branded ribbon and we will tie the boxes with it rather than with ours.',
+    leadTime: 'Ribbon needed with us five working days before dispatch.',
   },
   {
     title: 'Handwritten cards',

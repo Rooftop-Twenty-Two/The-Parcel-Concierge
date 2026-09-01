@@ -5,7 +5,7 @@ import { BRANDING_OPTIONS } from '@/lib/corporate'
 export const metadata: Metadata = {
   title: 'Branding and personalisation',
   description:
-    'Printed cards with your logo, ribbon in your colours, handwritten notes and bespoke hamper contents for corporate orders.',
+    'Printed cards with your logo, your own branded ribbon, handwritten notes and bespoke hamper contents for corporate orders.',
   alternates: { canonical: '/corporate-gifting/branding-personalisation' },
 }
 

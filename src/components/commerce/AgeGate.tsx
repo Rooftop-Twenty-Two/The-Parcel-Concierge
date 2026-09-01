@@ -18,7 +18,7 @@ import { AGE_GATE } from '@/lib/site-config'
  * as soon as the client knows the answer.
  *
  * The gate is a courtesy check, not the enforcement point. Enforcement is
- * the delivery: the courier hands alcohol to somebody over 18 or brings it
+ * the delivery: An Post hand alcohol to somebody over 18 or bring it
  * back. Nothing here is load bearing for compliance on its own, and the
  * whole approach NEEDS LEGAL SIGN-OFF before launch (docs/build-status.md).
  */

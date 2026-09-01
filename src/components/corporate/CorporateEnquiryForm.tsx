@@ -87,13 +87,20 @@ export function CorporateEnquiryForm() {
         {errors.deliveryMode ? <FieldError message={errors.deliveryMode} /> : null}
       </fieldset>
 
+      {/*
+        A week, not a day. We used to ask for the exact date the boxes
+        should be in recipients' hands, which reads as a date we are
+        promising back: once a box is with An Post the day it lands is not
+        ours to guarantee. Asking for the week keeps the useful part of the
+        answer without the promise.
+      */}
       <Field
-        label="When does it need to land?"
+        label="Which week does it need to land?"
         name="deadline"
-        type="date"
+        placeholder="Week of 15 December"
         error={errors.deadline}
         required
-        hint="The date they should be in recipients' hands, not the date you want to order."
+        hint="The week they should be with recipients, not the date you want to order. We work to the week because we cannot guarantee which day An Post deliver on."
       />
 
       <fieldset className="space-y-3">

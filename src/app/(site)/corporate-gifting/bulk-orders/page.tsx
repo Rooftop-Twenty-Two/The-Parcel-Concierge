@@ -18,7 +18,8 @@ export default function BulkOrdersPage() {
       <h1 className="mt-2 font-display text-[length:var(--text-hero)] text-navy">Bulk orders</h1>
       <p className="mt-4 text-lg text-ink-muted">
         Volume pricing starts at {BULK_ORDER_MINIMUM} units. Below that, order through the site as
-        normal and email us if you need the boxes branded.
+        normal and email us if you need to add any branding, whether that is ribbon, cards, pens or
+        anything else you want in the box.
       </p>
 
       <section className="mt-12">

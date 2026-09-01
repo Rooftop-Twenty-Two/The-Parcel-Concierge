@@ -58,10 +58,15 @@ export type ClubSize = {
   description: string
 }
 
+/**
+ * Six bottles is the ceiling, confirmed by the client in September 2026:
+ * we deliver a club case of up to six, not twelve. Adding a size back is a
+ * row here and nothing else, because every page counts and prices from
+ * this list.
+ */
 export const SIZES: readonly ClubSize[] = [
   { id: '3', bottles: 3, label: 'Three bottles', description: 'A taste of the list without committing the shelf space.' },
   { id: '6', bottles: 6, label: 'Six bottles', description: 'Our standard case. Enough to have something for a Tuesday and something for a Sunday.' },
-  { id: '12', bottles: 12, label: 'Twelve bottles', description: 'A full case. Works out cheapest per bottle and lasts a season.' },
 ]
 
 /**

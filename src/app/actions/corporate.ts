@@ -19,6 +19,11 @@ export type CorporateEnquiry = {
   quantity: number
   budgetPerUnitEuro: number | null
   deliveryMode: string
+  /**
+   * The week the boxes should be with recipients, free text ("Week of 15
+   * December"). Deliberately not a date: we cannot guarantee which day An
+   * Post deliver on, so we do not ask the buyer to name one.
+   */
   deadline: string
   branding: boolean
   alcoholAllowed: boolean
@@ -71,9 +76,7 @@ export async function submitCorporateEnquiry(
   }
 
   if (!deadline) {
-    errors.deadline = 'When does this need to land?'
-  } else if (Number.isNaN(Date.parse(deadline))) {
-    errors.deadline = 'That date does not look right.'
+    errors.deadline = 'Which week does this need to land?'
   }
 
   if (Object.keys(errors).length) return { ok: false, errors }
@@ -86,7 +89,9 @@ export async function submitCorporateEnquiry(
     quantity,
     budgetPerUnitEuro,
     deliveryMode,
-    deadline,
+    // Free text since it stopped being a date input, so it gets a ceiling
+    // like every other free-text field here.
+    deadline: deadline.slice(0, 120),
     branding: form.get('branding') === 'on',
     alcoholAllowed: form.get('alcoholAllowed') === 'on',
     notes: notes.slice(0, 2000),

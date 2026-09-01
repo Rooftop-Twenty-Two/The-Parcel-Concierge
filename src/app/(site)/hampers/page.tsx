@@ -32,6 +32,17 @@ export default function HampersHub() {
         '/hampers/125-200',
         '/hampers/new-baby',
       ]}
+      // The builder is the answer to "none of these is quite right", which
+      // is the commonest reason somebody leaves a hamper listing, so it
+      // sits between the collection cards and the grid rather than only in
+      // the nav.
+      promo={{
+        eyebrow: 'Made to order',
+        title: 'Build your own hamper',
+        body: 'Pick the box, pick what goes in it and write the card. The whole shop is in the builder, not just what is on this page, and we pack it by hand the same way.',
+        href: '/build-your-own-hamper',
+        cta: 'Start building',
+      }}
     />
   )
 }

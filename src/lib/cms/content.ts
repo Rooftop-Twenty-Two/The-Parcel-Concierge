@@ -411,6 +411,21 @@ export const CONTENT: CmsData = {
     },
   ],
 
+  /**
+   * Maker copy.
+   *
+   * RULE, learned the hard way in September 2026: a maker description
+   * states only what we can check. That means the products we actually
+   * stock (the catalogue export is the source), which of our hampers they
+   * appear in (the listing copy above is the source), and where the client
+   * has confirmed they are based. It does NOT mean founding dates,
+   * ownership, process, provenance or "the one people come back for".
+   *
+   * A first pass at these six carried invented founding years and a
+   * popularity claim, on a page whose whole job is to say we know our
+   * producers. If a fact is not in the catalogue, in the copy above or
+   * confirmed by the client, leave it out and add it to the client list.
+   */
   makers: [
     {
       slug: 'the-handmade-soap-company',
@@ -423,14 +438,14 @@ export const CONTENT: CmsData = {
       slug: 'filligans-of-donegal',
       name: 'Filligan’s of Donegal',
       county: 'Donegal',
-      body: '<p>Filligan’s have been making preserves in Donegal since 1990, in small batches and in season rather than to a year round recipe. Their marmalade, blackcurrant preserve and chilli jam are in more of our food hampers than anything else we buy.</p><p>They also make the balsamic and olive oil dressing that goes into the Irish food boxes.</p>',
+      body: '<p>Filligan’s make preserves, chutneys and mustards in Donegal. We carry the Seville marmalade, the blackcurrant, raspberry, strawberry and threeberry preserves, the chilli jam, the cheeseboard chutney and their balsamic and olive oil dressing.</p><p>Three of their jars go into the All Ireland Food Hamper.</p>',
       productHandles: [],
     },
     {
       slug: 'mcnutt-of-donegal',
       name: 'McNutt of Donegal',
       county: 'Donegal',
-      body: '<p>McNutt have been weaving in Donegal since 1953. Their lambswool throws, blankets and scarves are the things in our hampers that are still in the house years later, which is the whole point of putting one in a box.</p><p>The lambswool blanket in Hello Baby Boy and Hello Baby Girl is theirs, as is the scarf in the Classic Gentleman’s Hamper.</p>',
+      body: '<p>McNutt weave lambswool in Donegal. We carry their throws and blankets and their linen tote bags, and they are the things in our hampers that are still in the house years later.</p><p>The lambswool blanket in Hello Baby Boy and Hello Baby Girl is theirs, and so is the scarf in the Classic Gentleman’s Hamper.</p>',
       productHandles: [],
     },
     {
@@ -439,25 +454,25 @@ export const CONTENT: CmsData = {
       // Clarke works from, so the page leaves the line off rather than
       // guessing. See docs/build-status.md.
       name: 'Julie Clarke',
-      body: '<p>Julie Clarke makes the Aran Candle range, poured in Ireland and scented after the places they are named for: Atlantic Shores, Connemara Turf Smoke, Celtic Honeysuckle, Aran Meadow.</p><p>They are the candles we reach for when a box needs something for the house rather than something to eat.</p>',
+      body: '<p>Julie Clarke makes the Aran Candle range: Atlantic Shores, Connemara Turf Smoke, Celtic Honeysuckle and Aran Meadow among them.</p><p>They are what we reach for when a box needs something for the house rather than something to eat.</p>',
       productHandles: [],
     },
     {
       slug: 'pestle-and-mortar',
       name: 'Pestle and Mortar',
-      body: '<p>Irish skincare, made without the long ingredient lists most of the shelf carries. The hyaluronic serum and the balm cleanser are the two people come back for.</p><p>Their sets are the base of the pamper boxes we build for somebody who already knows what they use.</p>',
+      body: '<p>Skincare, and the shelf for somebody who already knows what they use. We carry the Pure Hyaluronic serum, the Erase balm cleanser, the Recover eye cream, the Daily Shield SPF 50 and their gift sets.</p><p>The New Baby Celebration hamper has their skincare in it for Mum.</p>',
       productHandles: [],
     },
     {
       slug: 'kybalion',
       name: 'Kybalion Jewellery',
-      body: '<p>Irish designed jewellery, and the part of the shop that surprises people who came in for a hamper. Celtic knots, evil eye pieces and everyday chains, at prices that work as a gift rather than as an occasion.</p><p>Ask us in the shop if you want a piece put into a box with something else.</p>',
+      body: '<p>Kybalion make the jewellery we carry: Celtic knots, the blue evil eye necklace, hoops, and drops in malachite and labradorite.</p><p>Ask us in the shop if you want a piece put into a box with something else.</p>',
       productHandles: [],
     },
     {
       slug: 'jo-browne',
       name: 'Jo Browne',
-      body: '<p>Natural Irish body care, built around bamboo rather than plastic. The body oils, the facecloths and the bamboo bedding all come from them.</p><p>Their body oils are in Bubbles and Bliss, and the sleep set is what goes into the New Mum hamper.</p>',
+      body: '<p>Body care built around bamboo. We carry the Day and Night body oil, the bamboo facecloths and make up pads, the soaps with bamboo silk, and the bamboo bedding and pyjamas.</p><p>Their body oils are in Bubbles and Bliss, and the sleep set goes into the New Mum and Baby Girl hamper.</p>',
       productHandles: [],
     },
   ],

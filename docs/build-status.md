@@ -285,12 +285,22 @@ currently blocking.
 
 Also needed, and not on the section 13 list:
 
-- **Counties for four makers.** The September 2026 review replaced Skelligs
-  and Bean and Goose with Filligan's of Donegal, McNutt of Donegal, Julie
-  Clarke, Pestle and Mortar, Kybalion Jewellery and Jo Browne. We have
-  confirmed counties for the two Donegal names only, so the other four
-  render without the county line rather than with a guessed one. Send us
-  four counties and they turn on.
+- **Maker descriptions need the client's own words.** The September 2026
+  review replaced Skelligs and Bean and Goose with Filligan's of Donegal,
+  McNutt of Donegal, Julie Clarke, Pestle and Mortar, Kybalion Jewellery
+  and Jo Browne. The first pass at their descriptions carried facts we had
+  no source for, including two invented founding years. They have been cut
+  back to what the catalogue and the listing copy actually support: the
+  products we stock and the hampers they appear in.
+
+  What is still missing, and only the client has it: **counties** for Julie
+  Clarke, Pestle and Mortar, Kybalion and Jo Browne (we have Donegal for
+  the two Donegal names, and those four render without the county line
+  rather than with a guessed one), and **anything about the makers
+  themselves**, how long they have been going, who runs them, how they
+  work. That is the part that makes the page worth reading and it is the
+  part we cannot write for them. See the rule at the top of the `makers`
+  block in `src/lib/cms/content.ts`.
 - **Replacement photography for the studio hamper set.** The client flagged
   the A Taste of Luxury frame in September 2026: the Butlers box in it reads
   "Hassetts Concierge" and several other labels in the shot are garbled the

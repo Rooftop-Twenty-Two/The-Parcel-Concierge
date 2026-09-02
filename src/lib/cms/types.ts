@@ -75,6 +75,12 @@ export type Maker = {
   county?: string
   /** HTML. */
   body: string
+  /**
+   * The short "Irish made | Beautifully scented" line the client writes
+   * under a maker. Rendered as its own row, separated by the component
+   * rather than by punctuation in the copy.
+   */
+  flags?: readonly string[]
   /** Products from this maker, by handle. */
   productHandles: string[]
 }

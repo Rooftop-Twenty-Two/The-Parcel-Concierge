@@ -11,7 +11,7 @@ export const revalidate = 3600
 export const metadata: Metadata = {
   title: 'About us',
   description:
-    'Karen and Ciaran McBride run The Parcel Concierge from Dunshaughlin, Co. Meath. We buy from small Irish producers directly and pack every hamper by hand.',
+    'Ciaran and Karen McBride run The Parcel Concierge with their team from Dunshaughlin, Co. Meath. Bespoke hampers, the Wine Vault, homewares, skincare and handmade Irish jewellery.',
   alternates: { canonical: '/about' },
 }
 

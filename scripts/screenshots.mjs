@@ -39,7 +39,6 @@ const pages = [
   ['/corporate-gifting/enquiry', '10-corporate-enquiry', DESKTOP, true],
   ['/delivery', '11-delivery', DESKTOP, true],
   ['/gifts-by-budget', '12-budget-hub', DESKTOP, true],
-  ['/guides/what-to-send-after-a-bereavement', '13-guide', DESKTOP, true],
   ['/about/our-makers', '14-makers', DESKTOP, true],
   ['/faq', '15-faq', DESKTOP, true],
   ['/', '16-mobile-home', MOBILE, true],

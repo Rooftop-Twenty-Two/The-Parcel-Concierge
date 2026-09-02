@@ -30,9 +30,9 @@ export const CONTENT: CmsData = {
     slots: [
       {
         kind: 'hero',
-        headline: 'Hampers, wine and gifts, chosen and sent with care',
+        headline: 'Beautiful hampers, fine wines and thoughtful gifts',
         subhead:
-          'We build every hamper ourselves in Dunshaughlin, and the Wine Vault holds over three hundred bottles we chose. Free hand delivery locally, €8.95 anywhere else in Ireland, free over €100.',
+          'Visit us in our bricks and mortar store in Dunshaughlin or shop with us online from anywhere. Enjoy free local delivery within the A85 eircode area, personally delivered by our team, with nationwide delivery through An Post, free on orders over €100.',
         ctaLabel: 'Shop all hampers',
         ctaHref: '/hampers',
         imageHandle: 'large-basket',
@@ -94,7 +94,7 @@ export const CONTENT: CmsData = {
       {
         kind: 'hamper-builder',
         title: 'Build your own hamper',
-        body: 'Pick the box, pick what goes in it, write the card. We pack it by hand and send it out the same way we send everything else.',
+        body: 'Create a gift as unique as the person receiving it. Choose from our carefully selected range of fine wines, chocolates and artisan foods. Make your gift even more special by adding a personal note: include your message when ordering and we will make sure it goes in. We take care of the finishing touches, presenting and wrapping your hamper beautifully.',
       },
       {
         kind: 'corporate',
@@ -103,8 +103,8 @@ export const CONTENT: CmsData = {
       },
       {
         kind: 'visit-shop',
-        title: 'There is much more in store',
-        body: 'What you see online is the edit: our hampers, the wine, and everything you can put in a box you build. The shelves in Dunshaughlin go much further, with jewellery, skincare, candles, homeware, cards and a wine room you can browse bottle by bottle, and one of us on the floor to help you choose.',
+        title: 'There is even more to discover in store',
+        body: 'Browse our carefully chosen collection of homewares, jewellery, skincare, candles, greeting cards, accessories, chocolates, gifts and much more, with something special for every occasion and plenty of treats for yourself too. Whether you shop online or pop in for a browse, we are here to make gifting easy, personal and beautifully presented. More than hampers. More than wine. A whole world of gifting under one roof.',
       },
       {
         kind: 'occasions',
@@ -213,7 +213,7 @@ export const CONTENT: CmsData = {
     {
       path: '/wine',
       intro:
-        'The Wine Vault. Over three hundred bottles, chosen by us, from weeknight reds to Champagne. Filter by grape, country, style or budget.',
+        'Discover over three hundred bottles in The Wine Vault, with something to suit every taste, occasion and budget. Filter by grape, country, wine style or budget, whether you are looking for a favourite, discovering something new, choosing for a special occasion or finding the right bottle to add to a gift.',
       seoBlock:
         '<p>We are a gifting business that takes wine seriously, which is an unusual combination and the reason this list looks the way it does. We buy directly from estates where we can. Everything else on the list is here because we drank it and wanted to sell it.</p><p>Grape, region and style are filters on this page rather than separate sections, so you can start from Malbec, or from Spain, or from "something full bodied under €25", and get to the same place. If you would rather start from the money, the three budget pages will do it faster.</p><p>Wine is alcohol, so we can only deliver to somebody over 18 and there are places we cannot ship to. The delivery page sets out exactly where.</p>',
       metaTitle: 'The Wine Vault: wine and Champagne, chosen by us',
@@ -426,57 +426,116 @@ export const CONTENT: CmsData = {
    * producers. If a fact is not in the catalogue, in the copy above or
    * confirmed by the client, leave it out and add it to the client list.
    */
+  /**
+   * Maker copy.
+   *
+   * RULE, learned the hard way in September 2026: a maker description
+   * states only what we can check, and the descriptions below are the
+   * client's own words, supplied in full. Do not embellish them, and do
+   * not add founding dates, ownership, process or provenance we cannot
+   * source. A first pass written here carried invented founding years and
+   * a popularity claim, on the page whose whole job is to say we know our
+   * producers.
+   *
+   * `county` is set only where the client has stated it. The pages leave
+   * the line off rather than guessing.
+   *
+   * `flags` is the short "Irish made | Beautifully scented" line the
+   * client writes under each one. Optional, and rendered as its own row.
+   */
   makers: [
     {
       slug: 'the-handmade-soap-company',
       name: 'The Handmade Soap Company',
       county: 'Meath',
-      body: '<p>Based in Slane, ten minutes up the road. They make everything in small batches without synthetic fragrance or parabens, and they were doing it long before it was a selling point.</p><p>Their hand wash, lotion and body care sets are the base of the pamper boxes we build.</p>',
+      body: '<p>We are delighted to stock The Handmade Soap Company, a beautiful Irish local brand creating natural products designed to make everyday moments feel a little more special.</p><p>From beautifully scented hand washes and lotions to gift sets, their products are made with care in Co. Meath and are a firm favourite at The Parcel Concierge.</p><p>Perfect as a thoughtful gift on their own, or as an addition to one of our bespoke hampers.</p>',
+      flags: ['Irish made', 'Beautifully scented', 'Naturally luxurious'],
       productHandles: [],
     },
     {
       slug: 'filligans-of-donegal',
-      name: 'Filligan’s of Donegal',
+      name: 'Filligan\u2019s of Donegal',
       county: 'Donegal',
-      body: '<p>Filligan’s make preserves, chutneys and mustards in Donegal. We carry the Seville marmalade, the blackcurrant, raspberry, strawberry and threeberry preserves, the chilli jam, the cheeseboard chutney and their balsamic and olive oil dressing.</p><p>Three of their jars go into the All Ireland Food Hamper.</p>',
+      body: '<p>We are delighted to have Filligan\u2019s of Donegal at The Parcel Concierge, a wonderful Irish brand that fits perfectly with our love of quality, locally produced products.</p><p>Based in Donegal, Filligan\u2019s creates a delicious range of chutneys, relishes, jams and preserves using carefully selected ingredients and traditional recipes. Their products are a lovely addition to our hampers and gift sets, bringing a true taste of Ireland to every gift.</p>',
+      productHandles: [],
+    },
+    {
+      slug: 'chocolate-garden-of-ireland',
+      name: 'The Chocolate Garden of Ireland',
+      body: '<p>No hamper or gift is complete without a little chocolate.</p><p>We are proud to feature treats from The Chocolate Garden of Ireland, an Irish family run business creating handmade gluten free chocolates and confectionery.</p><p>Their chocolates make a gorgeous addition to our gift hampers, adding the touch that makes a gift extra special.</p>',
+      flags: ['Irish made', 'Deliciously indulgent', 'Perfect for gifting'],
+      productHandles: [],
+    },
+    {
+      slug: 'rathbornes-1488',
+      name: 'Rathbornes 1488',
+      body: '<p>We love adding a touch of luxury to our gifts, and Rathbornes 1488 candles do exactly that.</p><p>One of Ireland\u2019s most celebrated candle makers, Rathbornes has a wonderful heritage dating back centuries. Their beautifully presented candles and home fragrances combine sophisticated scents with timeless style.</p><p>A gorgeous gift by itself, or the finishing touch to one of our hampers.</p>',
+      flags: ['Irish heritage', 'Beautiful fragrance', 'Timeless luxury'],
+      productHandles: [],
+    },
+    {
+      slug: 'tipperary-crystal',
+      name: 'Tipperary Crystal',
+      body: '<p>We are delighted to stock a selection from Tipperary Crystal, one of Ireland\u2019s best known giftware brands.</p><p>With beautiful pieces designed for gifting and the home, Tipperary Crystal is perfect for birthdays, celebrations, thank yous and those occasions when you want to give something a little extra special.</p><p>Beautifully presented and easy to gift, it is a lovely addition to our collection at The Parcel Concierge.</p>',
+      flags: ['Beautiful Irish design', 'Elegant gifting', 'Made for special occasions'],
       productHandles: [],
     },
     {
       slug: 'mcnutt-of-donegal',
       name: 'McNutt of Donegal',
       county: 'Donegal',
-      body: '<p>McNutt weave lambswool in Donegal. We carry their throws and blankets and their linen tote bags, and they are the things in our hampers that are still in the house years later.</p><p>The lambswool blanket in Hello Baby Boy and Hello Baby Girl is theirs, and so is the scarf in the Classic Gentleman’s Hamper.</p>',
-      productHandles: [],
-    },
-    {
-      slug: 'julie-clarke',
-      // County outstanding: the client has not confirmed where Julie
-      // Clarke works from, so the page leaves the line off rather than
-      // guessing. See docs/build-status.md.
-      name: 'Julie Clarke',
-      body: '<p>Julie Clarke makes the Aran Candle range: Atlantic Shores, Connemara Turf Smoke, Celtic Honeysuckle and Aran Meadow among them.</p><p>They are what we reach for when a box needs something for the house rather than something to eat.</p>',
-      productHandles: [],
-    },
-    {
-      slug: 'pestle-and-mortar',
-      name: 'Pestle and Mortar',
-      body: '<p>Skincare, and the shelf for somebody who already knows what they use. We carry the Pure Hyaluronic serum, the Erase balm cleanser, the Recover eye cream, the Daily Shield SPF 50 and their gift sets.</p><p>The New Baby Celebration hamper has their skincare in it for Mum.</p>',
+      body: '<p>We are delighted to stock McNutt of Donegal, a family run Irish business creating beautiful woven pieces from their home on the rugged Donegal coast.</p><p>Known for their colours, textures and timeless designs, McNutt products combine traditional Irish craftsmanship with a contemporary feel.</p><p>Beautifully made and wonderfully giftable, they are a perfect choice when you are looking for something special with a true touch of Donegal.</p>',
+      flags: ['Irish made', 'Donegal craftsmanship', 'Beautifully timeless'],
       productHandles: [],
     },
     {
       slug: 'kybalion',
       name: 'Kybalion Jewellery',
-      body: '<p>Kybalion make the jewellery we carry: Celtic knots, the blue evil eye necklace, hoops, and drops in malachite and labradorite.</p><p>Ask us in the shop if you want a piece put into a box with something else.</p>',
+      body: '<p>We are delighted to have Kybalion Jewellery as part of our carefully selected jewellery collection at The Parcel Concierge.</p><p>With stylish pieces designed to add the finishing touch, Kybalion Jewellery makes a wonderful gift for birthdays, celebrations, thank yous, or simply as a little treat for yourself.</p><p>We love pieces that feel special while still being easy to wear every day, which makes Kybalion a beautiful addition to our gifting range.</p>',
+      flags: ['Stylish', 'Beautifully giftable', 'Made to be treasured'],
       productHandles: [],
     },
     {
-      slug: 'jo-browne',
-      name: 'Jo Browne',
-      body: '<p>Body care built around bamboo. We carry the Day and Night body oil, the bamboo facecloths and make up pads, the soaps with bamboo silk, and the bamboo bedding and pyjamas.</p><p>Their body oils are in Bubbles and Bliss, and the sleep set goes into the New Mum and Baby Girl hamper.</p>',
+      slug: 'pestle-and-mortar',
+      name: 'Pestle and Mortar',
+      body: '<p>We are proud to stock Pestle and Mortar, an award winning Irish skincare brand known for its beautifully simple approach to skincare.</p><p>Combining high performance ingredients with elegant, uncomplicated formulations, their skincare products are designed to fit effortlessly into everyday routines.</p><p>Beautifully packaged and a pleasure to use, Pestle and Mortar products make a gorgeous gift on their own or an addition to one of our bespoke gift hampers.</p>',
+      flags: ['Irish skincare', 'Simple luxury', 'Beautiful gifting'],
+      productHandles: [],
+    },
+    {
+      slug: 'butlers-chocolates',
+      name: 'Butlers Chocolates',
+      body: '<p>We are delighted to feature Butlers Chocolates, one of Ireland\u2019s best loved chocolate brands, in our gifting collection at The Parcel Concierge.</p><p>Beautifully presented and wonderfully indulgent, Butlers chocolates suit every occasion, from birthdays and celebrations to thank you gifts or simply a well deserved treat.</p><p>They are also a favourite addition to our bespoke hampers, adding the touch of chocolate luxury that makes a gift feel extra special.</p>',
+      flags: ['Irish chocolate', 'Deliciously indulgent', 'Perfect for gifting'],
+      productHandles: [],
+    },
+    {
+      slug: 'julie-clarke',
+      name: 'Julie Clarke Candles',
+      body: '<p>We are delighted to stock the Julie Clarke candle collection at The Parcel Concierge.</p><p>With gorgeous fragrances and stylish presentation, these candles are perfect for creating a warm and welcoming atmosphere at home. From fresh and uplifting scents to rich and comforting fragrances, there is something to suit every taste.</p><p>Beautiful as a standalone present or added to one of our bespoke hampers, Julie Clarke candles bring fragrance and luxury to any gift.</p>',
+      flags: ['Beautiful fragrance', 'Stylish gifting', 'A little everyday luxury'],
+      productHandles: [],
+    },
+    {
+      slug: 'la-bougie',
+      name: 'La Bougie',
+      body: '<p>We are proud to stock La Bougie, a luxury Irish fragrance brand known for its beautifully crafted candles and sophisticated scents.</p><p>Created in Ireland by perfumer Lucy Hagerty, La Bougie combines distinctive fragrances with elegant presentation, making each candle feel wonderfully luxurious.</p><p>Perfect for birthdays, housewarmings, thank you gifts or simply treating yourself, La Bougie is a beautiful addition to our carefully selected gifting collection.</p>',
+      flags: ['Irish fragrance', 'Sophisticated scents', 'Luxurious gifting'],
       productHandles: [],
     },
   ],
 
+  /**
+   * PAUSED, September 2026: the client asked for the guides section to
+   * come off the site for now and to come back to it later. The routes,
+   * the nav and footer rows and the sitemap entries are gone, and
+   * /guides and both article URLs redirect (data/redirects/redirects.csv).
+   *
+   * The copy stays here on purpose. Bringing the section back is
+   * restoring src/app/(site)/guides, one NAV row, one FOOTER_LINKS row and
+   * the sitemap entries, then dropping the three redirects. Nothing here
+   * needs rewriting.
+   */
   guides: [
     {
       slug: 'how-to-choose-a-hamper',
@@ -507,15 +566,15 @@ export const CONTENT: CmsData = {
       slug: 'about',
       title: 'About us',
       intro:
-        'We are Karen and Ciaran McBride, and with our amazing team we run The Parcel Concierge from Dunshaughlin in Co. Meath, packing every hamper ourselves.',
-      body: '<p>We pack every box ourselves in the shop in Dunshaughlin, from makers we know. The Handmade Soap Company are up the road in Slane, the preserves come from Filligan’s of Donegal, and the wine room is chosen bottle by bottle by us.</p><p>We are members of Guaranteed Irish. We hand deliver in the A85 eircode area ourselves, which means one of us gets in the van, and everything else goes with An Post at €8.95 anywhere in Ireland, free on orders over €100.</p>',
-      updatedAt: '2026-08-01',
+        'Welcome to The Parcel Concierge, proudly run by Ciaran and Karen McBride along with our amazing team in the heart of Dunshaughlin, Co. Meath.',
+      body: '<p>Our passion for exceptional gifting and personal service drives our dedicated team, both in our welcoming bricks and mortar store at No 1 Supple House, Dunshaughlin, and online.</p><p>At The Parcel Concierge we specialise in crafting bespoke hampers tailored to your needs, for any occasion. Our offerings extend to an extensive selection of fine wines housed in our Wine Vault, so you can find the right pairing for your special moments.</p><p>We also have a great selection of homewares, skincare, food and a collection of handmade Irish jewellery that reflects quality craftsmanship and unique designs, making every piece a treasure.</p><p>We are proud members of Guaranteed Irish, supporting Irish businesses and our local community.</p><h2>Proudly Irish, delivered with care</h2><p>For deliveries within the A85 eircode area, your order is delivered personally by The Parcel Concierge team, giving it that extra bit of care from our door to yours.</p><p>For all deliveries outside the A85 area, we trust An Post to deliver your order safely and reliably throughout Ireland within two to three working days.</p><p>Whether it is a thoughtful gift, a beautiful hamper or something special just for you, every order is carefully prepared and beautifully presented before it leaves us. Join us in celebrating life’s moments with thoughtful gifts that leave a lasting impression.</p><p>Thank you for being part of our journey.</p>',
+      updatedAt: '2026-09-02',
     },
     {
       slug: 'guaranteed-irish',
-      title: 'Guaranteed Irish',
-      body: '<p>We are members of Guaranteed Irish, which means we have been assessed on where we are based, who we employ and where we buy from.</p><p>In practice it means most of what is in our boxes was made in Ireland by a small producer we deal with directly, and the boxes themselves are packed here rather than drop shipped from somewhere else. Where something in a hamper is not Irish, and some of the wine is not, the product page says where it is from.</p>',
-      updatedAt: '2026-08-01',
+      title: 'Proud members of Guaranteed Irish',
+      body: '<p>At The Parcel Concierge we are incredibly proud to be members of Guaranteed Irish, a symbol that represents businesses committed to supporting Ireland, its communities and its economy.</p><p>For us, being part of Guaranteed Irish reflects the values at the heart of our business: shopping Irish, supporting Irish suppliers and choosing quality products from businesses throughout Ireland wherever possible.</p><p>From beautiful Irish made chocolates, candles and skincare to artisan foods, jewellery and gifts, we are proud to showcase so many wonderful Irish brands both in store and throughout our bespoke hampers.</p><p>Being a Guaranteed Irish member is more than displaying a symbol. It represents our commitment to local business, Irish enterprise, sustainable employment and keeping communities thriving.</p><p>When you shop with The Parcel Concierge you are supporting an independent Irish business that, in turn, proudly supports many other Irish businesses.</p><p>Proudly Irish. Supporting local. Gifting with care.</p>',
+      updatedAt: '2026-09-02',
     },
   ],
 }

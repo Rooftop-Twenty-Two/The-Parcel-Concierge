@@ -123,7 +123,34 @@ export const NAV = [
   },
   // Seasonal: the Christmas entry point gets its own top-level item while
   // the season runs. Remove this row in January.
-  { label: 'Christmas', href: '/occasions/christmas', columns: [], promo: null },
+  //
+  // It carries a real menu rather than being a bare link. When it was bare
+  // it was one of two items in the bar that dropped nothing on hover, and
+  // the client read the pair as duplicates of each other.
+  {
+    label: 'Christmas',
+    href: '/occasions/christmas',
+    columns: [
+      {
+        title: 'Christmas',
+        links: [
+          { label: 'Christmas gifts and hampers', href: '/occasions/christmas' },
+          { label: 'Build your own hamper', href: '/build-your-own-hamper' },
+          { label: 'The Wine Vault', href: '/wine' },
+          { label: 'Corporate Christmas gifting', href: '/corporate-gifting' },
+          { label: 'Delivery and last posting dates', href: '/delivery' },
+        ],
+      },
+    ],
+    promo: {
+      title: 'Christmas gifts and hampers',
+      body: 'More Christmas hampers land in November. Everything on the site is ready to send today.',
+      href: '/occasions/christmas',
+      imageSrc: '/photography/tpc-christmas-11.jpg',
+      imageAlt:
+        'The Parcel Concierge shop in Dunshaughlin dressed for Christmas, the window full of lights and gifts',
+    },
+  },
   {
     label: 'Occasions',
     href: '/occasions',
@@ -147,7 +174,6 @@ export const NAV = [
       imageAlt: 'A bottle of Champagne, a glass and a notebook packed in a green gift box',
     },
   },
-  { label: 'Guides', href: '/guides', columns: [], promo: null },
   {
     label: 'About',
     href: '/about',
@@ -194,7 +220,6 @@ export const FOOTER_LINKS = [
       { label: 'Our story', href: '/about' },
       { label: 'Our makers', href: '/about/our-makers' },
       { label: 'Guaranteed Irish', href: '/about/guaranteed-irish' },
-      { label: 'Guides', href: '/guides' },
     ],
   },
   {

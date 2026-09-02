@@ -60,7 +60,9 @@ export function DeliveryPromise({
             ✓
           </span>
           <span>
-            Republic of Ireland only.{' '}
+            {DELIVERY.uk
+              ? `UK delivery ${formatMinor(DELIVERY.uk.priceMinor)}. `
+              : 'Republic of Ireland only. '}
             <Link href="/delivery" className="underline underline-offset-2">
               Delivery details
             </Link>

@@ -48,6 +48,11 @@ export async function getMaker(slug: string): Promise<Maker | null> {
   return CONTENT.makers.find((m) => m.slug === slug) ?? null
 }
 
+/**
+ * Unused while the guides section is paused (September 2026). Kept because
+ * restoring the section should be restoring the route, not rewriting the
+ * accessors. See the note on CONTENT.guides.
+ */
 export async function getGuides(): Promise<Guide[]> {
   return [...CONTENT.guides].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))
 }

@@ -18,9 +18,9 @@ import { AGE_GATE } from '@/lib/site-config'
  * The builder, as a four step wizard.
  *
  * Box, items, extras, review: the same order the shop walks a customer
- * through at the counter. There used to be a delivery-country step, but we
- * deliver within the Republic of Ireland only, and a question with one
- * answer is not a question. The running total never leaves the
+ * through at the counter. There is no delivery-country step: the
+ * destination comes from the address at checkout, which is where the buyer
+ * is typing it anyway. The running total never leaves the
  * screen; it lives in a bar pinned to the bottom, with the step controls,
  * so the two things a buyer actually watches (what it costs, what is
  * next) are always in the same place.

@@ -29,14 +29,17 @@ export function VisitTheShop({
   return (
     <section className="bg-green text-cream">
       <div className="mx-auto grid max-w-[1400px] items-center gap-10 px-4 py-16 lg:grid-cols-[1fr_1.1fr] lg:px-8">
+        {/* Inside rather than the shopfront: this band is a list of what is
+            on the shelves, so the photograph should be the shelves. The
+            frame is portrait because the photograph is. */}
         <StampFrame className="bg-beige">
           <Image
-            src="/photography/tpc-may-1-2.jpg"
-            alt={`The Parcel Concierge shopfront in ${SITE.town}, with wine barrel tables outside`}
-            width={1600}
-            height={1067}
+            src="/photography/tpc-may-9.jpg"
+            alt={`Inside The Parcel Concierge in ${SITE.town}, with greeting cards, jewellery, homeware and serving boards on display`}
+            width={1467}
+            height={2200}
             sizes="(min-width: 1024px) 46vw, 92vw"
-            className="aspect-3/2 w-full object-cover"
+            className="aspect-3/4 w-full object-cover"
           />
         </StampFrame>
 

@@ -43,7 +43,6 @@ const STATIC_ROUTES = new Set([
   '/gifts-by-budget',
   '/gifts',
   '/gift-card',
-  '/guides',
   '/about',
   '/about/our-makers',
   '/about/guaranteed-irish',
@@ -59,7 +58,7 @@ const STATIC_ROUTES = new Set([
 ])
 
 /** Prefixes under which a dynamic route can legitimately exist. */
-const DYNAMIC_PREFIXES = ['/hampers/', '/wine/', '/gifts/', '/guides/', '/legal/']
+const DYNAMIC_PREFIXES = ['/hampers/', '/wine/', '/gifts/', '/legal/']
 
 function pathOf(destination: string): string {
   const [path = ''] = destination.split('?')

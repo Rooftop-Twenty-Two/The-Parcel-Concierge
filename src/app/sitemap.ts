@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next'
-import { getGuides, listingPathsWithCopy } from '@/lib/cms'
+import { listingPathsWithCopy } from '@/lib/cms'
 import { isFixtureMode, queryProducts } from '@/lib/commerce'
 import {
   COLLECTIONS,
@@ -44,7 +44,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: url('/gifts-for'), priority: 0.6, changeFrequency: 'monthly' },
     { url: url('/gifts-by-budget'), priority: 0.8, changeFrequency: 'monthly' },
     { url: url('/gifts'), priority: 0.5, changeFrequency: 'monthly' },
-    { url: url('/guides'), priority: 0.6, changeFrequency: 'monthly' },
     { url: url('/about'), priority: 0.5, changeFrequency: 'yearly' },
     { url: url('/about/our-makers'), priority: 0.6, changeFrequency: 'monthly' },
     { url: url('/about/guaranteed-irish'), priority: 0.4, changeFrequency: 'yearly' },
@@ -60,14 +59,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     await Promise.all(COLLECTIONS.map((collection) => listingEntry(collection, url, withCopy)))
   ).filter((entry): entry is NonNullable<typeof entry> => entry !== null)
 
-  const guides = await getGuides()
-  const guideEntries: MetadataRoute.Sitemap = guides.map((guide) => ({
-    url: url(`/guides/${guide.slug}`),
-    lastModified: guide.updatedAt,
-    priority: 0.5,
-    changeFrequency: 'yearly',
-  }))
-
   const { items } = await queryProducts({ first: 250 })
   const productEntries: MetadataRoute.Sitemap = items.map((product) => ({
     url: url(productPathFor(product.kind, product.handle)),
@@ -75,7 +66,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     changeFrequency: 'weekly',
   }))
 
-  return [...staticEntries, ...listingEntries, ...guideEntries, ...productEntries]
+  return [...staticEntries, ...listingEntries, ...productEntries]
 }
 
 async function listingEntry(

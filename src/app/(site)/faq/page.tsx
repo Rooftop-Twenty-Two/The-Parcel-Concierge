@@ -2,14 +2,13 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { Accordion } from '@/components/ui/Accordion'
-import { formatMinor } from '@/lib/commerce/money'
 import { faqJsonLd } from '@/lib/seo/structured-data'
 import { AGE_GATE, DELIVERY } from '@/lib/site-config'
 
 export const metadata: Metadata = {
   title: 'Frequently asked questions',
   description:
-    'Delivery, gift messages, allergens, corporate orders, alcohol and returns. The questions we actually get asked.',
+    'Delivery, gift messages, corporate orders, alcohol and returns. The questions we actually get asked.',
   alternates: { canonical: '/faq' },
 }
 
@@ -24,11 +23,9 @@ export const metadata: Metadata = {
 const FAQS = [
   {
     question: 'How much is delivery?',
-    answer: `Free hand delivery in our local area, ${formatMinor(DELIVERY.national.priceMinor)} anywhere else in the Republic of Ireland${
-      DELIVERY.freeDeliveryThresholdMinor === null
-        ? ''
-        : `, and free on orders over ${formatMinor(DELIVERY.freeDeliveryThresholdMinor)}`
-    }. We do not deliver outside Ireland. Full details are on the delivery page.`,
+    answer:
+      'It depends where it is going: free locally, a flat rate elsewhere in Ireland, free over a certain order value, and a separate rate for the UK. The delivery page has the rates in full.',
+    link: { href: '/delivery', label: 'See our delivery information' },
   },
   {
     question: 'Can I send a hamper straight to the person it is for?',
@@ -38,12 +35,7 @@ const FAQS = [
   {
     question: 'Do you write the gift message by hand?',
     answer:
-      'Yes, on a card inside the lid. Whatever you type is exactly what we write, so check the spelling of names before you order.',
-  },
-  {
-    question: 'Where do I find the allergens?',
-    answer:
-      'On every hamper page, in the allergens section. We list them for every box, and if a box does not have allergen information we do not publish it.',
+      'Yes, on a card inside the package. Whatever you type is exactly what we write, so check the spelling of names before you order.',
   },
   {
     question: 'Do you deliver alcohol?',
@@ -57,17 +49,17 @@ const FAQS = [
   {
     question: 'Do you do corporate orders?',
     answer:
-      'Yes, and it is a large part of what we do in December. We handle branding, individual addresses and volume pricing. Start with the corporate gifting enquiry form.',
+      'Yes, and it is a large part of what we do all year round. We handle branding, individual addresses and volume pricing. Start with the corporate gifting enquiry form.',
   },
   {
     question: 'What if something arrives damaged?',
     answer:
-      'Email us a photo within 48 hours and we will replace it or refund it. We pack glass and bottles in fitted boxes, but a box out of our hands is out of our hands.',
+      'Email us a photo within 48 hours and we will replace it or refund it.',
   },
   {
     question: 'Are you actually Irish?',
     answer:
-      'Yes. We are based in Dunshaughlin, Co. Meath, we pack every box here ourselves, and we are members of Guaranteed Irish. Where something in a hamper is not Irish, and some of the wine is not, the product page says where it is from.',
+      'Yes. We are based in Dunshaughlin, Co. Meath, we pack every box here ourselves, and we are members of Guaranteed Irish.',
   },
 ]
 
@@ -90,6 +82,16 @@ export default function FaqPage() {
           {FAQS.map((faq) => (
             <Accordion key={faq.question} title={faq.question}>
               <p>{faq.answer}</p>
+              {/* The link is deliberately outside `answer`: that string is
+                  what goes into the FAQPage structured data, which takes
+                  plain text. */}
+              {'link' in faq && faq.link ? (
+                <p>
+                  <Link href={faq.link.href} className="underline underline-offset-4">
+                    {faq.link.label}
+                  </Link>
+                </p>
+              ) : null}
             </Accordion>
           ))}
         </div>

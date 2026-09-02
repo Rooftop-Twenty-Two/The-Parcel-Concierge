@@ -10,7 +10,7 @@ import { DELIVERY, handDeliveryZone } from '@/lib/site-config'
 export const metadata: Metadata = {
   title: 'Delivery',
   description:
-    'Free hand delivery in our local area, €8.95 anywhere else in the Republic of Ireland and free on orders over €100. Cut-off times, alcohol restrictions and what happens if nobody is home.',
+    'Free local delivery within the A85 eircode area, €8.95 elsewhere in Ireland with An Post and free over €100, and €40 to the UK. Cut-off times, alcohol restrictions and what happens if nobody is home.',
   alternates: { canonical: '/delivery' },
 }
 
@@ -33,6 +33,7 @@ export const metadata: Metadata = {
 export default function DeliveryPage() {
   const zone = handDeliveryZone()
   const carrier = DELIVERY.carrier
+  const uk = DELIVERY.uk
   const cutOff = DELIVERY.cutOff
   const threshold = DELIVERY.freeDeliveryThresholdMinor
 
@@ -41,8 +42,16 @@ export default function DeliveryPage() {
       question: 'How much is delivery in Ireland?',
       answer: `${formatMinor(DELIVERY.national.priceMinor)} anywhere in the Republic of Ireland${
         threshold === null ? '' : `, and free on orders over ${formatMinor(threshold)}`
-      }. Hand delivery in our local area is free.`,
+      }. Local delivery${zone ? ` within ${zone}` : ''} is free and we do it ourselves.`,
     },
+    ...(uk
+      ? [
+          {
+            question: 'Do you deliver to the UK?',
+            answer: `Yes, for ${formatMinor(uk.priceMinor)}. ${uk.note}`,
+          },
+        ]
+      : []),
     {
       question: 'Do you deliver alcohol?',
       answer: `Yes, to anyone over 18. We may ask for proof of age on delivery, and ${carrier} will not leave alcohol with a neighbour or in a safe place.`,
@@ -63,10 +72,13 @@ export default function DeliveryPage() {
       <div className="mx-auto max-w-[1400px] px-4 py-14 lg:px-8">
         <div className="grid gap-10 lg:grid-cols-[1fr_240px]">
           <div>
-            <h1 className="font-display text-[length:var(--text-hero)] text-navy">Delivery</h1>
+            <h1 className="font-display text-[length:var(--text-hero)] text-navy">
+              Delivery information
+            </h1>
             <p className="mt-4 max-w-2xl text-lg text-ink-muted">
-              We hand deliver locally ourselves, which means one of us gets in the van. Everything
-              else goes with {carrier}. Here is exactly what that costs and when it arrives.
+              At The Parcel Concierge we want to make sending the perfect gift as easy as possible.
+              Every order is prepared with care, beautifully presented and packaged securely before
+              it begins its journey to you or someone special.
             </p>
           </div>
           <PostmarkRoundel className="hidden h-40 w-40 text-green lg:block" />
@@ -78,24 +90,32 @@ export default function DeliveryPage() {
             price="Free"
             body={
               zone
-                ? `We deliver by hand in ${zone}, and only there. If your eircode starts with anything else, your order goes with ${carrier} at the rate beside this.`
+                ? `Free local delivery within ${zone} only, personally delivered by The Parcel Concierge team.`
                 : 'We deliver by hand around Dunshaughlin ourselves. The exact area is not published yet, so contact us with your eircode and we will confirm the same day.'
             }
           />
           <RateCard
-            title="Rest of Ireland"
+            title="Nationwide"
             price={formatMinor(DELIVERY.national.priceMinor)}
-            body={`With ${carrier}, anywhere in the Republic of Ireland.${
-              threshold === null
-                ? ''
-                : ` Free on orders over ${formatMinor(threshold)}.`
+            body={`For deliveries throughout Ireland outside ${
+              zone ?? 'our local area'
+            }, your order is carefully packaged and sent with ${carrier}.${
+              threshold === null ? '' : ` Free on orders over ${formatMinor(threshold)}.`
             }`}
           />
-          <RateCard
-            title="Outside Ireland"
-            price="Not available"
-            body="We deliver within the Republic of Ireland only. If you are abroad and sending to an Irish address, that works perfectly: order as normal and put their address on it."
-          />
+          {uk ? (
+            <RateCard
+              title="United Kingdom"
+              price={formatMinor(uk.priceMinor)}
+              body={`We deliver to the UK as well. ${uk.note}`}
+            />
+          ) : (
+            <RateCard
+              title="Outside Ireland"
+              price="Not available"
+              body="We deliver within the Republic of Ireland only. If you are abroad and sending to an Irish address, that works perfectly: order as normal and put their address on it."
+            />
+          )}
         </div>
 
         <div className="mt-14 max-w-3xl">

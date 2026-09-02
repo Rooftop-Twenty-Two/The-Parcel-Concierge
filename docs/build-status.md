@@ -277,7 +277,7 @@ currently blocking.
 | 1 | Brand asset pack: logo suite, colours, licensed fonts | **Part received.** Logos, colours and graphic devices arrived and are in use. The four licensed fonts (Bebas Kai, Salfish, South Epic, Futura) did not. We are running open substitutes; swapping in the real files is one file, `src/lib/brand/fonts.ts` |
 | 2 | The 12 hamper shots plus a shot list mapping images to SKUs | **Part received.** Sixteen photographs landed: ten studio hamper shots and six lifestyle shots of the shop and the owners. All sixteen are in use. **No shot list came with them**, so the image-to-SKU mapping is ours and needs confirming: see "The photography" below |
 | 3 | Final retain/remove decision on jewellery, crystal, homeware | The redirect map. `/collections/jewellery` currently has a provisional rule |
-| 4 | Free hand-delivery zone, by county or eircode | **Received, September 2026: the A85 eircode area and nothing beyond it.** Set in `src/lib/site-config.ts`; the delivery page, the delivery promise and the about page all name it |
+| 4 | Free hand-delivery zone, by county or eircode | **Received, September 2026: the A85 eircode area and nothing beyond it.** Set in `src/lib/site-config.ts`; the delivery bar, the hub pages, the delivery page, the delivery promise and the about page all read it from there |
 | 5 | Corporate volume pricing tiers and lead times | The bulk orders page says pricing is quoted on enquiry rather than printing a table |
 | 6 | Search Console and GA4 access | The redirect map is built from what actually gets traffic, not from what we assume exists. This is the biggest risk item |
 | 7 | Trustpilot account access | Stars use the verified June figures rather than live ones |
@@ -285,22 +285,28 @@ currently blocking.
 
 Also needed, and not on the section 13 list:
 
-- **Maker descriptions need the client's own words.** The September 2026
-  review replaced Skelligs and Bean and Goose with Filligan's of Donegal,
-  McNutt of Donegal, Julie Clarke, Pestle and Mortar, Kybalion Jewellery
-  and Jo Browne. The first pass at their descriptions carried facts we had
-  no source for, including two invented founding years. They have been cut
-  back to what the catalogue and the listing copy actually support: the
-  products we stock and the hampers they appear in.
+- **UK delivery reversed.** August's confirmed answer was that there is no
+  UK delivery, and the site said "Republic of Ireland only" in six places.
+  September's answer is the UK at €40, with customs caveats. That is live,
+  driven by `DELIVERY.uk` in `src/lib/site-config.ts`, and setting that to
+  null puts every one of those claims back. Worth confirming once more,
+  because it reverses a decision the client made a month ago and the site
+  now quotes a price for it.
 
-  What is still missing, and only the client has it: **counties** for Julie
-  Clarke, Pestle and Mortar, Kybalion and Jo Browne (we have Donegal for
-  the two Donegal names, and those four render without the county line
-  rather than with a guessed one), and **anything about the makers
-  themselves**, how long they have been going, who runs them, how they
-  work. That is the part that makes the page worth reading and it is the
-  part we cannot write for them. See the rule at the top of the `makers`
-  block in `src/lib/cms/content.ts`.
+- **Maker copy is now the client's own, and stays that way.** The first
+  pass we wrote carried facts we had no source for, including two invented
+  founding years. The client then supplied full descriptions for eleven
+  makers and those are what is on the page, verbatim apart from house
+  punctuation. The rule is written at the top of the `makers` block in
+  `src/lib/cms/content.ts`: do not embellish them.
+
+  Two open points. **Jo Browne** was on the client's September list of
+  makers to add and is not on the eleven they later wrote copy for, so the
+  page does not carry them: confirm whether that is deliberate. And
+  **counties** are set only for The Handmade Soap Company (Meath),
+  Filligan's and McNutt (Donegal), because those are the three the client
+  stated. The other eight render without the county line rather than with
+  a guessed one.
 - **Replacement photography for the studio hamper set.** The client flagged
   the A Taste of Luxury frame in September 2026: the Butlers box in it reads
   "Hassetts Concierge" and several other labels in the shot are garbled the

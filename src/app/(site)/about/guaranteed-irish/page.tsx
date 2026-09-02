@@ -9,7 +9,7 @@ export const revalidate = 3600
 export const metadata: Metadata = {
   title: 'Guaranteed Irish',
   description:
-    'We are members of Guaranteed Irish. What that means in practice for what goes in our hampers and where it is packed.',
+    'We are proud members of Guaranteed Irish, supporting Irish suppliers and choosing quality products from businesses throughout Ireland wherever possible.',
   alternates: { canonical: '/about/guaranteed-irish' },
 }
 

@@ -4,7 +4,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { CartCount } from '@/components/layout/CartCount'
+import { formatMinor } from '@/lib/commerce/money'
 import { NAV } from '@/lib/routes'
+import { DELIVERY, handDeliveryZone } from '@/lib/site-config'
 
 /**
  * Site header.
@@ -113,12 +115,26 @@ export function Header() {
   )
 }
 
+/**
+ * The delivery offer, on every page. Built from site-config rather than
+ * typed out, so the day a rate or the hand-delivery area changes it
+ * changes here too.
+ */
 function DeliveryBar() {
+  const zone = handDeliveryZone()
+  const parts = [
+    zone ? `Free local delivery in ${zone}` : 'Free hand delivery in our local area',
+    `${formatMinor(DELIVERY.national.priceMinor)} elsewhere in Ireland with ${DELIVERY.carrier}`,
+    DELIVERY.freeDeliveryThresholdMinor === null
+      ? null
+      : `free over ${formatMinor(DELIVERY.freeDeliveryThresholdMinor)}`,
+    DELIVERY.uk ? `UK ${formatMinor(DELIVERY.uk.priceMinor)}` : null,
+  ].filter((part): part is string => part !== null)
+
   return (
     <div className="bg-navy text-cream">
       <p className="mx-auto max-w-[1400px] px-4 py-2 text-center text-[13px] tracking-wide lg:px-8">
-        Free hand delivery in our local area. €8.95 anywhere else in the Republic of Ireland, free
-        over €100.
+        {parts.join('. ')}.
       </p>
     </div>
   )

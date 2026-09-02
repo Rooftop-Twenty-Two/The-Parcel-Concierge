@@ -340,10 +340,13 @@ function BuilderBand({ slot }: { slot: Extract<HomepageSlot, { kind: 'hamper-bui
           </ButtonLink>
         </div>
 
+        {/* A baby hamper here, per the client: the builder's job is to
+            show that a box gets built around a person, and the baby boxes
+            say that faster than a generic gift box does. */}
         <StampFrame className="bg-beige">
           <Image
-            src="/photography/tpc-06-contents.jpg"
-            alt="A bottle of Champagne, a glass and a linen bound notebook packed into a green gift box"
+            src="/photography/hamper-hello-baby-girl.jpg"
+            alt="A new baby hamper with a teddy bear, a pink blanket, sparkling rosé and chocolates in a green gift box"
             width={1200}
             height={1500}
             sizes="(min-width: 1024px) 40vw, 92vw"
@@ -463,14 +466,15 @@ function CorporateBand({ slot }: { slot: Extract<HomepageSlot, { kind: 'corporat
     <section className="bg-beige py-16">
       <div className="mx-auto grid max-w-[1400px] items-center gap-10 px-4 lg:grid-cols-2 lg:px-8">
         <StampFrame className="order-2 bg-cream lg:order-1">
-          {/* The shop and the van, not a hamper. A product shot here reads
-              as "this is the box your team gets", which is the opposite of
-              the proposition: the recipient picks their own. */}
+          {/* The shop, not a hamper. A product shot here reads as "this is
+              the box your team gets", which is the opposite of the
+              proposition: the recipient picks their own. Not the Christmas
+              frame either, which the seasonal band above now uses. */}
           <Image
-            src="/photography/tpc-christmas-11.jpg"
-            alt="The Parcel Concierge shop in Dunshaughlin dressed for Christmas, with the delivery van outside and corporate gifts listed in the window"
-            width={1200}
-            height={1500}
+            src="/photography/tpc-may-1-2.jpg"
+            alt="The Parcel Concierge shopfront in Dunshaughlin, with wine barrel tables outside"
+            width={1600}
+            height={1067}
             sizes="(min-width: 1024px) 46vw, 92vw"
             className="aspect-3/2 w-full object-cover"
           />

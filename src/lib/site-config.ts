@@ -50,11 +50,20 @@ export const DELIVERY = {
     counties: null as readonly string[] | null,
   },
   /**
-   * Confirmed by the client, August 2026: THERE IS NO UK DELIVERY. The
-   * site deliberately says "Republic of Ireland only" rather than staying
-   * silent, so a UK buyer finds out before the checkout does.
+   * REVERSED by the client, September 2026. August's answer was that there
+   * was no UK delivery and the site said "Republic of Ireland only"
+   * everywhere. The client now offers the UK at €40, so that claim had to
+   * come off every page that carried it, not just the delivery page.
+   *
+   * Set `uk` to null to switch UK delivery back off: the rate card, the
+   * delivery promise and the FAQ all read this rather than restating it.
    */
-  shipsOutsideIreland: false,
+  shipsOutsideIreland: true,
+  uk: {
+    priceMinor: 4000,
+    /** Customs is the client's own caveat, and it belongs next to the price. */
+    note: 'Delivery times may vary and additional customs requirements may apply.',
+  } as { priceMinor: number; note: string } | null,
   /**
    * Free delivery on orders of €100 or more. Confirmed by the client,
    * August 2026; the cart progress nudge renders now that this is set.

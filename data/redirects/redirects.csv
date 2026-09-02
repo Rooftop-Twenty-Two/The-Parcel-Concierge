@@ -147,3 +147,6 @@ source,destination,type,note
 /products/bodegas-aldea-rioja-reserva,/wine/bodegas-aldea-rioja-reserva,301,Retained wine
 /products/wild-gorse-soy-candle,/gifts/wild-gorse-soy-candle,301,Retained add-on
 /wine/subscription,/wine-club,301,The club moved to its own top level route when the taste quiz landed
+/guides,/hampers,301,Guides section paused by the client in September 2026
+/guides/how-to-choose-a-hamper,/hampers,301,Guides section paused by the client in September 2026
+/guides/corporate-gifting-that-does-not-embarrass-anyone,/corporate-gifting,301,Guides section paused by the client in September 2026

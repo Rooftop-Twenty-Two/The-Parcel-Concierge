@@ -308,5 +308,20 @@
     "source": "/wine/subscription",
     "destination": "/wine-club",
     "permanent": true
+  },
+  {
+    "source": "/guides",
+    "destination": "/hampers",
+    "permanent": true
+  },
+  {
+    "source": "/guides/how-to-choose-a-hamper",
+    "destination": "/hampers",
+    "permanent": true
+  },
+  {
+    "source": "/guides/corporate-gifting-that-does-not-embarrass-anyone",
+    "destination": "/corporate-gifting",
+    "permanent": true
   }
 ]

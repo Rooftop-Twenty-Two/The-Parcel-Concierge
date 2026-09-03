@@ -92,6 +92,13 @@ async function productsByCollection(
   tags: string[],
 ): Promise<ProductQueryResult> {
   const sort = COLLECTION_SORT_KEYS[query.sort ?? 'featured']
+  // A price band ("gifts €50-100") is a Storefront collection filter: Shopify
+  // keeps any product with a VARIANT in range, so a "From €25" product with a
+  // €60 option correctly belongs in €50-100. We then re-price the card to the
+  // in-band variant so it quotes €60, not the out-of-band €25.
+  const hasPriceBand = query.minPriceMinor !== undefined || query.maxPriceMinor !== undefined
+  const lo = query.minPriceMinor
+  const hi = query.maxPriceMinor
   const data = await storefront<{
     collection: {
       products: {
@@ -122,7 +129,36 @@ async function productsByCollection(
   // collection.products has no query arg, so the builder box products are
   // filtered out here rather than in the query.
   const hidden = new Set(HIDDEN_FROM_LISTINGS)
-  const items = products.nodes.map(normaliseProductCard).filter((card) => !hidden.has(card.handle))
+  const items = products.nodes
+    .filter((node) => !hidden.has(node.handle))
+    .map((node) => {
+      const card = normaliseProductCard(node)
+      if (!hasPriceBand) return card
+      // Re-price to the cheapest AVAILABLE variant that is in the band, so a
+      // multi-variant product reads its in-band price (and the quick-add adds
+      // that same variant). Falls back to the product's own range when none of
+      // the fetched variants land in the band.
+      const inBand = (node.variants?.nodes ?? [])
+        .filter(
+          (v): v is typeof v & { price: { amount: string; currencyCode: string } } =>
+            v.availableForSale !== false && Boolean(v.price),
+        )
+        .map((v) => ({ id: v.id, minor: money(v.price.amount, v.price.currencyCode).amountMinor }))
+        .filter((v) => (lo === undefined || v.minor >= lo) && (hi === undefined || v.minor <= hi))
+        .sort((a, b) => a.minor - b.minor)
+      const [cheapest] = inBand
+      if (cheapest) {
+        const dearest = inBand[inBand.length - 1] ?? cheapest
+        card.priceRange = {
+          min: { amountMinor: cheapest.minor, currencyCode: card.priceRange.min.currencyCode },
+          max: { amountMinor: dearest.minor, currencyCode: card.priceRange.max.currencyCode },
+        }
+        card.defaultVariantId = cheapest.id
+        card.defaultVariantPriceMinor = cheapest.minor
+      }
+      return card
+    })
+
   return { items, pageInfo: products.pageInfo, totalKnown: items.length }
 }
 

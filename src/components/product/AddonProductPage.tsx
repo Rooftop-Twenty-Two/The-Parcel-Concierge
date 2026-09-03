@@ -5,7 +5,7 @@ import { ProductGallery } from '@/components/product/ProductGallery'
 import { ProductGrid } from '@/components/product/ProductCard'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { TrustpilotStars } from '@/components/trust/TrustpilotStars'
-import { formatMoney } from '@/lib/commerce/money'
+import { cheapestAvailableVariant, formatMoney } from '@/lib/commerce/money'
 import type { Product, ProductCard } from '@/lib/commerce/types'
 import { breadcrumbJsonLd, productJsonLd } from '@/lib/seo/structured-data'
 
@@ -25,7 +25,7 @@ export function AddonProductPage({
   trust: { rating: number; reviewCount: number }
   hampers: ProductCard[]
 }) {
-  const variant = product.variants[0]
+  const variant = cheapestAvailableVariant(product.variants)
   const crumbs = [
     { name: 'Home', path: '/' },
     { name: 'Gifts', path: '/gifts' },

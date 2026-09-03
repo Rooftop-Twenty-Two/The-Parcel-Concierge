@@ -66,3 +66,22 @@ export function formatPriceRange(range: { min: Money; max: Money }): string {
   if (range.min.amountMinor === range.max.amountMinor) return formatMoney(range.min)
   return `From ${formatMoney(range.min)}`
 }
+
+/**
+ * The variant a product page should open on: the cheapest one a shopper can
+ * actually buy. A PDP that defaults to variants[0] can land on a sold-out
+ * first variant (e.g. a necklace whose first style is out of stock) and quote
+ * a price the grid's "From" never showed. Falls back to the cheapest of all
+ * variants when none are in stock, so the page still quotes a price.
+ */
+export function cheapestAvailableVariant<T extends { availableForSale: boolean; price: Money }>(
+  variants: readonly T[],
+): T | undefined {
+  const inStock = variants.filter((v) => v.availableForSale)
+  const pool = inStock.length ? inStock : variants
+  let best: T | undefined
+  for (const variant of pool) {
+    if (!best || variant.price.amountMinor < best.price.amountMinor) best = variant
+  }
+  return best
+}

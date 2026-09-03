@@ -7,7 +7,7 @@ import { ProductGrid } from '@/components/product/ProductCard'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { TrustpilotStars } from '@/components/trust/TrustpilotStars'
 import { PostmarkRoundel } from '@/components/ui/Stamp'
-import { formatMoney } from '@/lib/commerce/money'
+import { cheapestAvailableVariant, formatMoney } from '@/lib/commerce/money'
 import type { Product, ProductCard } from '@/lib/commerce/types'
 import { breadcrumbJsonLd, productJsonLd } from '@/lib/seo/structured-data'
 
@@ -29,7 +29,7 @@ export function WineProductPage({
   trust: { rating: number; reviewCount: number }
   crossSell: ProductCard[]
 }) {
-  const variant = product.variants[0]
+  const variant = cheapestAvailableVariant(product.variants)
   const wine = product.wine
 
   const crumbs = [

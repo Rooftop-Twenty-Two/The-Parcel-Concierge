@@ -189,7 +189,7 @@ export const PRODUCT_BY_HANDLE = /* GraphQL */ `
           currencyCode
         }
       }
-      variants(first: 25) {
+      variants(first: 100) {
         nodes {
           id
           sku

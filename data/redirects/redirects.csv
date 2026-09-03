@@ -131,7 +131,7 @@ source,destination,type,note
 /pages/corporate,/corporate-gifting,301,Now a full B2B flow
 /policies/terms-of-service,/legal/terms,301,Direct equivalent
 /policies/privacy-policy,/legal/privacy,301,Direct equivalent
-/policies/refund-policy,/legal/terms,301,Returns folded into the terms when the separate page came off in September 2026
+/policies/refund-policy,/legal/returns,301,Direct equivalent
 #
 # ---------------------------------------------------------------------------
 # Products: worked examples of the two per-product patterns
@@ -150,4 +150,3 @@ source,destination,type,note
 /guides,/hampers,301,Guides section paused by the client in September 2026
 /guides/how-to-choose-a-hamper,/hampers,301,Guides section paused by the client in September 2026
 /guides/corporate-gifting-that-does-not-embarrass-anyone,/corporate-gifting,301,Guides section paused by the client in September 2026
-/legal/returns,/legal/terms,301,Returns page removed September 2026; the cancellation and refund terms live in the terms of service

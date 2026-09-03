@@ -14,20 +14,18 @@ export const revalidate = 3600
  * deploy. These used to be placeholders saying the text was being
  * finalised.
  *
- * THERE ARE THREE, NOT FOUR. Returns had its own route until September
- * 2026, when the client asked for it to come off. Distance selling law
- * still requires the cancellation and refund terms to be given, so they
- * were folded into the terms of service rather than deleted, and
- * /legal/returns redirects there (data/redirects/redirects.csv). Putting
- * the separate page back means a CMS document and a NAV row; the wording
- * already exists inside terms.
+ * Returns came off briefly in September 2026 and went back when the client
+ * supplied their refund policy. The returns window is stated in ONE place,
+ * on the refund policy page: the terms link to it rather than restating a
+ * number, because a site that says 14 days in one place and 30 in another
+ * is a site that says the wrong thing somewhere.
  *
  * NEEDS A SOLICITOR. These are a careful draft against Irish and EU
  * consumer and data protection law, written from what this codebase
  * actually does, and they are not a substitute for review by somebody
  * qualified. See docs/build-status.md.
  */
-const LEGAL_SLUGS = ['terms', 'privacy', 'cookies'] as const
+const LEGAL_SLUGS = ['terms', 'privacy', 'returns', 'cookies'] as const
 
 type Props = { params: Promise<{ slug: string }> }
 

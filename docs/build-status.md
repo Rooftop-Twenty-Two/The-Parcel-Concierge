@@ -325,6 +325,36 @@ Also needed, and not on the section 13 list:
   the acceptable standard is a legal question and it differs between the two
   jurisdictions. The mechanism is built so a stronger check is a change to
   one component and one API route.
+- **Three things to raise with the client about their refund policy.** They
+  supplied it in September 2026 and it is published as `legal-returns`,
+  their wording. It is the stock Shopify template, and three parts of it do
+  not fit this business:
+
+  1. **"We cannot accept returns on sale items."** A trader cannot contract
+     out of the statutory withdrawal right, and it does not disappear
+     because an item was discounted. Faulty sale goods keep full statutory
+     rights too. This term is likely unenforceable against an EU consumer
+     and should come out or be qualified.
+  2. **The EU cooling off paragraph is written backwards.** It reads
+     "if the merchandise is being shipped into the European Union", which
+     is template wording for a trader outside the EU. This business is in
+     Co. Meath and most of its orders never leave Ireland, so the 14 day
+     right is the baseline for nearly every order rather than a special
+     case at the end of the policy.
+  3. **The 30 day window and the exceptions sit oddly together.** Perishable
+     food, custom products and personal care are excluded, and between them
+     that is most of what the shop sells: the hampers, anything
+     personalised, and the skincare. The generous headline number applies
+     to a smaller part of the range than it appears to.
+
+  Two phrases were dropped as apparel boilerplate that would read as an
+  error on a hamper shop: "unworn" and "with tags". Nothing else was
+  changed, and the substance ("same condition as received, in its original
+  packaging") is intact.
+
+  The returns window is stated once, on that page. The terms link to it
+  rather than repeating a number.
+
 - **A solicitor's review of the legal pages.** Terms, privacy and cookies
   are now written rather than placeholders, drafted against Irish and EU
   consumer and data protection law and from what this codebase actually

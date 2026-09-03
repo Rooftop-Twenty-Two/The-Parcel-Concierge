@@ -193,9 +193,9 @@ export default function DeliveryPage() {
                 and bottles in fitted boxes, but a box out of our hands is out of our hands.
               </p>
               <p>
-                Full details are in the cancellations, returns and refunds section of our{' '}
-                <Link href="/legal/terms" className="underline underline-offset-2">
-                  terms of service
+                Full details are in our{' '}
+                <Link href="/legal/returns" className="underline underline-offset-2">
+                  refund policy
                 </Link>
                 .
               </p>

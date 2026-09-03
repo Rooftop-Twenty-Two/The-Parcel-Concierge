@@ -67,10 +67,10 @@ export function HamperProductPage({
           </ol>
         </nav>
 
-        <div className="grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
-          <ProductGallery images={product.images} title={product.title} />
+        <VariantSelectionProvider product={product}>
+          <div className="grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
+            <ProductGallery images={product.images} title={product.title} />
 
-          <VariantSelectionProvider product={product}>
             <div>
             <div className="flex flex-wrap gap-2">
               {product.tags
@@ -109,8 +109,8 @@ export function HamperProductPage({
 
             {hamper ? <HamperDetails product={product} /> : null}
             </div>
-          </VariantSelectionProvider>
-        </div>
+          </div>
+        </VariantSelectionProvider>
       </div>
 
       {crossSell.length ? (

@@ -55,10 +55,10 @@ export function AddonProductPage({
           </ol>
         </nav>
 
-        <div className="grid gap-10 lg:grid-cols-[1fr_1fr] lg:gap-16">
-          <ProductGallery images={product.images} title={product.title} />
+        <VariantSelectionProvider product={product}>
+          <div className="grid gap-10 lg:grid-cols-[1fr_1fr] lg:gap-16">
+            <ProductGallery images={product.images} title={product.title} />
 
-          <VariantSelectionProvider product={product}>
             <div>
               <h1 className="font-display text-[length:var(--text-display)] text-navy">
                 {product.title}
@@ -81,8 +81,8 @@ export function AddonProductPage({
                 <DeliveryPromise compact />
               </div>
             </div>
-          </VariantSelectionProvider>
-        </div>
+          </div>
+        </VariantSelectionProvider>
       </div>
 
       {hampers.length ? (

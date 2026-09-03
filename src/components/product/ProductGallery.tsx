@@ -1,7 +1,8 @@
 'use client'
 
 import Image from 'next/image'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useVariantSelectionOptional } from '@/components/product/VariantSelector'
 import { StampFrame } from '@/components/ui/Stamp'
 import type { ProductImage } from '@/lib/commerce/types'
 
@@ -18,6 +19,17 @@ import type { ProductImage } from '@/lib/commerce/types'
  */
 export function ProductGallery({ images, title }: { images: ProductImage[]; title: string }) {
   const [active, setActive] = useState(0)
+
+  // Follow the selected variant: choosing a variant that has its own image
+  // jumps the gallery to it (variant images are part of `images`). Thumbnail
+  // clicks still work independently for browsing the rest of the shots.
+  const selectedVariantImageUrl = useVariantSelectionOptional()?.selectedVariant?.image?.url
+  useEffect(() => {
+    if (!selectedVariantImageUrl) return
+    const index = images.findIndex((image) => image.url === selectedVariantImageUrl)
+    if (index >= 0) setActive(index)
+  }, [selectedVariantImageUrl, images])
+
   const current = images[active] ?? images[0]
 
   if (!current) {

@@ -208,6 +208,9 @@ export const PRODUCT_BY_HANDLE = /* GraphQL */ `
             name
             value
           }
+          image {
+            ...ImageFields
+          }
         }
       }
       ${HAMPER_METAFIELDS}

@@ -77,10 +77,10 @@ export function WineProductPage({
           </ol>
         </nav>
 
-        <div className="grid gap-10 lg:grid-cols-[1fr_1fr] lg:gap-16">
-          <ProductGallery images={product.images} title={product.title} />
+        <VariantSelectionProvider product={product}>
+          <div className="grid gap-10 lg:grid-cols-[1fr_1fr] lg:gap-16">
+            <ProductGallery images={product.images} title={product.title} />
 
-          <VariantSelectionProvider product={product}>
             <div>
             {wine?.isExclusiveImport ? (
               <div className="mb-4 flex items-center gap-3 border border-green/30 bg-green/5 px-4 py-3">
@@ -167,8 +167,8 @@ export function WineProductPage({
               </Link>
             </p>
             </div>
-          </VariantSelectionProvider>
-        </div>
+          </div>
+        </VariantSelectionProvider>
       </div>
 
       {crossSell.length ? (

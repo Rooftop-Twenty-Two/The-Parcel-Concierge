@@ -81,6 +81,7 @@ function variantsOf(product: CatalogueProduct): ProductVariant[] {
     availableForSale: v.inventoryQuantity === null || v.inventoryQuantity > 0,
     quantityAvailable: v.inventoryQuantity,
     selectedOptions: v.options ?? [],
+    image: null,
   }))
 }
 

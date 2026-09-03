@@ -209,6 +209,7 @@ type RawVariant = {
   price: { amount: string; currencyCode: string }
   compareAtPrice: { amount: string; currencyCode: string } | null
   selectedOptions: { name: string; value: string }[]
+  image?: Parameters<typeof normaliseImage>[0]
 }
 
 function normaliseVariant(raw: RawVariant): ProductVariant {
@@ -223,6 +224,7 @@ function normaliseVariant(raw: RawVariant): ProductVariant {
       ? money(raw.compareAtPrice.amount, raw.compareAtPrice.currencyCode)
       : null,
     selectedOptions: raw.selectedOptions,
+    image: normaliseImage(raw.image ?? null),
   }
 }
 

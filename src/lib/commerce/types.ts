@@ -35,6 +35,8 @@ export type ProductVariant = {
   /** null when Shopify is not tracking inventory for this variant. */
   quantityAvailable: number | null
   selectedOptions: { name: string; value: string }[]
+  /** The variant's own image, when it has one, so the gallery can follow it. */
+  image: ProductImage | null
 }
 
 export type HamperContentLine = {

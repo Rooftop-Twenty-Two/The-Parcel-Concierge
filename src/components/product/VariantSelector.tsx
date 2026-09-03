@@ -41,6 +41,12 @@ export function useVariantSelection(): VariantSelectionValue {
   return value
 }
 
+/** Non-throwing variant: for components (like the gallery) that read the
+ *  selection when a provider is present but must still work without one. */
+export function useVariantSelectionOptional(): VariantSelectionValue | null {
+  return useContext(VariantSelectionContext)
+}
+
 export function VariantSelectionProvider({
   product,
   children,
@@ -102,8 +108,11 @@ export function VariantPrice() {
  * pages behave exactly as before. Sold-out variants are shown but disabled and
  * labelled, so they can never be selected or added.
  */
+const VISIBLE_VARIANTS = 12
+
 export function VariantSelector() {
   const { product, selectedVariant, selectVariant } = useVariantSelection()
+  const [showAll, setShowAll] = useState(false)
 
   if (product.variants.length <= 1) return null
 
@@ -113,11 +122,25 @@ export function VariantSelector() {
   const optionName = product.variants[0]?.selectedOptions.map((o) => o.name).join(' / ') || 'Options'
   const legend = /title/i.test(optionName) ? 'Options' : optionName
 
+  // Big variant sets (30+ necklace styles) collapse to a first row plus a
+  // "show all". The selected variant is always kept visible even when
+  // collapsed, so a deep-linked or picked option beyond the fold still shows.
+  let shown = showAll ? product.variants : product.variants.slice(0, VISIBLE_VARIANTS)
+  if (!showAll && selectedVariant && !shown.some((v) => v.id === selectedVariant.id)) {
+    shown = [selectedVariant, ...shown.slice(0, VISIBLE_VARIANTS - 1)]
+  }
+  const hiddenCount = product.variants.length - shown.length
+
   return (
     <fieldset className="mt-8 border-t border-rule pt-6">
-      <legend className="text-sm font-medium text-navy">{legend}</legend>
+      <legend className="text-sm font-medium text-navy">
+        {legend}
+        {selectedVariant ? (
+          <span className="ml-2 font-normal text-ink-muted">{selectedVariant.title}</span>
+        ) : null}
+      </legend>
       <div className="mt-3 flex flex-wrap gap-2">
-        {product.variants.map((variant) => {
+        {shown.map((variant) => {
           const selected = variant.id === selectedVariant?.id
           const soldOut = !variant.availableForSale
           return (
@@ -146,6 +169,24 @@ export function VariantSelector() {
             </label>
           )
         })}
+        {hiddenCount > 0 ? (
+          <button
+            type="button"
+            onClick={() => setShowAll(true)}
+            className="inline-flex items-center border border-dashed border-navy/50 px-4 py-2 text-sm text-navy transition-colors hover:border-navy hover:bg-beige"
+          >
+            Show all {product.variants.length}
+          </button>
+        ) : null}
+        {showAll && product.variants.length > VISIBLE_VARIANTS ? (
+          <button
+            type="button"
+            onClick={() => setShowAll(false)}
+            className="inline-flex items-center px-4 py-2 text-sm text-ink-muted underline underline-offset-4 hover:text-navy"
+          >
+            Show fewer
+          </button>
+        ) : null}
       </div>
     </fieldset>
   )

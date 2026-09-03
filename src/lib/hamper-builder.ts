@@ -57,30 +57,28 @@ export type BoxOption = {
   capacity: number
 }
 
+// variantTitle values must match the live build-a-hamper product's variant
+// titles EXACTLY (note the lower-case "medium"). Capacities are our own
+// guidance — the real per-box limits live in a Giftship app metafield the
+// Storefront token cannot read, so these are sensible defaults.
 export const BOX_OPTIONS: readonly BoxOption[] = [
   {
     id: 'small',
-    variantTitle: 'The small box',
-    description: 'Shallow kraft box, packed and hand tied by us. Room for up to four things.',
+    variantTitle: 'Display Hamper (Small)',
+    description: 'Our small display hamper, packed and hand tied by us. Room for up to four things.',
     capacity: 4,
   },
   {
-    id: 'standard',
-    variantTitle: 'The standard box',
-    description: 'Our usual deep kraft box. Room for up to six things, including a bottle.',
+    id: 'medium',
+    variantTitle: 'Display Hamper (medium)',
+    description: 'The medium display hamper. Room for up to six things, including a bottle.',
     capacity: 6,
   },
   {
     id: 'large',
-    variantTitle: 'The large box',
-    description: 'Deep box with a fitted base for bottles. Room for up to nine things.',
+    variantTitle: 'Display Hamper (Large)',
+    description: 'The large display hamper, with room for bottles. Up to nine things.',
     capacity: 9,
-  },
-  {
-    id: 'wicker',
-    variantTitle: 'The wicker hamper',
-    description: 'A lidded wicker hamper that gets kept. Room for up to twelve things.',
-    capacity: 12,
   },
 ]
 
@@ -137,28 +135,24 @@ export function componentCount(selection: Pick<BuilderSelection, 'components'>):
 export type PickerShelf = {
   id: string
   label: string
-  /** What fills the shelf. */
-  query:
-    | { kind: 'aisle'; aisle: string }
-    | { kind: 'wine' }
-    | { kind: 'all' }
+  /** The native Shopify collection whose products fill the shelf. */
+  collection: string
   /** True when everything on the shelf is alcohol. */
   alcohol: boolean
 }
 
 export const PICKER_SHELVES: readonly PickerShelf[] = [
-  { id: 'all', label: 'Everything', query: { kind: 'all' }, alcohol: false },
-  { id: 'food', label: 'Food and larder', query: { kind: 'aisle', aisle: 'food-larder' }, alcohol: false },
-  { id: 'chocolate', label: 'Chocolate and sweet things', query: { kind: 'aisle', aisle: 'chocolate-sweets' }, alcohol: false },
-  { id: 'wine', label: 'Wine and Champagne', query: { kind: 'wine' }, alcohol: true },
-  { id: 'cellar', label: 'More from the cellar', query: { kind: 'aisle', aisle: 'wine-cellar-extras' }, alcohol: true },
-  { id: 'candles', label: 'Candles and fragrance', query: { kind: 'aisle', aisle: 'candles-fragrance' }, alcohol: false },
-  { id: 'beauty', label: 'Beauty and bath', query: { kind: 'aisle', aisle: 'beauty-bath' }, alcohol: false },
-  { id: 'homeware', label: 'Homeware and kitchen', query: { kind: 'aisle', aisle: 'homeware-kitchen' }, alcohol: false },
-  { id: 'baby', label: 'Baby and children', query: { kind: 'aisle', aisle: 'baby-kids' }, alcohol: false },
-  { id: 'jewellery', label: 'Jewellery and accessories', query: { kind: 'aisle', aisle: 'jewellery-accessories' }, alcohol: false },
-  { id: 'cards', label: 'Cards and stationery', query: { kind: 'aisle', aisle: 'cards-stationery' }, alcohol: false },
-  { id: 'other', label: 'Everything else', query: { kind: 'aisle', aisle: 'everything-else' }, alcohol: false },
+  { id: 'all', label: 'Everything', collection: 'all-gifts', alcohol: false },
+  { id: 'food', label: 'Food and larder', collection: 'all-food', alcohol: false },
+  { id: 'chocolate', label: 'Chocolate and sweet things', collection: 'chocolate-confectionery-1', alcohol: false },
+  { id: 'wine', label: 'Wine and Champagne', collection: 'fine-wines-1', alcohol: true },
+  { id: 'cellar', label: 'Champagne and sparkling', collection: 'champagne-and-prosecco-1', alcohol: true },
+  { id: 'candles', label: 'Candles and fragrance', collection: 'candles-diffusers', alcohol: false },
+  { id: 'beauty', label: 'Beauty and bath', collection: 'beauty', alcohol: false },
+  { id: 'homeware', label: 'Homeware and kitchen', collection: 'homeware', alcohol: false },
+  { id: 'baby', label: 'Baby and children', collection: 'baby', alcohol: false },
+  { id: 'jewellery', label: 'Jewellery and accessories', collection: 'jewellery', alcohol: false },
+  { id: 'cards', label: 'Cards and stationery', collection: 'greeting-cards', alcohol: false },
 ]
 
 // There is no delivery-country choice: we deliver within the Republic of

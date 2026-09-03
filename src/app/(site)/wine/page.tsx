@@ -23,7 +23,7 @@ export default function WineHub() {
         src: '/photography/tpc-may-13.jpg',
         alt: 'The wine room in the shop in Dunshaughlin, shelved floor to ceiling on both sides',
       }}
-      query={{ kinds: ['wine', 'spirit'], sort: 'featured', first: 24 }}
+      query={{ collection: 'fine-wines-1', sort: 'featured', first: 24 }}
       alcohol
       promo={{
         eyebrow: 'New',

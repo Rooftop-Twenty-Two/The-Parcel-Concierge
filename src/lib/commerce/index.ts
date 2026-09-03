@@ -7,7 +7,8 @@ import { hasStorefrontCredentials } from '../shopify/env'
 import { normaliseProduct, normaliseProductCard } from '../shopify/normalise'
 import {
   PRODUCT_BY_HANDLE,
-  PRODUCTS_BY_HANDLES,
+  PRODUCT_CARD_BY_HANDLE,
+  PRODUCTS_BY_COLLECTION,
   PRODUCTS_BY_QUERY,
   VARIANT_AVAILABILITY,
 } from '../shopify/queries'
@@ -48,6 +49,81 @@ const SORT_KEYS: Record<NonNullable<ProductQuery['sort']>, { sortKey: string; re
   'price-asc': { sortKey: 'PRICE', reverse: false },
   'price-desc': { sortKey: 'PRICE', reverse: true },
   newest: { sortKey: 'CREATED_AT', reverse: true },
+}
+
+/**
+ * Collection product sorting uses ProductCollectionSortKeys, a different enum
+ * from product search. `featured` maps to the collection's own manual order
+ * (COLLECTION_DEFAULT) so a curated collection reads as the merchant arranged
+ * it, not by best-seller.
+ */
+const COLLECTION_SORT_KEYS: Record<
+  NonNullable<ProductQuery['sort']>,
+  { sortKey: string; reverse: boolean }
+> = {
+  featured: { sortKey: 'COLLECTION_DEFAULT', reverse: false },
+  'price-asc': { sortKey: 'PRICE', reverse: false },
+  'price-desc': { sortKey: 'PRICE', reverse: true },
+  newest: { sortKey: 'CREATED', reverse: true },
+}
+
+/**
+ * Price band and stock as Storefront collection filters, because
+ * collection.products has no free-text query arg. Mirrors buildSearchQuery:
+ * out-of-stock excluded by default, min defaults to 0, max left open.
+ */
+function buildCollectionFilters(query: ProductQuery): Record<string, unknown>[] {
+  const filters: Record<string, unknown>[] = []
+  if (!query.includeOutOfStock) filters.push({ available: true })
+  if (query.minPriceMinor !== undefined || query.maxPriceMinor !== undefined) {
+    const price: { min: number; max?: number } = { min: (query.minPriceMinor ?? 0) / 100 }
+    if (query.maxPriceMinor !== undefined) price.max = query.maxPriceMinor / 100
+    filters.push({ price })
+  }
+  return filters
+}
+
+/**
+ * Reads a listing from a native Shopify collection — the live store's real
+ * taxonomy. Every taxonomy listing routes here via query.collection.
+ */
+async function productsByCollection(
+  query: ProductQuery,
+  tags: string[],
+): Promise<ProductQueryResult> {
+  const sort = COLLECTION_SORT_KEYS[query.sort ?? 'featured']
+  const data = await storefront<{
+    collection: {
+      products: {
+        nodes: Parameters<typeof normaliseProductCard>[0][]
+        pageInfo: { hasNextPage: boolean; endCursor: string | null }
+      }
+    } | null
+  }>({
+    query: PRODUCTS_BY_COLLECTION,
+    variables: {
+      handle: query.collection,
+      first: query.first ?? 24,
+      after: query.after ?? null,
+      sortKey: sort.sortKey,
+      reverse: sort.reverse,
+      filters: buildCollectionFilters(query),
+    },
+    tags,
+    revalidate: REVALIDATE.listing,
+  })
+
+  const products = data.collection?.products
+  if (!products) {
+    // Unknown collection handle: dark this one route rather than 500 the page.
+    return { items: [], pageInfo: { hasNextPage: false, endCursor: null }, totalKnown: 0 }
+  }
+
+  // collection.products has no query arg, so the builder box products are
+  // filtered out here rather than in the query.
+  const hidden = new Set(HIDDEN_FROM_LISTINGS)
+  const items = products.nodes.map(normaliseProductCard).filter((card) => !hidden.has(card.handle))
+  return { items, pageInfo: products.pageInfo, totalKnown: items.length }
 }
 
 /**
@@ -106,6 +182,7 @@ export async function queryProducts(query: ProductQuery): Promise<ProductQueryRe
   if (isFixtureMode()) return fixtureQuery(query)
 
   if (query.handles?.length) return productsByHandles(query.handles)
+  if (query.collection) return productsByCollection(query, [TAG_ALL_PRODUCTS])
 
   const sort = SORT_KEYS[query.sort ?? 'featured']
   const data = await storefront<{
@@ -138,24 +215,22 @@ async function productsByHandles(handles: string[]): Promise<ProductQueryResult>
   if (!handles.length) {
     return { items: [], pageInfo: { hasNextPage: false, endCursor: null }, totalKnown: 0 }
   }
-  const data = await storefront<{ products: { nodes: Parameters<typeof normaliseProductCard>[0][] } }>({
-    query: PRODUCTS_BY_HANDLES,
-    variables: {
-      query: handles.map((h) => `handle:'${h}'`).join(' OR '),
-      first: Math.min(handles.length, 100),
-    },
-    tags: handles.map(productTag),
-    revalidate: REVALIDATE.listing,
-  })
+  // products(query:"handle:'x'") is UNINDEXED on this store and returns a
+  // relevance fallback rather than the named products, so each handle is
+  // fetched directly. Next dedupes and caches these within a render pass, and
+  // the handle order is preserved, which is the whole point of a curated list.
+  const cards = await Promise.all(
+    handles.map((handle) =>
+      storefront<{ product: Parameters<typeof normaliseProductCard>[0] | null }>({
+        query: PRODUCT_CARD_BY_HANDLE,
+        variables: { handle },
+        tags: [productTag(handle), TAG_ALL_PRODUCTS],
+        revalidate: REVALIDATE.listing,
+      }).then((data) => (data.product ? normaliseProductCard(data.product) : null)),
+    ),
+  )
 
-  const byHandle = new Map(data.products.nodes.map((n) => [n.handle, normaliseProductCard(n)]))
-  // Restore the curated order. Shopify's relevance order is not the
-  // editorial order and must not be allowed to win.
-  const items = handles.flatMap((h) => {
-    const card = byHandle.get(h)
-    return card ? [card] : []
-  })
-
+  const items = cards.filter((card): card is NonNullable<typeof card> => card !== null)
   return { items, pageInfo: { hasNextPage: false, endCursor: null }, totalKnown: items.length }
 }
 
@@ -165,6 +240,8 @@ async function productsByHandles(handles: string[]): Promise<ProductQueryResult>
  */
 export async function queryListing(path: string, query: ProductQuery): Promise<ProductQueryResult> {
   if (isFixtureMode()) return fixtureQuery(query)
+  if (query.handles?.length) return productsByHandles(query.handles)
+  if (query.collection) return productsByCollection(query, [TAG_ALL_PRODUCTS, collectionTag(path)])
   // The tag is attached by re-running the query with the collection tag
   // included; Storefront calls are deduped by Next within a render pass, so
   // this does not double-fetch.
@@ -219,8 +296,10 @@ export async function allProductHandles(): Promise<string[]> {
           products(
             first: $first
             after: $after
-            # Builder items have no URL, so the sitemap must not see them.
-            query: "available_for_sale:true AND -tag:'type:builder-item'"
+            # The builder box products are mechanisms with no URL, so the
+            # sitemap must not see them. On the live store they are the
+            # GIST_BUILDER_PRODUCT type, not the absent type:builder-item tag.
+            query: "available_for_sale:true AND -product_type:GIST_BUILDER_PRODUCT AND -tag:'type:builder-item'"
           ) {
             nodes {
               handle

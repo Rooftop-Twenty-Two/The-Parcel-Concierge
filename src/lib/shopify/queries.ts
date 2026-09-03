@@ -27,6 +27,13 @@ export const PRODUCT_CARD_FRAGMENT = /* GraphQL */ `
     title
     productType
     tags
+    # The live store carries no type:* tags; native collection membership is
+    # what the front end reads instead. See kindFromMembership in normalise.ts.
+    collections(first: 20) {
+      nodes {
+        handle
+      }
+    }
     availableForSale
     featuredImage {
       ...ImageFields
@@ -160,6 +167,11 @@ export const PRODUCT_BY_HANDLE = /* GraphQL */ `
       descriptionHtml
       productType
       tags
+      collections(first: 20) {
+        nodes {
+          handle
+        }
+      }
       availableForSale
       updatedAt
       images(first: 10) {
@@ -231,6 +243,58 @@ export const PRODUCTS_BY_HANDLES = /* GraphQL */ `
     products(query: $query, first: $first) {
       nodes {
         ...ProductCard
+      }
+    }
+  }
+`
+
+/**
+ * One product card by handle. Used to fetch curated-by-handle lists one
+ * product at a time, because on this store products(query:"handle:'x'") is
+ * unindexed and returns a relevance fallback rather than the named product.
+ */
+export const PRODUCT_CARD_BY_HANDLE = /* GraphQL */ `
+  ${PRODUCT_CARD_FRAGMENT}
+  query ProductCardByHandle($handle: String!) {
+    product(handle: $handle) {
+      ...ProductCard
+    }
+  }
+`
+
+/**
+ * Products in a native Shopify collection. This is how the live store's real
+ * taxonomy is read: every listing points at a collection handle rather than
+ * at the type: and occasion: tags the store does not carry.
+ *
+ * collection.products has no free-text query arg, so price and stock are
+ * expressed as Storefront `filters` and hidden handles are removed in code.
+ */
+export const PRODUCTS_BY_COLLECTION = /* GraphQL */ `
+  ${PRODUCT_CARD_FRAGMENT}
+  query ProductsInCollection(
+    $handle: String!
+    $first: Int!
+    $after: String
+    $sortKey: ProductCollectionSortKeys!
+    $reverse: Boolean!
+    $filters: [ProductFilter!]
+  ) {
+    collection(handle: $handle) {
+      products(
+        first: $first
+        after: $after
+        sortKey: $sortKey
+        reverse: $reverse
+        filters: $filters
+      ) {
+        nodes {
+          ...ProductCard
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
       }
     }
   }
@@ -310,6 +374,11 @@ const CART_FIELDS = /* GraphQL */ `
               handle
               title
               tags
+              collections(first: 10) {
+                nodes {
+                  handle
+                }
+              }
             }
           }
         }

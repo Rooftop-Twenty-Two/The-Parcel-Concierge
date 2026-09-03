@@ -30,19 +30,19 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'No such shelf' }, { status: 400 })
   }
 
-  const query: ProductQuery = {
-    ...shelfQuery(shelf.query),
-    text: q || undefined,
-    sort: 'price-asc',
-    // The dull paging trade again (see src/lib/commerce/pagination.ts):
-    // ask for everything up to this page and slice, so fixture and
-    // Storefront behave identically without a cursor in the client.
-    first: PAGE_SIZE * page,
-  }
+  // A native collection has no free-text arg, so a search runs across the
+  // whole shop by title; an unsearched shelf reads its collection. The dull
+  // paging trade again (see src/lib/commerce/pagination.ts): ask for
+  // everything up to this page and slice.
+  const query: ProductQuery = q
+    ? { text: q, sort: 'price-asc', first: PAGE_SIZE * page }
+    : { collection: shelf.collection, sort: 'price-asc', first: PAGE_SIZE * page }
 
   const result = await queryProducts(query)
+  // The builder box products themselves must never appear in the picker.
+  const pickable = result.items.filter((item) => item.kind !== 'builder-item')
   const start = PAGE_SIZE * (page - 1)
-  const items = result.items.slice(start, start + PAGE_SIZE)
+  const items = pickable.slice(start, start + PAGE_SIZE)
 
   return NextResponse.json(
     {
@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
           item.kind === 'wine' || item.kind === 'spirit' || item.tags.includes('contains:alcohol'),
       })),
       page,
-      hasMore: result.items.length > start + PAGE_SIZE || result.pageInfo.hasNextPage,
+      hasMore: pickable.length > start + PAGE_SIZE || result.pageInfo.hasNextPage,
       total: result.totalKnown,
     },
     // The catalogue moves slowly; the picker does not need to be fresher
@@ -75,15 +75,4 @@ export async function GET(request: NextRequest) {
       },
     },
   )
-}
-
-function shelfQuery(query: (typeof PICKER_SHELVES)[number]['query']): ProductQuery {
-  switch (query.kind) {
-    case 'aisle':
-      return { kinds: ['builder-item'], tags: [`aisle:${query.aisle}`] }
-    case 'wine':
-      return { kinds: ['wine'] }
-    case 'all':
-      return { kinds: ['builder-item', 'wine'] }
-  }
 }

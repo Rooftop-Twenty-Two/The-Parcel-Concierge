@@ -193,6 +193,13 @@ export type ProductQuery = {
   /** Any one of these flags is enough. Organic OR biodynamic, for instance. */
   anyWineFlag?: ('fineWine' | 'organic' | 'biodynamic' | 'isAlcoholFree' | 'giftSet')[]
   /**
+   * A native Shopify collection handle. When set, the listing reads
+   * collection(handle){products} instead of a tag/product_type search — this
+   * is the live store's real taxonomy. Price bounds below ride as Storefront
+   * collection filters; `sort` maps to ProductCollectionSortKeys.
+   */
+  collection?: string
+  /**
    * Explicit handles, in order. Set by CMS-curated listings, which are the
    * only listings where editorial ordering beats a query.
    */

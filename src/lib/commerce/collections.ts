@@ -3,16 +3,23 @@ import type { ProductQuery } from './types'
 /**
  * The hamper builder's parent product.
  *
+ * The live store's builder boxes are Shopify products of type
+ * GIST_BUILDER_PRODUCT: `build-a-hamper` (standard) and
+ * `build-a-premium-hamper` (premium). The standard box is the parent the
+ * builder route resolves; both are hidden from listings below.
+ *
  * It lives here rather than in hamper-builder.ts because the ingest tool
  * and the redirect validator both read this module directly, and it must
  * stay free of runtime imports so they can.
  */
-export const BUILDER_PARENT_HANDLE = 'build-your-own-hamper'
+export const BUILDER_PARENT_HANDLE = 'build-a-hamper'
+
+/** The premium builder box. Hidden from listings like the standard box. */
+export const BUILDER_PREMIUM_HANDLE = 'build-a-premium-hamper'
 
 /**
- * The builder's optional hand tied bow (€1.50). A mechanism product like
- * the box: it exists so the charge can ride into Shopify checkout as a
- * line, never to be browsed.
+ * The builder's optional hand-tied bow. No such product exists on the live
+ * store today, so the builder simply does not offer a bow until one does.
  */
 export const BUILDER_BOW_HANDLE = 'gift-bow'
 
@@ -20,17 +27,14 @@ export const BUILDER_BOW_HANDLE = 'gift-bow'
  * Products that exist in Shopify but must never appear in a listing, in a
  * grid, in the sitemap, or at a product URL of their own.
  *
- * The hamper builder's parent product is one: it is a real Shopify product
- * so the box can be priced and sold, but it is a mechanism rather than a
- * hamper you buy off a grid. Left in, it shows up in every hamper listing
- * priced "From €8", and /hampers/build-your-own-hamper becomes a second,
- * worse URL for the builder.
- *
- * Enforced in the query layer rather than per listing, so a new listing
- * cannot forget it.
+ * The builder box products are mechanisms, not hampers you buy off a grid.
+ * Left in, they show up in every hamper listing priced "From €8.50".
+ * Enforced in the query layer (productsByCollection filters these handles)
+ * rather than per listing, so a new listing cannot forget it.
  */
 export const HIDDEN_FROM_LISTINGS: ReadonlySet<string> = new Set([
   BUILDER_PARENT_HANDLE,
+  BUILDER_PREMIUM_HANDLE,
   BUILDER_BOW_HANDLE,
 ])
 
@@ -43,6 +47,10 @@ export const HIDDEN_FROM_LISTINGS: ReadonlySet<string> = new Set([
  *   - the sitemap
  *   - breadcrumbs and structured data
  *   - the min-four-products rule (brief section 5)
+ *
+ * Each listing reads a native Shopify COLLECTION (the live store's real
+ * taxonomy) via `query.collection`. The store carries no type:/occasion:
+ * tags, so tag-based queries return nothing; collection handles do not.
  *
  * Grape variety, region and style are facets on /wine, not routes. The old
  * site's ~50 grape sub-collections do not appear here by design.
@@ -69,8 +77,8 @@ export type CollectionDef = {
   title: string
   h1: string
   /**
-   * What fills the grid. `handles` here means CMS-curated: the CMS owns the
-   * ordering and the picks, and still references products by handle only.
+   * What fills the grid. Normally a native Shopify collection handle via
+   * `collection`. `curated: true` rows are filled by the CMS by handle.
    */
   query: ProductQuery
   /** True when the listing can contain alcohol, which arms the age gate. */
@@ -87,14 +95,13 @@ export type CollectionDef = {
   curated?: boolean
 }
 
-const HAMPER_BASE: ProductQuery = { kinds: ['hamper'], sort: 'featured', first: 24 }
-const WINE_BASE: ProductQuery = { kinds: ['wine', 'spirit'], sort: 'featured', first: 24 }
+const HAMPER_BASE: ProductQuery = { sort: 'featured', first: 24 }
+const WINE_BASE: ProductQuery = { sort: 'featured', first: 24 }
 
 export const COLLECTIONS: readonly CollectionDef[] = [
   // ---------------------------------------------------------------------
-  // Hampers. Budget bands first: they are the highest-intent entry point
-  // and they are real, server-rendered, indexable routes, never filter
-  // state.
+  // Hampers. Budget bands read the master All Hampers collection with a
+  // price filter. Budget bands first: highest-intent, real indexable routes.
   // ---------------------------------------------------------------------
   {
     slug: 'under-75',
@@ -102,7 +109,7 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     path: '/hampers/under-75',
     title: 'Hampers under €75',
     h1: 'Hampers under €75',
-    query: { ...HAMPER_BASE, maxPriceMinor: 7499, sort: 'price-desc' },
+    query: { ...HAMPER_BASE, collection: 'all-hampers-1', maxPriceMinor: 7499, sort: 'price-desc' },
     alcohol: true,
     facets: ['occasion', 'recipient'],
     parentPath: '/hampers',
@@ -113,7 +120,7 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     path: '/hampers/75-125',
     title: 'Hampers €75 to €125',
     h1: 'Hampers from €75 to €125',
-    query: { ...HAMPER_BASE, minPriceMinor: 7500, maxPriceMinor: 12499 },
+    query: { ...HAMPER_BASE, collection: 'all-hampers-1', minPriceMinor: 7500, maxPriceMinor: 12499 },
     alcohol: true,
     facets: ['occasion', 'recipient'],
     parentPath: '/hampers',
@@ -124,7 +131,7 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     path: '/hampers/125-200',
     title: 'Hampers €125 to €200',
     h1: 'Hampers from €125 to €200',
-    query: { ...HAMPER_BASE, minPriceMinor: 12500, maxPriceMinor: 19999 },
+    query: { ...HAMPER_BASE, collection: 'all-hampers-1', minPriceMinor: 12500, maxPriceMinor: 19999 },
     alcohol: true,
     facets: ['occasion', 'recipient'],
     parentPath: '/hampers',
@@ -135,20 +142,22 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     path: '/hampers/luxury-200-plus',
     title: 'Luxury hampers over €200',
     h1: 'Luxury hampers, €200 and over',
-    query: { ...HAMPER_BASE, minPriceMinor: 20000, sort: 'price-asc' },
+    query: { ...HAMPER_BASE, collection: 'all-hampers-1', minPriceMinor: 20000, sort: 'price-asc' },
     alcohol: true,
     facets: ['occasion', 'recipient'],
     parentPath: '/hampers',
   },
 
-  // Hamper themes.
+  // Hamper themes. Wine and food hampers share the merchant's single
+  // Food & Wine Hampers collection until it is split; both stay dark below
+  // the four-product floor until the merchant populates it.
   {
     slug: 'wine',
     hub: 'hampers',
     path: '/hampers/wine',
     title: 'Wine hampers',
     h1: 'Wine hampers',
-    query: { ...HAMPER_BASE, productTypes: ['Wine hamper'] },
+    query: { ...HAMPER_BASE, collection: 'food-and-wine-hampers-1' },
     alcohol: true,
     facets: ['price', 'occasion'],
     parentPath: '/hampers',
@@ -159,20 +168,18 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     path: '/hampers/food',
     title: 'Food hampers',
     h1: 'Food hampers',
-    query: { ...HAMPER_BASE, productTypes: ['Food hamper'] },
+    query: { ...HAMPER_BASE, collection: 'food-and-wine-hampers-1' },
     alcohol: false,
     facets: ['price', 'occasion'],
     parentPath: '/hampers',
   },
-  // There is no whiskey listing: the shop does not stock spirits
-  // (confirmed by the client, August 2026).
   {
     slug: 'pamper',
     hub: 'hampers',
     path: '/hampers/pamper',
     title: 'Pamper hampers',
     h1: 'Pamper hampers',
-    query: { ...HAMPER_BASE, productTypes: ['Pamper hamper'] },
+    query: { ...HAMPER_BASE, collection: 'pamper-hampers-1' },
     alcohol: false,
     facets: ['price', 'recipient'],
     parentPath: '/hampers',
@@ -183,31 +190,36 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     path: '/hampers/new-baby',
     title: 'New baby hampers',
     h1: 'New baby hampers',
-    query: { ...HAMPER_BASE, tags: ['occasion:new-baby'] },
-    // The August 2026 baby hampers carry Prosecco or Champagne for the
-    // parents, so this listing arms the age gate.
+    query: { ...HAMPER_BASE, collection: 'baby-hampers-1' },
+    // The baby hampers can carry Prosecco or Champagne for the parents, so
+    // this listing arms the age gate.
     alcohol: true,
     facets: ['price'],
     parentPath: '/hampers',
   },
   {
+    // No native sympathy collection exists yet. Pre-wired to the handle the
+    // merchant will create ('sympathy' — see shopify-client-checklist.csv);
+    // it darks gracefully until that collection exists.
     slug: 'sympathy',
     hub: 'hampers',
     path: '/hampers/sympathy',
     title: 'Sympathy hampers',
     h1: 'Sympathy hampers',
-    query: { ...HAMPER_BASE, tags: ['occasion:sympathy'] },
+    query: { ...HAMPER_BASE, collection: 'sympathy' },
     alcohol: false,
     facets: ['price'],
     parentPath: '/hampers',
   },
   {
+    // Only match is a gifts collection, not hampers-only — grid reads as
+    // "anniversary gifts". Accepted over leaving the route dark.
     slug: 'anniversary',
     hub: 'hampers',
     path: '/hampers/anniversary',
     title: 'Anniversary hampers',
     h1: 'Anniversary hampers',
-    query: { ...HAMPER_BASE, tags: ['occasion:anniversary'] },
+    query: { ...HAMPER_BASE, collection: 'gifts-by-anniversary-1' },
     alcohol: true,
     facets: ['price', 'recipient'],
     parentPath: '/hampers',
@@ -218,18 +230,20 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     path: '/hampers/thank-you',
     title: 'Thank you hampers',
     h1: 'Thank you hampers',
-    query: { ...HAMPER_BASE, tags: ['occasion:thank-you'] },
+    query: { ...HAMPER_BASE, collection: 'thank-you' },
     alcohol: true,
     facets: ['price', 'recipient'],
     parentPath: '/hampers',
   },
   {
+    // The merchant's 'corporate' collection is empty; using the populated
+    // gifts-for-employees as the proxy until 'corporate' is filled.
     slug: 'corporate',
     hub: 'hampers',
     path: '/hampers/corporate',
     title: 'Corporate hampers',
     h1: 'Corporate hampers',
-    query: { ...HAMPER_BASE, tags: ['occasion:corporate'] },
+    query: { ...HAMPER_BASE, collection: 'gifts-for-employees' },
     alcohol: true,
     facets: ['price'],
     parentPath: '/hampers',
@@ -239,12 +253,14 @@ export const COLLECTIONS: readonly CollectionDef[] = [
   // Wine and spirits. The Wine Vault.
   // ---------------------------------------------------------------------
   {
+    // No native exclusive collection exists. Pre-wired to 'exclusive-to-us'
+    // for the merchant to create; darks until then.
     slug: 'exclusive-to-us',
     hub: 'wine',
     path: '/wine/exclusive-to-us',
     title: 'Exclusive to us',
     h1: 'Wines you will not find anywhere else in Ireland',
-    query: { ...WINE_BASE, tags: ['badge:exclusive'] },
+    query: { ...WINE_BASE, collection: 'exclusive-to-us' },
     alcohol: true,
     facets: ['grape', 'country', 'price'],
     parentPath: '/wine',
@@ -257,22 +273,19 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     h1: 'The value edit',
     // Curated: every product on this page needs a verified price comparison
     // behind it. A query cannot know which ones we hold evidence for.
-    query: { ...WINE_BASE, first: 24 },
+    query: { ...WINE_BASE },
     curated: true,
     alcohol: true,
     facets: ['price'],
     parentPath: '/wine',
   },
   {
-    // 251 wines carry the shop's own "Fine Wines" tag. It is the closest
-    // thing the existing catalogue has to a considered selection, so it
-    // earns a route rather than a filter.
     slug: 'fine-wines',
     hub: 'wine',
     path: '/wine/fine-wines',
     title: 'Fine wines',
     h1: 'Fine wines',
-    query: { ...WINE_BASE, wineFlags: ['fineWine'], first: 48 },
+    query: { ...WINE_BASE, collection: 'fine-wines-1', first: 48 },
     alcohol: true,
     facets: ['grape', 'country', 'style', 'price'],
     parentPath: '/wine',
@@ -282,23 +295,19 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     hub: 'wine',
     path: '/wine/organic-biodynamic',
     title: 'Organic and biodynamic',
-    h1: 'Organic and biodynamic wine',
-    query: { ...WINE_BASE, anyWineFlag: ['organic', 'biodynamic'], first: 48 },
+    h1: 'Organic wine',
+    query: { ...WINE_BASE, collection: 'organic-wine', first: 48 },
     alcohol: true,
     facets: ['grape', 'country', 'price'],
     parentPath: '/wine',
   },
   {
-    // The only wine listing where the age gate stays down. There is one
-    // de-alcoholised wine in the catalogue today, so the four-product floor
-    // keeps this route dark until the range grows. That is the rule doing
-    // its job, not a bug.
     slug: 'alcohol-free',
     hub: 'wine',
     path: '/wine/alcohol-free',
     title: 'Alcohol free',
     h1: 'Alcohol free wine',
-    query: { ...WINE_BASE, wineFlags: ['isAlcoholFree'] },
+    query: { ...WINE_BASE, collection: 'non-alcoholic-1' },
     alcohol: false,
     facets: ['style'],
     parentPath: '/wine',
@@ -309,7 +318,7 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     path: '/wine/champagne-sparkling',
     title: 'Champagne and sparkling',
     h1: 'Champagne and sparkling wine',
-    query: { ...WINE_BASE, productTypes: ['Champagne', 'Sparkling wine'] },
+    query: { ...WINE_BASE, collection: 'champagne-and-prosecco-1' },
     alcohol: true,
     facets: ['country', 'region', 'price'],
     parentPath: '/wine',
@@ -320,7 +329,7 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     path: '/wine/red',
     title: 'Red wine',
     h1: 'Red wine',
-    query: { ...WINE_BASE, productTypes: ['Red wine'] },
+    query: { ...WINE_BASE, collection: 'red-wines-1' },
     alcohol: true,
     facets: ['grape', 'country', 'region', 'style', 'price'],
     parentPath: '/wine',
@@ -331,7 +340,7 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     path: '/wine/white',
     title: 'White wine',
     h1: 'White wine',
-    query: { ...WINE_BASE, productTypes: ['White wine'] },
+    query: { ...WINE_BASE, collection: 'white-wines-1' },
     alcohol: true,
     facets: ['grape', 'country', 'region', 'style', 'price'],
     parentPath: '/wine',
@@ -342,7 +351,7 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     path: '/wine/rose',
     title: 'Rosé wine',
     h1: 'Rosé wine',
-    query: { ...WINE_BASE, productTypes: ['Rosé wine'] },
+    query: { ...WINE_BASE, collection: 'rose' },
     alcohol: true,
     facets: ['grape', 'country', 'price'],
     parentPath: '/wine',
@@ -351,34 +360,33 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     slug: 'port-dessert',
     hub: 'wine',
     path: '/wine/port-dessert',
-    title: 'Port and dessert wine',
-    h1: 'Port and dessert wine',
-    query: { ...WINE_BASE, productTypes: ['Port', 'Dessert wine', 'Sherry'] },
+    title: 'Port and sherry',
+    h1: 'Port and sherry',
+    query: { ...WINE_BASE, collection: 'port-and-sherry-1' },
     alcohol: true,
     facets: ['country', 'price'],
     parentPath: '/wine',
   },
-  // No whiskey or gin listings: the shop does not stock spirits
-  // (confirmed by the client, August 2026). The old /collections/whiskey
-  // and /collections/gin URLs redirect to /wine.
   {
     slug: 'gift-sets',
     hub: 'wine',
     path: '/wine/gift-sets',
     title: 'Wine gift sets',
     h1: 'Wine gift sets',
-    query: { ...WINE_BASE, productTypes: ['Wine gift set'] },
+    query: { ...WINE_BASE, collection: 'wine-gift-sets' },
     alcohol: true,
     facets: ['price'],
     parentPath: '/wine',
   },
   {
+    // No native all-wine collection (wine-collection-1 is empty), so the wine
+    // price bands read Fine Wines (250) as the proxy master.
     slug: 'under-25',
     hub: 'wine',
     path: '/wine/under-25',
     title: 'Wine under €25',
     h1: 'Wine under €25',
-    query: { ...WINE_BASE, maxPriceMinor: 2499, sort: 'price-desc' },
+    query: { ...WINE_BASE, collection: 'fine-wines-1', maxPriceMinor: 2499, sort: 'price-desc' },
     alcohol: true,
     facets: ['grape', 'country'],
     parentPath: '/wine',
@@ -389,7 +397,7 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     path: '/wine/25-50',
     title: 'Wine €25 to €50',
     h1: 'Wine from €25 to €50',
-    query: { ...WINE_BASE, minPriceMinor: 2500, maxPriceMinor: 4999 },
+    query: { ...WINE_BASE, collection: 'fine-wines-1', minPriceMinor: 2500, maxPriceMinor: 4999 },
     alcohol: true,
     facets: ['grape', 'country'],
     parentPath: '/wine',
@@ -400,20 +408,14 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     path: '/wine/50-plus',
     title: 'Wine €50 and over',
     h1: 'Wine, €50 and over',
-    query: { ...WINE_BASE, minPriceMinor: 5000, sort: 'price-asc' },
+    query: { ...WINE_BASE, collection: 'fine-wines-1', minPriceMinor: 5000, sort: 'price-asc' },
     alcohol: true,
     facets: ['grape', 'country'],
     parentPath: '/wine',
   },
 
   // ---------------------------------------------------------------------
-  // Occasions.
-  //
-  // Christmas, new baby, sympathy and wedding map onto locked taxonomy
-  // tags. Mother's Day, Father's Day, Valentine's, Easter and get well have
-  // no tag in the locked taxonomy (brief section 6 does not list them), so
-  // they are CMS-curated rather than tag-driven. That gap is on the phase 1
-  // sign-off list: see docs/ia-and-routes.md.
+  // Occasions. Each reads the merchant's seasonal / occasion collection.
   // ---------------------------------------------------------------------
   {
     slug: 'christmas',
@@ -421,11 +423,7 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     path: '/occasions/christmas',
     title: 'Christmas gifts and hampers',
     h1: 'Christmas gifts and hampers',
-    query: { sort: 'featured', first: 24 },
-    // Curated while the full Christmas collection is being prepared: one
-    // hamper carries the christmas tag today, and the client wants a
-    // Christmas entry point that sells now rather than a dark route.
-    curated: true,
+    query: { collection: 'christmas-collection-2025', sort: 'featured', first: 24 },
     alcohol: true,
     facets: ['price', 'recipient'],
     parentPath: '/occasions',
@@ -436,8 +434,7 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     path: '/occasions/mothers-day',
     title: "Mother's Day gifts",
     h1: "Mother's Day gifts",
-    query: { sort: 'featured', first: 24 },
-    curated: true,
+    query: { collection: 'mothers-day-gifts', sort: 'featured', first: 24 },
     alcohol: true,
     facets: ['price'],
     parentPath: '/occasions',
@@ -448,8 +445,7 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     path: '/occasions/fathers-day',
     title: "Father's Day gifts",
     h1: "Father's Day gifts",
-    query: { sort: 'featured', first: 24 },
-    curated: true,
+    query: { collection: 'fathers-day', sort: 'featured', first: 24 },
     alcohol: true,
     facets: ['price'],
     parentPath: '/occasions',
@@ -460,8 +456,7 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     path: '/occasions/valentines',
     title: "Valentine's gifts",
     h1: "Valentine's gifts",
-    query: { sort: 'featured', first: 24 },
-    curated: true,
+    query: { collection: 'valentines-day', sort: 'featured', first: 24 },
     alcohol: true,
     facets: ['price'],
     parentPath: '/occasions',
@@ -472,8 +467,7 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     path: '/occasions/easter',
     title: 'Easter gifts',
     h1: 'Easter gifts',
-    query: { sort: 'featured', first: 24 },
-    curated: true,
+    query: { collection: 'easter-1', sort: 'featured', first: 24 },
     alcohol: false,
     facets: ['price'],
     parentPath: '/occasions',
@@ -484,20 +478,19 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     path: '/occasions/new-baby',
     title: 'New baby gifts',
     h1: 'New baby gifts',
-    query: { tags: ['occasion:new-baby'], sort: 'featured', first: 24 },
-    // See /hampers/new-baby: the current baby hampers include a bottle
-    // for the parents.
+    query: { collection: 'gifts-for-baby', sort: 'featured', first: 24 },
     alcohol: true,
     facets: ['price'],
     parentPath: '/occasions',
   },
   {
+    // Pre-wired to the 'sympathy' collection the merchant will create.
     slug: 'sympathy',
     hub: 'occasions',
     path: '/occasions/sympathy',
     title: 'Sympathy gifts',
     h1: 'Sympathy gifts',
-    query: { tags: ['occasion:sympathy'], sort: 'featured', first: 24 },
+    query: { collection: 'sympathy', sort: 'featured', first: 24 },
     alcohol: false,
     facets: ['price'],
     parentPath: '/occasions',
@@ -508,19 +501,19 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     path: '/occasions/wedding-engagement',
     title: 'Wedding and engagement gifts',
     h1: 'Wedding and engagement gifts',
-    query: { tags: ['occasion:wedding'], sort: 'featured', first: 24 },
+    query: { collection: 'wedding-anniversary', sort: 'featured', first: 24 },
     alcohol: true,
     facets: ['price'],
     parentPath: '/occasions',
   },
   {
+    // Pre-wired to the 'get-well' collection the merchant will create.
     slug: 'get-well',
     hub: 'occasions',
     path: '/occasions/get-well',
     title: 'Get well gifts',
     h1: 'Get well gifts',
-    query: { sort: 'featured', first: 24 },
-    curated: true,
+    query: { collection: 'get-well', sort: 'featured', first: 24 },
     alcohol: false,
     facets: ['price'],
     parentPath: '/occasions',
@@ -535,7 +528,7 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     path: '/gifts-for/her',
     title: 'Gifts for her',
     h1: 'Gifts for her',
-    query: { tags: ['recipient:her'], sort: 'featured', first: 24 },
+    query: { collection: 'gifts-for-her-1', sort: 'featured', first: 24 },
     alcohol: true,
     facets: ['price', 'occasion'],
     parentPath: '/gifts-for',
@@ -546,7 +539,7 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     path: '/gifts-for/him',
     title: 'Gifts for him',
     h1: 'Gifts for him',
-    query: { tags: ['recipient:him'], sort: 'featured', first: 24 },
+    query: { collection: 'gifts-for-him-1', sort: 'featured', first: 24 },
     alcohol: true,
     facets: ['price', 'occasion'],
     parentPath: '/gifts-for',
@@ -557,7 +550,7 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     path: '/gifts-for/couples',
     title: 'Gifts for couples',
     h1: 'Gifts for couples',
-    query: { tags: ['recipient:couple'], sort: 'featured', first: 24 },
+    query: { collection: 'gifts-for-couples-1', sort: 'featured', first: 24 },
     alcohol: true,
     facets: ['price', 'occasion'],
     parentPath: '/gifts-for',
@@ -568,15 +561,15 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     path: '/gifts-for/clients',
     title: 'Gifts for clients',
     h1: 'Gifts for clients',
-    query: { tags: ['recipient:client'], sort: 'featured', first: 24 },
+    query: { collection: 'gifts-for-customers', sort: 'featured', first: 24 },
     alcohol: true,
     facets: ['price'],
     parentPath: '/gifts-for',
   },
 
   // ---------------------------------------------------------------------
-  // Budget. Bands here match PRICE_BANDS in taxonomy.ts and the GA4 budget
-  // dimension, so shopper, tag and report never disagree.
+  // Budget. Scoped to the All Gifts collection with a price filter so the
+  // band never pulls the whole store.
   // ---------------------------------------------------------------------
   {
     slug: 'under-50',
@@ -584,7 +577,7 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     path: '/gifts-by-budget/under-50',
     title: 'Gifts under €50',
     h1: 'Gifts under €50',
-    query: { maxPriceMinor: 4999, sort: 'price-desc', first: 24 },
+    query: { collection: 'all-gifts', maxPriceMinor: 4999, sort: 'price-desc', first: 24 },
     alcohol: true,
     facets: ['occasion', 'recipient'],
     parentPath: '/gifts-by-budget',
@@ -595,7 +588,7 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     path: '/gifts-by-budget/50-100',
     title: 'Gifts €50 to €100',
     h1: 'Gifts from €50 to €100',
-    query: { minPriceMinor: 5000, maxPriceMinor: 9999, sort: 'featured', first: 24 },
+    query: { collection: 'all-gifts', minPriceMinor: 5000, maxPriceMinor: 9999, sort: 'featured', first: 24 },
     alcohol: true,
     facets: ['occasion', 'recipient'],
     parentPath: '/gifts-by-budget',
@@ -606,7 +599,7 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     path: '/gifts-by-budget/100-150',
     title: 'Gifts €100 to €150',
     h1: 'Gifts from €100 to €150',
-    query: { minPriceMinor: 10000, maxPriceMinor: 14999, sort: 'featured', first: 24 },
+    query: { collection: 'all-gifts', minPriceMinor: 10000, maxPriceMinor: 14999, sort: 'featured', first: 24 },
     alcohol: true,
     facets: ['occasion', 'recipient'],
     parentPath: '/gifts-by-budget',
@@ -617,15 +610,14 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     path: '/gifts-by-budget/150-plus',
     title: 'Gifts €150 and over',
     h1: 'Gifts, €150 and over',
-    query: { minPriceMinor: 15000, sort: 'price-asc', first: 24 },
+    query: { collection: 'all-gifts', minPriceMinor: 15000, sort: 'price-asc', first: 24 },
     alcohol: true,
     facets: ['occasion', 'recipient'],
     parentPath: '/gifts-by-budget',
   },
 
   // ---------------------------------------------------------------------
-  // The add-on band. Deliberately small. These exist to be added to a
-  // hamper at the cart, not to be discovered on their own.
+  // The add-on band. Small by design: added to a hamper at the cart.
   // ---------------------------------------------------------------------
   {
     slug: 'candles-diffusers',
@@ -633,7 +625,7 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     path: '/gifts/candles-diffusers',
     title: 'Candles and diffusers',
     h1: 'Candles and diffusers',
-    query: { kinds: ['addon'], productTypes: ['Candle', 'Diffuser'], sort: 'featured', first: 24 },
+    query: { collection: 'candles-diffusers', sort: 'featured', first: 24 },
     alcohol: false,
     facets: [],
     parentPath: '/gifts',
@@ -644,7 +636,7 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     path: '/gifts/chocolate-treats',
     title: 'Chocolate and treats',
     h1: 'Chocolate and treats',
-    query: { kinds: ['addon'], productTypes: ['Chocolate', 'Confectionery'], sort: 'featured', first: 24 },
+    query: { collection: 'chocolate-confectionery-1', sort: 'featured', first: 24 },
     alcohol: false,
     facets: [],
     parentPath: '/gifts',
@@ -655,7 +647,7 @@ export const COLLECTIONS: readonly CollectionDef[] = [
     path: '/gifts/crystal-glassware',
     title: 'Crystal and glassware',
     h1: 'Crystal and glassware',
-    query: { kinds: ['addon'], productTypes: ['Crystal', 'Glassware'], sort: 'featured', first: 24 },
+    query: { collection: 'glassware-crystal', sort: 'featured', first: 24 },
     alcohol: false,
     facets: [],
     parentPath: '/gifts',
@@ -682,3 +674,22 @@ export function collectionsInHub(hub: CollectionHub): CollectionDef[] {
  * sitemap so an under-populated listing is never submitted for indexing.
  */
 export const MIN_PRODUCTS_PER_LISTING = 4
+
+/**
+ * Collection handles the site is pre-wired to that the merchant has not
+ * created yet (see shopify-client-checklist.csv). They dark gracefully until
+ * the collection exists, so `collections:validate` warns about them rather
+ * than failing the build. Every other mapped handle must resolve.
+ */
+export const PENDING_MERCHANT_COLLECTIONS: ReadonlySet<string> = new Set([
+  'sympathy',
+  'get-well',
+  'exclusive-to-us',
+])
+
+/** Every native collection handle the listing registry reads, de-duplicated. */
+export const MAPPED_COLLECTION_HANDLES: readonly string[] = [
+  ...new Set(
+    COLLECTIONS.map((c) => c.query.collection).filter((h): h is string => typeof h === 'string'),
+  ),
+]

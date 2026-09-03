@@ -176,7 +176,15 @@ async function Hero({
                 className="aspect-4/3 w-full object-cover"
               />
             ) : (
-              <div className="aspect-4/3 w-full bg-beige" />
+              <Image
+                src="/photography/tpc-01-full.jpg"
+                alt="A Parcel Concierge hamper packed by hand in Co. Meath"
+                width={1200}
+                height={900}
+                priority={priority}
+                sizes="(min-width: 1024px) 46vw, 92vw"
+                className="aspect-4/3 w-full object-cover"
+              />
             )}
           </StampFrame>
 
@@ -307,7 +315,10 @@ async function FeaturedHampers({
 }: {
   slot: Extract<HomepageSlot, { kind: 'featured-hampers' }>
 }) {
-  const { items } = await queryProducts({ handles: slot.handles, first: slot.handles.length })
+  // The live store carries none of the fixture handles, so featured hampers
+  // come from the merchant's All Hampers collection. slot.title still drives
+  // the heading.
+  const { items } = await queryProducts({ collection: 'all-hampers-1', first: 8 })
   if (items.length < 3) return null
 
   return (
@@ -387,7 +398,7 @@ function OccasionBand({ slot }: { slot: Extract<HomepageSlot, { kind: 'occasions
 }
 
 async function WineVault({ slot }: { slot: Extract<HomepageSlot, { kind: 'wine-vault' }> }) {
-  const { items } = await queryProducts({ handles: slot.handles, first: slot.handles.length })
+  const { items } = await queryProducts({ collection: 'fine-wines-1', first: 4 })
 
   return (
     <section className="bg-green py-16 text-cream">

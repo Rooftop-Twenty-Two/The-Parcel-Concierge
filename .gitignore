@@ -10,3 +10,8 @@ node_modules/
 next-env.d.ts
 data/ingest-reports/
 .data/
+
+# Local Netlify folder
+.netlify
+.vercel
+.env*

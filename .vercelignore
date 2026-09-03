@@ -1,0 +1,12 @@
+# Files that must never be uploaded to a deploy. None are imported by the
+# build (`npm run build` = redirects:build + next build) or served at runtime.
+
+# 342 MB of high-res photography ORIGINALS. These are the source files for
+# scripts/photography/optimise.mjs (run manually, not at build). The
+# optimised, SERVED assets live in public/photography and are kept.
+# Excluding this cuts the deploy upload from ~570 MB to ~30 MB.
+docs/
+
+# Secrets and local state — belt-and-braces (already gitignored).
+.env.local
+.netlify/

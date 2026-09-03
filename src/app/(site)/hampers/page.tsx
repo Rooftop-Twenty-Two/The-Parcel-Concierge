@@ -23,7 +23,7 @@ export default function HampersHub() {
         src: '/photography/tpc-09-full.jpg',
         alt: 'An Irish food hamper packed with crisps, tea, preserves and coffee in a green gift box',
       }}
-      query={{ kinds: ['hamper'], sort: 'featured', first: 24 }}
+      query={{ collection: 'all-hampers-1', sort: 'featured', first: 24 }}
       alcohol
       // Only the bands the twenty-hamper range can fill: the thin listings
       // redirect here, so a card for one would send the shopper in a loop.

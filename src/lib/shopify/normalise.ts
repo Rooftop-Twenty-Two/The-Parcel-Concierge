@@ -95,6 +95,62 @@ export function kindFromTags(tags: readonly string[], productType?: string | nul
   return 'addon'
 }
 
+/**
+ * The live store's real taxonomy is native Shopify collections, not tags.
+ * Membership in the master wine/hamper collections decides a product's kind.
+ * type: tags still win when present (for any future ingested product), and
+ * product_type is the last resort for a product in no collection.
+ */
+const WINE_COLLECTION_HANDLES = new Set<string>([
+  'fine-wines-1',
+  'wine-collection-1',
+  'red-wines-1',
+  'white-wines-1',
+  'rose',
+  'champagne-and-prosecco-1',
+  'champagne',
+  'champagne-1',
+  'prosecco',
+  'prosecco-1',
+  'cava',
+  'cava-1',
+  'cremant',
+  'cremant-1',
+  'rose-sparkling',
+  'port-and-sherry-1',
+  'sherry-1',
+  'liqueurs-1',
+  'sweet-wine',
+  'non-alcoholic-1',
+  'organic-wine',
+  'wine-gift-sets',
+  'cider',
+])
+
+export function kindFromMembership(
+  collectionHandles: readonly string[],
+  tags: readonly string[],
+  productType?: string | null,
+): ProductKind {
+  // The builder's own box product is quarantined out of every listing.
+  if ((productType ?? '') === 'GIST_BUILDER_PRODUCT') return 'builder-item'
+  // Ingested tag taxonomy still wins if a product ever carries it.
+  if (tags.includes('type:builder-item')) return 'builder-item'
+  if (tags.includes('type:hamper')) return 'hamper'
+  if (tags.includes('type:wine')) return 'wine'
+  if (tags.includes('type:spirit')) return 'spirit'
+  if (tags.includes('type:addon')) return 'addon'
+  // Native collection membership. A hamper collection wins over a wine one (a
+  // food-and-wine hamper lives in food-and-wine-hampers-1). Gift collections
+  // like gifts-for-wine-lovers-1 must NOT read as wine, hence an explicit wine
+  // set rather than a substring match on "wine".
+  if (collectionHandles.some((h) => h.includes('hamper') && !h.startsWith('gifts-'))) return 'hamper'
+  if (collectionHandles.some((h) => WINE_COLLECTION_HANDLES.has(h))) return 'wine'
+  if (collectionHandles.length > 0) return 'addon'
+  // A product in no collection at all: fall back to product_type.
+  return kindFromTags(tags, productType)
+}
+
 type RawPriceRange = {
   minVariantPrice: { amount: string; currencyCode: string }
   maxVariantPrice: { amount: string; currencyCode: string }
@@ -106,6 +162,7 @@ type RawCardProduct = {
   title: string
   productType?: string | null
   tags: string[]
+  collections?: { nodes: { handle: string }[] }
   availableForSale: boolean
   featuredImage: Parameters<typeof normaliseImage>[0]
   priceRange: RawPriceRange
@@ -127,7 +184,7 @@ export function normaliseProductCard(raw: RawCardProduct): ProductCard {
     id: raw.id,
     handle: raw.handle,
     title: raw.title,
-    kind: kindFromTags(raw.tags, raw.productType),
+    kind: kindFromMembership(raw.collections?.nodes.map((n) => n.handle) ?? [], raw.tags, raw.productType),
     tags: raw.tags,
     availableForSale: raw.availableForSale,
     image: normaliseImage(raw.featuredImage),
@@ -287,7 +344,7 @@ export function normaliseProduct(raw: RawProduct): Product {
     handle: raw.handle,
     title: raw.title,
     descriptionHtml: raw.descriptionHtml,
-    kind: kindFromTags(raw.tags, raw.productType),
+    kind: kindFromMembership(raw.collections?.nodes.map((n) => n.handle) ?? [], raw.tags, raw.productType),
     images,
     variants: raw.variants.nodes.map(normaliseVariant),
     priceRange: {
@@ -321,7 +378,12 @@ type RawCart = {
         id: string
         title: string
         image: Parameters<typeof normaliseImage>[0]
-        product: { handle: string; title: string; tags: string[] }
+        product: {
+          handle: string
+          title: string
+          tags: string[]
+          collections?: { nodes: { handle: string }[] }
+        }
       }
     }[]
   }
@@ -345,8 +407,10 @@ export function normaliseCart(raw: RawCart): Cart {
   }))
 
   const containsAlcohol = raw.lines.nodes.some((node) => {
-    const tags = node.merchandise.product.tags
-    return tags.includes('type:wine') || tags.includes('type:spirit')
+    const product = node.merchandise.product
+    const handles = product.collections?.nodes.map((n) => n.handle) ?? []
+    const kind = kindFromMembership(handles, product.tags, null)
+    return kind === 'wine' || kind === 'spirit'
   })
 
   return {

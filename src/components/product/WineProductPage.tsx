@@ -4,10 +4,14 @@ import { DeliveryPromise } from '@/components/commerce/DeliveryPromise'
 import { AddToCart } from '@/components/product/AddToCart'
 import { ProductGallery } from '@/components/product/ProductGallery'
 import { ProductGrid } from '@/components/product/ProductCard'
+import {
+  VariantPrice,
+  VariantSelectionProvider,
+  VariantSelector,
+} from '@/components/product/VariantSelector'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { TrustpilotStars } from '@/components/trust/TrustpilotStars'
 import { PostmarkRoundel } from '@/components/ui/Stamp'
-import { cheapestAvailableVariant, formatMoney } from '@/lib/commerce/money'
 import type { Product, ProductCard } from '@/lib/commerce/types'
 import { breadcrumbJsonLd, productJsonLd } from '@/lib/seo/structured-data'
 
@@ -29,7 +33,6 @@ export function WineProductPage({
   trust: { rating: number; reviewCount: number }
   crossSell: ProductCard[]
 }) {
-  const variant = cheapestAvailableVariant(product.variants)
   const wine = product.wine
 
   const crumbs = [
@@ -77,7 +80,8 @@ export function WineProductPage({
         <div className="grid gap-10 lg:grid-cols-[1fr_1fr] lg:gap-16">
           <ProductGallery images={product.images} title={product.title} />
 
-          <div>
+          <VariantSelectionProvider product={product}>
+            <div>
             {wine?.isExclusiveImport ? (
               <div className="mb-4 flex items-center gap-3 border border-green/30 bg-green/5 px-4 py-3">
                 <PostmarkRoundel className="h-12 w-12 shrink-0 text-green" />
@@ -95,9 +99,7 @@ export function WineProductPage({
               {product.title}
             </h1>
 
-            {variant ? (
-              <p className="mt-2 font-serif text-2xl text-navy">{formatMoney(variant.price)}</p>
-            ) : null}
+            <VariantPrice />
 
             <div className="mt-3">
               <TrustpilotStars rating={trust.rating} reviewCount={trust.reviewCount} />
@@ -122,9 +124,8 @@ export function WineProductPage({
               </p>
             ) : null}
 
-            {variant ? (
-              <AddToCart product={product} variantId={variant.id} />
-            ) : null}
+            <VariantSelector />
+            <AddToCart product={product} />
 
             {specs.some(([, value]) => value) ? (
               <dl className="mt-10 grid grid-cols-2 gap-x-6 gap-y-3 border-t border-rule pt-6 text-sm">
@@ -165,7 +166,8 @@ export function WineProductPage({
                 Delivery details
               </Link>
             </p>
-          </div>
+            </div>
+          </VariantSelectionProvider>
         </div>
       </div>
 

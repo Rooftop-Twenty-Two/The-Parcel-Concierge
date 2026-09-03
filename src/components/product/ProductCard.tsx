@@ -20,7 +20,10 @@ export function ProductCardTile({
   product: ProductCardModel
   priority?: boolean
 }) {
-  const href = productPath(product)
+  // Deep link the variant the card is quoting (e.g. the in-band variant on a
+  // budget listing) so the PDP opens on the same price, not the cheapest.
+  const variantId = product.defaultVariantId?.split('/').pop()
+  const href = variantId ? `${productPath(product)}?variant=${variantId}` : productPath(product)
   const badge = product.badges[0]
 
   return (

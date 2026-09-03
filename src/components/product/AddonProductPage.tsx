@@ -3,9 +3,13 @@ import { DeliveryPromise } from '@/components/commerce/DeliveryPromise'
 import { AddToCart } from '@/components/product/AddToCart'
 import { ProductGallery } from '@/components/product/ProductGallery'
 import { ProductGrid } from '@/components/product/ProductCard'
+import {
+  VariantPrice,
+  VariantSelectionProvider,
+  VariantSelector,
+} from '@/components/product/VariantSelector'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { TrustpilotStars } from '@/components/trust/TrustpilotStars'
-import { cheapestAvailableVariant, formatMoney } from '@/lib/commerce/money'
 import type { Product, ProductCard } from '@/lib/commerce/types'
 import { breadcrumbJsonLd, productJsonLd } from '@/lib/seo/structured-data'
 
@@ -25,7 +29,6 @@ export function AddonProductPage({
   trust: { rating: number; reviewCount: number }
   hampers: ProductCard[]
 }) {
-  const variant = cheapestAvailableVariant(product.variants)
   const crumbs = [
     { name: 'Home', path: '/' },
     { name: 'Gifts', path: '/gifts' },
@@ -55,36 +58,30 @@ export function AddonProductPage({
         <div className="grid gap-10 lg:grid-cols-[1fr_1fr] lg:gap-16">
           <ProductGallery images={product.images} title={product.title} />
 
-          <div>
-            <h1 className="font-display text-[length:var(--text-display)] text-navy">
-              {product.title}
-            </h1>
-            {variant ? (
-              <p className="mt-2 font-serif text-2xl text-navy">{formatMoney(variant.price)}</p>
-            ) : null}
+          <VariantSelectionProvider product={product}>
+            <div>
+              <h1 className="font-display text-[length:var(--text-display)] text-navy">
+                {product.title}
+              </h1>
+              <VariantPrice />
 
-            <div className="mt-3">
-              <TrustpilotStars rating={trust.rating} reviewCount={trust.reviewCount} />
-            </div>
+              <div className="mt-3">
+                <TrustpilotStars rating={trust.rating} reviewCount={trust.reviewCount} />
+              </div>
 
-            <div
-              className="prose-tpc mt-6 text-ink-muted"
-              dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
-            />
-
-            {variant ? (
-              <AddToCart
-                product={product}
-                variantId={variant.id}
-                label="Add to hamper"
-                confirmation="Added to hamper"
+              <div
+                className="prose-tpc mt-6 text-ink-muted"
+                dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
               />
-            ) : null}
 
-            <div className="mt-8">
-              <DeliveryPromise compact />
+              <VariantSelector />
+              <AddToCart product={product} label="Add to hamper" confirmation="Added to hamper" />
+
+              <div className="mt-8">
+                <DeliveryPromise compact />
+              </div>
             </div>
-          </div>
+          </VariantSelectionProvider>
         </div>
       </div>
 

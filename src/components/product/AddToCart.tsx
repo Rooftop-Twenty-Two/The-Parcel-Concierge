@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation'
 import { useState, useTransition } from 'react'
 import { addToCartAction } from '@/app/actions/cart'
+import { useVariantSelection } from '@/components/product/VariantSelector'
 import { Button } from '@/components/ui/Button'
 import { trackAddToCart, toAnalyticsItem } from '@/lib/analytics/events'
 import { formatMoney } from '@/lib/commerce/money'
@@ -20,12 +21,10 @@ import type { CartLineAttribute, PersonalisationOption, Product } from '@/lib/co
  */
 export function AddToCart({
   product,
-  variantId,
   label = 'Add to cart',
   confirmation = 'Added to cart',
 }: {
   product: Product
-  variantId: string
   label?: string
   confirmation?: string
 }) {
@@ -34,7 +33,9 @@ export function AddToCart({
   const [status, setStatus] = useState<{ kind: 'ok' | 'error'; message: string } | null>(null)
   const [values, setValues] = useState<Record<string, string>>({})
 
-  const variant = product.variants.find((v) => v.id === variantId) ?? product.variants[0]
+  // The variant comes from the shared selection so the button always adds the
+  // variant the shopper picked, at the price it shows.
+  const { selectedVariant: variant } = useVariantSelection()
   const options = product.hamper?.personalisation ?? []
 
   function attributesFromValues(): CartLineAttribute[] {

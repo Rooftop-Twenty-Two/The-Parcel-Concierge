@@ -4,10 +4,14 @@ import { DeliveryPromise } from '@/components/commerce/DeliveryPromise'
 import { AddToCart } from '@/components/product/AddToCart'
 import { ProductGallery } from '@/components/product/ProductGallery'
 import { ProductGrid } from '@/components/product/ProductCard'
+import {
+  VariantPrice,
+  VariantSelectionProvider,
+  VariantSelector,
+} from '@/components/product/VariantSelector'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { TrustpilotStars } from '@/components/trust/TrustpilotStars'
 import { Accordion } from '@/components/ui/Accordion'
-import { cheapestAvailableVariant, formatMoney } from '@/lib/commerce/money'
 import { TAG_LABELS } from '@/lib/commerce/taxonomy'
 import type { Product, ProductCard } from '@/lib/commerce/types'
 import { breadcrumbJsonLd, productJsonLd } from '@/lib/seo/structured-data'
@@ -32,7 +36,6 @@ export function HamperProductPage({
   trust: { rating: number; reviewCount: number }
   crossSell: ProductCard[]
 }) {
-  const variant = cheapestAvailableVariant(product.variants)
   const hamper = product.hamper
   const containsAlcohol = hamper?.containsAlcohol ?? false
 
@@ -67,7 +70,8 @@ export function HamperProductPage({
         <div className="grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
           <ProductGallery images={product.images} title={product.title} />
 
-          <div>
+          <VariantSelectionProvider product={product}>
+            <div>
             <div className="flex flex-wrap gap-2">
               {product.tags
                 .filter((t) => t.startsWith('badge:'))
@@ -85,9 +89,7 @@ export function HamperProductPage({
               {product.title}
             </h1>
 
-            {variant ? (
-              <p className="mt-2 font-serif text-2xl text-navy">{formatMoney(variant.price)}</p>
-            ) : null}
+            <VariantPrice />
 
             <div className="mt-3">
               <TrustpilotStars rating={trust.rating} reviewCount={trust.reviewCount} />
@@ -102,12 +104,12 @@ export function HamperProductPage({
               dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
             />
 
-            {variant ? (
-              <AddToCart product={product} variantId={variant.id} label="Add to cart" confirmation="Added to cart" />
-            ) : null}
+            <VariantSelector />
+            <AddToCart product={product} label="Add to cart" confirmation="Added to cart" />
 
             {hamper ? <HamperDetails product={product} /> : null}
-          </div>
+            </div>
+          </VariantSelectionProvider>
         </div>
       </div>
 

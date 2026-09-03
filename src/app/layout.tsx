@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { fontVariables } from '@/lib/brand/fonts'
 import { isFixtureMode } from '@/lib/commerce'
-import { SITE } from '@/lib/site-config'
+import { SITE, SITE_NOINDEX } from '@/lib/site-config'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -17,9 +17,10 @@ export const metadata: Metadata = {
     locale: 'en_IE',
     siteName: SITE.name,
   },
-  // Until the live store is connected, prices and stock are a snapshot;
-  // the preview must never be indexed as if it were the shop.
-  robots: isFixtureMode() ? { index: false, follow: false } : undefined,
+  // Noindex while on fixtures (a snapshot, not the shop) or while an
+  // environment is held back from launch (SITE_NOINDEX) — e.g. the production
+  // Vercel domain before the real domain and legal pages go live.
+  robots: isFixtureMode() || SITE_NOINDEX ? { index: false, follow: false } : undefined,
 }
 
 /**

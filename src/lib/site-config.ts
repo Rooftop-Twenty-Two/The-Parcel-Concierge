@@ -22,6 +22,14 @@ export const SITE = {
   memberships: ['Guaranteed Irish'],
 } as const
 
+/**
+ * Force noindex site-wide (robots.txt disallow + meta noindex) even when the
+ * store is connected. Set SITE_NOINDEX=true on an environment that is live but
+ * not yet launched — e.g. the production Vercel domain before the real domain,
+ * legal pages and launch sign-off are in place. Remove it to go indexable.
+ */
+export const SITE_NOINDEX = process.env.SITE_NOINDEX === 'true'
+
 export const DELIVERY = {
   /**
    * €8.95 confirmed by the client, August 2026. The June 2026 review

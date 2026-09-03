@@ -23,6 +23,39 @@ export const SITE = {
 } as const
 
 /**
+ * Trader identity and contact details.
+ *
+ * Source: the client's own email signature, September 2026. Consumer law
+ * requires a trading name, a geographic address and a contact route to be
+ * given before a distance contract is concluded, so the legal pages render
+ * these rather than pointing at a form.
+ *
+ * `companyNumber` and `vatNumber` are null because we have not been given
+ * them. The legal pages omit the line rather than inventing a number, and
+ * both are on the client list in docs/build-status.md. If the business is a
+ * registered company, the CRO number has to appear before launch.
+ */
+export const CONTACT = {
+  email: 'hello@theparcelconcierge.com',
+  phone: '(01) 801 9810',
+  address: {
+    line1: 'No 1, Supple House',
+    town: 'Dunshaughlin',
+    county: 'Co. Meath',
+    eircode: 'A85 R684',
+    country: 'Ireland',
+  },
+  companyNumber: null as string | null,
+  vatNumber: null as string | null,
+} as const
+
+/** One line, for prose. */
+export function postalAddress(): string {
+  const { line1, town, county, eircode, country } = CONTACT.address
+  return `${line1}, ${town}, ${county}, ${eircode}, ${country}`
+}
+
+/**
  * Force noindex site-wide (robots.txt disallow + meta noindex) even when the
  * store is connected. Set SITE_NOINDEX=true on an environment that is live but
  * not yet launched — e.g. the production Vercel domain before the real domain,

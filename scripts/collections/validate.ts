@@ -27,7 +27,8 @@ function readEnv(): Record<string, string> {
     try {
       for (const line of readFileSync(new URL(`../../${source}`, import.meta.url), 'utf8').split('\n')) {
         const match = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)\s*$/)
-        if (match && !(match[1] in env)) env[match[1]] = match[2].replace(/^["']|["']$/g, '').trim()
+        const key = match?.[1]
+        if (key && !(key in env)) env[key] = (match[2] ?? '').replace(/^["']|["']$/g, '').trim()
       }
     } catch {
       // no such env file; fall through to process.env
@@ -37,15 +38,21 @@ function readEnv(): Record<string, string> {
 }
 
 const env = readEnv()
-const DOMAIN = env.SHOPIFY_STORE_DOMAIN
-const TOKEN = env.SHOPIFY_STOREFRONT_TOKEN
+const domain = env.SHOPIFY_STORE_DOMAIN
+const token = env.SHOPIFY_STOREFRONT_TOKEN
 const VERSION = env.SHOPIFY_API_VERSION || '2025-07'
 
-if (!DOMAIN || !TOKEN) {
+if (!domain || !token) {
   // No credentials (e.g. a fixture-mode build): nothing to validate against.
-  console.log('[collections:validate] no Shopify credentials — skipping (fixture mode)')
+  console.log('[collections:validate] no Shopify credentials, skipping (fixture mode)')
   process.exit(0)
 }
+
+// Narrowing from the guard above does not reach into the function bodies
+// below, because TypeScript cannot know when they are called. The guard
+// exits the process, so these are strings by the time anything runs.
+const DOMAIN: string = domain
+const TOKEN: string = token
 
 type Count = { available: number | 'error' }
 

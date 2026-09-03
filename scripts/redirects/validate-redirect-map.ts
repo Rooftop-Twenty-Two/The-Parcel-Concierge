@@ -52,7 +52,6 @@ const STATIC_ROUTES = new Set([
   '/cart',
   '/legal/terms',
   '/legal/privacy',
-  '/legal/returns',
   '/legal/cookies',
   ...COLLECTIONS.map((c) => c.path),
 ])

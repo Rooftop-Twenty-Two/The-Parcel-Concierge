@@ -1,80 +1,103 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { getPage } from '@/lib/cms'
+import { CONTACT, SITE, postalAddress } from '@/lib/site-config'
+
+export const revalidate = 3600
 
 /**
  * Legal pages.
  *
- * The policy text has to be written and approved by the client, not by us:
- * terms, privacy, returns and cookies all make binding statements about a
- * business we do not run. Inventing them would be worse than the blank
- * shipping page the June review found.
+ * The text lives in the CMS as `legal-<slug>` documents, like every other
+ * page on the site, so amending a policy is a content change rather than a
+ * deploy. These used to be placeholders saying the text was being
+ * finalised.
  *
- * So these routes exist, are linked from the footer, and say honestly that
- * the text is being finalised, rather than shipping filler that reads as
- * real policy. Replacing each one is a CMS document, not a code change:
- * see docs/build-status.md.
+ * THERE ARE THREE, NOT FOUR. Returns had its own route until September
+ * 2026, when the client asked for it to come off. Distance selling law
+ * still requires the cancellation and refund terms to be given, so they
+ * were folded into the terms of service rather than deleted, and
+ * /legal/returns redirects there (data/redirects/redirects.csv). Putting
+ * the separate page back means a CMS document and a NAV row; the wording
+ * already exists inside terms.
+ *
+ * NEEDS A SOLICITOR. These are a careful draft against Irish and EU
+ * consumer and data protection law, written from what this codebase
+ * actually does, and they are not a substitute for review by somebody
+ * qualified. See docs/build-status.md.
  */
-const LEGAL_PAGES: Record<string, { title: string; summary: string }> = {
-  terms: {
-    title: 'Terms of service',
-    summary: 'The terms you agree to when you buy from us.',
-  },
-  privacy: {
-    title: 'Privacy policy',
-    summary: 'What we collect, why, and how long we keep it.',
-  },
-  returns: {
-    title: 'Returns and refunds',
-    summary: 'What happens if something arrives damaged, or is not what you expected.',
-  },
-  cookies: {
-    title: 'Cookies',
-    summary: 'The cookies this site sets and what each one does.',
-  },
-}
+const LEGAL_SLUGS = ['terms', 'privacy', 'cookies'] as const
 
 type Props = { params: Promise<{ slug: string }> }
 
 export function generateStaticParams() {
-  return Object.keys(LEGAL_PAGES).map((slug) => ({ slug }))
+  return LEGAL_SLUGS.map((slug) => ({ slug }))
+}
+
+function isLegalSlug(slug: string): slug is (typeof LEGAL_SLUGS)[number] {
+  return (LEGAL_SLUGS as readonly string[]).includes(slug)
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const page = LEGAL_PAGES[slug]
+  if (!isLegalSlug(slug)) return {}
+  const page = await getPage(`legal-${slug}`)
   if (!page) return {}
   return {
     title: page.title,
-    description: page.summary,
+    description: page.intro,
     alternates: { canonical: `/legal/${slug}` },
-    // Not indexable while the text is a placeholder.
-    robots: { index: false, follow: true },
   }
 }
 
 export default async function LegalPage({ params }: Props) {
   const { slug } = await params
-  const page = LEGAL_PAGES[slug]
+  if (!isLegalSlug(slug)) notFound()
+
+  const page = await getPage(`legal-${slug}`)
   if (!page) notFound()
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-14 lg:px-8">
       <h1 className="font-display text-[length:var(--text-hero)] text-navy">{page.title}</h1>
-      <p className="mt-4 text-lg text-ink-muted">{page.summary}</p>
+      {page.intro ? <p className="mt-4 text-lg text-ink-muted">{page.intro}</p> : null}
+      <p className="mt-3 text-sm text-ink-muted">
+        Last updated{' '}
+        <time dateTime={page.updatedAt}>
+          {new Date(`${page.updatedAt}T12:00:00`).toLocaleDateString('en-IE', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+          })}
+        </time>
+      </p>
 
-      <div className="mt-8 border border-gold bg-beige px-6 py-6">
-        <h2 className="font-serif text-xl font-semibold text-navy">
-          This text is still being finalised
-        </h2>
-        <p className="mt-2 text-ink-muted">
-          We would rather leave this page honest than fill it with something that looks like a
-          policy and is not one. If you need the answer to something covered here before we publish
-          it,{' '}
+      <div
+        className="prose-tpc mt-10 text-ink-muted"
+        dangerouslySetInnerHTML={{ __html: page.body }}
+      />
+
+      <div className="mt-12 border-t border-rule pt-8 text-sm text-ink-muted">
+        <h2 className="font-serif text-xl text-navy">Contact us</h2>
+        <p className="mt-2">
+          {SITE.name}, {postalAddress()}.
+        </p>
+        <p className="mt-1">
+          <a href={`mailto:${CONTACT.email}`} className="underline underline-offset-4">
+            {CONTACT.email}
+          </a>{' '}
+          or {CONTACT.phone}.
+        </p>
+        {CONTACT.companyNumber ? (
+          <p className="mt-1">Company registration number {CONTACT.companyNumber}.</p>
+        ) : null}
+        {CONTACT.vatNumber ? <p className="mt-1">VAT number {CONTACT.vatNumber}.</p> : null}
+        <p className="mt-4">
           <Link href="/contact" className="underline underline-offset-4">
-            ask us
+            Get in touch
           </Link>{' '}
-          and we will tell you in writing.
+          if anything here is unclear and we will answer in writing.
         </p>
       </div>
     </div>

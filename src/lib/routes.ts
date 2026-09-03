@@ -227,7 +227,6 @@ export const FOOTER_LINKS = [
     links: [
       { label: 'Terms of service', href: '/legal/terms' },
       { label: 'Privacy policy', href: '/legal/privacy' },
-      { label: 'Returns and refunds', href: '/legal/returns' },
       { label: 'Cookies', href: '/legal/cookies' },
     ],
   },

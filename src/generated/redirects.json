@@ -281,7 +281,7 @@
   },
   {
     "source": "/policies/refund-policy",
-    "destination": "/legal/returns",
+    "destination": "/legal/terms",
     "permanent": true
   },
   {
@@ -322,6 +322,11 @@
   {
     "source": "/guides/corporate-gifting-that-does-not-embarrass-anyone",
     "destination": "/corporate-gifting",
+    "permanent": true
+  },
+  {
+    "source": "/legal/returns",
+    "destination": "/legal/terms",
     "permanent": true
   }
 ]

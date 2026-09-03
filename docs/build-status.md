@@ -325,7 +325,32 @@ Also needed, and not on the section 13 list:
   the acceptable standard is a legal question and it differs between the two
   jurisdictions. The mechanism is built so a stronger check is a change to
   one component and one API route.
-- **Policy text** for the four legal pages.
+- **A solicitor's review of the legal pages.** Terms, privacy and cookies
+  are now written rather than placeholders, drafted against Irish and EU
+  consumer and data protection law and from what this codebase actually
+  does (the real cookie names, the real carriers, the real corporate
+  gifting data flow). They are a serious draft, not advice, and they should
+  not go live without somebody qualified reading them. The text is CMS
+  content (`legal-terms`, `legal-privacy`, `legal-cookies` in
+  `src/lib/cms/content.ts`), so amending it is a content change.
+
+  Returns had its own page until the client asked for it to come off in
+  September 2026. Distance selling law still requires the cancellation and
+  refund terms to be given, so they moved into the terms of service rather
+  than being deleted, and `/legal/returns` redirects there.
+
+- **The CRO and VAT numbers.** `CONTACT.companyNumber` and
+  `CONTACT.vatNumber` in `src/lib/site-config.ts` are null and the legal
+  pages omit the line rather than inventing one. If the business trades as
+  a registered company, the registration number has to appear before
+  launch.
+
+- **A cookie consent banner.** There is none, and `Analytics.tsx` loads
+  GA4, Google Ads and the Meta pixel unconditionally as soon as their ids
+  are set. Under GDPR and ePrivacy those need consent before they fire.
+  The cookie policy describes this honestly rather than claiming a consent
+  step that does not exist, but the gap is real and it is a launch
+  blocker the moment any analytics id is configured in production.
 - **Phone number, email address and opening hours** for the contact page. It
   currently routes people to the corporate form and states where we are,
   rather than printing a number nobody confirmed.

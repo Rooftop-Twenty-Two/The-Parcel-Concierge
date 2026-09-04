@@ -195,6 +195,7 @@ export function BuilderWizard({
         giftMessage,
         ribbonColour,
         bowVariantId: bowAdded && bow ? bow.variantId : null,
+        bottlesAdded: chosenList.reduce((sum, c) => sum + (c.item.alcohol ? c.quantity : 0), 0),
       })
 
       if (result.ok) {

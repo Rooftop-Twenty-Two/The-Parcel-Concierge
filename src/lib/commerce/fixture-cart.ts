@@ -123,9 +123,9 @@ export function buildCart(state: FixtureCartState): Cart {
     const { product, variant } = resolved
     const lineTotal = multiplyMoney(variant.price, line.quantity)
     subtotal = addMoney(subtotal, lineTotal)
-    if (product.tags.includes('type:wine') || product.tags.includes('type:spirit')) {
-      containsAlcohol = true
-    }
+    const isBottle =
+      product.tags.includes('type:wine') || product.tags.includes('type:spirit')
+    if (isBottle) containsAlcohol = true
     if (product.hamper?.containsAlcohol) containsAlcohol = true
 
     lines.push({
@@ -143,6 +143,7 @@ export function buildCart(state: FixtureCartState): Cart {
       // subscription line reads as a one-off here. Nothing in fixture mode
       // can be subscribed to anyway.
       sellingPlanName: null,
+      isBottle,
     })
   }
 

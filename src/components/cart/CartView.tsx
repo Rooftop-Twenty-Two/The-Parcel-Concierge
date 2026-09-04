@@ -10,6 +10,7 @@ import {
   trackCheckoutHandoff,
   trackViewCart,
 } from '@/lib/analytics/events'
+import { countBottles } from '@/lib/commerce/bottle-limit'
 import { formatMoney, formatMinor } from '@/lib/commerce/money'
 import type { Cart } from '@/lib/commerce/types'
 import { DELIVERY } from '@/lib/site-config'
@@ -24,6 +25,13 @@ import { DELIVERY } from '@/lib/site-config'
  * domain change.
  */
 export function CartView({ cart }: { cart: Cart }) {
+  // The per-order bottle limit. The server actions refuse to write past it;
+  // this is the visible half, and it also catches a cart that went over
+  // before the limit existed.
+  const MAX_BOTTLES = DELIVERY.maxBottlesPerOrder
+  const bottles = countBottles(cart.lines)
+  const overBottleLimit = MAX_BOTTLES !== null && bottles > MAX_BOTTLES
+
   const [pending, startTransition] = useTransition()
   const [message, setMessage] = useState(
     cart.lines.flatMap((l) => l.attributes).find((a) => a.key === 'Gift message')?.value ?? '',
@@ -208,13 +216,38 @@ export function CartView({ cart }: { cart: Cart }) {
           Delivery is worked out at checkout, once we know where it is going.
         </p>
 
-        <a
-          href={cart.checkoutUrl}
-          onClick={onCheckout}
-          className="mt-6 block bg-red px-6 py-4 text-center text-lg text-cream transition-colors hover:bg-wine"
-        >
-          Go to checkout
-        </a>
+        {overBottleLimit ? (
+          <>
+            <p
+              role="alert"
+              className="mt-6 border border-red bg-red/5 px-5 py-4 text-sm text-navy"
+            >
+              <strong className="font-semibold">
+                {bottles} bottles is more than we can send in one order.
+              </strong>{' '}
+              We deliver up to {MAX_BOTTLES} bottles at a time. Take{' '}
+              {bottles - (MAX_BOTTLES ?? 0)} out to check out, or{' '}
+              <Link href="/contact" className="underline underline-offset-2">
+                contact us
+              </Link>{' '}
+              and we will arrange a larger order with you.
+            </p>
+            <span
+              aria-disabled="true"
+              className="mt-4 block cursor-not-allowed bg-red/40 px-6 py-4 text-center text-lg text-cream"
+            >
+              Go to checkout
+            </span>
+          </>
+        ) : (
+          <a
+            href={cart.checkoutUrl}
+            onClick={onCheckout}
+            className="mt-6 block bg-red px-6 py-4 text-center text-lg text-cream transition-colors hover:bg-wine"
+          >
+            Go to checkout
+          </a>
+        )}
 
         <p className="mt-3 text-center text-xs text-ink-muted">
           Checkout is handled by Shopify. Your card details never touch our servers.

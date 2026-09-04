@@ -106,6 +106,20 @@ export const DELIVERY = {
     note: 'Delivery times may vary and additional customs requirements may apply.',
   } as { priceMinor: number; note: string } | null,
   /**
+   * The most bottles we will send in one order.
+   *
+   * Confirmed by the client, September 2026: "delivery for up to 6 bottles
+   * only". This is a packing and carriage limit, not a club rule, so it is
+   * enforced on the whole cart rather than only on a Wine Vault Club case.
+   *
+   * Counted across wine and spirit lines, which includes the bottles inside
+   * a hamper you build yourself, because the builder puts each component on
+   * the cart as its own line. It does NOT count bottles inside a ready made
+   * hamper: those are one line of one product and the cart cannot see
+   * inside them. Set to null to lift the cap entirely.
+   */
+  maxBottlesPerOrder: 6 as number | null,
+  /**
    * Free delivery on orders of €100 or more. Confirmed by the client,
    * August 2026; the cart progress nudge renders now that this is set.
    */

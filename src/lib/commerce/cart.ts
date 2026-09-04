@@ -3,6 +3,7 @@ import 'server-only'
 import { cookies } from 'next/headers'
 import { storefront } from '../shopify/client'
 import { normaliseCart } from '../shopify/normalise'
+import { countBottles } from './bottle-limit'
 import {
   CART_ATTRIBUTES_UPDATE,
   CART_CREATE,
@@ -231,4 +232,9 @@ export async function setCartAttributes(attributes: CartLineAttribute[]): Promis
     revalidate: false,
   })
   return unwrap(data.cartAttributesUpdate, 'Update cart attributes')
+}
+
+/** Bottles in the cart, for the per-order delivery limit. */
+export function bottleCount(cart: Cart | null): number {
+  return cart ? countBottles(cart.lines) : 0
 }

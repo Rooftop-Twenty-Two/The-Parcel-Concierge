@@ -2,7 +2,9 @@
 
 import { revalidatePath } from 'next/cache'
 import { verifyLines } from '@/lib/commerce'
-import { addLines } from '@/lib/commerce/cart'
+import { addLines, bottleCount, getCart } from '@/lib/commerce/cart'
+import { exceedsBottleLimit } from '@/lib/commerce/bottle-limit'
+import { DELIVERY } from '@/lib/site-config'
 import type { CartLineAttribute } from '@/lib/commerce/types'
 import { BOW_LABEL, BOX_OPTIONS, BUNDLE_ATTRIBUTES } from '@/lib/hamper-builder'
 
@@ -39,12 +41,29 @@ export async function addBuiltHamperAction(input: {
   ribbonColour: string
   /** Variant id of the gift-bow product, when the €1.50 bow was added. */
   bowVariantId?: string | null
+  /**
+   * How many of the chosen components are bottles. The wizard knows, from
+   * the picker items; the cart does not until the lines are written. See
+   * DELIVERY.maxBottlesPerOrder.
+   */
+  bottlesAdded?: number
 }): Promise<BuilderResult> {
   const box = BOX_OPTIONS.find((b) => b.id === input.boxId)
   if (!box) return { ok: false, message: 'Pick a box before you add the hamper to your cart.' }
 
   if (!input.components.length) {
     return { ok: false, message: 'Put at least one thing in the box.' }
+  }
+
+  const max = DELIVERY.maxBottlesPerOrder
+  if (max !== null && input.bottlesAdded) {
+    const already = bottleCount(await getCart())
+    if (exceedsBottleLimit(already, input.bottlesAdded, max)) {
+      return {
+        ok: false,
+        message: `We can only deliver ${max} bottles in one order, and this hamper would take you to ${already + input.bottlesAdded}. Take a bottle out, or order in two goes.`,
+      }
+    }
   }
 
   const total = input.components.reduce((sum, c) => sum + c.quantity, 0)

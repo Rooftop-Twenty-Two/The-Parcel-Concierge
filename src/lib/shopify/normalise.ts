@@ -391,6 +391,13 @@ type RawCart = {
   }
 }
 
+function isBottleLine(node: RawCart['lines']['nodes'][number]): boolean {
+  const product = node.merchandise.product
+  const handles = product.collections?.nodes.map((n) => n.handle) ?? []
+  const kind = kindFromMembership(handles, product.tags, null)
+  return kind === 'wine' || kind === 'spirit'
+}
+
 export function normaliseCart(raw: RawCart): Cart {
   const lines: CartLine[] = raw.lines.nodes.map((node) => ({
     id: node.id,
@@ -406,14 +413,10 @@ export function normaliseCart(raw: RawCart): Cart {
     lineTotal: money(node.cost.totalAmount.amount, node.cost.totalAmount.currencyCode),
     attributes: node.attributes,
     sellingPlanName: node.sellingPlanAllocation?.sellingPlan.name ?? null,
+    isBottle: isBottleLine(node),
   }))
 
-  const containsAlcohol = raw.lines.nodes.some((node) => {
-    const product = node.merchandise.product
-    const handles = product.collections?.nodes.map((n) => n.handle) ?? []
-    const kind = kindFromMembership(handles, product.tags, null)
-    return kind === 'wine' || kind === 'spirit'
-  })
+  const containsAlcohol = lines.some((line) => line.isBottle)
 
   return {
     id: raw.id,

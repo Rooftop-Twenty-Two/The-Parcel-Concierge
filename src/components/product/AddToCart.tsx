@@ -51,6 +51,9 @@ export function AddToCart({
     startTransition(async () => {
       const result = await addToCartAction({
         lines: [{ variantId: variant.id, quantity: 1, attributes: attributesFromValues() }],
+        // The page knows what it is selling; the cart only learns once the
+        // line is written. See DELIVERY.maxBottlesPerOrder.
+        bottlesAdded: product.kind === 'wine' || product.kind === 'spirit' ? 1 : 0,
       })
 
       if (result.ok) {

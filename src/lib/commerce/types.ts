@@ -166,6 +166,12 @@ export type CartLine = {
   attributes: CartLineAttribute[]
   /** Set on subscription lines. Shopify's name for the plan, e.g. "Every 3 months". */
   sellingPlanName: string | null
+  /**
+   * A wine or spirit line, which is what the per-order bottle limit counts.
+   * Bottles inside a ready made hamper are invisible here: that is one line
+   * of one product. See DELIVERY.maxBottlesPerOrder.
+   */
+  isBottle: boolean
 }
 
 export type Cart = {

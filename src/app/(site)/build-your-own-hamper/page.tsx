@@ -12,7 +12,7 @@ export const revalidate = 900
 export const metadata: Metadata = {
   title: 'Build your own hamper',
   description:
-    'Pick the box, fill it from everything in the shop, write the card. We pack it by hand in Co. Meath and send it out the same day we send everything else.',
+    'Pick a hamper box or wicker basket, fill it from everything in the shop, write the card. We pack it by hand in Co. Meath and send it out the same day we send everything else.',
   alternates: { canonical: '/build-your-own-hamper' },
 }
 

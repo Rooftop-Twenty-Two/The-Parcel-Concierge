@@ -34,7 +34,7 @@ import { AGE_GATE } from '@/lib/site-config'
  */
 
 const STEPS = [
-  { id: 'box', label: 'Your box' },
+  { id: 'box', label: 'Box or basket' },
   { id: 'items', label: 'Fill it' },
   { id: 'extras', label: 'Finishing touches' },
   { id: 'review', label: 'Review' },
@@ -170,8 +170,8 @@ export function BuilderWizard({
       case 'box':
         return null
       case 'items':
-        if (itemCount === 0) return 'Put something in the box'
-        if (overCapacity) return `${box.capacity} fit in this box`
+        if (itemCount === 0) return 'Put something in it'
+        if (overCapacity) return `${box.capacity} fit in this one`
         return null
       case 'extras':
         return null
@@ -234,7 +234,7 @@ export function BuilderWizard({
           </h1>
           <p className="mt-3 max-w-2xl text-cream/85">
             Everything we sell online is on these shelves, and the shop in Dunshaughlin carries
-            even more. Pick a box, fill it, write the card, and we pack it by hand.
+            even more. Pick a hamper box or wicker basket, fill it, write the card, and we pack it by hand.
           </p>
         </div>
       </header>
@@ -244,7 +244,7 @@ export function BuilderWizard({
       {/* pb clears the sticky bar. */}
       <main className="mx-auto max-w-[1400px] px-4 pb-44 pt-10 lg:px-8">
         {step === 'box' ? (
-          <StepShell title="Choose your box" lede="Every size is packed the same way: by hand, hand tied, built so nothing moves.">
+          <StepShell title="Choose your hamper box or wicker basket" lede="Every size is packed the same way: by hand, hand tied, built so nothing moves.">
             <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {BOX_OPTIONS.map((option) => {
                 const variant = parent.variants.find((v) => v.title === option.variantTitle)
@@ -316,7 +316,7 @@ export function BuilderWizard({
                     Hand tied bow, {formatMinor(bow.priceMinor)}
                   </button>
                   <p className="mt-2 text-sm text-ink-muted">
-                    Tied on top of the ribbon when the box is packed.
+                    Tied on top of the ribbon when it is packed.
                   </p>
                 </div>
               ) : null}
@@ -346,7 +346,7 @@ export function BuilderWizard({
             <div className="grid gap-10 lg:grid-cols-[1fr_360px]">
               <div>
                 <ReviewRow
-                  label="The box"
+                  label="Box or basket"
                   value={`${box.variantTitle}${boxVariant ? `, ${formatMinor(boxVariant.price.amountMinor)}` : ''}`}
                   onEdit={() => goTo('box')}
                 />
@@ -363,7 +363,7 @@ export function BuilderWizard({
                 />
 
                 <h3 className="mt-8 border-b border-rule pb-2 font-serif text-xl text-navy">
-                  In the box ({itemCount} {itemCount === 1 ? 'thing' : 'things'})
+                  Inside ({itemCount} {itemCount === 1 ? 'thing' : 'things'})
                 </h3>
                 <ul className="divide-y divide-rule">
                   {chosenList.map(({ item, quantity }) => (
@@ -397,7 +397,7 @@ export function BuilderWizard({
                 </ul>
                 {itemCount === 0 ? (
                   <p className="mt-4 text-ink-muted">
-                    The box is empty.{' '}
+                    Nothing in it yet.{' '}
                     <button type="button" className="underline" onClick={() => goTo('items')}>
                       Go and fill it
                     </button>
@@ -433,7 +433,7 @@ export function BuilderWizard({
 
                 {containsAlcohol ? (
                   <p className="mt-3 text-xs text-ink-muted">
-                    There is alcohol in this box, so somebody over 18 has to take the delivery in.
+                    There is alcohol in this hamper, so somebody over 18 has to take the delivery in.
                   </p>
                 ) : null}
 

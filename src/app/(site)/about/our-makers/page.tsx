@@ -1,7 +1,5 @@
 import type { Metadata } from 'next'
-import { ProductGrid } from '@/components/product/ProductCard'
 import { getMakers } from '@/lib/cms'
-import { queryProducts } from '@/lib/commerce'
 
 export const revalidate = 3600
 
@@ -15,13 +13,6 @@ export const metadata: Metadata = {
 export default async function MakersPage() {
   const makers = await getMakers()
 
-  const withProducts = await Promise.all(
-    makers.map(async (maker) => ({
-      maker,
-      products: (await queryProducts({ handles: maker.productHandles, first: 4 })).items,
-    })),
-  )
-
   return (
     <div className="mx-auto max-w-[1400px] px-4 py-14 lg:px-8">
       <h1 className="font-display text-[length:var(--text-hero)] text-navy">Our makers</h1>
@@ -31,7 +22,7 @@ export default async function MakersPage() {
       </p>
 
       <div className="mt-14 space-y-16">
-        {withProducts.map(({ maker, products }) => (
+        {makers.map((maker) => (
           <section key={maker.slug} id={maker.slug}>
             <div className="flex flex-wrap items-baseline gap-x-4">
               <h2 className="font-display text-[length:var(--text-display)] text-navy">
@@ -60,15 +51,6 @@ export default async function MakersPage() {
                   </li>
                 ))}
               </ul>
-            ) : null}
-
-            {products.length ? (
-              <div className="mt-8">
-                <h3 className="mb-4 text-xs uppercase tracking-[0.18em] text-ink-muted">
-                  Where you will find their work
-                </h3>
-                <ProductGrid products={products} />
-              </div>
             ) : null}
           </section>
         ))}

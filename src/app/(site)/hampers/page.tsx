@@ -38,7 +38,7 @@ export default function HampersHub() {
       promo={{
         eyebrow: 'Made to order',
         title: 'Build your own hamper',
-        body: 'Pick the box, pick what goes in it and write the card. The whole shop is in the builder, not just what is on this page, and we pack it by hand the same way.',
+        body: 'Pick a hamper box or wicker basket, fill it and write the card. The whole shop is in the builder, not just what is on this page, and we pack it by hand the same way.',
         href: '/build-your-own-hamper',
         cta: 'Start building',
       }}

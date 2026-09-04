@@ -239,12 +239,12 @@ function PickerCard({
                 type="button"
                 onClick={() => onAdjust(item, -1)}
                 className="px-4 py-2 text-navy hover:bg-navy hover:text-cream"
-                aria-label={`Take one ${item.title} out of the box`}
+                aria-label={`Take one ${item.title} out of your hamper`}
               >
                 −
               </button>
               <span className="text-sm font-medium text-navy" aria-live="polite">
-                {quantity} in box
+                {quantity} added
               </span>
               <button
                 type="button"
@@ -261,7 +261,7 @@ function PickerCard({
               onClick={() => onAdjust(item, 1)}
               disabled={!item.variantId}
               className="w-full border border-navy py-2 text-sm text-navy transition-colors hover:bg-navy hover:text-cream disabled:opacity-40"
-              aria-label={`Add ${item.title} to the box`}
+              aria-label={`Add ${item.title} to your hamper`}
             >
               +
             </button>

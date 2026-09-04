@@ -217,7 +217,12 @@ function buildSearchQuery(query: ProductQuery): string {
 export async function queryProducts(query: ProductQuery): Promise<ProductQueryResult> {
   if (isFixtureMode()) return fixtureQuery(query)
 
-  if (query.handles?.length) return productsByHandles(query.handles)
+  // `handles` PRESENT means a curated list, even when it is empty: an empty
+  // curated list is no products, not every product. Testing `.length` here
+  // let `handles: []` fall through to the general search, and the makers
+  // page then showed four arbitrary products from the whole store under
+  // "where you will find their work". Found by the client, September 2026.
+  if (query.handles) return productsByHandles(query.handles)
   if (query.collection) return productsByCollection(query, [TAG_ALL_PRODUCTS])
 
   const sort = SORT_KEYS[query.sort ?? 'featured']
@@ -276,7 +281,12 @@ async function productsByHandles(handles: string[]): Promise<ProductQueryResult>
  */
 export async function queryListing(path: string, query: ProductQuery): Promise<ProductQueryResult> {
   if (isFixtureMode()) return fixtureQuery(query)
-  if (query.handles?.length) return productsByHandles(query.handles)
+  // `handles` PRESENT means a curated list, even when it is empty: an empty
+  // curated list is no products, not every product. Testing `.length` here
+  // let `handles: []` fall through to the general search, and the makers
+  // page then showed four arbitrary products from the whole store under
+  // "where you will find their work". Found by the client, September 2026.
+  if (query.handles) return productsByHandles(query.handles)
   if (query.collection) return productsByCollection(query, [TAG_ALL_PRODUCTS, collectionTag(path)])
   // The tag is attached by re-running the query with the collection tag
   // included; Storefront calls are deduped by Next within a render pass, so

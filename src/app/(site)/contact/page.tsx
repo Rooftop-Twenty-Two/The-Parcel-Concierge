@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { PostmarkRoundel, StampFrame } from '@/components/ui/Stamp'
-import { SITE } from '@/lib/site-config'
+import { CONTACT, SITE, postalAddress } from '@/lib/site-config'
 
 export const metadata: Metadata = {
   title: 'Contact us',
@@ -14,31 +14,46 @@ export const metadata: Metadata = {
 /**
  * Contact.
  *
- * The phone number, email address and opening hours are outstanding client
- * details. Rather than printing a number we have not confirmed, this page
- * routes people to the channels we know exist and says plainly what is
- * missing. Filling them in is an edit to site-config, not to this page.
+ * The phone number and email address are confirmed and come from
+ * site-config, so they are stated once and cannot drift from the legal
+ * pages that also carry them. Opening hours are still outstanding: the sign
+ * in the shopfront photograph carries them in the meantime.
  */
 export default function ContactPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-14 lg:px-8">
       <PostmarkRoundel className="h-20 w-20 text-green" />
       <h1 className="mt-6 font-display text-[length:var(--text-hero)] text-navy">Contact us</h1>
-      <p className="mt-4 text-lg text-ink-muted">
-        You will be talking to {SITE.owners}. We read everything ourselves, which is slower than a
-        call centre and considerably more useful.
-      </p>
+      <dl className="mt-8 grid gap-6 sm:grid-cols-2">
+        <div className="border border-navy/20 bg-beige p-6">
+          <dt className="text-xs uppercase tracking-[0.18em] text-green">Email</dt>
+          <dd className="mt-2">
+            <a
+              href={`mailto:${CONTACT.email}`}
+              className="font-serif text-xl text-navy underline underline-offset-4"
+            >
+              {CONTACT.email}
+            </a>
+          </dd>
+        </div>
+        <div className="border border-navy/20 bg-beige p-6">
+          <dt className="text-xs uppercase tracking-[0.18em] text-green">Telephone</dt>
+          <dd className="mt-2">
+            <a
+              href={`tel:${CONTACT.phone.replace(/[^+\d]/g, '')}`}
+              className="font-serif text-xl text-navy underline underline-offset-4"
+            >
+              {CONTACT.phone}
+            </a>
+          </dd>
+        </div>
+        <div className="border border-navy/20 bg-beige p-6 sm:col-span-2">
+          <dt className="text-xs uppercase tracking-[0.18em] text-green">Address</dt>
+          <dd className="mt-2 font-serif text-xl text-navy">{postalAddress()}</dd>
+        </div>
+      </dl>
 
       <div className="mt-10 space-y-8">
-        <section>
-          <h2 className="font-serif text-2xl font-semibold text-navy">About an order</h2>
-          <p className="mt-2 text-ink-muted">
-            Have your order number ready if you have one. If you are asking whether something can
-            arrive by a particular date, tell us the eircode as well and we can answer properly
-            rather than guessing.
-          </p>
-        </section>
-
         <section>
           <h2 className="font-serif text-2xl font-semibold text-navy">Corporate orders</h2>
           <p className="mt-2 text-ink-muted">

@@ -52,7 +52,7 @@ export const NAV = [
     ],
     promo: {
       title: 'Build your own hamper',
-      body: 'Pick the box, pick what goes in it, write the card.',
+      body: 'Pick a hamper box or wicker basket, fill it, write the card.',
       href: '/build-your-own-hamper',
       imageSrc: '/photography/tpc-03-full.jpg',
       imageAlt: 'A new baby hamper with a teddy bear, a blanket and a bottle of sparkling rosé',

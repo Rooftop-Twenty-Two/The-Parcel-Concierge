@@ -231,13 +231,6 @@ export const CONTENT: CmsData = {
         'The considered part of our list: growers rather than brands, much of it bought direct. Filter by grape, country, style or budget.',
     },
     {
-      path: '/wine/organic-biodynamic',
-      intro:
-        'Wines made without synthetic chemicals in the vineyard, and in the biodynamic case to a calendar most of us do not pretend to understand. We list them together because people who want one usually want the other.',
-      seoBlock:
-        '<p>Organic certification covers what goes on the vines. Biodynamic goes further and treats the vineyard as one system, with a planting and picking calendar to match. Both take more work than farming conventionally, which is why these bottles are rarely the cheapest thing on a shelf.</p><p>We do not stock them because they are organic. We stock them because the growers who bother tend to be the growers who care about everything else too, and it shows in the glass. Avondale in South Africa is the clearest example on this page.</p><p>Over 18 only, and we may ask for proof on delivery.</p>',
-    },
-    {
       path: '/wine/gift-sets',
       intro:
         'Boxed sets of two or three bottles, ready to send as they are. No hamper, no packing, just wine in a carton that looks like it was meant to be given.',

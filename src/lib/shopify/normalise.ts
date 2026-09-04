@@ -1,4 +1,5 @@
 import { money } from '../commerce/money'
+import { CHRISTMAS_HAMPERS_COLLECTION } from '../commerce/collections'
 import type {
   Cart,
   CartLine,
@@ -127,6 +128,15 @@ const WINE_COLLECTION_HANDLES = new Set<string>([
   'cider',
 ])
 
+/**
+ * Hamper collections whose handle does NOT contain "hamper", so the substring
+ * test below would miss them. The seasonal Christmas collection is a hamper
+ * range but its handle is "christmas-2026", so its products sit in no
+ * *hamper* collection and carry no type: tag — without this they read as
+ * gifts, their cards link to /gifts/ and their /hampers/<handle> pages 404.
+ */
+const HAMPER_COLLECTION_HANDLES = new Set<string>([CHRISTMAS_HAMPERS_COLLECTION])
+
 export function kindFromMembership(
   collectionHandles: readonly string[],
   tags: readonly string[],
@@ -144,7 +154,12 @@ export function kindFromMembership(
   // food-and-wine hamper lives in food-and-wine-hampers-1). Gift collections
   // like gifts-for-wine-lovers-1 must NOT read as wine, hence an explicit wine
   // set rather than a substring match on "wine".
-  if (collectionHandles.some((h) => h.includes('hamper') && !h.startsWith('gifts-'))) return 'hamper'
+  if (
+    collectionHandles.some(
+      (h) => (h.includes('hamper') && !h.startsWith('gifts-')) || HAMPER_COLLECTION_HANDLES.has(h),
+    )
+  )
+    return 'hamper'
   if (collectionHandles.some((h) => WINE_COLLECTION_HANDLES.has(h))) return 'wine'
   if (collectionHandles.length > 0) return 'addon'
   // A product in no collection at all: fall back to product_type.

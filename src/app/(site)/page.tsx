@@ -315,10 +315,9 @@ async function FeaturedHampers({
 }: {
   slot: Extract<HomepageSlot, { kind: 'featured-hampers' }>
 }) {
-  // The live store carries none of the fixture handles, so featured hampers
-  // come from the merchant's All Hampers collection. slot.title still drives
-  // the heading.
-  const { items } = await queryProducts({ collection: 'all-hampers-1', first: 8 })
+  // Featured hampers come from the merchant's Christmas Hampers collection
+  // (the seasonal set Cathal curates). slot.title still drives the heading.
+  const { items } = await queryProducts({ collection: 'christmas-hampers-1', first: 8 })
   if (items.length < 3) return null
 
   return (

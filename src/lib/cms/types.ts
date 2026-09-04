@@ -46,7 +46,13 @@ export type HomepageSlot =
       image?: { src: string; alt: string }
     }
   | { kind: 'budget-bands' }
-  | { kind: 'featured-hampers'; title: string; handles: string[] }
+  /**
+   * The band reads the seasonal hamper collection (HAMPERS_COLLECTION), not
+   * a hand-picked list: there is one live hamper range and the homepage
+   * must not disagree with the hub about what is in it. The CMS owns the
+   * heading only.
+   */
+  | { kind: 'featured-hampers'; title: string }
   | { kind: 'hamper-builder'; title: string; body: string }
   | { kind: 'occasions'; title: string; paths: string[] }
   | { kind: 'wine-vault'; title: string; body: string; handles: string[] }

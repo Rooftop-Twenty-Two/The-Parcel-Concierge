@@ -99,22 +99,38 @@ const HAMPER_BASE: ProductQuery = { sort: 'featured', first: 24 }
 const WINE_BASE: ProductQuery = { sort: 'featured', first: 24 }
 
 /**
- * SEASONAL — Christmas 2025 (client request via Cathal, 2026-09-03).
+ * SEASONAL — Christmas (client request via Cathal, September 2026).
  *
- * The client's live hamper range is the Christmas Hampers collection only; the
- * year-round hampers are retired for the season. While CHRISTMAS_HAMPERS_ONLY
- * is true:
+ * The client's live hamper range is one merchant collection; the year-round
+ * hampers are retired for the season. While CHRISTMAS_HAMPERS_ONLY is true:
  *   - the /hampers hub grid reads HAMPERS_COLLECTION (see hampers/page.tsx)
+ *   - the homepage featured band reads it too
+ *   - /occasions/christmas reads it
  *   - every hamper sub-listing (price bands + themes) is dropped from the
  *     active COLLECTIONS below, so no off-season or old-catalogue hamper can
  *     surface in the nav, the sitemap, static params or route resolution.
+ *
+ * ONE CONSTANT, read everywhere. The handle used to be typed out in three
+ * places and had already drifted into two different values, which is how a
+ * seasonal swap half happens: the hub shows the new range and the homepage
+ * still shows last year's.
+ *
+ * A wrong handle cannot ship silently. `collections:validate` runs inside
+ * `npm run build` and exits non-zero when a mapped collection is missing on
+ * the store, so the deploy fails loudly rather than serving an empty shop.
  *
  * Hamper *products* still resolve at /hampers/<handle>: resolveHubSlug reads
  * the product, not this registry. To restore the full year-round hamper range
  * post-Christmas, set CHRISTMAS_HAMPERS_ONLY to false.
  */
 export const CHRISTMAS_HAMPERS_ONLY = true
-export const HAMPERS_COLLECTION = CHRISTMAS_HAMPERS_ONLY ? 'christmas-hampers-1' : 'all-hampers-1'
+
+/** The merchant's "Christmas 2026" collection. */
+export const CHRISTMAS_HAMPERS_COLLECTION = 'christmas-2026'
+
+export const HAMPERS_COLLECTION = CHRISTMAS_HAMPERS_ONLY
+  ? CHRISTMAS_HAMPERS_COLLECTION
+  : 'all-hampers-1'
 
 /**
  * The full listing registry. The active `COLLECTIONS` below is derived from
@@ -445,7 +461,7 @@ const ALL_LISTINGS: readonly CollectionDef[] = [
     path: '/occasions/christmas',
     title: 'Christmas gifts and hampers',
     h1: 'Christmas gifts and hampers',
-    query: { collection: 'christmas-collection-2025', sort: 'featured', first: 24 },
+    query: { collection: CHRISTMAS_HAMPERS_COLLECTION, sort: 'featured', first: 24 },
     alcohol: true,
     facets: ['price', 'recipient'],
     parentPath: '/occasions',

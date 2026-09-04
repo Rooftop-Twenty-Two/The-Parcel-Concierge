@@ -61,9 +61,8 @@ type Reference = { where: string; handle: string }
 const references: Reference[] = []
 
 for (const slot of CONTENT.homepage.slots) {
-  if (slot.kind === 'featured-hampers') {
-    references.push(...slot.handles.map((handle) => ({ where: 'homepage featured hampers', handle })))
-  }
+  // The featured hampers band reads the seasonal collection rather than a
+  // handle list, so there is nothing here to resolve.
   if (slot.kind === 'wine-vault') {
     references.push(...slot.handles.map((handle) => ({ where: 'homepage wine vault', handle })))
   }

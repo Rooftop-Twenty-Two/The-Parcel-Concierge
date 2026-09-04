@@ -57,19 +57,6 @@ export const CONTENT: CmsData = {
       {
         kind: 'featured-hampers',
         title: 'Hampers to start with',
-        // Every handle is a real hamper from the client's August 2026
-        // range. The selection covers the price range; the client can
-        // reorder it here.
-        handles: [
-          'the-perfect-duo',
-          'for-the-guinness-lover',
-          'all-ireland-food-hamper',
-          '5-2',
-          'because-you-re-amazing-hamper',
-          'luxury-home-amp-indulgence-hamper',
-          '3',
-          'large-basket',
-        ],
       },
       {
         kind: 'wine-vault',

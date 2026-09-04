@@ -10,7 +10,7 @@ import { VisitTheShop } from '@/components/VisitTheShop'
 import { getHomepage, getMakers } from '@/lib/cms'
 import type { HomepageSlot } from '@/lib/cms/types'
 import { getProduct, queryProducts } from '@/lib/commerce'
-import { getCollectionByPath } from '@/lib/commerce/collections'
+import { getCollectionByPath, HAMPERS_COLLECTION } from '@/lib/commerce/collections'
 import type { ProductCard } from '@/lib/commerce/types'
 import { getTrustSummary } from '@/lib/trustpilot'
 
@@ -315,9 +315,12 @@ async function FeaturedHampers({
 }: {
   slot: Extract<HomepageSlot, { kind: 'featured-hampers' }>
 }) {
-  // Featured hampers come from the merchant's Christmas Hampers collection
-  // (the seasonal set Cathal curates). slot.title still drives the heading.
-  const { items } = await queryProducts({ collection: 'christmas-hampers-1', first: 8 })
+  // The seasonal hamper collection, read from the one constant the hub and
+  // /occasions/christmas also read, so the homepage can never end up showing
+  // a different range from the rest of the site. slot.title drives the
+  // heading; the slot no longer carries handles, because this band has not
+  // been a hand-picked list since the range went Christmas-only.
+  const { items } = await queryProducts({ collection: HAMPERS_COLLECTION, first: 8 })
   if (items.length < 3) return null
 
   return (

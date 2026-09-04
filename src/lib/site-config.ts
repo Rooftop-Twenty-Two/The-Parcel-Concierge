@@ -63,6 +63,20 @@ export function postalAddress(): string {
  */
 export const SITE_NOINDEX = process.env.SITE_NOINDEX === 'true'
 
+/**
+ * Serve a holding page instead of the site.
+ *
+ * Set SITE_COMING_SOON=true on an environment that is public but not ready
+ * to be walked around: middleware rewrites every page request to
+ * /coming-soon, so there is no way to click into a half finished shop, and
+ * the whole site goes noindex with it.
+ *
+ * It is an environment variable rather than a code change so it can be
+ * turned off in the Vercel dashboard the moment the site is ready, with no
+ * deploy and nothing to revert.
+ */
+export const SITE_COMING_SOON = process.env.SITE_COMING_SOON === 'true'
+
 export const DELIVERY = {
   /**
    * €8.95 confirmed by the client, August 2026. The June 2026 review

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { fontVariables } from '@/lib/brand/fonts'
 import { isFixtureMode } from '@/lib/commerce'
-import { SITE, SITE_NOINDEX } from '@/lib/site-config'
+import { SITE, SITE_COMING_SOON, SITE_NOINDEX } from '@/lib/site-config'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -20,7 +20,10 @@ export const metadata: Metadata = {
   // Noindex while on fixtures (a snapshot, not the shop) or while an
   // environment is held back from launch (SITE_NOINDEX) — e.g. the production
   // Vercel domain before the real domain and legal pages go live.
-  robots: isFixtureMode() || SITE_NOINDEX ? { index: false, follow: false } : undefined,
+  robots:
+    isFixtureMode() || SITE_NOINDEX || SITE_COMING_SOON
+      ? { index: false, follow: false }
+      : undefined,
 }
 
 /**

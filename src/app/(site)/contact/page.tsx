@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
+import { ContactForm } from '@/components/contact/ContactForm'
 import { PostmarkRoundel, StampFrame } from '@/components/ui/Stamp'
 import { CONTACT, SITE, postalAddress } from '@/lib/site-config'
 
@@ -52,6 +53,17 @@ export default function ContactPage() {
           <dd className="mt-2 font-serif text-xl text-navy">{postalAddress()}</dd>
         </div>
       </dl>
+
+      <section className="mt-12">
+        <h2 className="font-serif text-2xl font-semibold text-navy">Send us a message</h2>
+        <p className="mt-2 text-ink-muted">
+          For anything about an order, a gift, or whether we can get something to you by a date. We
+          read every one ourselves and reply the same working day.
+        </p>
+        <div className="mt-6">
+          <ContactForm />
+        </div>
+      </section>
 
       <div className="mt-10 space-y-8">
         <section>

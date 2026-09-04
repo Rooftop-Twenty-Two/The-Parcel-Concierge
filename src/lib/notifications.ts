@@ -1,6 +1,7 @@
 import 'server-only'
 
 import type { CorporateEnquiry } from '@/app/actions/corporate'
+import type { ContactMessage } from '@/app/actions/contact'
 
 /**
  * Outbound notifications.
@@ -20,35 +21,129 @@ import type { CorporateEnquiry } from '@/app/actions/corporate'
 const WEBHOOK = process.env.CORPORATE_ENQUIRY_WEBHOOK ?? ''
 const NOTIFY_EMAIL = process.env.CORPORATE_ENQUIRY_EMAIL ?? ''
 
-export async function sendCorporateEnquiry(
-  enquiry: CorporateEnquiry,
-  context: { volumeThreshold: number },
-): Promise<void> {
-  const payload = {
-    type: 'corporate-enquiry',
-    receivedAt: new Date().toISOString(),
-    aboveVolumeThreshold: enquiry.quantity >= context.volumeThreshold,
-    notifyEmail: NOTIFY_EMAIL || null,
-    enquiry,
-  }
+/**
+ * Transactional email via Postmark. The From address is a verified sending
+ * domain (hello@theparcelconcierge.com, DKIM + Return-Path in DNS). When
+ * POSTMARK_SERVER_TOKEN is unset the message is logged and the call still
+ * succeeds, so a preview build without the token does not 500 — the same
+ * trade the webhook paths make.
+ */
+const POSTMARK_TOKEN = process.env.POSTMARK_SERVER_TOKEN ?? ''
+const CONTACT_FROM = process.env.CONTACT_FORM_FROM ?? 'hello@theparcelconcierge.com'
+const CONTACT_TO = process.env.CONTACT_FORM_TO ?? 'hello@theparcelconcierge.com'
 
-  if (!WEBHOOK) {
+async function sendEmail(params: {
+  to: string
+  subject: string
+  text: string
+  replyTo?: string
+}): Promise<void> {
+  if (!POSTMARK_TOKEN) {
     console.warn(
-      '[notifications] CORPORATE_ENQUIRY_WEBHOOK is not set. Enquiry logged only:',
-      JSON.stringify(payload),
+      '[notifications] POSTMARK_SERVER_TOKEN is not set. Email logged only:',
+      JSON.stringify({ to: params.to, subject: params.subject, replyTo: params.replyTo }),
     )
     return
   }
 
+  const response = await fetch('https://api.postmarkapp.com/email', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      'X-Postmark-Server-Token': POSTMARK_TOKEN,
+    },
+    body: JSON.stringify({
+      From: CONTACT_FROM,
+      To: params.to,
+      ReplyTo: params.replyTo,
+      Subject: params.subject,
+      TextBody: params.text,
+      MessageStream: 'outbound',
+    }),
+  })
+
+  if (!response.ok) {
+    const detail = await response.text().catch(() => '')
+    throw new Error(`Postmark responded ${response.status}: ${detail.slice(0, 300)}`)
+  }
+}
+
+/**
+ * A contact-form message. Goes to the business inbox with the sender's address
+ * as Reply-To, so a reply from the inbox goes straight back to them.
+ */
+export async function sendContactMessage(message: ContactMessage): Promise<void> {
+  const body = [
+    `From: ${message.name} <${message.email}>`,
+    message.phone ? `Phone: ${message.phone}` : null,
+    `Subject: ${message.subject || '(none given)'}`,
+    '',
+    message.message,
+  ]
+    .filter((line) => line !== null)
+    .join('\n')
+
+  await sendEmail({
+    to: CONTACT_TO,
+    replyTo: message.email,
+    subject: `Website contact: ${message.subject || message.name}`,
+    text: body,
+  })
+}
+
+export async function sendCorporateEnquiry(
+  enquiry: CorporateEnquiry,
+  context: { volumeThreshold: number },
+): Promise<void> {
+  const aboveVolumeThreshold = enquiry.quantity >= context.volumeThreshold
+
+  // Email the enquiry to the business inbox — the same inbox the contact form
+  // uses. Reply-To is the buyer, so a reply from the inbox reaches them.
+  await sendEmail({
+    to: NOTIFY_EMAIL || CONTACT_TO,
+    replyTo: enquiry.email,
+    subject: `Corporate enquiry: ${enquiry.company} — ${enquiry.quantity} boxes${
+      aboveVolumeThreshold ? ' (volume)' : ''
+    }`,
+    text: corporateEnquiryText(enquiry, aboveVolumeThreshold),
+  })
+
+  // Fan out to the CRM webhook as well, when one is configured.
+  if (!WEBHOOK) return
+
   const response = await fetch(WEBHOOK, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
+    body: JSON.stringify({
+      type: 'corporate-enquiry',
+      receivedAt: new Date().toISOString(),
+      aboveVolumeThreshold,
+      notifyEmail: NOTIFY_EMAIL || null,
+      enquiry,
+    }),
   })
 
   if (!response.ok) {
     throw new Error(`Corporate enquiry webhook responded ${response.status}`)
   }
+}
+
+function corporateEnquiryText(enquiry: CorporateEnquiry, aboveVolumeThreshold: boolean): string {
+  return [
+    `Company: ${enquiry.company}`,
+    `Name: ${enquiry.name} <${enquiry.email}>`,
+    enquiry.phone ? `Phone: ${enquiry.phone}` : null,
+    `Quantity: ${enquiry.quantity} boxes${aboveVolumeThreshold ? ' (above volume threshold)' : ''}`,
+    enquiry.budgetPerUnitEuro != null ? `Budget per box: €${enquiry.budgetPerUnitEuro}` : null,
+    `Delivery: ${enquiry.deliveryMode}`,
+    `Needed: ${enquiry.deadline}`,
+    `Branding: ${enquiry.branding ? 'yes' : 'no'}`,
+    `Alcohol allowed: ${enquiry.alcoholAllowed ? 'yes' : 'no'}`,
+    enquiry.notes ? `\nNotes:\n${enquiry.notes}` : null,
+  ]
+    .filter((line) => line !== null)
+    .join('\n')
 }
 
 export async function subscribeToNewsletter(email: string): Promise<void> {

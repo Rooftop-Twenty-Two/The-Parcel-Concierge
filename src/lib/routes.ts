@@ -98,27 +98,10 @@ export const NAV = [
       imageAlt: 'The wine room in the shop in Dunshaughlin',
     },
   },
-  {
-    label: 'Corporate',
-    href: '/corporate-gifting',
-    columns: [
-      {
-        title: 'Corporate gifting',
-        links: [
-          { label: 'Bulk orders', href: '/corporate-gifting/bulk-orders' },
-          { label: 'Branding and personalisation', href: '/corporate-gifting/branding-personalisation' },
-          { label: 'Make an enquiry', href: '/corporate-gifting/enquiry' },
-        ],
-      },
-    ],
-    promo: {
-      title: 'Client lists, handled',
-      body: 'One address or two hundred. Send us the spreadsheet and we do the rest.',
-      href: '/corporate-gifting/bulk-orders',
-      imageSrc: '/photography/tpc-christmas-11.jpg',
-      imageAlt: 'The Parcel Concierge shop in Dunshaughlin dressed for Christmas, with the delivery van outside and corporate gifts listed in the window',
-    },
-  },
+  // No dropdown, per the client, September 2026. The bulk orders and
+  // branding pages came off and the menu was down to a single link, which
+  // is a panel that costs a hover and says nothing. Straight to the hub.
+  { label: 'Corporate', href: '/corporate-gifting', columns: [], promo: null },
   // Seasonal: the Christmas entry point gets its own top-level item while
   // the season runs. Remove this row in January.
   //

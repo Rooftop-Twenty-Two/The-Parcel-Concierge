@@ -31,8 +31,6 @@ Two open questions are at the end. Everything else is implemented.
 │   └── /wine/under-25 · /25-50 · /50-plus
 │
 ├── /corporate-gifting                            [FULL B2B FLOW]
-│   ├── /corporate-gifting/bulk-orders
-│   ├── /corporate-gifting/branding-personalisation
 │   └── /corporate-gifting/enquiry
 │
 ├── /occasions

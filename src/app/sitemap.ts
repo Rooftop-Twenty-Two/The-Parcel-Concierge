@@ -37,8 +37,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: url('/wine'), priority: 0.9, changeFrequency: 'weekly' },
     { url: url('/wine-club'), priority: 0.9, changeFrequency: 'monthly' },
     { url: url('/corporate-gifting'), priority: 0.8, changeFrequency: 'monthly' },
-    { url: url('/corporate-gifting/bulk-orders'), priority: 0.6, changeFrequency: 'monthly' },
-    { url: url('/corporate-gifting/branding-personalisation'), priority: 0.6, changeFrequency: 'monthly' },
     { url: url('/corporate-gifting/enquiry'), priority: 0.6, changeFrequency: 'monthly' },
     { url: url('/occasions'), priority: 0.7, changeFrequency: 'monthly' },
     { url: url('/gifts-for'), priority: 0.6, changeFrequency: 'monthly' },

@@ -199,7 +199,7 @@ export const CONTENT: CmsData = {
       intro:
         'Corporate hampers with your branding on the card inside the lid. Alcohol free options, volume pricing over ten units, and we handle the address list.',
       seoBlock:
-        '<p>These are the boxes we send by the hundred every December. They are built from Irish producers, which is usually the point of sending one, and they go out with a printed card carrying your logo inside the lid rather than plastered across the outside.</p><p>Alcohol free options are available for lists where you cannot check first. For more than ten units, the corporate gifting pages carry branding options and lead times, and there is a bulk order form that takes your address list and deadline in one go.</p>',
+        '<p>These are the boxes we send by the hundred every December. They are built from Irish producers, which is usually the point of sending one, and they go out with a printed card carrying your logo inside the lid rather than plastered across the outside.</p><p>Alcohol free options are available for lists where you cannot check first. For more than ten units, send us your numbers through the corporate gifting enquiry form and we will come back with a price, a lead time and what we need from you.</p>',
     },
     {
       path: '/wine',
@@ -299,7 +299,7 @@ export const CONTENT: CmsData = {
       intro:
         'Client gifts, from a single box to a list of two hundred. Alcohol free options, branding on the card, and volume pricing over ten units.',
       seoBlock:
-        '<p>A client gift has to do two things: look like it cost something, and not create a problem. Ours are built from Irish producers, which handles the first, and the alcohol free options handle the second, because sending wine to a list you have not checked is a risk nobody needs.</p><p>Branding goes on a printed card inside the lid rather than across the outside of the box, which is what most people actually want. For more than ten units, the corporate gifting pages carry volume pricing and lead times, and the bulk order form takes your address list and your deadline in one go.</p><p>We can deliver to individual home addresses or to one office. Tell us which on the form.</p>',
+        '<p>A client gift has to do two things: look like it cost something, and not create a problem. Ours are built from Irish producers, which handles the first, and the alcohol free options handle the second, because sending wine to a list you have not checked is a risk nobody needs.</p><p>Branding goes on a printed card inside the lid rather than across the outside of the box, which is what most people actually want. For more than ten units, the corporate gifting enquiry form takes your numbers, your address list and your deadline in one go, and we quote from there.</p><p>We can deliver to individual home addresses or to one office. Tell us which on the form.</p>',
     },
     {
       path: '/occasions/christmas',

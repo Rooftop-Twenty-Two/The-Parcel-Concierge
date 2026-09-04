@@ -323,5 +323,15 @@
     "source": "/guides/corporate-gifting-that-does-not-embarrass-anyone",
     "destination": "/corporate-gifting",
     "permanent": true
+  },
+  {
+    "source": "/corporate-gifting/bulk-orders",
+    "destination": "/corporate-gifting",
+    "permanent": true
+  },
+  {
+    "source": "/corporate-gifting/branding-personalisation",
+    "destination": "/corporate-gifting",
+    "permanent": true
   }
 ]

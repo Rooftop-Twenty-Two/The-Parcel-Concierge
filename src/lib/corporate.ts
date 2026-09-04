@@ -16,11 +16,21 @@ export type VolumeTier = {
   leadTimeWorkingDays: number
 }
 
+/**
+ * Unused since the bulk orders page came off at the client's request in
+ * September 2026. Kept because restoring that page should be restoring the
+ * route, not rewriting its configuration.
+ */
 export const VOLUME_TIERS: readonly VolumeTier[] = []
 
 /**
  * Branding options we can actually deliver. These are the ones already
  * described on the hamper product pages, so they are safe to publish.
+ *
+ * Unused since the branding and personalisation page came off at the
+ * client's request in September 2026. Kept for the same reason as
+ * VOLUME_TIERS above: bringing the page back should be a route, not a
+ * rewrite.
  */
 export const BRANDING_OPTIONS = [
   {

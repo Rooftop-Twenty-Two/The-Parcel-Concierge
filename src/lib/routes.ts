@@ -37,17 +37,15 @@ export const NAV = [
   {
     label: 'Hampers',
     href: '/hampers',
-    // The menu lists only listings the real catalogue can fill: twenty
-    // hampers today, so the thin sub-listings stay out of the nav until
-    // the range grows (the routes themselves redirect to /hampers).
+    // Seasonal: the hamper range is the Christmas collection only
+    // (CHRISTMAS_HAMPERS_ONLY in commerce/collections.ts), so the price-band
+    // and theme sub-listings are out of the nav. Restore these links when the
+    // full range reopens.
     columns: [
       {
         title: 'Hampers',
         links: [
           { label: 'All hampers', href: '/hampers' },
-          { label: '€75 to €125', href: '/hampers/75-125' },
-          { label: '€125 to €200', href: '/hampers/125-200' },
-          { label: 'New baby', href: '/hampers/new-baby' },
           { label: 'Build your own hamper', href: '/build-your-own-hamper' },
         ],
       },

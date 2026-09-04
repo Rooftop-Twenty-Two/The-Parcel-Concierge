@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { HubPage } from '@/components/listing/HubPage'
+import { HAMPERS_COLLECTION } from '@/lib/commerce/collections'
 import { getListingCopy } from '@/lib/cms'
 
 export const revalidate = 1800
@@ -23,15 +24,13 @@ export default function HampersHub() {
         src: '/photography/tpc-09-full.jpg',
         alt: 'An Irish food hamper packed with crisps, tea, preserves and coffee in a green gift box',
       }}
-      query={{ collection: 'all-hampers-1', sort: 'featured', first: 24 }}
+      query={{ collection: HAMPERS_COLLECTION, sort: 'featured', first: 24 }}
       alcohol
-      // Only the bands the twenty-hamper range can fill: the thin listings
-      // redirect here, so a card for one would send the shopper in a loop.
-      featuredPaths={[
-        '/hampers/75-125',
-        '/hampers/125-200',
-        '/hampers/new-baby',
-      ]}
+      // Seasonal: the hamper range is the Christmas collection only, so the
+      // sub-listing cards are dropped (CHRISTMAS_HAMPERS_ONLY in
+      // commerce/collections.ts). One grid of the Christmas hampers, then the
+      // builder. Restore price-band / theme cards when the range reopens.
+      featuredPaths={[]}
       // The builder is the answer to "none of these is quite right", which
       // is the commonest reason somebody leaves a hamper listing, so it
       // sits between the collection cards and the grid rather than only in

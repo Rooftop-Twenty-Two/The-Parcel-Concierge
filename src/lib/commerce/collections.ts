@@ -98,7 +98,29 @@ export type CollectionDef = {
 const HAMPER_BASE: ProductQuery = { sort: 'featured', first: 24 }
 const WINE_BASE: ProductQuery = { sort: 'featured', first: 24 }
 
-export const COLLECTIONS: readonly CollectionDef[] = [
+/**
+ * SEASONAL — Christmas 2025 (client request via Cathal, 2026-09-03).
+ *
+ * The client's live hamper range is the Christmas Hampers collection only; the
+ * year-round hampers are retired for the season. While CHRISTMAS_HAMPERS_ONLY
+ * is true:
+ *   - the /hampers hub grid reads HAMPERS_COLLECTION (see hampers/page.tsx)
+ *   - every hamper sub-listing (price bands + themes) is dropped from the
+ *     active COLLECTIONS below, so no off-season or old-catalogue hamper can
+ *     surface in the nav, the sitemap, static params or route resolution.
+ *
+ * Hamper *products* still resolve at /hampers/<handle>: resolveHubSlug reads
+ * the product, not this registry. To restore the full year-round hamper range
+ * post-Christmas, set CHRISTMAS_HAMPERS_ONLY to false.
+ */
+export const CHRISTMAS_HAMPERS_ONLY = true
+export const HAMPERS_COLLECTION = CHRISTMAS_HAMPERS_ONLY ? 'christmas-hampers-1' : 'all-hampers-1'
+
+/**
+ * The full listing registry. The active `COLLECTIONS` below is derived from
+ * this, dropping the hamper sub-listings while CHRISTMAS_HAMPERS_ONLY is on.
+ */
+const ALL_LISTINGS: readonly CollectionDef[] = [
   // ---------------------------------------------------------------------
   // Hampers. Budget bands read the master All Hampers collection with a
   // price filter. Budget bands first: highest-intent, real indexable routes.
@@ -654,6 +676,15 @@ export const COLLECTIONS: readonly CollectionDef[] = [
   },
 ]
 
+/**
+ * The active listing registry. While CHRISTMAS_HAMPERS_ONLY is on, the hamper
+ * hub's sub-listings are suppressed so the nav, sitemap, static params and
+ * route resolution all see only what should show this season.
+ */
+export const COLLECTIONS: readonly CollectionDef[] = ALL_LISTINGS.filter(
+  (c) => !(CHRISTMAS_HAMPERS_ONLY && c.hub === 'hampers'),
+)
+
 const BY_PATH = new Map(COLLECTIONS.map((c) => [c.path, c]))
 
 export function getCollectionByPath(path: string): CollectionDef | undefined {
@@ -687,9 +718,16 @@ export const PENDING_MERCHANT_COLLECTIONS: ReadonlySet<string> = new Set([
   'exclusive-to-us',
 ])
 
-/** Every native collection handle the listing registry reads, de-duplicated. */
+/**
+ * Every native collection handle the site reads, de-duplicated: the full
+ * listing registry plus the seasonal hampers collection the hub and homepage
+ * read directly. Derived from ALL_LISTINGS (not the seasonally-filtered
+ * COLLECTIONS) so collections:validate keeps checking every mapped handle
+ * regardless of the seasonal flag.
+ */
 export const MAPPED_COLLECTION_HANDLES: readonly string[] = [
-  ...new Set(
-    COLLECTIONS.map((c) => c.query.collection).filter((h): h is string => typeof h === 'string'),
-  ),
+  ...new Set([
+    HAMPERS_COLLECTION,
+    ...ALL_LISTINGS.map((c) => c.query.collection).filter((h): h is string => typeof h === 'string'),
+  ]),
 ]

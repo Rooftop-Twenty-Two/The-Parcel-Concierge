@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { ListingPage, listingMetadata, type ListingSearchParams } from '@/components/listing/ListingPage'
 import { AddonProductPage } from '@/components/product/AddonProductPage'
 import { queryProducts } from '@/lib/commerce'
+import { similarProducts } from '@/lib/commerce/similar'
 import { resolveHubSlug } from '@/lib/resolve-route'
 import { hubStaticParams } from '@/lib/static-params'
 import { stripHtml } from '@/lib/seo/structured-data'
@@ -50,14 +51,20 @@ export default async function GiftSlugPage({ params, searchParams }: Props) {
 
   if (resolved.kind === 'none') notFound()
 
-  const [trust, hampers] = await Promise.all([
+  const [trust, hampers, similar] = await Promise.all([
     getTrustSummary(),
     // An add-on's job is to be added to a hamper, so the page pushes back
     // towards hampers rather than towards more add-ons.
     queryProducts({ kinds: ['hamper'], first: 4, sort: 'price-asc' }),
+    similarProducts(resolved.product),
   ])
 
   return (
-    <AddonProductPage product={resolved.product} trust={trust} hampers={hampers.items} />
+    <AddonProductPage
+      product={resolved.product}
+      trust={trust}
+      hampers={hampers.items}
+      similar={similar}
+    />
   )
 }

@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { ListingPage, listingMetadata, type ListingSearchParams } from '@/components/listing/ListingPage'
 import { HamperProductPage } from '@/components/product/HamperProductPage'
 import { queryProducts } from '@/lib/commerce'
+import { similarProducts } from '@/lib/commerce/similar'
 import { resolveHubSlug } from '@/lib/resolve-route'
 import { hubStaticParams } from '@/lib/static-params'
 import { stripHtml } from '@/lib/seo/structured-data'
@@ -58,13 +59,19 @@ export default async function HamperSlugPage({ params, searchParams }: Props) {
 
   const { product } = resolved
 
-  const [trust, crossSell] = await Promise.all([
+  const [trust, crossSell, similar] = await Promise.all([
     getTrustSummary(),
     // "Finish the gift": the add-on band exists to be added to a hamper.
     queryProducts({ kinds: ['addon'], first: 4, sort: 'price-asc' }),
+    similarProducts(product),
   ])
 
   return (
-    <HamperProductPage product={product} trust={trust} crossSell={crossSell.items} />
+    <HamperProductPage
+      product={product}
+      trust={trust}
+      crossSell={crossSell.items}
+      similar={similar}
+    />
   )
 }

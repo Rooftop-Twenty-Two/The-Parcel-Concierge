@@ -3,6 +3,7 @@ import { DeliveryPromise } from '@/components/commerce/DeliveryPromise'
 import { AddToCart } from '@/components/product/AddToCart'
 import { ProductGallery } from '@/components/product/ProductGallery'
 import { ProductGrid } from '@/components/product/ProductCard'
+import { ProductCarousel } from '@/components/product/ProductCarousel'
 import {
   VariantPrice,
   VariantSelectionProvider,
@@ -24,10 +25,13 @@ export function AddonProductPage({
   product,
   trust,
   hampers,
+  similar,
 }: {
   product: Product
   trust: { rating: number; reviewCount: number }
   hampers: ProductCard[]
+  /** More from the same range, for the carousel at the foot of the page. */
+  similar: ProductCard[]
 }) {
   const crumbs = [
     { name: 'Home', path: '/' },
@@ -103,6 +107,20 @@ export function AddonProductPage({
             >
               Or build a box around it
             </Link>
+          </div>
+        </section>
+      ) : null}
+
+      {similar.length ? (
+        <section className="border-t border-rule">
+          <div className="mx-auto max-w-[1400px] px-4 py-14 lg:px-8">
+            <h2 className="font-display text-[length:var(--text-display)] text-navy">
+              More small gifts
+            </h2>
+            <p className="mt-2 max-w-xl text-ink-muted">Other things we put in our own boxes, sold on their own.</p>
+            <div className="mt-8">
+              <ProductCarousel products={similar} label="More small gifts" />
+            </div>
           </div>
         </section>
       ) : null}

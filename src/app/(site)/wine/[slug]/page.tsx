@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { ListingPage, listingMetadata, type ListingSearchParams } from '@/components/listing/ListingPage'
 import { WineProductPage } from '@/components/product/WineProductPage'
 import { queryProducts } from '@/lib/commerce'
+import { similarProducts } from '@/lib/commerce/similar'
 import { resolveHubSlug } from '@/lib/resolve-route'
 import { hubStaticParams } from '@/lib/static-params'
 import { stripHtml } from '@/lib/seo/structured-data'
@@ -56,7 +57,7 @@ export default async function WineSlugPage({ params, searchParams }: Props) {
 
   const { product } = resolved
 
-  const [trust, crossSell] = await Promise.all([
+  const [trust, crossSell, similar] = await Promise.all([
     getTrustSummary(),
     // Cross-sell into hampers rather than into more bottles: the point of
     // this site is that a bottle becomes a gift when it arrives in a box.
@@ -67,7 +68,15 @@ export default async function WineSlugPage({ params, searchParams }: Props) {
       tags: ['contains:alcohol'],
       first: 4,
     }),
+    similarProducts(product),
   ])
 
-  return <WineProductPage product={product} trust={trust} crossSell={crossSell.items} />
+  return (
+    <WineProductPage
+      product={product}
+      trust={trust}
+      crossSell={crossSell.items}
+      similar={similar}
+    />
+  )
 }

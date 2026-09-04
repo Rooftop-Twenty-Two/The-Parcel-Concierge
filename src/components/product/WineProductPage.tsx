@@ -4,6 +4,7 @@ import { DeliveryPromise } from '@/components/commerce/DeliveryPromise'
 import { AddToCart } from '@/components/product/AddToCart'
 import { ProductGallery } from '@/components/product/ProductGallery'
 import { ProductGrid } from '@/components/product/ProductCard'
+import { ProductCarousel } from '@/components/product/ProductCarousel'
 import {
   VariantPrice,
   VariantSelectionProvider,
@@ -28,10 +29,13 @@ export function WineProductPage({
   product,
   trust,
   crossSell,
+  similar,
 }: {
   product: Product
   trust: { rating: number; reviewCount: number }
   crossSell: ProductCard[]
+  /** More from the same range, for the carousel at the foot of the page. */
+  similar: ProductCard[]
 }) {
   const wine = product.wine
 
@@ -182,6 +186,20 @@ export function WineProductPage({
             </p>
             <div className="mt-8">
               <ProductGrid products={crossSell} />
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {similar.length ? (
+        <section className="border-t border-rule">
+          <div className="mx-auto max-w-[1400px] px-4 py-14 lg:px-8">
+            <h2 className="font-display text-[length:var(--text-display)] text-navy">
+              More from the Wine Vault
+            </h2>
+            <p className="mt-2 max-w-xl text-ink-muted">Other bottles we chose, from the same shelves.</p>
+            <div className="mt-8">
+              <ProductCarousel products={similar} label="More from the Wine Vault" />
             </div>
           </div>
         </section>

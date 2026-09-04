@@ -190,7 +190,8 @@ export default function DeliveryPage() {
             <Accordion title="Something arrived damaged">
               <p>
                 Email us a photo within 48 hours and we will replace it or refund it. We pack glass
-                and bottles in fitted boxes, but a box out of our hands is out of our hands.
+                and bottles carefully so they travel well, and if something arrives damaged we will
+                put it right.
               </p>
               <p>
                 Full details are in our{' '}

@@ -134,8 +134,12 @@ export const CONTENT: CmsData = {
       path: '/hampers',
       intro:
         'Every hamper on this page is packed by hand in Dunshaughlin. Pick by budget, by occasion or by what is in the box, and we will write the card by hand before it goes out.',
-      seoBlock:
-        '<p>We have been building hampers in Co. Meath since we opened, and the range on this page is the part of the business we care most about. Each box is put together in the shop by one of us, from makers we choose ourselves: Hassetts biscuits, chocolate from The Chocolate Garden of Ireland, preserves from Filligan’s of Donegal, lambswool from McNutt of Donegal, and hand wash from The Handmade Soap Company in Slane.</p><p>Hampers start at €55 and run to €495. If you are buying to a budget, the four bands above will get you there faster than scrolling. If you know the occasion but not the person, the occasion pages are a better starting point. And if nothing here is right, you can build your own box from scratch.</p><p>Free hand delivery in our local area, €8.95 anywhere else in the Republic of Ireland, free on orders over €100.</p>',
+      // Emptied at the client's request, September 2026. It had also gone
+      // stale twice over: it pointed at "the four bands above", which the
+      // Christmas-only range removed, and it quoted the pre-An Post
+      // delivery wording. An empty seoBlock renders nothing at all rather
+      // than an empty band.
+      seoBlock: '',
       metaTitle: 'Irish hampers, hand packed in Co. Meath',
       metaDescription:
         'Hampers packed by hand in Dunshaughlin, from makers we choose ourselves. Shop by budget, occasion or contents. Free local hand delivery, €8.95 nationwide.',

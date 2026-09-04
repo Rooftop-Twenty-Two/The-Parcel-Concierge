@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
+import { PreviewUnlock } from '@/components/PreviewUnlock'
 import { InkWaves, PostmarkRoundel } from '@/components/ui/Stamp'
 import { CONTACT, SITE, postalAddress } from '@/lib/site-config'
 
@@ -21,7 +22,13 @@ export const metadata: Metadata = {
  * "coming soon" turns a customer away; this one gives them a phone number
  * and an address instead.
  */
-export default function ComingSoonPage() {
+export default async function ComingSoonPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ wrong?: string }>
+}) {
+  const { wrong } = await searchParams
+
   // `relative` and `overflow-hidden` on main are load bearing: the
   // watermark is positioned against it and hangs past its right edge, and
   // without both it escapes the viewport and the page scrolls sideways.
@@ -110,6 +117,8 @@ export default function ComingSoonPage() {
       </div>
 
       <InkWaves className="h-14 w-full text-cream/20" lines={4} />
+
+      <PreviewUnlock wrong={wrong === '1'} />
     </main>
   )
 }

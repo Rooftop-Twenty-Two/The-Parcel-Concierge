@@ -177,7 +177,7 @@ export async function ListingPage({
         )}
       </div>
 
-      {copy ? (
+      {copy?.seoBlock ? (
         <section className="border-t border-rule bg-beige">
           <div className="mx-auto max-w-[1400px] px-4 py-14 lg:px-8">
             <div

@@ -146,7 +146,7 @@ export default async function WineClubLanding() {
         </div>
       </section>
 
-      {copy ? (
+      {copy?.seoBlock ? (
         <section className="mx-auto max-w-[1400px] px-4 py-14 lg:px-8">
           <div className="prose-tpc text-ink-muted" dangerouslySetInnerHTML={{ __html: copy.seoBlock }} />
         </section>

@@ -5,12 +5,12 @@ import { Accordion } from '@/components/ui/Accordion'
 import { PostmarkRoundel } from '@/components/ui/Stamp'
 import { formatMinor } from '@/lib/commerce/money'
 import { breadcrumbJsonLd, faqJsonLd } from '@/lib/seo/structured-data'
-import { DELIVERY, handDeliveryZone } from '@/lib/site-config'
+import { DELIVERY, handDeliveryZone, ukDeliveryPrice } from '@/lib/site-config'
 
 export const metadata: Metadata = {
   title: 'Delivery',
   description:
-    'Free local delivery within the A85 eircode area, €8.95 elsewhere in Ireland with An Post and free over €100, and €40 to the UK. Cut-off times, alcohol restrictions and what happens if nobody is home.',
+    'Free local delivery within the A85 eircode area, €8.95 elsewhere in Ireland with An Post and free over €100, and from €40 to the UK. Cut-off times, alcohol restrictions and what happens if nobody is home.',
   alternates: { canonical: '/delivery' },
 }
 
@@ -48,7 +48,7 @@ export default function DeliveryPage() {
       ? [
           {
             question: 'Do you deliver to the UK?',
-            answer: `Yes, for ${formatMinor(uk.priceMinor)}. ${uk.note}`,
+            answer: `Yes, ${ukDeliveryPrice(formatMinor)}. ${uk.note}`,
           },
         ]
       : []),
@@ -106,7 +106,7 @@ export default function DeliveryPage() {
           {uk ? (
             <RateCard
               title="United Kingdom"
-              price={formatMinor(uk.priceMinor)}
+              price={ukDeliveryPrice(formatMinor) ?? ''}
               body={`We deliver to the UK as well. ${uk.note}`}
             />
           ) : (

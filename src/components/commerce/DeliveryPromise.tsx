@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { DELIVERY, handDeliveryZone } from '@/lib/site-config'
+import { DELIVERY, handDeliveryZone, ukDeliveryPrice } from '@/lib/site-config'
 import { formatMinor } from '@/lib/commerce/money'
 
 /**
@@ -60,8 +60,8 @@ export function DeliveryPromise({
             ✓
           </span>
           <span>
-            {DELIVERY.uk
-              ? `UK delivery ${formatMinor(DELIVERY.uk.priceMinor)}. `
+            {ukDeliveryPrice(formatMinor)
+              ? `UK delivery ${ukDeliveryPrice(formatMinor)}. `
               : 'Republic of Ireland only. '}
             <Link href="/delivery" className="underline underline-offset-2">
               Delivery details

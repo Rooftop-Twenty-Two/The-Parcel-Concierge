@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react'
 import { CartCount } from '@/components/layout/CartCount'
 import { formatMinor } from '@/lib/commerce/money'
 import { NAV } from '@/lib/routes'
-import { DELIVERY, handDeliveryZone } from '@/lib/site-config'
+import { DELIVERY, handDeliveryZone, ukDeliveryPrice } from '@/lib/site-config'
 
 /**
  * Site header.
@@ -122,13 +122,23 @@ export function Header() {
  */
 function DeliveryBar() {
   const zone = handDeliveryZone()
-  const parts = [
-    zone ? `Free local delivery in ${zone}` : 'Free hand delivery in our local area',
+  // The free-over threshold is a clause of the national rate, not a
+  // sentence of its own: joined with the others it read "with An Post.
+  // free over €100.", lowercase after a full stop.
+  const national = [
     `${formatMinor(DELIVERY.national.priceMinor)} elsewhere in Ireland with ${DELIVERY.carrier}`,
     DELIVERY.freeDeliveryThresholdMinor === null
       ? null
       : `free over ${formatMinor(DELIVERY.freeDeliveryThresholdMinor)}`,
-    DELIVERY.uk ? `UK ${formatMinor(DELIVERY.uk.priceMinor)}` : null,
+  ]
+    .filter((clause): clause is string => clause !== null)
+    .join(', ')
+
+  const ukPrice = ukDeliveryPrice(formatMinor)
+  const parts = [
+    zone ? `Free local delivery in ${zone}` : 'Free hand delivery in our local area',
+    national,
+    ukPrice ? `UK ${ukPrice}` : null,
   ].filter((part): part is string => part !== null)
 
   return (

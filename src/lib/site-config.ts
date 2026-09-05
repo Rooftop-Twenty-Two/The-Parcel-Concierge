@@ -133,9 +133,19 @@ export const DELIVERY = {
   shipsOutsideIreland: true,
   uk: {
     priceMinor: 4000,
+    /**
+     * €40 is a starting price, not a flat rate. Corrected by the client,
+     * September 2026: the bar at the top of every page was reading
+     * "UK €40", which quotes a fixed price we cannot hold to.
+     *
+     * Everywhere the UK rate appears goes through ukDeliveryPrice() below,
+     * so this reads "from €40" in all of them or in none of them. Set it
+     * to false if a flat UK rate is ever agreed.
+     */
+    priceIsFrom: true,
     /** Customs is the client's own caveat, and it belongs next to the price. */
     note: 'Delivery times may vary and additional customs requirements may apply.',
-  } as { priceMinor: number; note: string } | null,
+  } as { priceMinor: number; priceIsFrom: boolean; note: string } | null,
   /**
    * The most bottles we will send in one order.
    *
@@ -177,6 +187,19 @@ export function handDeliveryZone(): string | null {
     return `the ${eircodeRoutingKeys.join(' and ')} eircode area`
   }
   return null
+}
+
+/**
+ * The UK delivery price as it should be written, "from" included.
+ *
+ * Takes the formatter as an argument so this module keeps no import of the
+ * commerce layer. Returns null when UK delivery is switched off, which is
+ * the signal every caller already handles.
+ */
+export function ukDeliveryPrice(format: (amountMinor: number) => string): string | null {
+  if (!DELIVERY.uk) return null
+  const price = format(DELIVERY.uk.priceMinor)
+  return DELIVERY.uk.priceIsFrom ? `from ${price}` : price
 }
 
 export const TRUSTPILOT = {

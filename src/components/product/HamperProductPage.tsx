@@ -16,6 +16,7 @@ import { Accordion } from '@/components/ui/Accordion'
 import { TAG_LABELS } from '@/lib/commerce/taxonomy'
 import type { Product, ProductCard } from '@/lib/commerce/types'
 import { breadcrumbJsonLd, productJsonLd } from '@/lib/seo/structured-data'
+import { demoteHeadings } from '@/lib/seo/demote-headings'
 
 /**
  * Hamper product page.
@@ -105,7 +106,7 @@ export function HamperProductPage({
 
             <div
               className="prose-tpc mt-6 text-ink-muted"
-              dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
+              dangerouslySetInnerHTML={{ __html: demoteHeadings(product.descriptionHtml) }}
             />
 
             <VariantSelector />

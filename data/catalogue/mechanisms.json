@@ -3,9 +3,9 @@
   "currencyCode": "EUR",
   "products": [
     {
-      "handle": "build-your-own-hamper",
+      "handle": "build-a-hamper",
       "title": "Build your own hamper",
-      "descriptionHtml": "<p>The box, the tissue, the ribbon and the hand written card. Whatever you choose to go in it is added separately, so you can see exactly what you are paying for.</p>",
+      "descriptionHtml": "<p>The hamper box or wicker basket, the ribbon and the hand written card. Whatever you choose to go in it is added separately, so you can see exactly what you are paying for.</p>",
       "productType": "Custom hamper",
       "vendor": "The Parcel Concierge",
       "tags": [
@@ -15,13 +15,13 @@
       "images": [
         {
           "src": "/placeholder/hamper-3.png",
-          "alt": "An empty kraft gift box, tissue lined and tied with ribbon",
+          "alt": "An empty kraft hamper box tied with ribbon",
           "width": 1200,
           "height": 1500
         },
         {
           "src": "/placeholder/hamper-1.png",
-          "alt": "A finished custom hamper with the lid open, showing the tissue lining",
+          "alt": "A finished custom hamper with the lid open",
           "width": 1200,
           "height": 1500
         },
@@ -86,7 +86,7 @@
         "contents": [],
         "allergens": "Allergens depend on what you put in it. Every item you add lists its own allergens on its product page.",
         "containsAlcohol": false,
-        "packaging": "Tissue lined, hand tied with ribbon, with your message written by hand on a card inside the lid.",
+        "packaging": "Hand tied with ribbon, with your message written by hand on a card inside the lid.",
         "personalisation": [
           {
             "kind": "gift-message",

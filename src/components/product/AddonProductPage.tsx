@@ -13,6 +13,7 @@ import { JsonLd } from '@/components/seo/JsonLd'
 import { TrustpilotStars } from '@/components/trust/TrustpilotStars'
 import type { Product, ProductCard } from '@/lib/commerce/types'
 import { breadcrumbJsonLd, productJsonLd } from '@/lib/seo/structured-data'
+import { demoteHeadings } from '@/lib/seo/demote-headings'
 
 /**
  * Add-on product page.
@@ -75,7 +76,7 @@ export function AddonProductPage({
 
               <div
                 className="prose-tpc mt-6 text-ink-muted"
-                dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
+                dangerouslySetInnerHTML={{ __html: demoteHeadings(product.descriptionHtml) }}
               />
 
               <VariantSelector />

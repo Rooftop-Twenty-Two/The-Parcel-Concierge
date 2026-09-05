@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ProductGrid } from '@/components/product/ProductCard'
@@ -15,6 +16,17 @@ import type { ProductCard } from '@/lib/commerce/types'
 import { getTrustSummary } from '@/lib/trustpilot'
 
 export const revalidate = 1800
+
+/**
+ * The homepage is reachable as `/`, as `/?utm_source=...` from every
+ * campaign, and as the target of a pile of legacy redirects. Without a
+ * self-canonical it was the only page on the site not telling Google which
+ * of those is the real one. Title and description are inherited from the
+ * root layout, which is where the site-wide defaults belong.
+ */
+export const metadata: Metadata = {
+  alternates: { canonical: '/' },
+}
 
 /**
  * Home.

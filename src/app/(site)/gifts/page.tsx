@@ -8,7 +8,11 @@ export async function generateMetadata(): Promise<Metadata> {
   const copy = await getListingCopy('/gifts')
   return {
     title: copy?.metaTitle ?? 'Add to a hamper',
-    description: copy?.metaDescription,
+    // The CMS has no copy for this hub, and without a fallback the page went
+    // out with no meta description at all.
+    description:
+      copy?.metaDescription ??
+      'Cards, candles, chocolates and the small things that finish a hamper. Add any of them to a gift, or send one on its own.',
     alternates: { canonical: '/gifts' },
   }
 }

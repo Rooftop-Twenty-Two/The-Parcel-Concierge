@@ -6,7 +6,8 @@ import { queryProducts } from '@/lib/commerce'
 import { similarProducts } from '@/lib/commerce/similar'
 import { resolveHubSlug } from '@/lib/resolve-route'
 import { hubStaticParams } from '@/lib/static-params'
-import { stripHtml } from '@/lib/seo/structured-data'
+import { productMetaDescription } from '@/lib/seo/meta-description'
+import { PRODUCT_DELIVERY_LINE } from '@/lib/seo/product-delivery-line'
 import { getTrustSummary } from '@/lib/trustpilot'
 
 export const revalidate = 3600
@@ -32,7 +33,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
     const { product } = resolved
     return {
       title: product.title,
-      description: stripHtml(product.descriptionHtml).slice(0, 155),
+      description: productMetaDescription(product, PRODUCT_DELIVERY_LINE),
       alternates: { canonical: `/wine/${product.handle}` },
       openGraph: {
         title: product.title,

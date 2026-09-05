@@ -1,7 +1,12 @@
 import type { Metadata } from 'next'
 import { fontVariables } from '@/lib/brand/fonts'
 import { isFixtureMode } from '@/lib/commerce'
-import { SITE, SITE_COMING_SOON, SITE_NOINDEX } from '@/lib/site-config'
+import {
+  GOOGLE_SITE_VERIFICATION,
+  SITE,
+  SITE_COMING_SOON,
+  SITE_NOINDEX,
+} from '@/lib/site-config'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -24,6 +29,9 @@ export const metadata: Metadata = {
     isFixtureMode() || SITE_NOINDEX || SITE_COMING_SOON
       ? { index: false, follow: false }
       : undefined,
+  // Proves ownership to Search Console. Unset means no tag at all, which is
+  // the right default: an empty verification tag is worse than none.
+  verification: GOOGLE_SITE_VERIFICATION ? { google: GOOGLE_SITE_VERIFICATION } : undefined,
 }
 
 /**

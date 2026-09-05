@@ -15,6 +15,7 @@ import { TrustpilotStars } from '@/components/trust/TrustpilotStars'
 import { PostmarkRoundel } from '@/components/ui/Stamp'
 import type { Product, ProductCard } from '@/lib/commerce/types'
 import { breadcrumbJsonLd, productJsonLd } from '@/lib/seo/structured-data'
+import { demoteHeadings } from '@/lib/seo/demote-headings'
 
 /**
  * Wine product page.
@@ -115,7 +116,7 @@ export function WineProductPage({
 
             <div
               className="prose-tpc mt-6 text-ink-muted"
-              dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
+              dangerouslySetInnerHTML={{ __html: demoteHeadings(product.descriptionHtml) }}
             />
 
             {/*

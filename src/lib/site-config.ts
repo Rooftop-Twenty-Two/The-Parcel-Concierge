@@ -77,6 +77,23 @@ export const SITE_NOINDEX = process.env.SITE_NOINDEX === 'true'
  */
 export const SITE_COMING_SOON = process.env.SITE_COMING_SOON === 'true'
 
+/**
+ * Google Search Console site verification.
+ *
+ * The token from the "HTML tag" verification method in Search Console —
+ * the `content` value only, not the whole meta tag. Set it as an
+ * environment variable rather than committing it, so the same code can
+ * verify a staging property and a production property with different
+ * tokens, and so rotating it is a dashboard change rather than a deploy.
+ *
+ * It renders even while the site is noindex or behind the holding page.
+ * That is deliberate: verification has to happen before launch, because
+ * you cannot submit a sitemap for a property you do not own yet, and the
+ * tag proves ownership without inviting a crawl. robots.txt and the
+ * per-page noindex are what hold indexing back, not this.
+ */
+export const GOOGLE_SITE_VERIFICATION = process.env.GOOGLE_SITE_VERIFICATION || null
+
 export const DELIVERY = {
   /**
    * €8.95 confirmed by the client, August 2026. The June 2026 review

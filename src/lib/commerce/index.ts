@@ -2,6 +2,7 @@ import 'server-only'
 
 import { collectionTag, productTag, REVALIDATE, TAG_ALL_PRODUCTS } from '../shopify/cache-tags'
 import { HIDDEN_FROM_LISTINGS } from './collections'
+import { MAX_FIRST } from './pagination'
 import { storefront } from '../shopify/client'
 import { hasStorefrontCredentials } from '../shopify/env'
 import { normaliseProduct, normaliseProductCard } from '../shopify/normalise'
@@ -109,6 +110,14 @@ async function productsByCollection(
   // begin with, so they keep the efficient Storefront filter.
   const preserveManualOrder = (query.sort ?? 'featured') === 'featured' && !hasPriceBand
   const dropOutOfStock = preserveManualOrder && !query.includeOutOfStock
+  // Offset pagination (see pagination.ts) asks for `pageSize * step` products
+  // from the start of the collection. When we drop out-of-stock in code, that
+  // window comes up short — a sold-out product among the first 24 leaves 23, so
+  // a mostly-off-season collection can render a near-empty grid even though it
+  // has plenty of live stock. So for the manual-order case we fetch the whole
+  // collection (the Storefront caps a single call at MAX_FIRST) and slice the
+  // requested window out of the in-stock result below.
+  const requested = query.first ?? 24
   const data = await storefront<{
     collection: {
       products: {
@@ -120,8 +129,8 @@ async function productsByCollection(
     query: PRODUCTS_BY_COLLECTION,
     variables: {
       handle: query.collection,
-      first: query.first ?? 24,
-      after: query.after ?? null,
+      first: preserveManualOrder ? MAX_FIRST : requested,
+      after: preserveManualOrder ? null : (query.after ?? null),
       sortKey: sort.sortKey,
       reverse: sort.reverse,
       filters: preserveManualOrder ? null : buildCollectionFilters(query),
@@ -139,7 +148,7 @@ async function productsByCollection(
   // collection.products has no query arg, so the builder box products are
   // filtered out here rather than in the query.
   const hidden = new Set(HIDDEN_FROM_LISTINGS)
-  const items = products.nodes
+  const filtered = products.nodes
     .filter((node) => !hidden.has(node.handle))
     // Out-of-stock is filtered in code only when we dropped the Storefront
     // availability filter to preserve manual order (above). Otherwise Shopify
@@ -173,7 +182,18 @@ async function productsByCollection(
       return card
     })
 
-  return { items, pageInfo: products.pageInfo, totalKnown: items.length }
+  if (preserveManualOrder) {
+    // We over-fetched the whole collection, so `filtered` is every in-stock
+    // product in manual order. Hand back the requested window and report the
+    // true in-stock total, so the grid fills and "Show more" is accurate.
+    return {
+      items: filtered.slice(0, requested),
+      pageInfo: { hasNextPage: filtered.length > requested, endCursor: null },
+      totalKnown: filtered.length,
+    }
+  }
+
+  return { items: filtered, pageInfo: products.pageInfo, totalKnown: filtered.length }
 }
 
 /**

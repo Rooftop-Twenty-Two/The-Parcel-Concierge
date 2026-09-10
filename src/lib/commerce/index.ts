@@ -99,6 +99,16 @@ async function productsByCollection(
   const hasPriceBand = query.minPriceMinor !== undefined || query.maxPriceMinor !== undefined
   const lo = query.minPriceMinor
   const hi = query.maxPriceMinor
+  // Manually-arranged collections (sort 'featured' -> COLLECTION_DEFAULT) must
+  // read in the merchant's drag order. Passing ANY Storefront `filters`
+  // argument routes the connection through Shopify's filter engine, which does
+  // not honour a collection's manual order, so an all-in-stock collection
+  // comes back reshuffled — the Easter listing regression, September 2026.
+  // For that case we send no filters and drop out-of-stock products in code
+  // instead. Price-banded or price-sorted listings are not in manual order to
+  // begin with, so they keep the efficient Storefront filter.
+  const preserveManualOrder = (query.sort ?? 'featured') === 'featured' && !hasPriceBand
+  const dropOutOfStock = preserveManualOrder && !query.includeOutOfStock
   const data = await storefront<{
     collection: {
       products: {
@@ -114,7 +124,7 @@ async function productsByCollection(
       after: query.after ?? null,
       sortKey: sort.sortKey,
       reverse: sort.reverse,
-      filters: buildCollectionFilters(query),
+      filters: preserveManualOrder ? null : buildCollectionFilters(query),
     },
     tags,
     revalidate: REVALIDATE.listing,
@@ -131,6 +141,10 @@ async function productsByCollection(
   const hidden = new Set(HIDDEN_FROM_LISTINGS)
   const items = products.nodes
     .filter((node) => !hidden.has(node.handle))
+    // Out-of-stock is filtered in code only when we dropped the Storefront
+    // availability filter to preserve manual order (above). Otherwise Shopify
+    // has already excluded them.
+    .filter((node) => !dropOutOfStock || node.availableForSale !== false)
     .map((node) => {
       const card = normaliseProductCard(node)
       if (!hasPriceBand) return card

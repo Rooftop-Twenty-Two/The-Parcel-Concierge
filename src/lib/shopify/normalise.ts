@@ -30,7 +30,7 @@ function warn(context: string, error: unknown): void {
   console.warn(`[shopify] could not parse ${context}:`, error)
 }
 
-function parseJson<T>(field: MetafieldValue, fallback: T, context: string): T {
+function parseJson<T>(field: MetafieldValue | undefined, fallback: T, context: string): T {
   if (!field?.value) return fallback
   try {
     return JSON.parse(field.value) as T
@@ -40,22 +40,22 @@ function parseJson<T>(field: MetafieldValue, fallback: T, context: string): T {
   }
 }
 
-function text(field: MetafieldValue): string | null {
+function text(field: MetafieldValue | undefined): string | null {
   const value = field?.value?.trim()
   return value ? value : null
 }
 
-function bool(field: MetafieldValue): boolean {
+function bool(field: MetafieldValue | undefined): boolean {
   return field?.value === 'true'
 }
 
-function num(field: MetafieldValue): number | null {
+function num(field: MetafieldValue | undefined): number | null {
   if (!field?.value) return null
   const parsed = Number(field.value)
   return Number.isFinite(parsed) ? parsed : null
 }
 
-function list(field: MetafieldValue, context: string): string[] {
+function list(field: MetafieldValue | undefined, context: string): string[] {
   const parsed = parseJson<unknown>(field, [], context)
   return Array.isArray(parsed) ? parsed.filter((v): v is string => typeof v === 'string') : []
 }
@@ -188,6 +188,37 @@ type RawCardProduct = {
       price?: { amount: string; currencyCode: string }
     }[]
   }
+  // Present only when the collection query is asked for facets ($withFacets).
+  wineGrape?: MetafieldValue
+  wineRegion?: MetafieldValue
+  wineCountry?: MetafieldValue
+  wineStyleBody?: MetafieldValue
+  wineStyleSweetness?: MetafieldValue
+}
+
+/**
+ * The wine.* facet values a card carries, or undefined when the query did not
+ * ask for them. Style folds body and sweetness into one facet, matching the
+ * fixture's facetValues so live and fixture filtering agree.
+ */
+function cardWineFacets(raw: RawCardProduct): ProductCard['wineFacets'] {
+  if (
+    raw.wineGrape === undefined &&
+    raw.wineRegion === undefined &&
+    raw.wineCountry === undefined &&
+    raw.wineStyleBody === undefined &&
+    raw.wineStyleSweetness === undefined
+  ) {
+    return undefined
+  }
+  return {
+    grape: list(raw.wineGrape ?? null, `wine.grape on ${raw.handle}`),
+    region: text(raw.wineRegion ?? null),
+    country: text(raw.wineCountry ?? null),
+    style: [text(raw.wineStyleBody ?? null), text(raw.wineStyleSweetness ?? null)].filter(
+      (v): v is string => typeof v === 'string',
+    ),
+  }
 }
 
 export function normaliseProductCard(raw: RawCardProduct): ProductCard {
@@ -212,6 +243,7 @@ export function normaliseProductCard(raw: RawCardProduct): ProductCard {
       min: money(raw.priceRange.minVariantPrice.amount, raw.priceRange.minVariantPrice.currencyCode),
       max: money(raw.priceRange.maxVariantPrice.amount, raw.priceRange.maxVariantPrice.currencyCode),
     },
+    wineFacets: cardWineFacets(raw),
   }
 }
 

@@ -153,3 +153,92 @@ export const TAG_LABELS: Record<string, string> = {
   'badge:hand-delivered': 'Hand delivered',
   ...Object.fromEntries(PRICE_BANDS.map((band) => [band.tag, band.label])),
 }
+
+/**
+ * Grape varieties, used to read a clean "Grape" filter out of the store's
+ * product tags and collections. The live catalogue does not fill the
+ * wine.grape metafield; instead a bottle carries tags and collections like
+ * "Syrah Wine", "Grenache Wine" and "Red Wines". Matching against this list
+ * keeps only the actual varieties (so "Red Wines" and utility collections drop
+ * out) and normalises the merchant's casing and typos to one tidy label.
+ *
+ * A variety the store sells that is missing here simply will not appear as a
+ * filter value; add it and it shows up. Order is display order in the rail.
+ */
+export const GRAPE_VARIETIES = [
+  // Reds
+  'Cabernet Sauvignon',
+  'Cabernet Franc',
+  'Merlot',
+  'Pinot Noir',
+  'Syrah',
+  'Shiraz',
+  'Grenache',
+  'Malbec',
+  'Tempranillo',
+  'Sangiovese',
+  'Nebbiolo',
+  'Barbera',
+  'Montepulciano',
+  'Zinfandel',
+  'Primitivo',
+  'Mourvèdre',
+  'Carmenère',
+  'Petit Verdot',
+  'Nero d’Avola',
+  'Touriga Nacional',
+  'Gamay',
+  'Pinotage',
+  'Carignan',
+  'Cinsault',
+  'Corvina',
+  'Aglianico',
+  // Whites
+  'Chardonnay',
+  'Sauvignon Blanc',
+  'Riesling',
+  'Pinot Grigio',
+  'Pinot Gris',
+  'Gewürztraminer',
+  'Viognier',
+  'Chenin Blanc',
+  'Sémillon',
+  'Albariño',
+  'Verdejo',
+  'Grüner Veltliner',
+  'Vermentino',
+  'Garganega',
+  'Trebbiano',
+  'Moscato',
+  'Muscat',
+  'Marsanne',
+  'Roussanne',
+  'Fiano',
+  'Torrontés',
+  'Macabeo',
+  'Assyrtiko',
+  'Glera',
+  // Rosé / other
+  'Grenache Rosé',
+] as const
+
+function normaliseGrapeKey(value: string): string {
+  return value
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '') // fold accents: "albariño" -> "albarino"
+    .replace(/\s+wines?$/, '') // drop a trailing "wine"/"wines": "syrah wine" -> "syrah"
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+const GRAPE_BY_KEY = new Map(GRAPE_VARIETIES.map((name) => [normaliseGrapeKey(name), name]))
+
+/**
+ * The canonical grape for a tag or collection label, or null when it is not a
+ * grape. Case-, accent- and "… Wine"-insensitive, so "Syrah WIne", "syrah" and
+ * "Syrah Wine" all resolve to "Syrah", while "Red Wines" resolves to null.
+ */
+export function grapeFromLabel(value: string): string | null {
+  return GRAPE_BY_KEY.get(normaliseGrapeKey(value)) ?? null
+}

@@ -15,7 +15,7 @@ import {
 } from '../shopify/queries'
 import { fixtureAllHandles, fixtureFacetOptions, fixtureProduct, fixtureQuery } from './fixtures'
 import { money } from './money'
-import { priceBandForMinor } from './taxonomy'
+import { grapeFromLabel, priceBandForMinor } from './taxonomy'
 import type { Money, Product, ProductCard, ProductQuery, ProductQueryResult } from './types'
 
 /**
@@ -31,8 +31,17 @@ const METAFIELD_FACETS = new Set(['grape', 'region', 'country', 'style'])
  */
 function cardFacetValues(card: ProductCard, facet: string): string[] {
   switch (facet) {
-    case 'grape':
-      return card.wineFacets?.grape ?? []
+    case 'grape': {
+      // Prefer the wine.grape metafield, but the live catalogue keeps grape in
+      // the product tags ("Syrah Wine", "Grenache Wine") instead, so read those
+      // too — matched against the known varieties so "Red Wines" and the like
+      // drop out. Union and de-duplicate the two sources.
+      const fromMeta = card.wineFacets?.grape ?? []
+      const fromTags = card.tags
+        .map((tag) => grapeFromLabel(tag))
+        .filter((g): g is string => g !== null)
+      return [...new Set([...fromMeta, ...fromTags])]
+    }
     case 'region':
       return card.wineFacets?.region ? [card.wineFacets.region] : []
     case 'country':

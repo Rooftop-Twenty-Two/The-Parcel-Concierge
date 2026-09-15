@@ -171,44 +171,85 @@ export const GRAPE_VARIETIES = [
   'Cabernet Franc',
   'Merlot',
   'Pinot Noir',
+  'Pinot Meunier',
   'Syrah',
   'Shiraz',
   'Grenache',
+  'Garnacha',
   'Malbec',
   'Tempranillo',
   'Sangiovese',
   'Nebbiolo',
   'Barbera',
+  'Dolcetto',
   'Montepulciano',
   'Zinfandel',
   'Primitivo',
   'Mourvèdre',
+  'Monastrell',
   'Carmenère',
   'Petit Verdot',
   'Nero d’Avola',
+  'Negroamaro',
   'Touriga Nacional',
+  'Touriga Franca',
   'Gamay',
   'Pinotage',
   'Carignan',
+  'Cariñena',
   'Cinsault',
   'Corvina',
   'Aglianico',
+  'Bonarda',
+  'Bobal',
+  'Mencía',
+  'Graciano',
+  'Sagrantino',
+  'Lagrein',
+  'Teroldego',
+  'Refosco',
+  'Nerello Mascalese',
+  'Frappato',
+  'Blaufränkisch',
+  'Zweigelt',
+  'Tannat',
+  'Petite Sirah',
+  'Saperavi',
+  'Marselan',
+  'Xinomavro',
+  'Agiorgitiko',
+  'Plavac Mali',
+  'Schiava',
+  'Lambrusco',
+  'Gaglioppo',
+  'Susumaniello',
+  'Nero di Troia',
   // Whites
   'Chardonnay',
   'Sauvignon Blanc',
   'Riesling',
   'Pinot Grigio',
   'Pinot Gris',
+  'Pinot Blanc',
   'Gewürztraminer',
   'Viognier',
   'Chenin Blanc',
   'Sémillon',
   'Albariño',
   'Verdejo',
+  'Godello',
   'Grüner Veltliner',
   'Vermentino',
   'Garganega',
+  'Cortese',
+  'Verdicchio',
+  'Falanghina',
+  'Greco',
+  'Pecorino',
+  'Grillo',
+  'Catarratto',
   'Trebbiano',
+  'Vernaccia',
   'Moscato',
   'Muscat',
   'Marsanne',
@@ -216,13 +257,23 @@ export const GRAPE_VARIETIES = [
   'Fiano',
   'Torrontés',
   'Macabeo',
+  'Xarel·lo',
+  'Parellada',
   'Assyrtiko',
+  'Furmint',
+  'Colombard',
+  'Melon de Bourgogne',
+  'Silvaner',
+  'Müller-Thurgau',
+  'Malvasia',
+  'Palomino',
+  'Pedro Ximénez',
   'Glera',
   // Rosé / other
   'Grenache Rosé',
 ] as const
 
-function normaliseGrapeKey(value: string): string {
+function normaliseWineLabel(value: string): string {
   return value
     .toLowerCase()
     .normalize('NFD')
@@ -232,7 +283,7 @@ function normaliseGrapeKey(value: string): string {
     .trim()
 }
 
-const GRAPE_BY_KEY = new Map(GRAPE_VARIETIES.map((name) => [normaliseGrapeKey(name), name]))
+const GRAPE_BY_KEY = new Map(GRAPE_VARIETIES.map((name) => [normaliseWineLabel(name), name]))
 
 /**
  * The canonical grape for a tag or collection label, or null when it is not a
@@ -240,5 +291,54 @@ const GRAPE_BY_KEY = new Map(GRAPE_VARIETIES.map((name) => [normaliseGrapeKey(na
  * "Syrah Wine" all resolve to "Syrah", while "Red Wines" resolves to null.
  */
 export function grapeFromLabel(value: string): string | null {
-  return GRAPE_BY_KEY.get(normaliseGrapeKey(value)) ?? null
+  return GRAPE_BY_KEY.get(normaliseWineLabel(value)) ?? null
+}
+
+/**
+ * Countries a wine can come from, and the demonyms the store tags them with.
+ * The live catalogue tags country the way it tags grape — "French Wines",
+ * "Italian Wines" — so each country lists the aliases that resolve to it. The
+ * country name resolves to itself too, so a store that later fills a proper
+ * country field also works. A country the store sells that is missing here
+ * simply will not appear as a filter value; add it and it shows up.
+ */
+const WINE_COUNTRIES: { name: string; aliases: string[] }[] = [
+  { name: 'France', aliases: ['French'] },
+  { name: 'Italy', aliases: ['Italian'] },
+  { name: 'Spain', aliases: ['Spanish'] },
+  { name: 'Portugal', aliases: ['Portuguese'] },
+  { name: 'Germany', aliases: ['German'] },
+  { name: 'Austria', aliases: ['Austrian'] },
+  { name: 'Australia', aliases: ['Australian'] },
+  { name: 'New Zealand', aliases: ['New Zealander'] },
+  { name: 'Argentina', aliases: ['Argentine', 'Argentinian'] },
+  { name: 'Chile', aliases: ['Chilean'] },
+  { name: 'United States', aliases: ['American', 'USA', 'US', 'Californian'] },
+  { name: 'South Africa', aliases: ['South African'] },
+  { name: 'Greece', aliases: ['Greek'] },
+  { name: 'Hungary', aliases: ['Hungarian'] },
+  { name: 'Georgia', aliases: ['Georgian'] },
+  { name: 'Lebanon', aliases: ['Lebanese'] },
+  { name: 'Romania', aliases: ['Romanian'] },
+  { name: 'Croatia', aliases: ['Croatian'] },
+  { name: 'Slovenia', aliases: ['Slovenian'] },
+  { name: 'Switzerland', aliases: ['Swiss'] },
+  { name: 'England', aliases: ['English'] },
+  { name: 'Ireland', aliases: ['Irish'] },
+]
+
+const COUNTRY_BY_KEY = new Map(
+  WINE_COUNTRIES.flatMap(({ name, aliases }) =>
+    [name, ...aliases].map((label) => [normaliseWineLabel(label), name] as const),
+  ),
+)
+
+/**
+ * The canonical country for a tag or collection label, or null when it is not
+ * a country. Handles the store's demonym tags ("French Wines" -> "France") as
+ * well as a plain country name ("Italy" -> "Italy"); "Red Wines" resolves to
+ * null.
+ */
+export function countryFromLabel(value: string): string | null {
+  return COUNTRY_BY_KEY.get(normaliseWineLabel(value)) ?? null
 }

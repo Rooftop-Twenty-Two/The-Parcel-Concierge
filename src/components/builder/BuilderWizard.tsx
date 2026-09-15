@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/Button'
 import { trackHamperBuilderStep } from '@/lib/analytics/events'
 import { formatMinor } from '@/lib/commerce/money'
 import type { Product } from '@/lib/commerce/types'
-import { BOX_OPTIONS, RIBBON_COLOURS, boxById } from '@/lib/hamper-builder'
+import { BOX_OPTIONS, boxById } from '@/lib/hamper-builder'
 import { AGE_GATE } from '@/lib/site-config'
 
 /**
@@ -49,7 +49,6 @@ type PersistedState = {
   boxId: string
   chosen: Record<string, Chosen>
   giftMessage: string
-  ribbonColour: string
   /** Optional so a state persisted before the bow existed still restores. */
   bowAdded?: boolean
 }
@@ -84,7 +83,6 @@ export function BuilderWizard({
   const [boxId, setBoxId] = useState(BOX_OPTIONS[1]?.id ?? BOX_OPTIONS[0]!.id)
   const [chosen, setChosen] = useState<Record<string, Chosen>>({})
   const [giftMessage, setGiftMessage] = useState('')
-  const [ribbonColour, setRibbonColour] = useState('')
   const [bowAdded, setBowAdded] = useState(false)
   const [status, setStatus] = useState<{ kind: 'ok' | 'error'; message: string } | null>(null)
   const [showAgeGate, setShowAgeGate] = useState(false)
@@ -108,7 +106,6 @@ export function BuilderWizard({
       setBoxId(persisted.boxId)
       setChosen(persisted.chosen)
       setGiftMessage(persisted.giftMessage)
-      setRibbonColour(persisted.ribbonColour)
       setBowAdded(Boolean(persisted.bowAdded))
     }
     setHydrated(true)
@@ -119,12 +116,12 @@ export function BuilderWizard({
     try {
       window.sessionStorage.setItem(
         STORAGE_KEY,
-        JSON.stringify({ step, boxId, chosen, giftMessage, ribbonColour, bowAdded }),
+        JSON.stringify({ step, boxId, chosen, giftMessage, bowAdded }),
       )
     } catch {
       // A full store loses persistence, not the builder.
     }
-  }, [hydrated, step, boxId, chosen, giftMessage, ribbonColour, bowAdded])
+  }, [hydrated, step, boxId, chosen, giftMessage, bowAdded])
 
   const box = boxById(boxId) ?? BOX_OPTIONS[0]!
   const boxVariant = parent.variants.find((v) => v.title === box.variantTitle) ?? parent.variants[0]
@@ -193,7 +190,6 @@ export function BuilderWizard({
         boxId: box.id,
         components: chosenList.map((c) => ({ variantId: c.item.variantId!, quantity: c.quantity })),
         giftMessage,
-        ribbonColour,
         bowVariantId: bowAdded && bow ? bow.variantId : null,
         bottlesAdded: chosenList.reduce((sum, c) => sum + (c.item.alcohol ? c.quantity : 0), 0),
       })
@@ -278,29 +274,8 @@ export function BuilderWizard({
         ) : null}
 
         {step === 'extras' ? (
-          <StepShell title="Finishing touches" lede="The card is free and hand written. If you would rather send a printed card, they are on the Cards shelf.">
+          <StepShell title="Finishing touches" lede="We write your personal message on our Parcel Concierge postcards, however if you would like a more personal greeting card please choose from the greeting card section and we can write it for you.">
             <div className="max-w-2xl space-y-8">
-              <fieldset>
-                <legend className="font-serif text-xl text-navy">Personal Concierge ribbon</legend>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {RIBBON_COLOURS.map((colour) => (
-                    <button
-                      key={colour}
-                      type="button"
-                      onClick={() => setRibbonColour(ribbonColour === colour ? '' : colour)}
-                      aria-pressed={ribbonColour === colour}
-                      className={`border px-4 py-2 text-sm transition-colors ${
-                        ribbonColour === colour
-                          ? 'border-navy bg-navy text-cream'
-                          : 'border-navy/25 text-navy hover:border-navy'
-                      }`}
-                    >
-                      {colour}
-                    </button>
-                  ))}
-                </div>
-              </fieldset>
-
               {bow ? (
                 <div>
                   <h3 className="font-serif text-xl text-navy">Bow</h3>
@@ -317,7 +292,7 @@ export function BuilderWizard({
                     Hand tied bow, {formatMinor(bow.priceMinor)}
                   </button>
                   <p className="mt-2 text-sm text-ink-muted">
-                    Tied on top of the ribbon when it is packed.
+                    Hand tied on top when your hamper is packed.
                   </p>
                 </div>
               ) : null}
@@ -352,9 +327,8 @@ export function BuilderWizard({
                   onEdit={() => goTo('box')}
                 />
                 <ReviewRow
-                  label="Ribbon and card"
+                  label="Finishing touches"
                   value={[
-                    ribbonColour || 'No ribbon',
                     bowAdded && bow ? `Hand tied bow, ${formatMinor(bow.priceMinor)}` : null,
                     giftMessage ? 'Gift message written' : 'No gift message',
                   ]

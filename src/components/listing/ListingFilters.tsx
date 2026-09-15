@@ -1,26 +1,18 @@
-'use client'
-
 import Link from 'next/link'
-import { useEffect, useRef } from 'react'
 import type { FacetKey } from '@/lib/commerce/collections'
 import { PRICE_BANDS, TAG_LABELS } from '@/lib/commerce/taxonomy'
 
 /**
- * Listing filters.
+ * Listing filters — a side rail of facets.
  *
- * One quiet row of facet buttons instead of forty open chips. Each button
- * discloses its values in a panel below the bar; what is selected shows as
- * removable pills, so the resting state of the page stays calm however
- * many grapes the cellar carries.
+ * Grape, region, style and price are filters here, not fifty separate routes
+ * like the old site had. The rail shows only the facets the products in this
+ * listing actually offer, and each value carries its live count.
  *
- * Still URL driven and server fed: every value and pill is a link, so a
- * filtered view is a real, shareable URL rather than client state that
- * vanishes on refresh. The panels are native <details>, so the whole thing
- * opens, filters and closes without JavaScript; the script on top only
- * adds manners (one panel at a time, close on outside click or Escape).
- *
- * Grape, region and style are filters here. They are not fifty separate
- * routes, which is what the old site had.
+ * URL driven and server fed: every value and pill is a plain link, so a
+ * filtered view is a real, shareable URL and the whole thing works with no
+ * JavaScript. On desktop the rail sits open beside the grid; on narrow screens
+ * it collapses into a single native <details> so it never buries the products.
  */
 
 export type FacetData = {
@@ -80,6 +72,53 @@ function label(facet: FacetKey, value: string): string {
   return value
 }
 
+/** One facet's heading and its list of value links. */
+function FacetSection({
+  basePath,
+  facets,
+  entry,
+}: {
+  basePath: string
+  facets: FacetData[]
+  entry: FacetData
+}) {
+  return (
+    <div className="border-t border-rule py-4 first:border-t-0 first:pt-0">
+      <h3 className="mb-2 font-serif text-sm uppercase tracking-wide text-navy">
+        {FACET_LABELS[entry.facet]}
+      </h3>
+      <ul className="flex flex-col gap-1">
+        {orderedOptions(entry.facet, entry.options).map((option) => {
+          const selected = entry.selected.includes(option.value)
+          return (
+            <li key={option.value}>
+              <Link
+                href={toggleHref(basePath, facets, entry.facet, option.value)}
+                rel="nofollow"
+                aria-pressed={selected}
+                className="group flex items-center gap-2 py-0.5 text-sm text-navy"
+              >
+                <span
+                  aria-hidden="true"
+                  className={`grid h-4 w-4 shrink-0 place-items-center border text-[10px] leading-none ${
+                    selected
+                      ? 'border-navy bg-navy text-cream'
+                      : 'border-rule bg-cream group-hover:border-navy'
+                  }`}
+                >
+                  {selected ? '✓' : ''}
+                </span>
+                <span className="flex-1 group-hover:underline">{label(entry.facet, option.value)}</span>
+                <span className="text-ink-muted">{option.count}</span>
+              </Link>
+            </li>
+          )
+        })}
+      </ul>
+    </div>
+  )
+}
+
 export function ListingFilters({
   basePath,
   facets,
@@ -89,139 +128,65 @@ export function ListingFilters({
   facets: FacetData[]
   resultCount: number
 }) {
-  const sectionRef = useRef<HTMLElement>(null)
+  const shown = facets.filter((f) => f.options.length > 1)
   const active = facets.flatMap((f) => f.selected.map((value) => ({ facet: f.facet, value })))
 
-  useEffect(() => {
-    function closeAll() {
-      sectionRef.current
-        ?.querySelectorAll<HTMLDetailsElement>('details[data-facet]')
-        .forEach((panel) => {
-          panel.open = false
-        })
-    }
-    function onPointerDown(event: PointerEvent) {
-      if (event.target instanceof Node && sectionRef.current?.contains(event.target)) return
-      closeAll()
-    }
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.key === 'Escape') closeAll()
-    }
-    document.addEventListener('pointerdown', onPointerDown)
-    document.addEventListener('keydown', onKeyDown)
-    return () => {
-      document.removeEventListener('pointerdown', onPointerDown)
-      document.removeEventListener('keydown', onKeyDown)
-    }
-  }, [])
+  const sections = shown.map((entry) => (
+    <FacetSection key={entry.facet} basePath={basePath} facets={facets} entry={entry} />
+  ))
 
-  function closeSiblings(opened: HTMLDetailsElement) {
-    sectionRef.current
-      ?.querySelectorAll<HTMLDetailsElement>('details[data-facet]')
-      .forEach((panel) => {
-        if (panel !== opened) panel.open = false
-      })
-  }
+  const activePills = active.length ? (
+    <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-rule pt-4">
+      {active.map(({ facet, value }) => (
+        <Link
+          key={`${facet}:${value}`}
+          href={toggleHref(basePath, facets, facet, value)}
+          rel="nofollow"
+          className="inline-flex items-center gap-1.5 border border-navy bg-navy px-2.5 py-1 text-xs text-cream transition-colors hover:bg-navy/85"
+        >
+          {label(facet, value)}
+          <span aria-hidden="true">×</span>
+          <span className="sr-only">Remove this filter</span>
+        </Link>
+      ))}
+      <Link href={basePath} className="text-sm text-navy underline underline-offset-4">
+        Clear all
+      </Link>
+    </div>
+  ) : null
 
   return (
-    <section
-      ref={sectionRef}
-      aria-label="Filter these products"
-      className="relative border-y border-rule py-4"
-    >
-      <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
-        <p className="text-sm text-ink-muted" role="status">
-          {resultCount} {resultCount === 1 ? 'product' : 'products'}
-        </p>
+    <aside aria-label="Filter these products" className="lg:sticky lg:top-6 lg:self-start">
+      <p className="text-sm text-ink-muted" role="status">
+        {resultCount} {resultCount === 1 ? 'product' : 'products'}
+      </p>
 
-        <div className="flex flex-wrap gap-2">
-          {facets
-            .filter((f) => f.options.length > 1)
-            .map((entry) => (
-              <details
-                key={entry.facet}
-                data-facet={entry.facet}
-                className="group"
-                onToggle={(event) => {
-                  if (event.currentTarget.open) closeSiblings(event.currentTarget)
-                }}
-              >
-                <summary
-                  className={`flex cursor-pointer select-none items-center gap-2 border px-3 py-1.5 text-sm text-navy transition-colors [&::-webkit-details-marker]:hidden ${
-                    entry.selected.length
-                      ? 'border-navy bg-beige'
-                      : 'border-rule bg-cream hover:border-navy'
-                  }`}
-                  style={{ listStyle: 'none' }}
-                >
-                  {FACET_LABELS[entry.facet]}
-                  {entry.selected.length ? (
-                    <span className="grid h-5 min-w-5 place-items-center rounded-full bg-navy px-1 text-[11px] leading-none text-cream">
-                      {entry.selected.length}
-                    </span>
-                  ) : null}
-                  <svg
-                    viewBox="0 0 10 6"
-                    aria-hidden="true"
-                    className="h-1.5 w-2.5 transition-transform group-open:rotate-180"
-                  >
-                    <path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" />
-                  </svg>
-                </summary>
-
-                <div className="absolute inset-x-0 top-full z-20 border border-rule bg-cream p-4 shadow-[0_16px_32px_rgba(27,42,74,0.12)]">
-                  <ul className="flex flex-wrap gap-2">
-                    {orderedOptions(entry.facet, entry.options).map((option) => {
-                      const selected = entry.selected.includes(option.value)
-                      return (
-                        <li key={option.value}>
-                          <Link
-                            href={toggleHref(basePath, facets, entry.facet, option.value)}
-                            rel="nofollow"
-                            aria-pressed={selected}
-                            className={`inline-flex items-center gap-1.5 border px-3 py-1.5 text-sm transition-colors ${
-                              selected
-                                ? 'border-navy bg-navy text-cream'
-                                : 'border-rule bg-cream text-navy hover:border-navy'
-                            }`}
-                          >
-                            {label(entry.facet, option.value)}
-                            <span className={selected ? 'text-cream/70' : 'text-ink-muted'}>
-                              {option.count}
-                            </span>
-                          </Link>
-                        </li>
-                      )
-                    })}
-                  </ul>
-                </div>
-              </details>
-            ))}
+      {/* Narrow screens: one collapsible panel so it never buries the grid. */}
+      <details className="mt-3 border-y border-rule lg:hidden">
+        <summary className="flex cursor-pointer select-none items-center justify-between py-3 font-serif text-navy [&::-webkit-details-marker]:hidden">
+          Filter
+          {active.length ? (
+            <span className="grid h-5 min-w-5 place-items-center rounded-full bg-navy px-1 text-[11px] leading-none text-cream">
+              {active.length}
+            </span>
+          ) : (
+            <span aria-hidden="true" className="text-ink-muted">
+              +
+            </span>
+          )}
+        </summary>
+        <div className="pb-4">
+          {sections}
+          {activePills}
         </div>
+      </details>
+
+      {/* Desktop: an open rail beside the products. */}
+      <div className="mt-4 hidden lg:block">
+        <h2 className="mb-3 font-display text-lg text-navy">Filter</h2>
+        {sections}
+        {activePills}
       </div>
-
-      {active.length ? (
-        <div className="mt-3 flex flex-wrap items-center gap-2">
-          {active.map(({ facet, value }) => (
-            <Link
-              key={`${facet}:${value}`}
-              href={toggleHref(basePath, facets, facet, value)}
-              rel="nofollow"
-              className="inline-flex items-center gap-1.5 border border-navy bg-navy px-3 py-1 text-sm text-cream transition-colors hover:bg-navy/85"
-            >
-              {label(facet, value)}
-              <span aria-hidden="true">×</span>
-              <span className="sr-only">Remove this filter</span>
-            </Link>
-          ))}
-          <Link
-            href={basePath}
-            className="text-sm text-navy underline underline-offset-4"
-          >
-            Clear all
-          </Link>
-        </div>
-      ) : null}
-    </section>
+    </aside>
   )
 }

@@ -149,6 +149,18 @@ export type ProductCard = Pick<
    * another is lying.
    */
   defaultVariantPriceMinor: number | null
+  /**
+   * wine.* facet values, populated only when a listing that exposes metafield
+   * facets fetches its cards (see PRODUCTS_BY_COLLECTION $withFacets). Undefined
+   * everywhere else, so the common card query stays lean. Drives the filter
+   * sidebar's options and its in-code filtering.
+   */
+  wineFacets?: {
+    grape: string[]
+    region: string | null
+    country: string | null
+    style: string[]
+  }
 }
 
 export type CartLineAttribute = { key: string; value: string }

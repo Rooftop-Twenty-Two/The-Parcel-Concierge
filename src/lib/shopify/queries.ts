@@ -282,6 +282,7 @@ export const PRODUCTS_BY_COLLECTION = /* GraphQL */ `
     $sortKey: ProductCollectionSortKeys!
     $reverse: Boolean!
     $filters: [ProductFilter!]
+    $withFacets: Boolean!
   ) {
     collection(handle: $handle) {
       products(
@@ -293,6 +294,24 @@ export const PRODUCTS_BY_COLLECTION = /* GraphQL */ `
       ) {
         nodes {
           ...ProductCard
+          # Fetched only for listings that expose metafield facets, so the
+          # filter sidebar has values to offer and filter by. Off by default,
+          # keeping the common card query as lean as the fragment.
+          wineGrape: metafield(namespace: "wine", key: "grape") @include(if: $withFacets) {
+            value
+          }
+          wineRegion: metafield(namespace: "wine", key: "region") @include(if: $withFacets) {
+            value
+          }
+          wineCountry: metafield(namespace: "wine", key: "country") @include(if: $withFacets) {
+            value
+          }
+          wineStyleBody: metafield(namespace: "wine", key: "style_body") @include(if: $withFacets) {
+            value
+          }
+          wineStyleSweetness: metafield(namespace: "wine", key: "style_sweetness") @include(if: $withFacets) {
+            value
+          }
         }
         pageInfo {
           hasNextPage

@@ -114,6 +114,9 @@ export async function ListingPage({
       selected: facets[facet] ?? [],
     })),
   )
+  // A facet with one value or none is not a choice, so the rail only shows when
+  // at least one facet offers a real choice between values.
+  const showFilters = facetData.some((f) => f.options.length > 1)
 
   const crumbs = [
     { name: 'Home', path: '/' },
@@ -150,31 +153,39 @@ export async function ListingPage({
       </header>
 
       <div className="mx-auto max-w-[1400px] px-4 py-10 lg:px-8">
-        {facetData.some((f) => f.options.length > 1) ? (
-          <ListingFilters
-            basePath={collection.path}
-            facets={facetData}
-            resultCount={result.totalKnown}
-          />
-        ) : null}
-
-        {result.items.length ? (
-          <div className="mt-8">
-            <ProductGrid products={result.items} priorityCount={4} />
-            <ShowMore
-              shown={result.items.length}
-              total={result.totalKnown}
-              paged={step > 1}
-              href={
-                hasMore(result.pageInfo, step, pageSize)
-                  ? nextStepHref(collection.path, searchParams, step)
-                  : null
-              }
+        <div
+          className={
+            showFilters ? 'lg:grid lg:grid-cols-[240px_1fr] lg:gap-10 lg:items-start' : undefined
+          }
+        >
+          {showFilters ? (
+            <ListingFilters
+              basePath={collection.path}
+              facets={facetData}
+              resultCount={result.totalKnown}
             />
+          ) : null}
+
+          <div className={showFilters ? 'mt-6 lg:mt-0' : undefined}>
+            {result.items.length ? (
+              <>
+                <ProductGrid products={result.items} priorityCount={4} />
+                <ShowMore
+                  shown={result.items.length}
+                  total={result.totalKnown}
+                  paged={step > 1}
+                  href={
+                    hasMore(result.pageInfo, step, pageSize)
+                      ? nextStepHref(collection.path, searchParams, step)
+                      : null
+                  }
+                />
+              </>
+            ) : (
+              <EmptyFilterState basePath={collection.path} />
+            )}
           </div>
-        ) : (
-          <EmptyFilterState basePath={collection.path} />
-        )}
+        </div>
       </div>
 
       {copy?.seoBlock ? (

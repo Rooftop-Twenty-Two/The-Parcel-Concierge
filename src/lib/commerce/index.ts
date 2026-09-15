@@ -15,7 +15,59 @@ import {
 } from '../shopify/queries'
 import { fixtureAllHandles, fixtureFacetOptions, fixtureProduct, fixtureQuery } from './fixtures'
 import { money } from './money'
-import type { Money, Product, ProductQuery, ProductQueryResult } from './types'
+import { grapeFromLabel, priceBandForMinor } from './taxonomy'
+import type { Money, Product, ProductCard, ProductQuery, ProductQueryResult } from './types'
+
+/**
+ * Facets whose values come from the wine.* metafields, so a listing exposing
+ * one must fetch those metafields on its cards ($withFacets). Price is derived
+ * from the card's own price; occasion/recipient from tags.
+ */
+const METAFIELD_FACETS = new Set(['grape', 'region', 'country', 'style'])
+
+/**
+ * The facet values a card exposes. The live twin of the fixture's facetValues
+ * (fixtures.ts), kept in step so a filtered view reads the same either way.
+ */
+function cardFacetValues(card: ProductCard, facet: string): string[] {
+  switch (facet) {
+    case 'grape': {
+      // Prefer the wine.grape metafield, but the live catalogue keeps grape in
+      // the product tags ("Syrah Wine", "Grenache Wine") instead, so read those
+      // too — matched against the known varieties so "Red Wines" and the like
+      // drop out. Union and de-duplicate the two sources.
+      const fromMeta = card.wineFacets?.grape ?? []
+      const fromTags = card.tags
+        .map((tag) => grapeFromLabel(tag))
+        .filter((g): g is string => g !== null)
+      return [...new Set([...fromMeta, ...fromTags])]
+    }
+    case 'region':
+      return card.wineFacets?.region ? [card.wineFacets.region] : []
+    case 'country':
+      return card.wineFacets?.country ? [card.wineFacets.country] : []
+    case 'style':
+      return card.wineFacets?.style ?? []
+    case 'price':
+      return [priceBandForMinor(card.priceRange.min.amountMinor).tag.slice('price:'.length)]
+    case 'occasion':
+      return card.tags.filter((t) => t.startsWith('occasion:')).map((t) => t.slice('occasion:'.length))
+    case 'recipient':
+      return card.tags.filter((t) => t.startsWith('recipient:')).map((t) => t.slice('recipient:'.length))
+    default:
+      return []
+  }
+}
+
+/** Values within one facet are ORed; different facets are ANDed. */
+function matchesFacets(card: ProductCard, facets: Record<string, string[]>): boolean {
+  for (const [facet, wanted] of Object.entries(facets)) {
+    if (!wanted.length) continue
+    const values = cardFacetValues(card, facet).map((v) => v.toLowerCase())
+    if (!wanted.some((w) => values.includes(w.toLowerCase()))) return false
+  }
+  return true
+}
 
 /**
  * The one interface every component uses to reach product data.
@@ -118,6 +170,15 @@ async function productsByCollection(
   // collection (the Storefront caps a single call at MAX_FIRST) and slice the
   // requested window out of the in-stock result below.
   const requested = query.first ?? 24
+  // Active facet selections from the URL (grape, region, price, …). They are
+  // applied in code rather than as Storefront filters, so a filtered wine
+  // listing keeps the merchant's manual order — the manual-order path already
+  // has the whole collection in hand. Cards carry the wine.* facet values only
+  // when a metafield facet is actually in play, so unfiltered listings and the
+  // common card query stay lean.
+  const activeFacets = Object.entries(query.facets ?? {}).filter(([, values]) => values.length > 0)
+  const facetFiltering = preserveManualOrder && activeFacets.length > 0
+  const withFacets = facetFiltering && activeFacets.some(([key]) => METAFIELD_FACETS.has(key))
   const data = await storefront<{
     collection: {
       products: {
@@ -134,6 +195,7 @@ async function productsByCollection(
       sortKey: sort.sortKey,
       reverse: sort.reverse,
       filters: preserveManualOrder ? null : buildCollectionFilters(query),
+      withFacets,
     },
     tags,
     revalidate: REVALIDATE.listing,
@@ -182,18 +244,25 @@ async function productsByCollection(
       return card
     })
 
+  // Narrow to the selected facets in code (only ever set on the manual-order
+  // path), preserving order. No-op when nothing is selected.
+  const faceted = facetFiltering
+    ? filtered.filter((card) => matchesFacets(card, query.facets ?? {}))
+    : filtered
+
   if (preserveManualOrder) {
-    // We over-fetched the whole collection, so `filtered` is every in-stock
-    // product in manual order. Hand back the requested window and report the
-    // true in-stock total, so the grid fills and "Show more" is accurate.
+    // We over-fetched the whole collection, so `faceted` is every in-stock
+    // product that matches the filters, in manual order. Hand back the
+    // requested window and report the true total, so the grid fills and
+    // "Show more" is accurate.
     return {
-      items: filtered.slice(0, requested),
-      pageInfo: { hasNextPage: filtered.length > requested, endCursor: null },
-      totalKnown: filtered.length,
+      items: faceted.slice(0, requested),
+      pageInfo: { hasNextPage: faceted.length > requested, endCursor: null },
+      totalKnown: faceted.length,
     }
   }
 
-  return { items: filtered, pageInfo: products.pageInfo, totalKnown: filtered.length }
+  return { items: faceted, pageInfo: products.pageInfo, totalKnown: faceted.length }
 }
 
 /**
@@ -353,10 +422,58 @@ export async function facetOptions(
   facet: string,
 ): Promise<{ value: string; count: number }[]> {
   if (isFixtureMode()) return fixtureFacetOptions(query, facet)
-  // Against a live store the facet values come from Storefront product
-  // filters. Until the store exists there is nothing to read them from, so
-  // this returns empty rather than guessing a vocabulary.
-  return []
+  // Facets are a collection-listing feature: the values are read from the
+  // products in the collection, so a non-collection query has nothing to offer.
+  if (!query.collection) return []
+
+  const sort = COLLECTION_SORT_KEYS[query.sort ?? 'featured']
+  const data = await storefront<{
+    collection: {
+      products: { nodes: Parameters<typeof normaliseProductCard>[0][] }
+    } | null
+  }>({
+    query: PRODUCTS_BY_COLLECTION,
+    variables: {
+      handle: query.collection,
+      first: MAX_FIRST,
+      after: null,
+      sortKey: sort.sortKey,
+      reverse: sort.reverse,
+      // No Storefront filters: we tally in code so options match the grid, and
+      // filters would reshuffle the collection. Always fetch the metafields —
+      // building the filter controls is exactly what they are for.
+      filters: null,
+      withFacets: true,
+    },
+    tags: [TAG_ALL_PRODUCTS, collectionTag(query.collection)],
+    revalidate: REVALIDATE.listing,
+  })
+
+  const nodes = data.collection?.products.nodes
+  if (!nodes) return []
+
+  const hidden = new Set(HIDDEN_FROM_LISTINGS)
+  // Count against the listing's own selection with THIS facet removed, so a
+  // shopper always sees what else is available within the facet they are using.
+  const others: Record<string, string[]> = Object.fromEntries(
+    Object.entries(query.facets ?? {}).filter(([key]) => key !== facet),
+  )
+  const includeOutOfStock = query.includeOutOfStock ?? false
+
+  const counts = new Map<string, number>()
+  for (const node of nodes) {
+    if (hidden.has(node.handle)) continue
+    if (!includeOutOfStock && node.availableForSale === false) continue
+    const card = normaliseProductCard(node)
+    if (!matchesFacets(card, others)) continue
+    for (const value of cardFacetValues(card, facet)) {
+      counts.set(value, (counts.get(value) ?? 0) + 1)
+    }
+  }
+
+  return [...counts.entries()]
+    .map(([value, count]) => ({ value, count }))
+    .sort((a, b) => a.value.localeCompare(b.value))
 }
 
 export async function allProductHandles(): Promise<string[]> {

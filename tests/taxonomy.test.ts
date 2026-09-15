@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import {
   findUnknownTags,
+  grapeFromLabel,
   isKnownTag,
   PRICE_BANDS,
   priceBandForMinor,
@@ -13,6 +14,17 @@ test('the taxonomy is locked: free tagging is rejected', () => {
   assert.equal(isKnownTag('occasion:halloween'), false)
   assert.equal(isKnownTag('Occasion:Christmas'), false, 'tags are lowercase')
   assert.equal(isKnownTag('christmas'), false, 'tags are namespaced')
+})
+
+test('a clean grape is read out of the store’s messy tags', () => {
+  // The real catalogue tags a bottle "Syrah WIne", "Grenache Wine", "Red Wines".
+  assert.equal(grapeFromLabel('Syrah WIne'), 'Syrah', 'typo and casing are normalised')
+  assert.equal(grapeFromLabel('Grenache Wine'), 'Grenache')
+  assert.equal(grapeFromLabel('syrah'), 'Syrah', 'the "Wine" suffix is optional')
+  assert.equal(grapeFromLabel('Red Wines'), null, 'a type is not a grape')
+  assert.equal(grapeFromLabel('Smart Products Filter Index - Do not delete'), null)
+  assert.equal(grapeFromLabel('Albarino'), 'Albariño', 'accents fold both ways')
+  assert.equal(grapeFromLabel('  pinot   noir  '), 'Pinot Noir', 'spacing is tidied')
 })
 
 test('every offending tag is reported, not just the first', () => {

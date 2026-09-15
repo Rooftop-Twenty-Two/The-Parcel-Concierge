@@ -82,8 +82,6 @@ export const BOX_OPTIONS: readonly BoxOption[] = [
   },
 ]
 
-export const RIBBON_COLOURS = ['Forest green', 'Gold', 'Cream', 'Wine red'] as const
-
 /**
  * The optional hand tied bow. The charge rides on the gift-bow mechanism
  * product (see BUILDER_BOW_HANDLE), so the price lives on that product and
@@ -107,7 +105,6 @@ export type BuilderSelection = {
   /** Component variant ids and quantities. */
   components: { variantId: string; quantity: number }[]
   giftMessage: string
-  ribbonColour: string
   /** Variant id of the gift-bow product when the bow is added. */
   bowVariantId: string | null
 }

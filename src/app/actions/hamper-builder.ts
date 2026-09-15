@@ -38,7 +38,6 @@ export async function addBuiltHamperAction(input: {
   boxId: string
   components: { variantId: string; quantity: number }[]
   giftMessage: string
-  ribbonColour: string
   /** Variant id of the gift-bow product, when the €1.50 bow was added. */
   bowVariantId?: string | null
   /**
@@ -104,9 +103,6 @@ export async function addBuiltHamperAction(input: {
       key: BUNDLE_ATTRIBUTES.giftMessage,
       value: input.giftMessage.trim().slice(0, 250),
     })
-  }
-  if (input.ribbonColour.trim()) {
-    parentAttributes.push({ key: BUNDLE_ATTRIBUTES.ribbon, value: input.ribbonColour.trim() })
   }
   if (input.bowVariantId) {
     parentAttributes.push({ key: BUNDLE_ATTRIBUTES.bow, value: BOW_LABEL })

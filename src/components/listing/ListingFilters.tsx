@@ -77,17 +77,37 @@ function FacetSection({
   basePath,
   facets,
   entry,
+  defaultOpen,
 }: {
   basePath: string
   facets: FacetData[]
   entry: FacetData
+  defaultOpen: boolean
 }) {
+  // Collapsed by default so the long grape list does not dominate the rail;
+  // a section with an active selection opens so the choice stays visible. Any
+  // number can be open at once — native <details>, no accordion behaviour.
+  const open = defaultOpen || entry.selected.length > 0
   return (
-    <div className="border-t border-rule py-4 first:border-t-0 first:pt-0">
-      <h3 className="mb-2 font-serif text-sm uppercase tracking-wide text-navy">
-        {FACET_LABELS[entry.facet]}
-      </h3>
-      <ul className="flex flex-col gap-1">
+    <details open={open} className="group border-t border-rule py-3 first:border-t-0 first:pt-0">
+      <summary className="flex cursor-pointer select-none items-center justify-between gap-2 font-serif text-sm uppercase tracking-wide text-navy [&::-webkit-details-marker]:hidden">
+        <span className="flex items-center">
+          {FACET_LABELS[entry.facet]}
+          {entry.selected.length ? (
+            <span className="ml-2 inline-grid h-4 min-w-4 place-items-center rounded-full bg-navy px-1 text-[10px] leading-none text-cream">
+              {entry.selected.length}
+            </span>
+          ) : null}
+        </span>
+        <svg
+          viewBox="0 0 10 6"
+          aria-hidden="true"
+          className="h-1.5 w-2.5 shrink-0 text-ink-muted transition-transform group-open:rotate-180"
+        >
+          <path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" />
+        </svg>
+      </summary>
+      <ul className="mt-2 flex flex-col gap-1">
         {orderedOptions(entry.facet, entry.options).map((option) => {
           const selected = entry.selected.includes(option.value)
           return (
@@ -115,7 +135,7 @@ function FacetSection({
           )
         })}
       </ul>
-    </div>
+    </details>
   )
 }
 
@@ -131,8 +151,14 @@ export function ListingFilters({
   const shown = facets.filter((f) => f.options.length > 1)
   const active = facets.flatMap((f) => f.selected.map((value) => ({ facet: f.facet, value })))
 
-  const sections = shown.map((entry) => (
-    <FacetSection key={entry.facet} basePath={basePath} facets={facets} entry={entry} />
+  const sections = shown.map((entry, index) => (
+    <FacetSection
+      key={entry.facet}
+      basePath={basePath}
+      facets={facets}
+      entry={entry}
+      defaultOpen={index === 0}
+    />
   ))
 
   const activePills = active.length ? (
@@ -181,8 +207,9 @@ export function ListingFilters({
         </div>
       </details>
 
-      {/* Desktop: an open rail beside the products. */}
-      <div className="mt-4 hidden lg:block">
+      {/* Desktop: a rail beside the products that scrolls on its own, so a long
+          facet list never drags the page grid with it. */}
+      <div className="mt-4 hidden lg:block lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto lg:pr-1">
         <h2 className="mb-3 font-display text-lg text-navy">Filter</h2>
         {sections}
         {activePills}

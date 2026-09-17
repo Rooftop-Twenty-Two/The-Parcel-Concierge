@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { ProductGrid } from '@/components/product/ProductCard'
 import { TrustpilotStars } from '@/components/trust/TrustpilotStars'
 import { ButtonLink } from '@/components/ui/Button'
+import { FairyLights, HollySprig } from '@/components/ui/Festive'
 import { Snowfall } from '@/components/ui/Snowfall'
 import { InkWaves, PostmarkRoundel, StampFrame } from '@/components/ui/Stamp'
 import { NewsletterSignup } from '@/components/marketing/NewsletterSignup'
@@ -38,14 +39,17 @@ export const metadata: Metadata = {
 export default async function HomePage() {
   const [homepage, trust] = await Promise.all([getHomepage(), getTrustSummary()])
 
-  // One switch for the whole seasonal treatment: the snow on the hero is
-  // on only while the Christmas band is in the slot list, so pulling that
-  // band in January takes the snow with it and nobody has to remember a
-  // second place.
+  // One switch for the whole seasonal treatment: the snow, the lights on
+  // the hero and the holly on the Christmas band are on only while the
+  // Christmas band is in the slot list, so pulling that band in January
+  // takes the lot with it and nobody has to remember a second place.
   const festive = homepage.slots.some((slot) => slot.kind === 'christmas')
 
   return (
     <>
+      {/* Pinned to the viewport so it falls over the whole page, behind
+          the sticky header. Nothing else on the homepage is fixed. */}
+      {festive ? <Snowfall variant="page" /> : null}
       {homepage.slots.map((slot, index) => (
         <Slot
           key={`${slot.kind}-${index}`}
@@ -143,8 +147,16 @@ async function Hero({
         className="pointer-events-none absolute -right-24 -top-24 hidden w-[560px] opacity-[0.07] lg:block"
       />
 
-      {festive ? <Snowfall className="z-0 text-cream" /> : null}
-      <div className="relative mx-auto grid max-w-[1400px] items-center gap-10 px-4 py-14 lg:grid-cols-2 lg:gap-16 lg:px-8 lg:py-20">
+      {/* A string of lights along the top edge. The extra top padding on
+          small screens keeps the eyebrow clear of the lowest bulbs. */}
+      {festive ? (
+        <FairyLights className="absolute inset-x-0 top-0 z-0 text-cream" />
+      ) : null}
+      <div
+        className={`relative mx-auto grid max-w-[1400px] items-center gap-10 px-4 py-14 lg:grid-cols-2 lg:gap-16 lg:px-8 lg:py-20 ${
+          festive ? 'pt-20' : ''
+        }`}
+      >
         <div className="animate-rise text-cream">
           <p className="mb-4 text-xs uppercase tracking-[0.24em] text-gold">
             Dunshaughlin, Co. Meath
@@ -211,7 +223,9 @@ async function Hero({
 
 /**
  * The Christmas band. Premium and quiet: deep red ground, gold type, one
- * photograph in a stamp frame. No snow, no clip art.
+ * photograph in a stamp frame, and a sprig of holly drawn in gold line
+ * work in the corner. No clip art. The snow falling over it belongs to
+ * the page, not the band.
  *
  * The frame takes either a photograph from /public or a product shot that
  * links to its product. It is a photograph today because the seasonal
@@ -225,6 +239,11 @@ async function ChristmasBand({ slot }: { slot: Extract<HomepageSlot, { kind: 'ch
     <section className="relative overflow-hidden bg-wine text-cream">
       <div className="relative mx-auto grid max-w-[1400px] items-center gap-10 px-4 py-14 lg:grid-cols-[1.2fr_1fr] lg:px-8">
         <div>
+          {/* In the flow rather than pinned to a corner, so it can never
+              land under the photograph or on top of the title at any
+              width. The negative margin lines the left leaf up with the
+              text edge. */}
+          <HollySprig className="-ml-2 mb-3 h-16 w-auto text-gold lg:h-20" />
           <p className="mb-3 text-xs uppercase tracking-[0.24em] text-gold">Christmas 2026</p>
           <h2 className="font-display text-[length:var(--text-display)]">{slot.title}</h2>
           <p className="mt-4 max-w-xl text-lg text-cream/90">{slot.body}</p>

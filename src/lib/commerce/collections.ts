@@ -130,12 +130,16 @@ const WINE_BASE: ProductQuery = { sort: 'featured', first: 24 }
 export const SEASONAL_HAMPERS_ONLY = true
 
 /**
- * The merchant's "General Hampers 2026" collection. It replaced "Christmas
- * 2026" (christmas-2026) as the live range in September 2026. The handle is
- * what Shopify derives from that title; confirm it in the collection's admin
- * URL, because collections:validate is the only other thing that will.
+ * The merchant's "General Hampers 2026" range. NOTE: its Shopify handle is
+ * `christmas-2026`, NOT `general-hampers-2026`. The merchant renamed the
+ * collection's *title* to "General Hampers 2026" in September 2026, but Shopify
+ * keeps the handle from when it was titled "Christmas 2026". Verified against
+ * the live store (20 products, all available, updated 2026-09-18). Read the
+ * handle from the collection's admin URL, not its title, if this changes again
+ * — a title-derived guess (general-hampers-2026) is a dead handle here and
+ * fails the build via collections:validate.
  */
-export const SEASONAL_HAMPERS_COLLECTION = 'general-hampers-2026'
+export const SEASONAL_HAMPERS_COLLECTION = 'christmas-2026'
 
 export const HAMPERS_COLLECTION = SEASONAL_HAMPERS_ONLY
   ? SEASONAL_HAMPERS_COLLECTION

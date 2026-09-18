@@ -80,6 +80,15 @@ export async function POST(request: Request) {
     case 'collections/update': {
       bump(TAG_CATALOGUE)
       for (const collection of COLLECTIONS) bump(collectionTag(collection.path))
+      // The homepage hamper band and the hub grids read a collection by
+      // handle and carry the products tag only: the hubs are not rows in
+      // COLLECTIONS, so their path tags are never bumped from here. Until
+      // this line, adding a hamper to the live collection in Shopify reached
+      // the sub-listings at once and the homepage half an hour later, which
+      // read as the site being out of sync (client, September 2026).
+      bump(TAG_ALL_PRODUCTS)
+      const handle = typeof payload.handle === 'string' ? payload.handle : null
+      if (handle) bump(collectionTag(handle))
       break
     }
 

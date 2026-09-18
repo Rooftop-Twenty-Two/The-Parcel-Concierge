@@ -92,6 +92,29 @@ The endpoint HMAC-verifies every request and returns 503 if the secret is
 unset. That is deliberate: an unverified endpoint that triggers rebuilds is
 a free denial of service for anyone who finds the URL.
 
+### 5b. Resync by hand
+
+For when the webhooks cannot do it: they are not subscribed yet, the edit
+landed mid-deploy, or you want to see a Shopify change on the site now
+rather than wait for the half-hour backstop.
+
+Set a long random string as `REVALIDATE_SECRET` in the hosting dashboard,
+then:
+
+```bash
+curl -X POST https://<site>/api/revalidate \
+  -H "Authorization: Bearer $REVALIDATE_SECRET"
+```
+
+That drops every cached Storefront read (products, every collection, the
+homepage bands) and the next request re-reads the live store. It returns
+503 while the secret is unset, for the same reason the webhook does.
+
+Note that a redeploy is **not** a resync: the hosting data cache survives
+deploys by design. If you cannot set the secret, Vercel has a "Purge Data
+Cache" button under the project's Data Cache settings, and Netlify's
+equivalent is "Clear cache and deploy site".
+
 ### 6. Know what step 3 also does
 
 `src/app/robots.ts` returns `disallow: /` for the whole site while it is in

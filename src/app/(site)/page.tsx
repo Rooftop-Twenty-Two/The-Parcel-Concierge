@@ -5,7 +5,6 @@ import { ProductGrid } from '@/components/product/ProductCard'
 import { TrustpilotStars } from '@/components/trust/TrustpilotStars'
 import { ButtonLink } from '@/components/ui/Button'
 import { FairyLights, HollySprig } from '@/components/ui/Festive'
-import { Snowfall } from '@/components/ui/Snowfall'
 import { InkWaves, PostmarkRoundel, StampFrame } from '@/components/ui/Stamp'
 import { NewsletterSignup } from '@/components/marketing/NewsletterSignup'
 import { VisitTheShop } from '@/components/VisitTheShop'
@@ -39,17 +38,16 @@ export const metadata: Metadata = {
 export default async function HomePage() {
   const [homepage, trust] = await Promise.all([getHomepage(), getTrustSummary()])
 
-  // One switch for the whole seasonal treatment: the snow, the lights on
-  // the hero and the holly on the Christmas band are on only while the
-  // Christmas band is in the slot list, so pulling that band in January
-  // takes the lot with it and nobody has to remember a second place.
+  // One switch for the whole seasonal treatment: the lights on the hero
+  // and the holly on the Christmas band are on only while the Christmas
+  // band is in the slot list, so pulling that band in January takes the
+  // lot with it and nobody has to remember a second place. The snowfall
+  // that used to fall over the page came off at the client's request in
+  // September 2026: it sat over the hero photograph.
   const festive = homepage.slots.some((slot) => slot.kind === 'christmas')
 
   return (
     <>
-      {/* Pinned to the viewport so it falls over the whole page, behind
-          the sticky header. Nothing else on the homepage is fixed. */}
-      {festive ? <Snowfall variant="page" /> : null}
       {homepage.slots.map((slot, index) => (
         <Slot
           key={`${slot.kind}-${index}`}
@@ -152,12 +150,16 @@ async function Hero({
           // basket in shot rather than the right-hand bottles alone.
           className="object-cover object-[67%_center] lg:object-right"
         />
-        {/* Legibility wash. Brand green under the copy on the left, gone by
-            the time it reaches the hamper so the photograph shows clean.
-            On a phone the copy spans the width, so the wash does too. */}
+        {/* Legibility wash. Brand green under the copy on the left, and
+            gone by the middle so the photograph is the hero, not the wash:
+            the products start just under halfway across at desktop widths
+            and the client wants them unobscured. The subhead keeps to the
+            left third, where the wash is still strong enough to carry
+            cream text over the pale linen. On a phone the copy spans the
+            width, so a lighter even wash does too. */}
         <div
           aria-hidden="true"
-          className="absolute inset-0 -z-0 bg-green/80 lg:bg-transparent lg:bg-linear-to-r lg:from-green lg:via-green/85 lg:via-40% lg:to-green/0 lg:to-80%"
+          className="absolute inset-0 -z-0 bg-green/60 lg:bg-transparent lg:bg-linear-to-r lg:from-green/90 lg:via-green/55 lg:via-30% lg:to-green/0 lg:to-55%"
         />
 
         {festive ? (

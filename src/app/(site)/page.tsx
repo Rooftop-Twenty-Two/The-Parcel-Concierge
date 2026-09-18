@@ -132,7 +132,52 @@ async function Hero({
   priority: boolean
   festive: boolean
 }) {
-  const product = slot.image || !slot.imageHandle ? null : await getProduct(slot.imageHandle)
+  const copy = <HeroCopy slot={slot} trust={trust} />
+
+  // A supplied photograph is the whole hero: full bleed, with the copy and
+  // the CTA sitting on top of it. The client's table shot puts the hamper
+  // and the bottles on the right and leaves the left third as empty linen,
+  // which is exactly where the copy goes.
+  if (slot.image) {
+    return (
+      <section className="relative isolate overflow-hidden bg-green">
+        <Image
+          src={slot.image.src}
+          alt={slot.image.alt}
+          fill
+          priority={priority}
+          sizes="100vw"
+          // The focal point is the basket, two thirds of the way across.
+          // On a phone the frame is tall and narrow, so that keeps the
+          // basket in shot rather than the right-hand bottles alone.
+          className="object-cover object-[67%_center] lg:object-right"
+        />
+        {/* Legibility wash. Brand green under the copy on the left, gone by
+            the time it reaches the hamper so the photograph shows clean.
+            On a phone the copy spans the width, so the wash does too. */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 -z-0 bg-green/80 lg:bg-transparent lg:bg-linear-to-r lg:from-green lg:via-green/85 lg:via-40% lg:to-green/0 lg:to-80%"
+        />
+
+        {festive ? (
+          <FairyLights className="absolute inset-x-0 top-0 z-0 text-cream" />
+        ) : null}
+        <div
+          className={`relative mx-auto flex max-w-[1400px] items-center px-4 py-16 lg:min-h-[680px] lg:px-8 lg:py-24 ${
+            festive ? 'pt-20' : ''
+          }`}
+        >
+          <div className="max-w-xl">{copy}</div>
+        </div>
+
+        <InkWaves className="relative h-16 w-full text-cream/25" lines={4} />
+      </section>
+    )
+  }
+
+  // No photograph: the copy beside a product shot in a stamp frame.
+  const product = slot.imageHandle ? await getProduct(slot.imageHandle) : null
   const image = product?.images[0] ?? null
 
   return (
@@ -157,53 +202,11 @@ async function Hero({
           festive ? 'pt-20' : ''
         }`}
       >
-        <div className="animate-rise text-cream">
-          <p className="mb-4 text-xs uppercase tracking-[0.24em] text-gold">
-            Dunshaughlin, Co. Meath
-          </p>
-          <h1 className="font-display text-[length:var(--text-hero)] leading-[0.92]">
-            {slot.headline}
-          </h1>
-          <p className="mt-5 max-w-md text-lg text-cream/90">{slot.subhead}</p>
-
-          <div className="mt-8 flex flex-wrap items-center gap-4">
-            <ButtonLink href={slot.ctaHref} size="large">
-              {slot.ctaLabel}
-            </ButtonLink>
-            <Link
-              href="/build-your-own-hamper"
-              className="text-cream underline underline-offset-4 hover:text-gold"
-            >
-              Or build your own
-            </Link>
-          </div>
-
-          <div className="mt-8">
-            <TrustpilotStars
-              rating={trust.rating}
-              reviewCount={trust.reviewCount}
-              variant="light"
-            />
-          </div>
-        </div>
+        {copy}
 
         <div className="relative animate-rise" style={{ animationDelay: '120ms' }}>
           <StampFrame className="bg-beige">
-            {slot.image ? (
-              // A wide table shot, wider than the 4:3 frame. The hamper and
-              // the bottles sit on the right of the photograph and the left
-              // is empty linen, so the crop is anchored right: a centred crop
-              // would lose a bottle off each edge and keep the blanket.
-              <Image
-                src={slot.image.src}
-                alt={slot.image.alt}
-                width={2000}
-                height={1116}
-                priority={priority}
-                sizes="(min-width: 1024px) 46vw, 92vw"
-                className="aspect-4/3 w-full object-cover object-right"
-              />
-            ) : image ? (
+            {image ? (
               <Image
                 src={image.url}
                 alt={image.alt}
@@ -232,6 +235,43 @@ async function Hero({
 
       <InkWaves className="h-16 w-full text-cream/25" lines={4} />
     </section>
+  )
+}
+
+/** The hero's words: eyebrow, headline, subhead, CTAs and the Trustpilot line. */
+function HeroCopy({
+  slot,
+  trust,
+}: {
+  slot: Extract<HomepageSlot, { kind: 'hero' }>
+  trust: { rating: number; reviewCount: number }
+}) {
+  return (
+    <div className="animate-rise text-cream">
+      <p className="mb-4 text-xs uppercase tracking-[0.24em] text-gold">
+        Dunshaughlin, Co. Meath
+      </p>
+      <h1 className="font-display text-[length:var(--text-hero)] leading-[0.92]">
+        {slot.headline}
+      </h1>
+      <p className="mt-5 max-w-md text-lg text-cream/90">{slot.subhead}</p>
+
+      <div className="mt-8 flex flex-wrap items-center gap-4">
+        <ButtonLink href={slot.ctaHref} size="large">
+          {slot.ctaLabel}
+        </ButtonLink>
+        <Link
+          href="/build-your-own-hamper"
+          className="text-cream underline underline-offset-4 hover:text-gold"
+        >
+          Or build your own
+        </Link>
+      </div>
+
+      <div className="mt-8">
+        <TrustpilotStars rating={trust.rating} reviewCount={trust.reviewCount} variant="light" />
+      </div>
+    </div>
   )
 }
 

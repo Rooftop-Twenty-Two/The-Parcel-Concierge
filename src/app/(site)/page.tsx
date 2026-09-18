@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { ProductGrid } from '@/components/product/ProductCard'
 import { TrustpilotStars } from '@/components/trust/TrustpilotStars'
 import { ButtonLink } from '@/components/ui/Button'
-import { FairyLights, HollySprig } from '@/components/ui/Festive'
+import { HollySprig } from '@/components/ui/Festive'
 import { InkWaves, PostmarkRoundel, StampFrame } from '@/components/ui/Stamp'
 import { NewsletterSignup } from '@/components/marketing/NewsletterSignup'
 import { VisitTheShop } from '@/components/VisitTheShop'
@@ -38,24 +38,16 @@ export const metadata: Metadata = {
 export default async function HomePage() {
   const [homepage, trust] = await Promise.all([getHomepage(), getTrustSummary()])
 
-  // One switch for the whole seasonal treatment: the lights on the hero
-  // and the holly on the Christmas band are on only while the Christmas
-  // band is in the slot list, so pulling that band in January takes the
-  // lot with it and nobody has to remember a second place. The snowfall
-  // that used to fall over the page came off at the client's request in
-  // September 2026: it sat over the hero photograph.
-  const festive = homepage.slots.some((slot) => slot.kind === 'christmas')
+  // The seasonal treatment is the Christmas band and the holly on it, so
+  // pulling that band from the slot list in January takes the lot with it.
+  // The page-wide snowfall and the string of lights over the hero both
+  // came off at the client's request in September 2026: they sat over the
+  // hero photograph.
 
   return (
     <>
       {homepage.slots.map((slot, index) => (
-        <Slot
-          key={`${slot.kind}-${index}`}
-          slot={slot}
-          trust={trust}
-          first={index === 0}
-          festive={festive}
-        />
+        <Slot key={`${slot.kind}-${index}`} slot={slot} trust={trust} first={index === 0} />
       ))}
     </>
   )
@@ -65,16 +57,14 @@ async function Slot({
   slot,
   trust,
   first,
-  festive,
 }: {
   slot: HomepageSlot
   trust: { rating: number; reviewCount: number }
   first: boolean
-  festive: boolean
 }) {
   switch (slot.kind) {
     case 'hero':
-      return <Hero slot={slot} trust={trust} priority={first} festive={festive} />
+      return <Hero slot={slot} trust={trust} priority={first} />
     case 'christmas':
       return <ChristmasBand slot={slot} />
     case 'budget-bands':
@@ -123,12 +113,10 @@ async function Hero({
   slot,
   trust,
   priority,
-  festive,
 }: {
   slot: Extract<HomepageSlot, { kind: 'hero' }>
   trust: { rating: number; reviewCount: number }
   priority: boolean
-  festive: boolean
 }) {
   const copy = <HeroCopy slot={slot} trust={trust} />
 
@@ -162,14 +150,7 @@ async function Hero({
           className="absolute inset-0 -z-0 bg-green/60 lg:bg-transparent lg:bg-linear-to-r lg:from-green/90 lg:via-green/55 lg:via-30% lg:to-green/0 lg:to-55%"
         />
 
-        {festive ? (
-          <FairyLights className="absolute inset-x-0 top-0 z-0 text-cream" />
-        ) : null}
-        <div
-          className={`relative mx-auto flex max-w-[1400px] items-center px-4 py-16 lg:min-h-[680px] lg:px-8 lg:py-24 ${
-            festive ? 'pt-20' : ''
-          }`}
-        >
+        <div className="relative mx-auto flex max-w-[1400px] items-center px-4 py-16 lg:min-h-[680px] lg:px-8 lg:py-24">
           <div className="max-w-xl">{copy}</div>
         </div>
 
@@ -194,16 +175,7 @@ async function Hero({
         className="pointer-events-none absolute -right-24 -top-24 hidden w-[560px] opacity-[0.07] lg:block"
       />
 
-      {/* A string of lights along the top edge. The extra top padding on
-          small screens keeps the eyebrow clear of the lowest bulbs. */}
-      {festive ? (
-        <FairyLights className="absolute inset-x-0 top-0 z-0 text-cream" />
-      ) : null}
-      <div
-        className={`relative mx-auto grid max-w-[1400px] items-center gap-10 px-4 py-14 lg:grid-cols-2 lg:gap-16 lg:px-8 lg:py-20 ${
-          festive ? 'pt-20' : ''
-        }`}
-      >
+      <div className="relative mx-auto grid max-w-[1400px] items-center gap-10 px-4 py-14 lg:grid-cols-2 lg:gap-16 lg:px-8 lg:py-20">
         {copy}
 
         <div className="relative animate-rise" style={{ animationDelay: '120ms' }}>

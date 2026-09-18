@@ -130,11 +130,12 @@ const WINE_COLLECTION_HANDLES = new Set<string>([
 
 /**
  * Hamper collections the substring test below must not be trusted to catch.
- * The live seasonal range is always a hamper collection whatever its handle
- * (the 2026 Christmas one was "christmas-2026", with no "hamper" in it), so
- * it is listed here explicitly. Without this, a product whose only collection
- * is the seasonal one and which carries no type: tag reads as a gift: its
- * card links to /gifts/ and its /hampers/<handle> page 404s.
+ * The live seasonal range is always a hamper collection whatever its handle,
+ * and its handle today is "christmas-2026" (the title says General Hampers
+ * 2026; Shopify kept the handle from the rename), with no "hamper" in it.
+ * So it is listed here explicitly. Without this, a product whose only
+ * collection is the seasonal one and which carries no type: tag reads as a
+ * gift: its card links to /gifts/ and its /hampers/<handle> page 404s.
  */
 const HAMPER_COLLECTION_HANDLES = new Set<string>([HAMPERS_COLLECTION])
 

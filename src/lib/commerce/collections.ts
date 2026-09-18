@@ -99,13 +99,14 @@ const HAMPER_BASE: ProductQuery = { sort: 'featured', first: 24 }
 const WINE_BASE: ProductQuery = { sort: 'featured', first: 24 }
 
 /**
- * SEASONAL — Christmas (client request via Cathal, September 2026).
+ * SEASONAL — one live hamper range (client request via Cathal, September 2026).
  *
  * The client's live hamper range is one merchant collection; the year-round
- * hampers are retired for the season. While CHRISTMAS_HAMPERS_ONLY is true:
+ * hampers are retired for the season. While SEASONAL_HAMPERS_ONLY is true:
  *   - the /hampers hub grid reads HAMPERS_COLLECTION (see hampers/page.tsx)
  *   - the homepage featured band reads it too
  *   - /occasions/christmas reads it
+ *   - "More hampers" on a product page reads it (commerce/similar.ts)
  *   - every hamper sub-listing (price bands + themes) is dropped from the
  *     active COLLECTIONS below, so no off-season or old-catalogue hamper can
  *     surface in the nav, the sitemap, static params or route resolution.
@@ -120,21 +121,26 @@ const WINE_BASE: ProductQuery = { sort: 'featured', first: 24 }
  * the store, so the deploy fails loudly rather than serving an empty shop.
  *
  * Hamper *products* still resolve at /hampers/<handle>: resolveHubSlug reads
- * the product, not this registry. To restore the full year-round hamper range
- * post-Christmas, set CHRISTMAS_HAMPERS_ONLY to false.
+ * the product, not this registry. To restore the full year-round hamper range,
+ * set SEASONAL_HAMPERS_ONLY to false.
  */
-export const CHRISTMAS_HAMPERS_ONLY = true
+export const SEASONAL_HAMPERS_ONLY = true
 
-/** The merchant's "Christmas 2026" collection. */
-export const CHRISTMAS_HAMPERS_COLLECTION = 'christmas-2026'
+/**
+ * The merchant's "General Hampers 2026" collection. It replaced "Christmas
+ * 2026" (christmas-2026) as the live range in September 2026. The handle is
+ * what Shopify derives from that title; confirm it in the collection's admin
+ * URL, because collections:validate is the only other thing that will.
+ */
+export const SEASONAL_HAMPERS_COLLECTION = 'general-hampers-2026'
 
-export const HAMPERS_COLLECTION = CHRISTMAS_HAMPERS_ONLY
-  ? CHRISTMAS_HAMPERS_COLLECTION
+export const HAMPERS_COLLECTION = SEASONAL_HAMPERS_ONLY
+  ? SEASONAL_HAMPERS_COLLECTION
   : 'all-hampers-1'
 
 /**
  * The full listing registry. The active `COLLECTIONS` below is derived from
- * this, dropping the hamper sub-listings while CHRISTMAS_HAMPERS_ONLY is on.
+ * this, dropping the hamper sub-listings while SEASONAL_HAMPERS_ONLY is on.
  */
 const ALL_LISTINGS: readonly CollectionDef[] = [
   // ---------------------------------------------------------------------
@@ -461,7 +467,10 @@ const ALL_LISTINGS: readonly CollectionDef[] = [
     path: '/occasions/christmas',
     title: 'Christmas gifts and hampers',
     h1: 'Christmas gifts and hampers',
-    query: { collection: CHRISTMAS_HAMPERS_COLLECTION, sort: 'featured', first: 24 },
+    // Reads the live hamper range, not a Christmas-specific collection: while
+    // SEASONAL_HAMPERS_ONLY is on there is exactly one range and this page
+    // must not disagree with the hub about what is in it.
+    query: { collection: HAMPERS_COLLECTION, sort: 'featured', first: 24 },
     alcohol: true,
     facets: ['price', 'recipient'],
     parentPath: '/occasions',
@@ -693,12 +702,12 @@ const ALL_LISTINGS: readonly CollectionDef[] = [
 ]
 
 /**
- * The active listing registry. While CHRISTMAS_HAMPERS_ONLY is on, the hamper
+ * The active listing registry. While SEASONAL_HAMPERS_ONLY is on, the hamper
  * hub's sub-listings are suppressed so the nav, sitemap, static params and
  * route resolution all see only what should show this season.
  */
 export const COLLECTIONS: readonly CollectionDef[] = ALL_LISTINGS.filter(
-  (c) => !(CHRISTMAS_HAMPERS_ONLY && c.hub === 'hampers'),
+  (c) => !(SEASONAL_HAMPERS_ONLY && c.hub === 'hampers'),
 )
 
 const BY_PATH = new Map(COLLECTIONS.map((c) => [c.path, c]))

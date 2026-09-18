@@ -37,8 +37,8 @@ export const NAV = [
   {
     label: 'Hampers',
     href: '/hampers',
-    // Seasonal: the hamper range is the Christmas collection only
-    // (CHRISTMAS_HAMPERS_ONLY in commerce/collections.ts), so the price-band
+    // Seasonal: the hamper range is one merchant collection only
+    // (SEASONAL_HAMPERS_ONLY in commerce/collections.ts), so the price-band
     // and theme sub-listings are out of the nav. Restore these links when the
     // full range reopens.
     columns: [

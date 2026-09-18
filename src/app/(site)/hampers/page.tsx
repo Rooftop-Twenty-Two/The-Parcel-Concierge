@@ -26,9 +26,9 @@ export default function HampersHub() {
       }}
       query={{ collection: HAMPERS_COLLECTION, sort: 'featured', first: 24 }}
       alcohol
-      // Seasonal: the hamper range is the Christmas collection only, so the
-      // sub-listing cards are dropped (CHRISTMAS_HAMPERS_ONLY in
-      // commerce/collections.ts). One grid of the Christmas hampers, then the
+      // Seasonal: the hamper range is one merchant collection only, so the
+      // sub-listing cards are dropped (SEASONAL_HAMPERS_ONLY in
+      // commerce/collections.ts). One grid of the live range, then the
       // builder. Restore price-band / theme cards when the range reopens.
       featuredPaths={[]}
       // The builder is the answer to "none of these is quite right", which

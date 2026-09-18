@@ -1,5 +1,5 @@
 import { money } from '../commerce/money'
-import { CHRISTMAS_HAMPERS_COLLECTION } from '../commerce/collections'
+import { HAMPERS_COLLECTION } from '../commerce/collections'
 import type {
   Cart,
   CartLine,
@@ -129,13 +129,14 @@ const WINE_COLLECTION_HANDLES = new Set<string>([
 ])
 
 /**
- * Hamper collections whose handle does NOT contain "hamper", so the substring
- * test below would miss them. The seasonal Christmas collection is a hamper
- * range but its handle is "christmas-2026", so its products sit in no
- * *hamper* collection and carry no type: tag — without this they read as
- * gifts, their cards link to /gifts/ and their /hampers/<handle> pages 404.
+ * Hamper collections the substring test below must not be trusted to catch.
+ * The live seasonal range is always a hamper collection whatever its handle
+ * (the 2026 Christmas one was "christmas-2026", with no "hamper" in it), so
+ * it is listed here explicitly. Without this, a product whose only collection
+ * is the seasonal one and which carries no type: tag reads as a gift: its
+ * card links to /gifts/ and its /hampers/<handle> page 404s.
  */
-const HAMPER_COLLECTION_HANDLES = new Set<string>([CHRISTMAS_HAMPERS_COLLECTION])
+const HAMPER_COLLECTION_HANDLES = new Set<string>([HAMPERS_COLLECTION])
 
 export function kindFromMembership(
   collectionHandles: readonly string[],

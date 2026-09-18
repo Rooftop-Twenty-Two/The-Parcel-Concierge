@@ -1,5 +1,5 @@
 import { queryProducts } from './index'
-import { CHRISTMAS_HAMPERS_COLLECTION } from './collections'
+import { HAMPERS_COLLECTION } from './collections'
 import type { ProductCard, ProductKind } from './types'
 
 /**
@@ -27,7 +27,7 @@ type Source = { collection: string; kinds: ProductKind[] }
  * an unconstrained query returns the whole catalogue.
  */
 const SOURCE_BY_KIND: Record<ProductKind, Source | null> = {
-  hamper: { collection: CHRISTMAS_HAMPERS_COLLECTION, kinds: ['hamper'] },
+  hamper: { collection: HAMPERS_COLLECTION, kinds: ['hamper'] },
   wine: { collection: 'fine-wines-1', kinds: ['wine', 'spirit'] },
   spirit: { collection: 'fine-wines-1', kinds: ['wine', 'spirit'] },
   addon: { collection: 'all-gifts', kinds: ['addon'] },

@@ -132,7 +132,7 @@ async function Hero({
   priority: boolean
   festive: boolean
 }) {
-  const product = slot.imageHandle ? await getProduct(slot.imageHandle) : null
+  const product = slot.image || !slot.imageHandle ? null : await getProduct(slot.imageHandle)
   const image = product?.images[0] ?? null
 
   return (
@@ -189,7 +189,21 @@ async function Hero({
 
         <div className="relative animate-rise" style={{ animationDelay: '120ms' }}>
           <StampFrame className="bg-beige">
-            {image ? (
+            {slot.image ? (
+              // A wide table shot, wider than the 4:3 frame. The hamper and
+              // the bottles sit on the right of the photograph and the left
+              // is empty linen, so the crop is anchored right: a centred crop
+              // would lose a bottle off each edge and keep the blanket.
+              <Image
+                src={slot.image.src}
+                alt={slot.image.alt}
+                width={2000}
+                height={1116}
+                priority={priority}
+                sizes="(min-width: 1024px) 46vw, 92vw"
+                className="aspect-4/3 w-full object-cover object-right"
+              />
+            ) : image ? (
               <Image
                 src={image.url}
                 alt={image.alt}

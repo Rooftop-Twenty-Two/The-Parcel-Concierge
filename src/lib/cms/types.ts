@@ -26,7 +26,20 @@ export type CuratedListing = {
 }
 
 export type HomepageSlot =
-  | { kind: 'hero'; headline: string; subhead: string; ctaLabel: string; ctaHref: string; imageHandle: string | null }
+  /**
+   * The hero. `image` is a photograph from /public; `imageHandle` puts a
+   * product shot in the frame instead. Set one or the other. `image` wins
+   * where both are set, and the product is not fetched at all.
+   */
+  | {
+      kind: 'hero'
+      headline: string
+      subhead: string
+      ctaLabel: string
+      ctaHref: string
+      imageHandle: string | null
+      image?: { src: string; alt: string }
+    }
   /**
    * The seasonal band. Understated by design: type, one photograph and a
    * CTA, no seasonal clip art. Remove the slot from the list when the

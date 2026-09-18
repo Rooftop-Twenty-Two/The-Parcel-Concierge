@@ -35,7 +35,14 @@ export const CONTENT: CmsData = {
           'Visit us in our bricks and mortar store in Dunshaughlin or shop with us online from anywhere. Enjoy free local delivery within the A85 eircode area, personally delivered by our team, with nationwide delivery through An Post, free on orders over €100.',
         ctaLabel: 'Shop all hampers',
         ctaHref: '/hampers',
-        imageHandle: 'large-basket',
+        // The client's own hero photograph (September 2026): the wicker
+        // hamper on the table with the wines, Butlers, biscuits and preserves
+        // laid out in front of it. Replaced the large-basket product shot.
+        imageHandle: null,
+        image: {
+          src: '/photography/tpc-hero-hamper-table.webp',
+          alt: 'A wicker hamper on a wooden table with red, white and sparkling wines, Butlers chocolates, luxury biscuits, preserves and candles laid out in front of it',
+        },
       },
       {
         kind: 'christmas',

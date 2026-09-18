@@ -12,6 +12,7 @@ import { getHomepage, getMakers } from '@/lib/cms'
 import type { HomepageSlot } from '@/lib/cms/types'
 import { getProduct, queryProducts } from '@/lib/commerce'
 import { getCollectionByPath, HAMPERS_COLLECTION } from '@/lib/commerce/collections'
+import { populatedListings } from '@/lib/commerce/populated'
 import type { ProductCard } from '@/lib/commerce/types'
 import { getTrustSummary } from '@/lib/trustpilot'
 
@@ -328,24 +329,42 @@ async function ChristmasBand({ slot }: { slot: Extract<HomepageSlot, { kind: 'ch
   )
 }
 
+/**
+ * The hamper price bands, not the gifts ones. The cards used to link to
+ * /gifts-by-budget, which reads the mixed All Gifts collection, and the
+ * client's report was that "Under €50" opened candles and wine when the
+ * page had promised hampers (September 2026). These read the live hamper
+ * range with a price filter, so a click lands on hampers in that band.
+ */
 const BUDGET_BAND_PATHS = [
-  '/gifts-by-budget/under-50',
-  '/gifts-by-budget/50-100',
-  '/gifts-by-budget/100-150',
-  '/gifts-by-budget/150-plus',
+  '/hampers/under-75',
+  '/hampers/75-125',
+  '/hampers/125-200',
+  '/hampers/luxury-200-plus',
 ]
 
-function BudgetBands() {
-  const bands = BUDGET_BAND_PATHS.map((path) => getCollectionByPath(path)).filter(
+/** "Hampers under €75" → "Under €75"; "Luxury hampers over €200" → "Over €200". */
+function bandLabel(title: string): string {
+  const stripped = title.replace(/^(luxury )?hampers,? /i, '')
+  return stripped.charAt(0).toUpperCase() + stripped.slice(1)
+}
+
+async function BudgetBands() {
+  const defined = BUDGET_BAND_PATHS.map((path) => getCollectionByPath(path)).filter(
     (c): c is NonNullable<typeof c> => c !== undefined,
   )
+  // A band with too few hampers redirects to the hub, so it is not offered.
+  // A small range can leave one or two bands empty; the section adapts and
+  // disappears altogether if none of them would open.
+  const bands = await populatedListings(defined)
+  if (!bands.length) return null
 
   return (
     <section className="mx-auto max-w-[1400px] px-4 py-16 lg:px-8">
       <SectionHeading
         eyebrow="The fastest way in"
-        title="Shop by budget"
-        body="Most people start with a figure in mind. Pick yours and see everything we can do for it, hampers and wine together."
+        title="Hampers by budget"
+        body="Most people start with a figure in mind. Pick yours and see every hamper we can do for it."
       />
 
       <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -356,7 +375,7 @@ function BudgetBands() {
               className="group flex h-full flex-col justify-between border border-navy/20 bg-beige p-6 transition-colors hover:bg-navy hover:text-cream"
             >
               <span className="font-display text-4xl text-navy group-hover:text-cream">
-                {band.title.replace('Gifts ', '')}
+                {bandLabel(band.title)}
               </span>
               <span className="mt-6 text-sm text-ink-muted group-hover:text-cream/80">
                 Shop this band

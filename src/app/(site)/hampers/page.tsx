@@ -26,11 +26,10 @@ export default function HampersHub() {
       }}
       query={{ collection: HAMPERS_COLLECTION, sort: 'featured', first: 24 }}
       alcohol
-      // Seasonal: the hamper range is one merchant collection only, so the
-      // sub-listing cards are dropped (SEASONAL_HAMPERS_ONLY in
-      // commerce/collections.ts). One grid of the live range, then the
-      // builder. Restore price-band / theme cards when the range reopens.
-      featuredPaths={[]}
+      // The cards are the hamper price bands: while SEASONAL_HAMPERS_ONLY
+      // is on (commerce/collections.ts) they are the only sub-listings in
+      // the hub, and they read the live range, so they can only ever show
+      // what is in it. HubPage drops any band too thin to open.
       // The builder is the answer to "none of these is quite right", which
       // is the commonest reason somebody leaves a hamper listing, so it
       // sits between the collection cards and the grid rather than only in

@@ -7,6 +7,7 @@ import { ButtonLink } from '@/components/ui/Button'
 import { InkWaves, StampFrame } from '@/components/ui/Stamp'
 import { getListingCopy } from '@/lib/cms'
 import { queryListing } from '@/lib/commerce'
+import { populatedListings } from '@/lib/commerce/populated'
 import { formatMinor } from '@/lib/commerce/money'
 import { DELIVERY, handDeliveryZone } from '@/lib/site-config'
 import { collectionsInHub, MIN_PRODUCTS_PER_LISTING, type CollectionHub } from '@/lib/commerce/collections'
@@ -41,12 +42,17 @@ export async function HubPage({
   featuredPaths?: string[]
   promo?: { eyebrow: string; title: string; body: string; href: string; cta: string }
 }) {
-  const [copy, result] = await Promise.all([getListingCopy(path), queryListing(path, query)])
-
   const all = collectionsInHub(hub)
-  const featured = featuredPaths
+  const candidates = featuredPaths
     ? featuredPaths.flatMap((p) => all.filter((c) => c.path === p))
     : all
+  // A card to a listing under the four-product floor would redirect straight
+  // back here, so only bands that will open are offered.
+  const [copy, result, featured] = await Promise.all([
+    getListingCopy(path),
+    queryListing(path, query),
+    populatedListings(candidates),
+  ])
 
   const crumbs = [
     { name: 'Home', path: '/' },

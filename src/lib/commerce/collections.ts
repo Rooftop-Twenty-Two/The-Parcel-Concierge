@@ -107,9 +107,12 @@ const WINE_BASE: ProductQuery = { sort: 'featured', first: 24 }
  *   - the homepage featured band reads it too
  *   - /occasions/christmas reads it
  *   - "More hampers" on a product page reads it (commerce/similar.ts)
- *   - every hamper sub-listing (price bands + themes) is dropped from the
- *     active COLLECTIONS below, so no off-season or old-catalogue hamper can
- *     surface in the nav, the sitemap, static params or route resolution.
+ *   - the hamper price bands read it too, so "Shop by budget" on the
+ *     homepage and the hub's cards lead to the live range
+ *   - every hamper THEME sub-listing (wine, food, pamper, baby, ...) is
+ *     dropped from the active COLLECTIONS below, because those read the old
+ *     merchant collections and would surface off-season or old-catalogue
+ *     hampers in the nav, the sitemap, static params or route resolution.
  *
  * ONE CONSTANT, read everywhere. The handle used to be typed out in three
  * places and had already drifted into two different values, which is how a
@@ -144,8 +147,12 @@ export const HAMPERS_COLLECTION = SEASONAL_HAMPERS_ONLY
  */
 const ALL_LISTINGS: readonly CollectionDef[] = [
   // ---------------------------------------------------------------------
-  // Hampers. Budget bands read the master All Hampers collection with a
-  // price filter. Budget bands first: highest-intent, real indexable routes.
+  // Hampers. Budget bands read the LIVE hamper range (HAMPERS_COLLECTION)
+  // with a price filter, so they follow the seasonal swap and stay active
+  // while SEASONAL_HAMPERS_ONLY is on. They are what the homepage "Shop by
+  // budget" cards link to: the client's ask (September 2026) is that those
+  // cards lead to hampers, not to the mixed All Gifts collection.
+  // Budget bands first: highest-intent, real indexable routes.
   // ---------------------------------------------------------------------
   {
     slug: 'under-75',
@@ -153,7 +160,7 @@ const ALL_LISTINGS: readonly CollectionDef[] = [
     path: '/hampers/under-75',
     title: 'Hampers under €75',
     h1: 'Hampers under €75',
-    query: { ...HAMPER_BASE, collection: 'all-hampers-1', maxPriceMinor: 7499, sort: 'price-desc' },
+    query: { ...HAMPER_BASE, collection: HAMPERS_COLLECTION, maxPriceMinor: 7499, sort: 'price-desc' },
     alcohol: true,
     facets: ['occasion', 'recipient'],
     parentPath: '/hampers',
@@ -164,7 +171,7 @@ const ALL_LISTINGS: readonly CollectionDef[] = [
     path: '/hampers/75-125',
     title: 'Hampers €75 to €125',
     h1: 'Hampers from €75 to €125',
-    query: { ...HAMPER_BASE, collection: 'all-hampers-1', minPriceMinor: 7500, maxPriceMinor: 12499 },
+    query: { ...HAMPER_BASE, collection: HAMPERS_COLLECTION, minPriceMinor: 7500, maxPriceMinor: 12499 },
     alcohol: true,
     facets: ['occasion', 'recipient'],
     parentPath: '/hampers',
@@ -175,7 +182,7 @@ const ALL_LISTINGS: readonly CollectionDef[] = [
     path: '/hampers/125-200',
     title: 'Hampers €125 to €200',
     h1: 'Hampers from €125 to €200',
-    query: { ...HAMPER_BASE, collection: 'all-hampers-1', minPriceMinor: 12500, maxPriceMinor: 19999 },
+    query: { ...HAMPER_BASE, collection: HAMPERS_COLLECTION, minPriceMinor: 12500, maxPriceMinor: 19999 },
     alcohol: true,
     facets: ['occasion', 'recipient'],
     parentPath: '/hampers',
@@ -186,7 +193,7 @@ const ALL_LISTINGS: readonly CollectionDef[] = [
     path: '/hampers/luxury-200-plus',
     title: 'Luxury hampers over €200',
     h1: 'Luxury hampers, €200 and over',
-    query: { ...HAMPER_BASE, collection: 'all-hampers-1', minPriceMinor: 20000, sort: 'price-asc' },
+    query: { ...HAMPER_BASE, collection: HAMPERS_COLLECTION, minPriceMinor: 20000, sort: 'price-asc' },
     alcohol: true,
     facets: ['occasion', 'recipient'],
     parentPath: '/hampers',
@@ -701,13 +708,19 @@ const ALL_LISTINGS: readonly CollectionDef[] = [
   },
 ]
 
+/** A listing that slices its collection by price rather than by theme. */
+export function isPriceBand(c: CollectionDef): boolean {
+  return c.query.minPriceMinor !== undefined || c.query.maxPriceMinor !== undefined
+}
+
 /**
  * The active listing registry. While SEASONAL_HAMPERS_ONLY is on, the hamper
- * hub's sub-listings are suppressed so the nav, sitemap, static params and
- * route resolution all see only what should show this season.
+ * hub's theme sub-listings are suppressed so the nav, sitemap, static params
+ * and route resolution all see only what should show this season. The price
+ * bands stay: they read the live range, so they can only show what is in it.
  */
 export const COLLECTIONS: readonly CollectionDef[] = ALL_LISTINGS.filter(
-  (c) => !(SEASONAL_HAMPERS_ONLY && c.hub === 'hampers'),
+  (c) => !(SEASONAL_HAMPERS_ONLY && c.hub === 'hampers' && !isPriceBand(c)),
 )
 
 const BY_PATH = new Map(COLLECTIONS.map((c) => [c.path, c]))

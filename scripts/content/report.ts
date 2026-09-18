@@ -62,12 +62,10 @@ const references: Reference[] = []
 
 for (const slot of CONTENT.homepage.slots) {
   // The featured hampers band reads the seasonal collection rather than a
-  // handle list, so there is nothing here to resolve.
+  // handle list, and the hero is a photograph from /public rather than a
+  // product shot, so neither has a handle to resolve.
   if (slot.kind === 'wine-vault') {
     references.push(...slot.handles.map((handle) => ({ where: 'homepage wine vault', handle })))
-  }
-  if (slot.kind === 'hero' && slot.imageHandle) {
-    references.push({ where: 'homepage hero', handle: slot.imageHandle })
   }
 }
 

@@ -26,7 +26,20 @@ export type CuratedListing = {
 }
 
 export type HomepageSlot =
-  | { kind: 'hero'; headline: string; subhead: string; ctaLabel: string; ctaHref: string; imageHandle: string | null }
+  /**
+   * The hero. One full-bleed photograph from /public with the words and
+   * the CTA sitting over its left third, so the photograph needs its
+   * subject on the right and something quiet on the left for the type to
+   * sit on. Swap the photograph seasonally here.
+   */
+  | {
+      kind: 'hero'
+      headline: string
+      subhead: string
+      ctaLabel: string
+      ctaHref: string
+      image: { src: string; alt: string }
+    }
   /**
    * The seasonal band. Understated by design: type, one photograph and a
    * CTA, no seasonal clip art. Remove the slot from the list when the

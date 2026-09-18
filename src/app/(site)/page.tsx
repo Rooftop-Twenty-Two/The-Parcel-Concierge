@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { ProductGrid } from '@/components/product/ProductCard'
 import { TrustpilotStars } from '@/components/trust/TrustpilotStars'
 import { ButtonLink } from '@/components/ui/Button'
-import { FairyLights, HollySprig } from '@/components/ui/Festive'
+import { HollySprig } from '@/components/ui/Festive'
 import { Snowfall } from '@/components/ui/Snowfall'
 import { InkWaves, PostmarkRoundel, StampFrame } from '@/components/ui/Stamp'
 import { NewsletterSignup } from '@/components/marketing/NewsletterSignup'
@@ -39,10 +39,11 @@ export const metadata: Metadata = {
 export default async function HomePage() {
   const [homepage, trust] = await Promise.all([getHomepage(), getTrustSummary()])
 
-  // One switch for the whole seasonal treatment: the snow, the lights on
-  // the hero and the holly on the Christmas band are on only while the
+  // One switch for the seasonal treatment: the snow is on only while the
   // Christmas band is in the slot list, so pulling that band in January
-  // takes the lot with it and nobody has to remember a second place.
+  // takes it with it and nobody has to remember a second place. The hero
+  // photograph is seasonal too, but it is swapped in the CMS content
+  // alongside the band rather than switched here.
   const festive = homepage.slots.some((slot) => slot.kind === 'christmas')
 
   return (
@@ -51,13 +52,7 @@ export default async function HomePage() {
           the sticky header. Nothing else on the homepage is fixed. */}
       {festive ? <Snowfall variant="page" /> : null}
       {homepage.slots.map((slot, index) => (
-        <Slot
-          key={`${slot.kind}-${index}`}
-          slot={slot}
-          trust={trust}
-          first={index === 0}
-          festive={festive}
-        />
+        <Slot key={`${slot.kind}-${index}`} slot={slot} trust={trust} first={index === 0} />
       ))}
     </>
   )
@@ -67,16 +62,14 @@ async function Slot({
   slot,
   trust,
   first,
-  festive,
 }: {
   slot: HomepageSlot
   trust: { rating: number; reviewCount: number }
   first: boolean
-  festive: boolean
 }) {
   switch (slot.kind) {
     case 'hero':
-      return <Hero slot={slot} trust={trust} priority={first} festive={festive} />
+      return <Hero slot={slot} trust={trust} priority={first} />
     case 'christmas':
       return <ChristmasBand slot={slot} />
     case 'budget-bands':
@@ -121,43 +114,56 @@ async function Slot({
 
 // ---------------------------------------------------------------------------
 
-async function Hero({
+/**
+ * The hero: one photograph, full bleed, with the words and the CTA over
+ * its left third.
+ *
+ * The photograph is composed for this, with the hamper on the right and
+ * quiet, dark wood on the left, so from lg up it sits behind the whole
+ * band and the type goes straight onto it, helped by a scrim that fades
+ * out before it reaches the hamper. Below lg there is no quiet third to
+ * write on, so the photograph stacks above the words instead and the
+ * words sit on the brand green, which is what the band was before.
+ *
+ * No fairy lights or monogram here any more: the photograph brings its
+ * own lights and tree, and a second string over the top read as clutter.
+ * The snow still falls over it, with the rest of the page.
+ */
+function Hero({
   slot,
   trust,
   priority,
-  festive,
 }: {
   slot: Extract<HomepageSlot, { kind: 'hero' }>
   trust: { rating: number; reviewCount: number }
   priority: boolean
-  festive: boolean
 }) {
-  const product = slot.imageHandle ? await getProduct(slot.imageHandle) : null
-  const image = product?.images[0] ?? null
-
   return (
-    <section className="relative overflow-hidden bg-green">
-      {/* The brand monogram as an oversized watermark, from the asset pack. */}
-      <Image
-        src="/brand/graphic-element-5.svg"
-        alt=""
-        aria-hidden="true"
-        width={767}
-        height={1054}
-        className="pointer-events-none absolute -right-24 -top-24 hidden w-[560px] opacity-[0.07] lg:block"
-      />
+    <section className="relative overflow-hidden bg-green text-cream">
+      <div className="relative aspect-16/9 lg:absolute lg:inset-0 lg:aspect-auto">
+        <Image
+          src={slot.image.src}
+          alt={slot.image.alt}
+          fill
+          priority={priority}
+          sizes="100vw"
+          quality={85}
+          className="object-cover object-right"
+        />
+        {/* Left-to-right scrim, large screens only. Deep enough at the
+            edge for cream type on the darkest crop, gone by the middle so
+            the hamper keeps its colour. */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 hidden bg-linear-to-r from-black/70 via-black/30 via-45% to-transparent to-65% lg:block"
+        />
+      </div>
 
-      {/* A string of lights along the top edge. The extra top padding on
-          small screens keeps the eyebrow clear of the lowest bulbs. */}
-      {festive ? (
-        <FairyLights className="absolute inset-x-0 top-0 z-0 text-cream" />
-      ) : null}
-      <div
-        className={`relative mx-auto grid max-w-[1400px] items-center gap-10 px-4 py-14 lg:grid-cols-2 lg:gap-16 lg:px-8 lg:py-20 ${
-          festive ? 'pt-20' : ''
-        }`}
-      >
-        <div className="animate-rise text-cream">
+      {/* The column is wide enough for the headline to sit on three lines
+          rather than four, which is what keeps the CTA above the fold on
+          a 900px-tall desktop viewport. */}
+      <div className="relative mx-auto max-w-[1400px] px-4 py-12 lg:flex lg:min-h-[640px] lg:items-center lg:px-8 lg:py-16 xl:min-h-[700px]">
+        <div className="animate-rise max-w-2xl">
           <p className="mb-4 text-xs uppercase tracking-[0.24em] text-gold">
             Dunshaughlin, Co. Meath
           </p>
@@ -186,37 +192,7 @@ async function Hero({
             />
           </div>
         </div>
-
-        <div className="relative animate-rise" style={{ animationDelay: '120ms' }}>
-          <StampFrame className="bg-beige">
-            {image ? (
-              <Image
-                src={image.url}
-                alt={image.alt}
-                width={image.width}
-                height={image.height}
-                priority={priority}
-                sizes="(min-width: 1024px) 46vw, 92vw"
-                className="aspect-4/3 w-full object-cover"
-              />
-            ) : (
-              <Image
-                src="/photography/tpc-01-full.jpg"
-                alt="A Parcel Concierge hamper packed by hand in Co. Meath"
-                width={1200}
-                height={900}
-                priority={priority}
-                sizes="(min-width: 1024px) 46vw, 92vw"
-                className="aspect-4/3 w-full object-cover"
-              />
-            )}
-          </StampFrame>
-
-          <PostmarkRoundel className="absolute -bottom-9 -left-9 hidden h-48 w-48 text-gold lg:block" />
-        </div>
       </div>
-
-      <InkWaves className="h-16 w-full text-cream/25" lines={4} />
     </section>
   )
 }

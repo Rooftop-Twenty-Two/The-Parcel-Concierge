@@ -132,7 +132,7 @@ export async function HubPage({
       ) : null}
 
       {result.items.length >= MIN_PRODUCTS_PER_LISTING ? (
-        <section className="mx-auto max-w-[1400px] px-4 pb-14 lg:px-8">
+        <section className="mx-auto max-w-[1400px] px-4 py-14 lg:px-8">
           {/*
             A hub shows a sample, not the whole hub. It used to be headed
             "Everything here", which was true of thirty hampers and became

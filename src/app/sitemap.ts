@@ -57,12 +57,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     await Promise.all(COLLECTIONS.map((collection) => listingEntry(collection, url, withCopy)))
   ).filter((entry): entry is NonNullable<typeof entry> => entry !== null)
 
-  const { items } = await queryProducts({ first: 250 })
-  const productEntries: MetadataRoute.Sitemap = items.map((product) => ({
-    url: url(productPathFor(product.kind, product.handle)),
-    priority: product.kind === 'hamper' ? 0.8 : 0.6,
-    changeFrequency: 'weekly',
-  }))
+  // Every product, a Storefront page at a time. This used to be one page of
+  // 250, and the catalogue is bigger than that: every product past the
+  // first page was left out of the sitemap.
+  const productEntries: MetadataRoute.Sitemap = []
+  let after: string | undefined
+  for (let page = 0; page < 8; page += 1) {
+    const { items, pageInfo } = await queryProducts({ first: 250, after })
+    for (const product of items) {
+      productEntries.push({
+        url: url(productPathFor(product.kind, product.handle)),
+        priority: product.kind === 'hamper' ? 0.8 : 0.6,
+        changeFrequency: 'weekly',
+      })
+    }
+    if (!pageInfo.hasNextPage || !pageInfo.endCursor || items.length === 0) break
+    after = pageInfo.endCursor
+  }
 
   return [...staticEntries, ...listingEntries, ...productEntries]
 }

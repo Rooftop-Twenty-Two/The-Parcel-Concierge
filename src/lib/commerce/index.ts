@@ -2,7 +2,7 @@ import 'server-only'
 
 import { collectionTag, productTag, REVALIDATE, TAG_ALL_PRODUCTS } from '../shopify/cache-tags'
 import { HIDDEN_FROM_LISTINGS } from './collections'
-import { MAX_FIRST } from './pagination'
+import { MAX_FIRST, MAX_LISTING } from './pagination'
 import { storefront } from '../shopify/client'
 import { hasStorefrontCredentials } from '../shopify/env'
 import { normaliseProduct, normaliseProductCard } from '../shopify/normalise'
@@ -140,6 +140,67 @@ function buildCollectionFilters(query: ProductQuery): Record<string, unknown>[] 
  * Reads a listing from a native Shopify collection — the live store's real
  * taxonomy. Every taxonomy listing routes here via query.collection.
  */
+type CollectionNode = Parameters<typeof normaliseProductCard>[0]
+
+type CollectionPageVariables = {
+  handle: string
+  sortKey: string
+  reverse: boolean
+  filters: unknown
+  withFacets: boolean
+}
+
+/**
+ * A collection read page by page, until it is exhausted, `need` products
+ * are in hand, or MAX_LISTING is reached.
+ *
+ * One Storefront call returns at most MAX_FIRST (250) products, and this
+ * used to be one call. The wine range passed 250 in 2026 (331 in the
+ * August export), so every wine past position 250 of the merchant's order
+ * in Fine Wines was on no listing at all, "Show more" ended before the
+ * end, and the facet counts tallied a partial collection. The client's
+ * report was a wine missing from the website.
+ *
+ * Each page is its own cached Storefront read with the listing's tags, so
+ * on a warm cache this costs nothing extra, and a collection that fits in
+ * one page is still one call.
+ *
+ * Returns null for an unknown collection handle.
+ */
+async function collectionPages(
+  variables: CollectionPageVariables,
+  tags: string[],
+  need: number,
+  startAfter: string | null = null,
+): Promise<{ nodes: CollectionNode[]; hasNextPage: boolean } | null> {
+  const nodes: CollectionNode[] = []
+  const cap = Math.min(need, MAX_LISTING)
+  let after: string | null = startAfter
+  let hasNextPage = false
+  while (nodes.length < cap) {
+    const data = await storefront<{
+      collection: {
+        products: {
+          nodes: CollectionNode[]
+          pageInfo: { hasNextPage: boolean; endCursor: string | null }
+        }
+      } | null
+    }>({
+      query: PRODUCTS_BY_COLLECTION,
+      variables: { ...variables, first: Math.min(MAX_FIRST, cap - nodes.length), after },
+      tags,
+      revalidate: REVALIDATE.listing,
+    })
+    const products = data.collection?.products
+    if (!products) return null
+    nodes.push(...products.nodes)
+    hasNextPage = products.pageInfo.hasNextPage
+    if (!hasNextPage || !products.pageInfo.endCursor || products.nodes.length === 0) break
+    after = products.pageInfo.endCursor
+  }
+  return { nodes, hasNextPage }
+}
+
 async function productsByCollection(
   query: ProductQuery,
   tags: string[],
@@ -167,8 +228,8 @@ async function productsByCollection(
   // window comes up short — a sold-out product among the first 24 leaves 23, so
   // a mostly-off-season collection can render a near-empty grid even though it
   // has plenty of live stock. So for the manual-order case we fetch the whole
-  // collection (the Storefront caps a single call at MAX_FIRST) and slice the
-  // requested window out of the in-stock result below.
+  // collection (page by page: see collectionPages) and slice the requested
+  // window out of the in-stock result below.
   const requested = query.first ?? 24
   // Active facet selections from the URL (grape, region, price, …). They are
   // applied in code rather than as Storefront filters, so a filtered wine
@@ -179,29 +240,18 @@ async function productsByCollection(
   const activeFacets = Object.entries(query.facets ?? {}).filter(([, values]) => values.length > 0)
   const facetFiltering = preserveManualOrder && activeFacets.length > 0
   const withFacets = facetFiltering && activeFacets.some(([key]) => METAFIELD_FACETS.has(key))
-  const data = await storefront<{
-    collection: {
-      products: {
-        nodes: Parameters<typeof normaliseProductCard>[0][]
-        pageInfo: { hasNextPage: boolean; endCursor: string | null }
-      }
-    } | null
-  }>({
-    query: PRODUCTS_BY_COLLECTION,
-    variables: {
-      handle: query.collection,
-      first: preserveManualOrder ? MAX_FIRST : requested,
-      after: preserveManualOrder ? null : (query.after ?? null),
+  const products = await collectionPages(
+    {
+      handle: query.collection!,
       sortKey: sort.sortKey,
       reverse: sort.reverse,
       filters: preserveManualOrder ? null : buildCollectionFilters(query),
       withFacets,
     },
     tags,
-    revalidate: REVALIDATE.listing,
-  })
-
-  const products = data.collection?.products
+    preserveManualOrder ? MAX_LISTING : requested,
+    preserveManualOrder ? null : (query.after ?? null),
+  )
   if (!products) {
     // Unknown collection handle: dark this one route rather than 500 the page.
     return { items: [], pageInfo: { hasNextPage: false, endCursor: null }, totalKnown: 0 }
@@ -262,7 +312,11 @@ async function productsByCollection(
     }
   }
 
-  return { items: faceted, pageInfo: products.pageInfo, totalKnown: faceted.length }
+  return {
+    items: faceted,
+    pageInfo: { hasNextPage: products.hasNextPage, endCursor: null },
+    totalKnown: faceted.length,
+  }
 }
 
 /**
@@ -427,29 +481,22 @@ export async function facetOptions(
   if (!query.collection) return []
 
   const sort = COLLECTION_SORT_KEYS[query.sort ?? 'featured']
-  const data = await storefront<{
-    collection: {
-      products: { nodes: Parameters<typeof normaliseProductCard>[0][] }
-    } | null
-  }>({
-    query: PRODUCTS_BY_COLLECTION,
-    variables: {
+  // The whole collection, so the counts match the whole grid. No Storefront
+  // filters: we tally in code so options match the grid, and filters would
+  // reshuffle the collection. Always fetch the metafields — building the
+  // filter controls is exactly what they are for.
+  const products = await collectionPages(
+    {
       handle: query.collection,
-      first: MAX_FIRST,
-      after: null,
       sortKey: sort.sortKey,
       reverse: sort.reverse,
-      // No Storefront filters: we tally in code so options match the grid, and
-      // filters would reshuffle the collection. Always fetch the metafields —
-      // building the filter controls is exactly what they are for.
       filters: null,
       withFacets: true,
     },
-    tags: [TAG_ALL_PRODUCTS, collectionTag(query.collection)],
-    revalidate: REVALIDATE.listing,
-  })
-
-  const nodes = data.collection?.products.nodes
+    [TAG_ALL_PRODUCTS, collectionTag(query.collection)],
+    MAX_LISTING,
+  )
+  const nodes = products?.nodes
   if (!nodes) return []
 
   const hidden = new Set(HIDDEN_FROM_LISTINGS)

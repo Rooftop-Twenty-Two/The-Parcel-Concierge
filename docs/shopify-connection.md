@@ -115,6 +115,19 @@ deploys by design. If you cannot set the secret, Vercel has a "Purge Data
 Cache" button under the project's Data Cache settings, and Netlify's
 equivalent is "Clear cache and deploy site".
 
+### 5c. "A wine is missing from the website"
+
+```bash
+npm run wines:audit                # every wine the site cannot surface, and why
+npm run wines:audit -- tokara      # one product's status, by handle or title
+```
+
+It reads every product on the store and reports wines that are in none of
+the collections the wine listings read, products that look like wine but
+read as gifts (wrong hub, /wine/ URL 404s), and wines that are out of stock.
+Almost always the fix is in Shopify: put the product in Fine Wines or the
+red/white/sparkling collection, or restock it.
+
 ### 6. Know what step 3 also does
 
 `src/app/robots.ts` returns `disallow: /` for the whole site while it is in

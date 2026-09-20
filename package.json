@@ -15,6 +15,7 @@
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.scripts.json",
     "test": "node --test --experimental-strip-types \"tests/**/*.test.ts\"",
     "collections:validate": "node --experimental-strip-types scripts/collections/validate.ts",
+    "wines:audit": "node --import ./scripts/lib/register-ts.mjs --experimental-strip-types scripts/collections/audit-wines.ts",
     "check": "npm run typecheck && npm run lint && npm run redirects:validate && npm run collections:validate && npm run content:report && npm run test",
     "redirects:build": "node scripts/redirects/build-redirect-map.mjs",
     "redirects:validate": "node --experimental-strip-types scripts/redirects/validate-redirect-map.ts",

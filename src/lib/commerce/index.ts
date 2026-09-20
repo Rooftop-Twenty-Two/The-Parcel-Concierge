@@ -11,6 +11,7 @@ import {
   PRODUCT_CARD_BY_HANDLE,
   PRODUCTS_BY_COLLECTION,
   PRODUCTS_BY_QUERY,
+  SEARCH_PRODUCTS,
   VARIANT_AVAILABILITY,
 } from '../shopify/queries'
 import { fixtureAllHandles, fixtureFacetOptions, fixtureProduct, fixtureQuery } from './fixtures'
@@ -521,6 +522,50 @@ export async function facetOptions(
   return [...counts.entries()]
     .map(([value, count]) => ({ value, count }))
     .sort((a, b) => a.value.localeCompare(b.value))
+}
+
+/**
+ * Site search, for the box in the header and /search.
+ *
+ * The old site had a search box and this one did not, and the client's
+ * first use for it was a wine they could not find on any listing. The
+ * results are the same product cards as a listing, so a product that is
+ * on no listing is still findable here: search reads the whole store,
+ * not a collection.
+ *
+ * Builder box products and builder items are mechanisms with no page of
+ * their own and are dropped, the same as on every listing.
+ */
+export async function searchProducts(
+  term: string,
+  first = 48,
+): Promise<{ items: ProductCard[]; total: number }> {
+  const trimmed = term.trim()
+  if (!trimmed) return { items: [], total: 0 }
+
+  if (isFixtureMode()) {
+    const result = fixtureQuery({ text: trimmed, first, sort: 'featured' })
+    const items = result.items.filter((item) => item.kind !== 'builder-item')
+    return { items, total: items.length }
+  }
+
+  const data = await storefront<{
+    search: { totalCount: number; nodes: Parameters<typeof normaliseProductCard>[0][] }
+  }>({
+    query: SEARCH_PRODUCTS,
+    variables: { term: trimmed, first: Math.min(first, MAX_FIRST) },
+    tags: [TAG_ALL_PRODUCTS],
+    revalidate: REVALIDATE.listing,
+  })
+
+  const hidden = new Set(HIDDEN_FROM_LISTINGS)
+  const items = data.search.nodes
+    // A non-product node has no handle; `types: [PRODUCT]` should keep them
+    // out, but the union type does not promise it.
+    .filter((node) => typeof node?.handle === 'string' && !hidden.has(node.handle))
+    .map(normaliseProductCard)
+    .filter((card) => card.kind !== 'builder-item')
+  return { items, total: Math.max(items.length, data.search.totalCount - (data.search.nodes.length - items.length)) }
 }
 
 export async function allProductHandles(): Promise<string[]> {

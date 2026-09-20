@@ -492,3 +492,24 @@ export const CART_ATTRIBUTES_UPDATE = /* GraphQL */ `
     }
   }
 `
+
+/**
+ * Site search. The Storefront `search` field, not products(query:): it
+ * matches across title, vendor, product type and tags with prefix matching
+ * on the last word, so "tokara dir" finds Tokara Directors Reserve, and it
+ * ranks by relevance. products(query:) matches the title only, whole words
+ * only, which is not what a shopper typing into a box expects.
+ */
+export const SEARCH_PRODUCTS = /* GraphQL */ `
+  ${PRODUCT_CARD_FRAGMENT}
+  query SearchProducts($term: String!, $first: Int!) {
+    search(query: $term, first: $first, types: [PRODUCT], unavailableProducts: HIDE, prefix: LAST) {
+      totalCount
+      nodes {
+        ... on Product {
+          ...ProductCard
+        }
+      }
+    }
+  }
+`

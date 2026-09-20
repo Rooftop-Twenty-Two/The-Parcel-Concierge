@@ -249,6 +249,11 @@ function MobileNav({ onNavigate }: { onNavigate: () => void }) {
       aria-label="Main"
       className="max-h-[75vh] overflow-y-auto border-t border-rule bg-cream lg:hidden"
     >
+      {/* The box is in the bar too, but the drawer is where a phone user
+          goes looking for anything, so it is the first thing in it. */}
+      <div className="px-4 pt-4">
+        <SearchForm />
+      </div>
       <ul className="divide-y divide-rule px-4 pb-8">
         {NAV.map((item) => (
           <li key={item.href} className="py-3">

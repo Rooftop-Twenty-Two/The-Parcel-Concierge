@@ -449,10 +449,20 @@ function BuilderBand({ slot }: { slot: Extract<HomepageSlot, { kind: 'hamper-bui
   )
 }
 
-function OccasionBand({ slot }: { slot: Extract<HomepageSlot, { kind: 'occasions' }> }) {
-  const collections = slot.paths
-    .map((path) => getCollectionByPath(path))
-    .filter((c): c is NonNullable<typeof c> => c !== undefined)
+async function OccasionBand({ slot }: { slot: Extract<HomepageSlot, { kind: 'occasions' }> }) {
+  // Through populatedListings like the budget bands and the hubs, so the
+  // band only ever offers an occasion that will open. Without it this
+  // shipped a card for Wedding and engagement, whose collection came out
+  // in the clear-out: the listing is under the four-product floor, so the
+  // card redirected to /occasions.
+  const collections = await populatedListings(
+    slot.paths
+      .map((path) => getCollectionByPath(path))
+      .filter((c): c is NonNullable<typeof c> => c !== undefined),
+  )
+  // One card is not a band worth showing. The slot is CMS-driven, so this
+  // comes back by itself the moment a second occasion has a collection.
+  if (collections.length < 2) return null
 
   return (
     <section className="mx-auto max-w-[1400px] px-4 py-16 lg:px-8">

@@ -135,29 +135,19 @@ export const NAV = [
         'The Parcel Concierge shop in Dunshaughlin dressed for Christmas, the window full of lights and gifts',
     },
   },
-  {
-    label: 'Occasions',
-    href: '/occasions',
-    columns: [
-      {
-        title: 'Occasions',
-        links: [
-          { label: 'Christmas', href: '/occasions/christmas' },
-          { label: "Mother's Day", href: '/occasions/mothers-day' },
-          { label: "Father's Day", href: '/occasions/fathers-day' },
-          { label: "Valentine's", href: '/occasions/valentines' },
-          { label: 'Get well soon', href: '/occasions/get-well' },
-        ],
-      },
-    ],
-    promo: {
-      title: 'Hampers by budget instead',
-      body: 'If the number is set and the person is not, start here.',
-      href: '/hampers/75-125',
-      imageSrc: '/photography/tpc-06-full.jpg',
-      imageAlt: 'A bottle of Champagne, a glass and a notebook packed in a green gift box',
-    },
-  },
+  // Occasions came out of the bar at the client's request, September 2026,
+  // and the menu was the reason: of its five links, four pointed at
+  // listings whose collections were removed in the collection clear-out,
+  // so they redirected straight back to the hub. The fifth was Christmas,
+  // which already has a top-level item of its own. A panel of dead ends
+  // next to the live one it duplicates.
+  //
+  // The hub itself is untouched and still at /occasions. It is reachable
+  // from the Christmas breadcrumb, from the homepage occasions band and
+  // from the sitemap, and it only ever offers listings that will open
+  // (see populatedListings in the page). So restoring this row is putting
+  // it back — nothing else has to be rebuilt — and it is worth doing once
+  // more than one occasion has a collection behind it again.
   {
     label: 'About',
     href: '/about',

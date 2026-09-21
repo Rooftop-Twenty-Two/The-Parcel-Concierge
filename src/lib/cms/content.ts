@@ -260,34 +260,6 @@ export const CONTENT: CmsData = {
         '<p>We compared our list against the other Irish retailers stocking the same wines, bottle for bottle and vintage for vintage. On the matches we could verify, we were at or below the cheapest Irish price about seven times out of ten. This page is the part of that we can stand over.</p><p>A wine only appears here when we hold a dated, verified comparison for it, and it comes off the page when the comparison goes stale. We do not name other retailers or quote their prices, because prices move and a claim that was true last month is a problem this month.</p><p>Everything on this page is also in the main list, filtered and sorted the usual way.</p>',
     },
     {
-      path: '/gifts-by-budget/under-50',
-      intro:
-        'Everything we sell under €50, hampers and bottles together. This is the page for a Kris Kringle, a thank you, or a gift where the budget was set by somebody else.',
-      seoBlock:
-        '<p>Buying to a ceiling is the most common way people shop for a gift and the hardest thing to do on most websites. This page exists so you can start from the number rather than working backwards from a category.</p><p>Under €50 is bottle territory: a very good red, a crisp white, or Champagne in a half bottle. The hampers pick up one band above, starting with The Perfect Duo at €55.</p><p>Sorted from the top of the band down, so the most you can get for the money is first. Free hand delivery locally, €8.95 anywhere else in Ireland.</p>',
-    },
-    {
-      path: '/gifts-by-budget/50-100',
-      intro:
-        'Gifts from €50 to €100, hampers and bottles together. The widest band we have and the one most people land in.',
-      seoBlock:
-        '<p>This is the band where a gift stops needing an apology. The Perfect Duo at €55 is rosé and chocolates in one box. For the Guinness Lover at €68 covers the man who has everything and drinks coffee. Bubbles and Bliss at €80 pairs two Proseccos with Jo Browne body oils, and the Taste of Ireland Gluten Free Hamper at €92 feeds the house nobody can usually buy for.</p><p>Because the band covers so much, the filters on this page earn their keep. Narrow by occasion if you know what it is for, or by recipient if you know who it is for, and the list gets manageable quickly.</p><p>Everything here is hand packed and hand tied, with a card written by hand. Free hand delivery locally, €8.95 anywhere else in Ireland.</p>',
-    },
-    {
-      path: '/gifts-by-budget/100-150',
-      intro:
-        'Gifts from €100 to €150. Bigger hampers, better bottles, and the glassware to go with them.',
-      seoBlock:
-        '<p>At this level you are buying something with a name on it. A McNutt of Donegal lambswool scarf beside a Sicilian red. Two Italian wines with a Caulfield Country walnut board to serve on. A Tipperary Crystal robin mug with Prosecco and chocolate. The box is built around one thing worth talking about rather than lots of things worth nothing.</p><p>This is also where our corporate range starts, so if you are buying more than ten of anything on this page it is worth looking at the corporate gifting section first for volume pricing.</p><p>Free hand delivery locally, €8.95 anywhere else in Ireland, free over €100.</p>',
-    },
-    {
-      path: '/gifts-by-budget/150-plus',
-      intro:
-        'Gifts at €150 and over. Champagne with the crystal to drink it from, lambswool, and the biggest baskets we pack.',
-      seoBlock:
-        '<p>Above €150 the boxes are built around things that stay in the house. Galway Crystal flutes with Henriot Champagne for a new home. A Tipperary Crystal vase beside a La Bougie diffuser. A lambswool blanket for a new baby, with a bottle for the parents.</p><p>The Grand Indulgence at €495 tops the range: Louis Roederer Champagne, Bordeaux, Rioja and a basket of food and fragrance to carry them.</p><p>Sorted from the bottom of the band up. Free delivery anywhere in Ireland at this level.</p>',
-    },
-    {
       path: '/gifts-for/her',
       intro:
         'Gifts for her, across hampers, wine and the pamper range. Filter by occasion or budget to narrow it down.',
@@ -537,7 +509,7 @@ export const CONTENT: CmsData = {
       publishedAt: '2026-08-01',
       updatedAt: '2026-08-01',
       productHandles: [],
-      relatedPaths: ['/gifts-by-budget/under-50', '/hampers/under-75', '/hampers/125-200'],
+      relatedPaths: ['/hampers/under-75', '/hampers/75-125', '/hampers/125-200'],
     },
     {
       slug: 'corporate-gifting-that-does-not-embarrass-anyone',

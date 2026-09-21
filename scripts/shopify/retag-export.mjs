@@ -472,7 +472,7 @@ const SITE_USE = {
   'champagne-and-prosecco-1': '/wine/champagne-sparkling and the Build a Box sparkling shelf',
   'port-and-sherry-1': '/wine/port-dessert', 'organic-wine': '/wine/organic-biodynamic',
   'non-alcoholic-1': '/wine/alcohol-free', 'wine-gift-sets': '/wine/gift-sets',
-  'all-gifts': 'the Build a Box Everything shelf and /gifts-by-budget',
+  'all-gifts': 'the Build a Box Everything shelf. Not a shopper-facing listing: Gifts by budget was retired in September 2026',
   'all-food': 'the Build a Box food shelf',
   'chocolate-confectionery-1': '/gifts/chocolate-treats and the Build a Box chocolate shelf',
   'candles-diffusers': '/gifts/candles-diffusers and the Build a Box candles shelf',

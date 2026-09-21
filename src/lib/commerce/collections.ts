@@ -723,8 +723,24 @@ export function isPriceBand(c: CollectionDef): boolean {
  * and route resolution all see only what should show this season. The price
  * bands stay: they read the live range, so they can only show what is in it.
  */
+/**
+ * Gifts by budget is retired (September 2026).
+ *
+ * The four bands read All Gifts, which is the Build a Box "Everything"
+ * shelf: once every standalone item is tagged into it so Build a Box can
+ * reach it, these pages become a shop window full of socks, cards and
+ * homeware. That is the standalone gift category the rebuild brief rules
+ * out. Nothing linked to them any more either: they are not in the nav,
+ * and the homepage budget cards point at the hamper price bands.
+ *
+ * The paths redirect to /hampers (data/redirects/redirects.csv). Bring
+ * them back by deleting this clause.
+ */
+const RETIRED_HUBS: ReadonlySet<CollectionHub> = new Set(['gifts-by-budget'])
+
 export const COLLECTIONS: readonly CollectionDef[] = ALL_LISTINGS.filter(
-  (c) => !(SEASONAL_HAMPERS_ONLY && c.hub === 'hampers' && !isPriceBand(c)),
+  (c) =>
+    !RETIRED_HUBS.has(c.hub) && !(SEASONAL_HAMPERS_ONLY && c.hub === 'hampers' && !isPriceBand(c)),
 )
 
 const BY_PATH = new Map(COLLECTIONS.map((c) => [c.path, c]))

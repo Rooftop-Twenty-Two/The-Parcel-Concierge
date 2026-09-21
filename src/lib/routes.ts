@@ -151,9 +151,9 @@ export const NAV = [
       },
     ],
     promo: {
-      title: 'Shop by budget instead',
+      title: 'Hampers by budget instead',
       body: 'If the number is set and the person is not, start here.',
-      href: '/gifts-by-budget/50-100',
+      href: '/hampers/75-125',
       imageSrc: '/photography/tpc-06-full.jpg',
       imageAlt: 'A bottle of Champagne, a glass and a notebook packed in a green gift box',
     },

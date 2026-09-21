@@ -333,5 +333,30 @@
     "source": "/corporate-gifting/branding-personalisation",
     "destination": "/corporate-gifting",
     "permanent": true
+  },
+  {
+    "source": "/gifts-by-budget",
+    "destination": "/hampers",
+    "permanent": true
+  },
+  {
+    "source": "/gifts-by-budget/under-50",
+    "destination": "/hampers/under-75",
+    "permanent": true
+  },
+  {
+    "source": "/gifts-by-budget/50-100",
+    "destination": "/hampers/under-75",
+    "permanent": true
+  },
+  {
+    "source": "/gifts-by-budget/100-150",
+    "destination": "/hampers/75-125",
+    "permanent": true
+  },
+  {
+    "source": "/gifts-by-budget/150-plus",
+    "destination": "/hampers/125-200",
+    "permanent": true
   }
 ]

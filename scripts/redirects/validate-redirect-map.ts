@@ -38,7 +38,7 @@ const STATIC_ROUTES = new Set([
   '/corporate-gifting/enquiry',
   '/occasions',
   '/gifts-for',
-  '/gifts-by-budget',
+
   '/gifts',
   '/gift-card',
   '/about',

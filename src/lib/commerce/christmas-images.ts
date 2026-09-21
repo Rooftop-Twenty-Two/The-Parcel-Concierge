@@ -65,27 +65,30 @@ export const CHRISTMAS_IMAGE_PATHS: ReadonlySet<string> = new Set(['/occasions/c
 export const LISTING_HEROES: Readonly<Record<string, ListingHeroContent>> = {
   '/occasions/christmas': {
     image: {
-      // A real photograph of a real hamper, not a render: shot for the
-      // client and supplied 18 September 2026. It is the one image in this
-      // file with no misrepresentation risk, which is why it leads the
-      // page. A second shot from the same set is in git at 270aa66 if a
-      // second band ever wants one.
+      // Supplied 21 September 2026, framed 16:9 for this band: the hamper
+      // right of centre, bare table and greenery on the left where the
+      // copy sits. That is the homepage composition, so it needs none of
+      // the extending the earlier flat-lay did.
       //
-      // The photograph as shot is a 4:3 top-down flat lay filling the
-      // frame edge to edge, and the hero band cropped it to a very zoomed
-      // middle third: one bottle filled the band and the headline sat on
-      // busy, high-contrast labels. So the file here is that photograph
-      // extended to 16:9 — the shot itself untouched on the right, and a
-      // blurred, darkened blow-up of it falling off to the left, feathered
-      // in over 260px. That gives the hero the homepage's composition,
-      // subject right and a soft dark field left under the copy, without
-      // cropping a single label or inventing anything not in the frame.
+      // It is a render, like the cards below, but the one that survives
+      // being the largest image on the page: every brand on it reads
+      // correctly at full size — Keogh's, Butlers, Filligan's, Shines,
+      // Isle of Crackers, Hadji Bey's. What is still wrong is small and
+      // secondary: the sub-lines under Hadji Bey's and Isle of Crackers,
+      // "very fouity deep fill" on the mince pies, and the Foods of
+      // Athenry roundel, which is not words. Legible if you go looking at
+      // full resolution; not at the size it renders.
       //
-      // Rebuild from the original (git, 270aa66) if the band's height
-      // changes. Two sharp passes — composite, then resize, because sharp
-      // applies resize before composite within one pipeline.
+      // A second shot came with it and was not used: it repeats the
+      // misspellings of the earlier set ("Chutnay For Chesse", "Dark
+      // Chocolate Shares", "Baittles" for Butlers). It is in git at
+      // c19b586 if it is ever wanted.
+      //
+      // 1600px wide is the source, so this is a little soft on a 2x
+      // display at full width. A larger export of the same frame is a
+      // straight swap.
       src: '/photography/christmas/hero.webp',
-      alt: 'A Christmas hamper photographed from above, holding two bottles of Château Les Moutins Bordeaux, Keogh’s crisps, Skelligs dark chocolate, a Filligan’s chutney and a box of deep-fill mince pies, with a red felt Christmas tree tucked in beside them',
+      alt: 'A Christmas hamper on a wooden table, holding a Butlers festive chocolate collection, Keogh’s crisps, Hadji Bey’s caramels, a Filligan’s chutney, Shines smoked salmon pâté, Isle of Crackers and a box of mince pies, with pine, holly and pinecones around it',
     },
     eyebrow: 'Christmas 2026',
     cta: { label: 'Shop Christmas hampers', href: '#grid' },

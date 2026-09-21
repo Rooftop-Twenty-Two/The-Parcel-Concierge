@@ -44,11 +44,15 @@ export function ListingHero({
         fill
         priority
         sizes="100vw"
-        // Same as the homepage: the hamper sits on the right of the frame
-        // and the left is dark and empty, which is where the copy goes. On
-        // a phone the frame is tall and narrow, so the focal point moves
-        // in to keep the box in shot rather than cropping to the blur.
-        className="object-cover object-[67%_center] lg:object-right"
+        // Same idea as the homepage: the hamper sits right of centre and
+        // the left of the frame is empty table, which is where the copy
+        // goes. Centred rather than object-right, because this photograph
+        // is 16:9 and the band is wider than that — below about 1220px
+        // the crop turns horizontal, and object-right would eat the empty
+        // left and push the headline onto the hamper. On a phone the
+        // frame is tall and narrow, so the focal point moves right to
+        // keep the box in shot rather than cropping to bare table.
+        className="object-cover object-[67%_center] lg:object-center"
       />
       <div
         aria-hidden="true"

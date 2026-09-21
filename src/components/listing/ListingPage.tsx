@@ -7,6 +7,7 @@ import { AgeGate } from '@/components/commerce/AgeGate'
 import { InkWaves } from '@/components/ui/Stamp'
 import { getCuratedListing, getListingCopy } from '@/lib/cms'
 import { facetOptions, queryListing, queryProducts } from '@/lib/commerce'
+import { CHRISTMAS_IMAGE_PATHS, withChristmasImages } from '@/lib/commerce/christmas-images'
 import {
   MIN_PRODUCTS_PER_LISTING,
   type CollectionDef,
@@ -93,12 +94,20 @@ export async function ListingPage({
   const pageSize = collection.query.first ?? 24
   const query = await buildListingQuery(collection, facets, step)
 
-  const [copy, result] = await Promise.all([
+  const [copy, fetched] = await Promise.all([
     getListingCopy(collection.path),
     collection.curated
       ? queryProducts(query)
       : queryListing(collection.path, query),
   ])
+
+  // The Christmas listing shows the hampers dressed for Christmas; every
+  // other listing shows the product's own image. Same products, same
+  // prices, same links: only the photograph changes. See
+  // commerce/christmas-images.ts, and remove this in January.
+  const result = CHRISTMAS_IMAGE_PATHS.has(collection.path)
+    ? { ...fetched, items: withChristmasImages(fetched.items) }
+    : fetched
 
   // The min-four rule applies to the unfiltered listing. A filter that
   // returns nothing is a legitimate empty state, not a broken route.

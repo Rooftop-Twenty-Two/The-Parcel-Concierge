@@ -121,6 +121,12 @@ export const CHRISTMAS_IMAGES: Readonly<Record<string, ChristmasImage>> = {
     src: '/photography/christmas/bubbles-bliss-luxury-hamper.webp',
     alt: 'The Bubbles and Bliss Luxury Hamper dressed for Christmas, two small bottles of Moët and Chandon Champagne either side of a Jo Browne body oil gift set',
   },
+  // Square rather than 4:3, so the card crops the top and bottom of the
+  // frame. The box is centred, which is why that is fine here.
+  'new-home-luxury-hamper': {
+    src: '/photography/christmas/new-home-luxury-hamper.webp',
+    alt: 'The New Home Luxury Hamper dressed for Christmas, a bottle of Henriot Champagne beside a Rathbornes candle, a framed ogham print and a boxed pair of Galway Crystal Champagne flutes',
+  },
 
   // CONTENTS DIFFER from the hamper as sold. Kept so the client can see
   // them in place and decide; each needs either a real photograph or the

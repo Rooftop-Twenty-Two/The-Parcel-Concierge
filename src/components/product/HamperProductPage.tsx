@@ -15,6 +15,7 @@ import { TrustpilotStars } from '@/components/trust/TrustpilotStars'
 import { Accordion } from '@/components/ui/Accordion'
 import { TAG_LABELS } from '@/lib/commerce/taxonomy'
 import type { Product, ProductCard } from '@/lib/commerce/types'
+import { withChristmasGallery } from '@/lib/commerce/christmas-images'
 import { breadcrumbJsonLd, productJsonLd } from '@/lib/seo/structured-data'
 import { demoteHeadings } from '@/lib/seo/demote-headings'
 
@@ -74,7 +75,13 @@ export function HamperProductPage({
 
         <VariantSelectionProvider product={product}>
           <div className="grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
-            <ProductGallery images={product.images} title={product.title} />
+            {/* The Christmas photograph leads while the treatment is on, so
+                a card clicked on /occasions/christmas opens on the same
+                image. See commerce/christmas-images.ts. */}
+            <ProductGallery
+              images={withChristmasGallery(product.handle, product.images)}
+              title={product.title}
+            />
 
             <div>
             <div className="flex flex-wrap gap-2">

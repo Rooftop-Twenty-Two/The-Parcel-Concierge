@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import { existsSync } from 'node:fs'
 import { test } from 'node:test'
 import {
+  withChristmasGallery,
   CHRISTMAS_IMAGES,
   CHRISTMAS_IMAGE_PATHS,
   withChristmasImages,
@@ -55,4 +56,20 @@ test('only the Christmas listing swaps images; the hub and the budget bands do n
   for (const path of ['/hampers', '/hampers/under-75', '/hampers/75-125', '/']) {
     assert.equal(CHRISTMAS_IMAGE_PATHS.has(path), false, `${path} must keep the everyday photograph`)
   }
+})
+
+test('the product page opens on the Christmas photograph, keeping every other image', () => {
+  const everyday = [
+    { url: 'https://cdn.shopify.com/a.png', alt: 'a', width: 1, height: 1 },
+    { url: 'https://cdn.shopify.com/b.png', alt: 'b', width: 1, height: 1 },
+  ]
+  const gallery = withChristmasGallery('large-basket', everyday)
+  assert.equal(gallery[0]!.url, '/photography/christmas/large-basket.webp')
+  assert.equal(gallery.length, 3, 'nothing is dropped')
+  assert.deepEqual(gallery.slice(1), everyday)
+})
+
+test('a hamper with no Christmas photograph keeps its gallery exactly', () => {
+  const everyday = [{ url: 'https://cdn.shopify.com/a.png', alt: 'a', width: 1, height: 1 }]
+  assert.deepEqual(withChristmasGallery('the-perfect-duo', everyday), everyday)
 })

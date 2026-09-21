@@ -1,5 +1,5 @@
 import type { ListingHeroContent } from '@/components/listing/ListingHero'
-import type { ProductCard } from './types'
+import type { ProductCard, ProductImage } from './types'
 
 /**
  * Christmas photography, shown on the Christmas listing only.
@@ -154,6 +154,27 @@ export const CHRISTMAS_IMAGES: Readonly<Record<string, ChristmasImage>> = {
  * one, where we hold a Christmas photograph. Everything else about the
  * card, including its price, stock and link, is untouched.
  */
+/**
+ * The product gallery with the Christmas photograph leading it.
+ *
+ * Somebody who clicks a card on the Christmas listing expects to land on
+ * the hamper they just looked at, so the product page opens on the same
+ * photograph. The everyday shots follow it, none are dropped, and a
+ * hamper we hold no Christmas photograph for is untouched.
+ *
+ * This is the one place the treatment reaches outside the Christmas
+ * listing, because a product page is not a "general section": it is
+ * wherever the shopper came from.
+ */
+export function withChristmasGallery(handle: string, images: readonly ProductImage[]): ProductImage[] {
+  const festive = CHRISTMAS_IMAGES[handle]
+  if (!festive) return [...images]
+  return [
+    { url: festive.src, alt: festive.alt, width: 1400, height: 1050 },
+    ...images.filter((image) => image.url !== festive.src),
+  ]
+}
+
 export function withChristmasImages(cards: readonly ProductCard[]): ProductCard[] {
   return cards.map((card) => {
     const festive = CHRISTMAS_IMAGES[card.handle]

@@ -110,6 +110,102 @@ const ALCOHOL_FALSE_FRIENDS = /\b(chocolates?|truffles?|fudge|sauce|cake|candle|
 const ADDON_TAGS = new Set(['candles & diffusers','chocolate & confectionery','crystal','glassware'])
 const HIDDEN_HANDLES = new Set(['build-a-hamper','build-a-premium-hamper','gift-bow'])
 
+/**
+ * One tag per collection the site reads, so each collection can be
+ * automated on "Product tag is equal to <tag>". The tag text is the
+ * merchant's own wherever the export already uses one, so most products
+ * keep working the moment the collection is switched to automated.
+ *
+ * A Shopify product CSV has no collection column, so this is how an
+ * import reaches collection membership: tag here, automate once in admin.
+ * data/shopify-import/collections-to-automate.csv is the setup list.
+ */
+const COLLECTION_TAG = {
+  hampers: 'All Hampers',
+  fineWines: 'Fine Wines',
+  red: 'Red Wines',
+  white: 'White Wines',
+  rose: 'Rose Wine',
+  sparkling: 'Champagne and Prosecco',
+  portSherry: 'Port and Sherry',
+  organic: 'Organic Wine',
+  nonAlcoholic: 'Non-Alcoholic',
+  wineGiftSets: 'Wine Gift Sets',
+  allGifts: 'All Gifts',
+  food: 'All Food',
+  chocolate: 'Chocolate & Confectionery',
+  candles: 'Candles & Diffusers',
+  crystal: 'Glassware & Crystal',
+  beauty: 'Beauty',
+  homeware: 'Homeware',
+  baby: 'Baby',
+  jewellery: 'Jewellery',
+  cards: 'Greeting Cards',
+}
+
+/** Which collection handle each of those tags should drive. */
+const COLLECTION_HANDLE = {
+  'All Hampers': 'christmas-2026', 'Fine Wines': 'fine-wines-1', 'Red Wines': 'red-wines-1',
+  'White Wines': 'white-wines-1', 'Rose Wine': 'rose', 'Champagne and Prosecco': 'champagne-and-prosecco-1',
+  'Port and Sherry': 'port-and-sherry-1', 'Organic Wine': 'organic-wine', 'Non-Alcoholic': 'non-alcoholic-1',
+  'Wine Gift Sets': 'wine-gift-sets', 'All Gifts': 'all-gifts', 'All Food': 'all-food',
+  'Chocolate & Confectionery': 'chocolate-confectionery-1', 'Candles & Diffusers': 'candles-diffusers',
+  'Glassware & Crystal': 'glassware-crystal', Beauty: 'beauty', Homeware: 'homeware', Baby: 'baby',
+  Jewellery: 'jewellery', 'Greeting Cards': 'greeting-cards',
+}
+
+/**
+ * Build a Box shelves, in priority order. Lifted from the AISLES table in
+ * scripts/catalogue/import-builder-items.mjs, which was itself read off
+ * this export, typos included. First match wins.
+ */
+const SHELVES = [
+  { tag: COLLECTION_TAG.chocolate,
+    types: ['chocolate','chocolate bar','nougat','jellies','popcorn','fudge','sweets','marshmallow','toffee'],
+    tags: ['chocolate & confectionery'],
+    titles: /\b(chocolates?|choc\b|easter egg|fudge|honeycomb|truffles?|toffee|caramels?|liquorice|marshmallows?|nougat|sweets|bonbons?|praline)\b/i },
+  { tag: COLLECTION_TAG.candles,
+    types: ['candle','candles','diffuser','wax melt','room spray'],
+    tags: ['candles & diffusers'],
+    titles: /\b(candles?|diffusers?|wax melts?|room spray|incense)\b/i },
+  { tag: COLLECTION_TAG.beauty,
+    types: ['soap','shampoo','deodrant','deodorant','bath salt','bodycare','moisturiser','lip balm','hand cream','perfume'],
+    tags: ['beauty','skincare','bath and body'],
+    titles: /\b(soap|shampoo|conditioner|body ?(wash|lotion|butter|cream)|moisturis|lip balm|hand cream|bath (salts?|bomb|soak)|sea sponge|face (mask|cream)|serum|cleanser|perfume|eau de)\b/i },
+  { tag: COLLECTION_TAG.baby,
+    types: ['teddy','toy','babygrow','sleepsuit'],
+    tags: ['gifts for baby','baby','gifts for children'],
+    titles: /\b(teddy|babygrow|sleepsuit|romper|rattle|twinkle twinkle|jellycat)\b/i },
+  { tag: COLLECTION_TAG.jewellery,
+    types: ['earrings','necklace','bracelet','brooch','socks','scarf','wallet','pen'],
+    tags: ['jewellery','earrings'],
+    titles: /\b(pendant|earrings?|necklace|bracelet|bangle|brooch|cufflinks?|scarf|wallet|socks?|rollerball|fountain pen|ballpoint|keyring|umbrella|gloves|beanie|cap)\b/i },
+  { tag: COLLECTION_TAG.crystal,
+    types: ['glasses','tumbler','vase'],
+    tags: ['crystal','glassware'],
+    titles: /\b(crystal|decanter|tumblers?|wine glass(es)?|champagne flutes?|vase)\b/i },
+  { tag: COLLECTION_TAG.homeware,
+    types: ['chopping board','mug','teapot','coaster','tray','frame','throw','cushion','bowl','plate','jug','lamp'],
+    tags: ['homeware','xmas homeware','kitchen'],
+    titles: /\b(mugs?|bowls?|(serving|chopping|cheese) ?boards?|lamp|bookends?|money tin|frame|coasters?|tray|jug|teapot|plates?|cushion|throw|blanket|ornament|decoration|bottle opener|corkscrew|tea light|apron|tea towel|door ?stop|clock|planter)\b/i },
+  { tag: COLLECTION_TAG.cards,
+    types: ['greeting card','card','journal','notebook','book','sign','plaque','print'],
+    tags: ['greeting cards','greeting card','birthday cards','other card','age cards','as gaeilge'],
+    titles: /\b(cards?|journal|notebook|notecards?|sign|plaque|print|bookmark|book light)\b/i },
+  { tag: COLLECTION_TAG.food,
+    types: ['jam','crisps','biscuits','coffee','tea','oil','rapeseed oil','salt','chutney','sauce','honey','granola','relish','mineral','shortbread','crackers','pasta','porridge','biscuit'],
+    tags: ['all food','food','xmas food','gluten-free food','jams & chutneys','condiment essentials','gifts for foodies','crisps & crackers'],
+    titles: /\b(sauce|balsamics?|ketchup|kimchi|soda|mayo(nnaise)?|dressing|jam|marmalade|chutney|relish|granola|biscuits?|crackers?|shortbread|coffee|tea|oil|honey|porridge|crisps|popcorn|pesto|sauerkraut|tapenade|mustard|vinegar|syrup|olives?|nuts|fudge)\b/i },
+]
+
+function shelfFor(type, tags, title) {
+  const t = lower(type)
+  const set = new Set(tags.map(lower))
+  for (const s of SHELVES) { if (s.types.includes(t)) return s.tag; if (s.tags.some((x) => set.has(x))) return s.tag }
+  for (const s of SHELVES) if (s.titles.test(title)) return s.tag
+  return null
+}
+
 // --- helpers ---------------------------------------------------------------
 
 const lower = (s) => (s || '').trim().toLowerCase()
@@ -198,7 +294,9 @@ for (const r of rows) { const h = r.Handle; if (!h) continue; if (!byHandle.has(
 
 const audit = []
 const review = []
+const collectionCounts = new Map()
 let changed = 0
+let unplaced = 0
 
 for (const [handle, group] of byHandle) {
   const head = group.find((r) => (r.Title || '').trim()) || group[0]
@@ -230,16 +328,16 @@ for (const [handle, group] of byHandle) {
     notes.push('Left untouched: excluded everywhere by handle and by the GIST_BUILDER_PRODUCT type.')
   } else if (isHamper) {
     classification = 'Hamper'; section = '/hampers and /occasions/christmas'
-    set.add('type:hamper')
-    notes.push('Added type:hamper so the site renders the hamper template at /hampers/<handle>.')
+    set.add('type:hamper'); set.add(COLLECTION_TAG.hampers)
+    notes.push('Added type:hamper and the All Hampers collection tag.')
   } else if (isSpirit) {
     classification = 'Spirit'; section = '/wine'
-    set.add('type:spirit'); set.add('contains:alcohol')
-    notes.push('Added type:spirit and contains:alcohol.')
+    set.add('type:spirit'); set.add('contains:alcohol'); set.add(COLLECTION_TAG.fineWines)
+    notes.push('Added type:spirit, contains:alcohol and the Fine Wines collection tag.')
   } else if (wineish) {
     classification = 'Wine'; section = '/wine'
-    set.add('type:wine'); set.add('contains:alcohol')
-    notes.push('Added type:wine and contains:alcohol.')
+    set.add('type:wine'); set.add('contains:alcohol'); set.add(COLLECTION_TAG.fineWines)
+    notes.push('Added type:wine, contains:alcohol and the Fine Wines collection tag.')
     const grapes = grapesOf(original, title, type)
     const region = regionOf(original, title, type)
     const country = countryOf(original, type, region)
@@ -254,21 +352,44 @@ for (const [handle, group] of byHandle) {
     for (const g of grapes) if (!lowerSet.has(lower(g)) && !lowerSet.has(`${lower(g)} wine`)) {
       set.add(g); notes.push(`Added "${g}" for the Grape filter.`)
     }
-    if (style && !STYLE_RULES.some((r) => r.tags.some((t) => lowerSet.has(t)))) {
-      set.add(style); notes.push(`Added "${style}" as the colour/style.`)
+    const styleTag = style ?? null
+    if (styleTag && !STYLE_RULES.some((r) => r.tags.some((t) => lowerSet.has(t)))) {
+      set.add(styleTag); notes.push(`Added "${styleTag}" as the colour/style.`)
     }
+    // The colour/style tag is also the sub-collection tag, so a red lands
+    // on /wine/red and a Champagne on /wine/champagne-sparkling.
+    const subs = { 'Red Wine': COLLECTION_TAG.red, 'White Wine': COLLECTION_TAG.white,
+      'Rosé Wine': COLLECTION_TAG.rose, Champagne: COLLECTION_TAG.sparkling,
+      Sparkling: COLLECTION_TAG.sparkling, Port: COLLECTION_TAG.portSherry,
+      Sherry: COLLECTION_TAG.portSherry, 'Wine Gift Set': COLLECTION_TAG.wineGiftSets }
+    const effectiveStyle = styleTag ?? STYLE_RULES.find((r) => r.tags.some((t) => lowerSet.has(t)))?.tag ?? null
+    if (effectiveStyle && subs[effectiveStyle]) {
+      set.add(subs[effectiveStyle]); notes.push(`Added the ${subs[effectiveStyle]} collection tag.`)
+    }
+    if (lowerSet.has('organic')) set.add(COLLECTION_TAG.organic)
+    if (/\b(alcohol[- ]?free|non[- ]?alcoholic|0%|zero)\b/i.test(title)) set.add(COLLECTION_TAG.nonAlcoholic)
     if (!country) { needsReview = true; confidence = 'medium'; ambiguity = 'No country identifiable from tags or type.' }
-    if (!style) { needsReview = true; confidence = 'medium'; ambiguity += (ambiguity ? ' ' : '') + 'No colour or style identifiable.' }
-  } else if (original.some((t) => ADDON_TAGS.has(lower(t)))) {
-    classification = 'Add-on gift'; section = '/gifts (candles, chocolate or crystal)'
-    set.add('type:addon')
-    notes.push('Added type:addon: this is one of the three add-on listings that survive under /gifts.')
+    if (!effectiveStyle) { needsReview = true; confidence = 'medium'; ambiguity += (ambiguity ? ' ' : '') + 'No colour or style identifiable, so it lands in Fine Wines but on no colour listing.' }
   } else {
-    classification = 'Build a Box item'; section = '/build-your-own-hamper only'
-    notes.push('No type: tag applied. Build a Box availability is decided by collection membership, and type:builder-item would remove it from the picker.')
-    if (!type && original.length === 0) {
+    // Everything that is not a hamper or a bottle. It is not a standalone
+    // shopping category, so it goes to the Build a Box shelves: All Gifts
+    // (the Everything shelf) plus its own shelf.
+    const shelf = shelfFor(type, original, title)
+    set.add(COLLECTION_TAG.allGifts)
+    if (shelf) set.add(shelf)
+    const isAddon = original.some((t) => ADDON_TAGS.has(lower(t))) ||
+      shelf === COLLECTION_TAG.candles || shelf === COLLECTION_TAG.chocolate || shelf === COLLECTION_TAG.crystal
+    if (isAddon) {
+      classification = 'Add-on gift'; section = '/gifts and Build a Box'
+      set.add('type:addon')
+      notes.push(`Added type:addon and the ${shelf ?? 'All Gifts'} collection tag: one of the three add-on listings that survive under /gifts.`)
+    } else {
+      classification = 'Build a Box item'; section = 'Build a Box'
+      notes.push(`Added the All Gifts${shelf ? ` and ${shelf}` : ''} collection tag. No type: tag: type:builder-item would remove it from the picker.`)
+    }
+    if (!shelf) {
       needsReview = true; confidence = 'low'
-      ambiguity = 'No product type and no tags: nothing in the data says what this is.'
+      ambiguity = 'No shelf identifiable from type, tags or title, so it reaches Build a Box only through the Everything shelf.'
     }
   }
 
@@ -292,9 +413,16 @@ for (const [handle, group] of byHandle) {
   const newTags = updated.join(', ')
   if (newTags !== (head.Tags || '')) { head.__newTags = newTags; changed += 1 }
 
+  const targetCollections = updated
+    .filter((t) => COLLECTION_HANDLE[t])
+    .map((t) => COLLECTION_HANDLE[t])
+  for (const c of targetCollections) collectionCounts.set(c, (collectionCounts.get(c) || 0) + 1)
+  if (targetCollections.length === 0 && !isGiftCard && !isMechanism) unplaced += 1
+
   audit.push({
     Handle: handle, Title: title, 'Original tags': original.join(', '), 'Updated tags': newTags,
     Classification: classification, 'Website section': section,
+    'Target collections': targetCollections.join(', ') || 'none',
     'Changes made': updated.filter((t) => !original.includes(t)).join(', ') || 'None',
     'Reason': notes.join(' '), 'Confidence': confidence,
     'Manual review required': needsReview ? 'Yes' : 'No',
@@ -331,12 +459,40 @@ function writeCsv(name, list, cols) {
   writeFileSync(join(outdir, name), lines.join('\n') + '\n')
 }
 writeCsv('product-tagging-audit.csv', audit,
-  ['Handle','Title','Original tags','Updated tags','Classification','Website section','Changes made','Reason','Confidence','Manual review required'])
+  ['Handle','Title','Original tags','Updated tags','Classification','Website section','Target collections','Changes made','Reason','Confidence','Manual review required'])
 writeCsv('manual-review-required.csv', review,
   ['Handle','Title','Current tags','Ambiguity','Decision required'])
+
+// The Shopify admin job the CSV cannot do: each collection switched to
+// automated on the one tag the import applies.
+const SITE_USE = {
+  'christmas-2026': '/hampers, its four price bands, /occasions/christmas and the homepage band',
+  'fine-wines-1': '/wine, /wine/fine-wines, the three wine price bands and the Build a Box wine shelf',
+  'red-wines-1': '/wine/red', 'white-wines-1': '/wine/white', rose: '/wine/rose',
+  'champagne-and-prosecco-1': '/wine/champagne-sparkling and the Build a Box sparkling shelf',
+  'port-and-sherry-1': '/wine/port-dessert', 'organic-wine': '/wine/organic-biodynamic',
+  'non-alcoholic-1': '/wine/alcohol-free', 'wine-gift-sets': '/wine/gift-sets',
+  'all-gifts': 'the Build a Box Everything shelf and /gifts-by-budget',
+  'all-food': 'the Build a Box food shelf',
+  'chocolate-confectionery-1': '/gifts/chocolate-treats and the Build a Box chocolate shelf',
+  'candles-diffusers': '/gifts/candles-diffusers and the Build a Box candles shelf',
+  'glassware-crystal': '/gifts/crystal-glassware', beauty: 'the Build a Box beauty shelf',
+  homeware: 'the Build a Box homeware shelf', baby: 'the Build a Box baby shelf',
+  jewellery: 'the Build a Box jewellery shelf', 'greeting-cards': 'the Build a Box cards shelf',
+}
+writeCsv('collections-to-automate.csv',
+  Object.entries(COLLECTION_HANDLE).map(([tag, h]) => ({
+    'Collection handle': h,
+    'Condition to set': `Product tag is equal to ${tag}`,
+    'Products this import tags': collectionCounts.get(h) || 0,
+    'What it feeds on the site': SITE_USE[h] || '',
+  })),
+  ['Collection handle','Condition to set','Products this import tags','What it feeds on the site'])
 
 const counts = {}
 for (const a of audit) counts[a.Classification] = (counts[a.Classification] || 0) + 1
 console.log(`rows in ${rows.length}, rows out ${written}`)
 console.log(`products ${byHandle.size}, tag strings changed ${changed}, flagged for review ${review.length}`)
 console.log('classification:', Object.entries(counts).map(([k, v]) => `${k} ${v}`).join(', '))
+console.log('products reaching no collection:', unplaced)
+console.log('collection placements:', [...collectionCounts.entries()].sort((a, b) => b[1] - a[1]).map(([c, n]) => `${c} ${n}`).join(', '))

@@ -71,10 +71,19 @@ export const LISTING_HEROES: Readonly<Record<string, ListingHeroContent>> = {
       // page. A second shot from the same set is in git at 270aa66 if a
       // second band ever wants one.
       //
-      // It is a top-down flat lay, so the 2.5:1 hero band crops it to the
-      // middle third. That is deliberate: the products and their labels
-      // live in that band, and the left of the frame is a dark bottle,
-      // which is what keeps the headline legible over it.
+      // The photograph as shot is a 4:3 top-down flat lay filling the
+      // frame edge to edge, and the hero band cropped it to a very zoomed
+      // middle third: one bottle filled the band and the headline sat on
+      // busy, high-contrast labels. So the file here is that photograph
+      // extended to 16:9 — the shot itself untouched on the right, and a
+      // blurred, darkened blow-up of it falling off to the left, feathered
+      // in over 260px. That gives the hero the homepage's composition,
+      // subject right and a soft dark field left under the copy, without
+      // cropping a single label or inventing anything not in the frame.
+      //
+      // Rebuild from the original (git, 270aa66) if the band's height
+      // changes. Two sharp passes — composite, then resize, because sharp
+      // applies resize before composite within one pipeline.
       src: '/photography/christmas/hero.webp',
       alt: 'A Christmas hamper photographed from above, holding two bottles of Château Les Moutins Bordeaux, Keogh’s crisps, Skelligs dark chocolate, a Filligan’s chutney and a box of deep-fill mince pies, with a red felt Christmas tree tucked in beside them',
     },

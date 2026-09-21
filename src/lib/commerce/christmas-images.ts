@@ -20,7 +20,9 @@ import type { ProductCard, ProductImage } from './types'
  * reads it.
  *
  * ---------------------------------------------------------------------
- * THESE ARE GENERATED IMAGES, NOT PHOTOGRAPHS OF THE REAL HAMPERS.
+ * THE CARD IMAGES BELOW ARE GENERATED, NOT PHOTOGRAPHS OF THE REAL
+ * HAMPERS. (The hero in LISTING_HEROES is the exception — that one is a
+ * real photograph, supplied 18 September 2026. See its note.)
  *
  * They were supplied as AI renders of each hamper restyled for Christmas.
  * Three things follow from that, and they are the client's to weigh:
@@ -63,8 +65,18 @@ export const CHRISTMAS_IMAGE_PATHS: ReadonlySet<string> = new Set(['/occasions/c
 export const LISTING_HEROES: Readonly<Record<string, ListingHeroContent>> = {
   '/occasions/christmas': {
     image: {
+      // A real photograph of a real hamper, not a render: shot for the
+      // client and supplied 18 September 2026. It is the one image in this
+      // file with no misrepresentation risk, which is why it leads the
+      // page. A second shot from the same set is in git at 270aa66 if a
+      // second band ever wants one.
+      //
+      // It is a top-down flat lay, so the 2.5:1 hero band crops it to the
+      // middle third. That is deliberate: the products and their labels
+      // live in that band, and the left of the frame is a dark bottle,
+      // which is what keeps the headline legible over it.
       src: '/photography/christmas/hero.webp',
-      alt: 'An Irish food hamper dressed for Christmas on a wooden table, holding Keogh’s crisps, Blanco Niño tortilla chips, a Ballymaloe relish set, coffee bags and Chocolate Garden chocolates, with pine, holly and gold ribbon around it',
+      alt: 'A Christmas hamper photographed from above, holding two bottles of Château Les Moutins Bordeaux, Keogh’s crisps, Skelligs dark chocolate, a Filligan’s chutney and a box of deep-fill mince pies, with a red felt Christmas tree tucked in beside them',
     },
     eyebrow: 'Christmas 2026',
     cta: { label: 'Shop Christmas hampers', href: '#grid' },
@@ -132,6 +144,17 @@ export const CHRISTMAS_IMAGES: Readonly<Record<string, ChristmasImage>> = {
     alt: 'The New Home Luxury Hamper dressed for Christmas, a bottle of Henriot Champagne beside a Rathbornes candle, a framed ogham print and a boxed pair of Galway Crystal Champagne flutes',
   },
 
+  // Square rather than 4:3, same as the New Home hamper above: the box is
+  // centred in the frame, so the card cropping the top and bottom is fine.
+  //
+  // This one checks out against the product description item for item —
+  // the bedtime bear and comforter, the Freixenet sparkling rosé, the two
+  // Julie Clarke bottles and the McNutt blanket are all as sold.
+  '4-1': {
+    src: '/photography/christmas/4-1.webp',
+    alt: 'The Hello Baby Girl hamper dressed for Christmas, a soft bedtime bear with its comforter beside a bottle of Freixenet sparkling rosé, Julie Clarke hand wash and lotion and a pink lambswool blanket',
+  },
+
   // CONTENTS DIFFER from the hamper as sold. Kept so the client can see
   // them in place and decide; each needs either a real photograph or the
   // entry removing before it is put in front of shoppers.
@@ -156,6 +179,15 @@ export const CHRISTMAS_IMAGES: Readonly<Record<string, ChristmasImage>> = {
   '3': {
     src: '/photography/christmas/3.webp',
     alt: 'The Hello Baby Boy hamper dressed for Christmas, a soft toy and a photo frame beside a bottle of sparkling wine',
+  },
+  // The closest of the renders, but not exact. The Tipperary Crystal robin
+  // mug, the Freixenet Prosecco and the candle are right; it adds a
+  // robin-patterned notebook and a "With Love" box that are not in the
+  // hamper, and the Chocolate Garden caramels and 75g bar that are in it
+  // are not identifiable in the frame.
+  'new-mum-and-baby-girl-luxury-hamper-copy': {
+    src: '/photography/christmas/new-mum-and-baby-girl-luxury-hamper-copy.webp',
+    alt: 'The Birdy Awesome hamper dressed for Christmas, a robin-patterned mug and notebook beside a bottle of Freixenet Prosecco, a boxed soy candle and chocolates, in a gift box on a wooden table',
   },
 }
 

@@ -785,6 +785,21 @@ export const PENDING_MERCHANT_COLLECTIONS: ReadonlySet<string> = new Set([
   'sympathy',
   'get-well',
   'exclusive-to-us',
+  // The six Occasions collections. They existed on the old store and were
+  // removed in the September 2026 collection clear-out; the client's call,
+  // 21 September, is that they are not being recreated for now. The site
+  // stays pre-wired to them so restoring one is creating the collection and
+  // nothing else — see data/shopify-import/collections-to-restore.csv.
+  //
+  // Until then each route darks: under the four-product floor a listing
+  // redirects to /occasions, and the hub below no longer offers a card for
+  // it, so nothing links into the dark.
+  'mothers-day-gifts',
+  'fathers-day',
+  'valentines-day',
+  'easter-1',
+  'gifts-for-baby',
+  'wedding-anniversary',
 ])
 
 /**

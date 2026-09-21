@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { collectionsInHub } from '@/lib/commerce/collections'
+import { populatedListings } from '@/lib/commerce/populated'
 
 export const revalidate = 1800
 
@@ -11,8 +12,12 @@ export const metadata: Metadata = {
   alternates: { canonical: '/occasions' },
 }
 
-export default function OccasionsHub() {
-  const occasions = collectionsInHub('occasions')
+export default async function OccasionsHub() {
+  // Only the occasions that will actually open. A listing under the
+  // four-product floor redirects back to this page, so a card for one is a
+  // card that reloads the page you are already on — and with the six
+  // seasonal collections retired from the store, that was six of the nine.
+  const occasions = await populatedListings(collectionsInHub('occasions'))
 
   return (
     <div className="mx-auto max-w-[1400px] px-4 py-14 lg:px-8">

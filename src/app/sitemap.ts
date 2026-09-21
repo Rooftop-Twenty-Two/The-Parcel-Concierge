@@ -39,8 +39,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: url('/corporate-gifting'), priority: 0.8, changeFrequency: 'monthly' },
     { url: url('/corporate-gifting/enquiry'), priority: 0.6, changeFrequency: 'monthly' },
     { url: url('/occasions'), priority: 0.7, changeFrequency: 'monthly' },
-    { url: url('/gifts-for'), priority: 0.6, changeFrequency: 'monthly' },
-    { url: url('/gifts'), priority: 0.5, changeFrequency: 'monthly' },
     { url: url('/about'), priority: 0.5, changeFrequency: 'yearly' },
     { url: url('/about/our-makers'), priority: 0.6, changeFrequency: 'monthly' },
     { url: url('/about/guaranteed-irish'), priority: 0.4, changeFrequency: 'yearly' },

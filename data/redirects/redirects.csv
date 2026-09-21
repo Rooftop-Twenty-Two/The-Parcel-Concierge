@@ -66,13 +66,13 @@ source,destination,type,note
 /collections/irish-whiskey,/wine,301,Spirits range discontinued. The Wine Vault is the nearest home
 /collections/gin,/wine,301,Spirits range discontinued. The Wine Vault is the nearest home
 /collections/spirits,/wine,301,Spirits range discontinued. The Wine Vault is the nearest home
-/collections/candles,/gifts/candles-diffusers,301,Now part of the add-on band
-/collections/diffusers,/gifts/candles-diffusers,301,Now part of the add-on band
-/collections/chocolate,/gifts/chocolate-treats,301,Now part of the add-on band
-/collections/crystal,/gifts/crystal-glassware,301,Now part of the add-on band
-/collections/glassware,/gifts/crystal-glassware,301,Now part of the add-on band
-/collections/gifts-for-her,/gifts-for/her,301,Direct equivalent
-/collections/gifts-for-him,/gifts-for/him,301,Direct equivalent
+/collections/candles,/build-your-own-hamper,301,Now part of the add-on band
+/collections/diffusers,/build-your-own-hamper,301,Now part of the add-on band
+/collections/chocolate,/build-your-own-hamper,301,Now part of the add-on band
+/collections/crystal,/build-your-own-hamper,301,Now part of the add-on band
+/collections/glassware,/build-your-own-hamper,301,Now part of the add-on band
+/collections/gifts-for-her,/hampers,301,Direct equivalent
+/collections/gifts-for-him,/hampers,301,Direct equivalent
 /collections/new-baby,/occasions/new-baby,301,Direct equivalent
 /collections/sympathy,/occasions/sympathy,301,Direct equivalent
 /collections/wedding,/occasions/wedding-engagement,301,Merged with engagement
@@ -80,12 +80,12 @@ source,destination,type,note
 # Removed categories. These 301 to their nearest surviving parent, never to
 # the homepage: a shopper who wanted a card should land somewhere that sells
 # something, and the link equity should follow the topic.
-/collections/cards,/gifts/chocolate-treats,301,The 254-SKU card estate is removed. Nearest add-on band.
-/collections/greeting-cards,/gifts/chocolate-treats,301,The 254-SKU card estate is removed. Nearest add-on band.
+/collections/cards,/build-your-own-hamper,301,The 254-SKU card estate is removed. Nearest add-on band.
+/collections/greeting-cards,/build-your-own-hamper,301,The 254-SKU card estate is removed. Nearest add-on band.
 /collections/beauty,/hampers/pamper,301,Beauty range removed. Pamper hampers are the nearest thing we still sell.
 /collections/skincare,/hampers/pamper,301,Beauty range removed. Pamper hampers are the nearest thing we still sell.
-/collections/homeware,/gifts/crystal-glassware,301,Homeware narrowed to crystal and glassware
-/collections/jewellery,/gifts,301,Pending the client retain/remove decision. Revisit before launch.
+/collections/homeware,/build-your-own-hamper,301,Homeware narrowed to crystal and glassware
+/collections/jewellery,/build-your-own-hamper,301,Pending the client retain/remove decision. Revisit before launch.
 #
 # ---------------------------------------------------------------------------
 # Grape-variety collections
@@ -157,3 +157,12 @@ source,destination,type,note
 /gifts-by-budget/50-100,/hampers/under-75,301,Gifts by budget retired. Nearest hamper band
 /gifts-by-budget/100-150,/hampers/75-125,301,Gifts by budget retired. Nearest hamper band
 /gifts-by-budget/150-plus,/hampers/125-200,301,Gifts by budget retired. Nearest hamper band
+/gifts,/build-your-own-hamper,301,No gift section Sept 2026. Gifts go in a hamper
+/gifts/candles-diffusers,/build-your-own-hamper,301,No gift section. Candles are a Build a Box shelf
+/gifts/chocolate-treats,/build-your-own-hamper,301,No gift section. Chocolate is a Build a Box shelf
+/gifts/crystal-glassware,/build-your-own-hamper,301,No gift section. Crystal goes in a hamper
+/gifts-for,/hampers,301,No gift section Sept 2026
+/gifts-for/her,/hampers,301,No gift section. Hampers are the gift
+/gifts-for/him,/hampers,301,No gift section. Hampers are the gift
+/gifts-for/couples,/hampers,301,No gift section. Hampers are the gift
+/gifts-for/clients,/corporate-gifting,301,No gift section. Client gifting is the corporate service

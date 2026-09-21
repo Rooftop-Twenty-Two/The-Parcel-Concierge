@@ -101,37 +101,37 @@
   },
   {
     "source": "/collections/candles",
-    "destination": "/gifts/candles-diffusers",
+    "destination": "/build-your-own-hamper",
     "permanent": true
   },
   {
     "source": "/collections/diffusers",
-    "destination": "/gifts/candles-diffusers",
+    "destination": "/build-your-own-hamper",
     "permanent": true
   },
   {
     "source": "/collections/chocolate",
-    "destination": "/gifts/chocolate-treats",
+    "destination": "/build-your-own-hamper",
     "permanent": true
   },
   {
     "source": "/collections/crystal",
-    "destination": "/gifts/crystal-glassware",
+    "destination": "/build-your-own-hamper",
     "permanent": true
   },
   {
     "source": "/collections/glassware",
-    "destination": "/gifts/crystal-glassware",
+    "destination": "/build-your-own-hamper",
     "permanent": true
   },
   {
     "source": "/collections/gifts-for-her",
-    "destination": "/gifts-for/her",
+    "destination": "/hampers",
     "permanent": true
   },
   {
     "source": "/collections/gifts-for-him",
-    "destination": "/gifts-for/him",
+    "destination": "/hampers",
     "permanent": true
   },
   {
@@ -151,12 +151,12 @@
   },
   {
     "source": "/collections/cards",
-    "destination": "/gifts/chocolate-treats",
+    "destination": "/build-your-own-hamper",
     "permanent": true
   },
   {
     "source": "/collections/greeting-cards",
-    "destination": "/gifts/chocolate-treats",
+    "destination": "/build-your-own-hamper",
     "permanent": true
   },
   {
@@ -171,12 +171,12 @@
   },
   {
     "source": "/collections/homeware",
-    "destination": "/gifts/crystal-glassware",
+    "destination": "/build-your-own-hamper",
     "permanent": true
   },
   {
     "source": "/collections/jewellery",
-    "destination": "/gifts",
+    "destination": "/build-your-own-hamper",
     "permanent": true
   },
   {
@@ -357,6 +357,51 @@
   {
     "source": "/gifts-by-budget/150-plus",
     "destination": "/hampers/125-200",
+    "permanent": true
+  },
+  {
+    "source": "/gifts",
+    "destination": "/build-your-own-hamper",
+    "permanent": true
+  },
+  {
+    "source": "/gifts/candles-diffusers",
+    "destination": "/build-your-own-hamper",
+    "permanent": true
+  },
+  {
+    "source": "/gifts/chocolate-treats",
+    "destination": "/build-your-own-hamper",
+    "permanent": true
+  },
+  {
+    "source": "/gifts/crystal-glassware",
+    "destination": "/build-your-own-hamper",
+    "permanent": true
+  },
+  {
+    "source": "/gifts-for",
+    "destination": "/hampers",
+    "permanent": true
+  },
+  {
+    "source": "/gifts-for/her",
+    "destination": "/hampers",
+    "permanent": true
+  },
+  {
+    "source": "/gifts-for/him",
+    "destination": "/hampers",
+    "permanent": true
+  },
+  {
+    "source": "/gifts-for/couples",
+    "destination": "/hampers",
+    "permanent": true
+  },
+  {
+    "source": "/gifts-for/clients",
+    "destination": "/corporate-gifting",
     "permanent": true
   }
 ]

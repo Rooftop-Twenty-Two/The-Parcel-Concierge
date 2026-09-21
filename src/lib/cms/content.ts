@@ -260,39 +260,11 @@ export const CONTENT: CmsData = {
         '<p>We compared our list against the other Irish retailers stocking the same wines, bottle for bottle and vintage for vintage. On the matches we could verify, we were at or below the cheapest Irish price about seven times out of ten. This page is the part of that we can stand over.</p><p>A wine only appears here when we hold a dated, verified comparison for it, and it comes off the page when the comparison goes stale. We do not name other retailers or quote their prices, because prices move and a claim that was true last month is a problem this month.</p><p>Everything on this page is also in the main list, filtered and sorted the usual way.</p>',
     },
     {
-      path: '/gifts-for/her',
-      intro:
-        'Gifts for her, across hampers, wine and the pamper range. Filter by occasion or budget to narrow it down.',
-      seoBlock:
-        '<p>This page is a starting point rather than an answer. What is actually on it is the part of our range that people most often buy for a woman: the pamper boxes built around The Handmade Soap Company in Slane, the lighter wines, and the food hampers that lean sweet rather than savoury.</p><p>If you know the occasion, the occasion pages will get you there faster. If you know the budget, the budget pages will. And if you know the person well enough to know what they actually like, build the box yourself and put exactly that in it.</p><p>Free hand delivery locally, €8.95 anywhere else in Ireland.</p>',
-    },
-    {
-      path: '/gifts-for/him',
-      intro:
-        'Gifts for him, across red wine, Guinness treats and the food hampers. Filter by occasion or budget to narrow it down.',
-      seoBlock:
-        '<p>Mostly red wine, Guinness chocolate and the food hampers that lean savoury. That is an honest description of what people buy from this page rather than a claim about what men like.</p><p>The Classic Gentleman’s Hamper wraps a McNutt of Donegal lambswool scarf around a bottle of Nero d’Avola and a box of Guinness truffles. For the Guinness Lover does the same job at a smaller budget, with an enamel mug he will actually use.</p><p>If you know the occasion or the budget, those pages will narrow it faster than this one. Free hand delivery locally, €8.95 anywhere else in Ireland.</p>',
-    },
-    {
-      path: '/gifts-for/clients',
-      intro:
-        'Client gifts, from a single box to a list of two hundred. Alcohol free options, branding on the card, and volume pricing over ten units.',
-      seoBlock:
-        '<p>A client gift has to do two things: look like it cost something, and not create a problem. Ours are built from Irish producers, which handles the first, and the alcohol free options handle the second, because sending wine to a list you have not checked is a risk nobody needs.</p><p>Branding goes on a printed card inside the lid rather than across the outside of the box, which is what most people actually want. For more than ten units, the corporate gifting enquiry form takes your numbers, your address list and your deadline in one go, and we quote from there.</p><p>We can deliver to individual home addresses or to one office. Tell us which on the form.</p>',
-    },
-    {
       path: '/occasions/christmas',
       intro:
         'Christmas hampers and gifts. We are working on more Christmas hampers now and they will be ready to go from November, once all the Christmas stock has arrived. Everything on this page is ready to send today.',
       seoBlock:
         '<p>If you are buying for a list rather than a person, the corporate section has volume pricing and will take your address list in one go. If you are buying one box for one house, the budget bands are the fastest way in.</p><p>Christmas delivery dates are published on the delivery page as soon as An Post confirm them. Order ahead of the last posting date rather than on it, because the last week is the week things go wrong.</p>',
-    },
-    {
-      path: '/gifts',
-      intro:
-        'Small things to add to a hamper. Candles, chocolate, crystal and boards. These are here to finish a gift rather than to be the gift.',
-      seoBlock:
-        '<p>This is a deliberately small section. It exists because people building a hamper often want one more thing in the box, not because we are trying to be a general gift shop. Everything here is something we already put in our own hampers, sold separately.</p><p>The candles and diffusers are poured in Ireland, including the Aran Candle range from Julie Clarke. The chocolate is from The Chocolate Garden of Ireland and Butlers. The crystal is the same glassware that goes in our wine boxes.</p><p>Add any of it at the cart, or build a hamper from scratch and put it in there.</p>',
     },
   ],
 
@@ -520,7 +492,7 @@ export const CONTENT: CmsData = {
       publishedAt: '2026-08-10',
       updatedAt: '2026-08-10',
       productHandles: [],
-      relatedPaths: ['/corporate-gifting', '/hampers/corporate', '/gifts-for/clients'],
+      relatedPaths: ['/corporate-gifting', '/hampers/corporate'],
     },
   ],
 

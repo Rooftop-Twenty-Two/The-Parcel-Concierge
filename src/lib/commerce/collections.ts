@@ -724,19 +724,30 @@ export function isPriceBand(c: CollectionDef): boolean {
  * bands stay: they read the live range, so they can only show what is in it.
  */
 /**
- * Gifts by budget is retired (September 2026).
+ * There is no gift section (client, September 2026).
  *
- * The four bands read All Gifts, which is the Build a Box "Everything"
- * shelf: once every standalone item is tagged into it so Build a Box can
- * reach it, these pages become a shop window full of socks, cards and
- * homeware. That is the standalone gift category the rebuild brief rules
- * out. Nothing linked to them any more either: they are not in the nav,
- * and the homepage budget cards point at the hamper price bands.
+ * The site sells hampers and wine. Everything else the shop carries is
+ * sold as something you put in a hamper, so it reaches a shopper through
+ * /build-your-own-hamper and nowhere else. Three hubs are retired:
  *
- * The paths redirect to /hampers (data/redirects/redirects.csv). Bring
- * them back by deleting this clause.
+ *   - gifts-by-budget: its four bands read All Gifts, which is the Build
+ *     a Box "Everything" shelf. Once every standalone item is tagged into
+ *     it so the builder can reach them, those pages become a shop window
+ *     of socks, cards and homeware.
+ *   - gifts: the candles, chocolate and crystal listings. Small, but a
+ *     browsable gift category all the same.
+ *   - gifts-for: her, him, couples and clients. Nothing in the nav
+ *     pointed at them.
+ *
+ * Their paths redirect to /build-your-own-hamper, except the budget bands
+ * which go to the hamper bands (data/redirects/redirects.csv).
+ *
+ * ADD-ON PRODUCTS KEEP THEIR PAGES. /gifts/<handle> still resolves, so a
+ * candle found in search, offered at the cart or suggested on a hamper
+ * page has somewhere to land. What is gone is the browsable category
+ * above it, not the product.
  */
-const RETIRED_HUBS: ReadonlySet<CollectionHub> = new Set(['gifts-by-budget'])
+const RETIRED_HUBS: ReadonlySet<CollectionHub> = new Set(['gifts-by-budget', 'gifts', 'gifts-for'])
 
 export const COLLECTIONS: readonly CollectionDef[] = ALL_LISTINGS.filter(
   (c) =>

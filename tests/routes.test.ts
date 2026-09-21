@@ -3,7 +3,9 @@ import { test } from 'node:test'
 import { join } from 'node:path'
 import {
   BUILDER_PARENT_HANDLE,
+  BUILDER_SHELF_COLLECTIONS,
   COLLECTIONS,
+  MAPPED_COLLECTION_HANDLES,
   HIDDEN_FROM_LISTINGS,
   MIN_PRODUCTS_PER_LISTING,
   collectionsInHub,
@@ -139,4 +141,19 @@ test('the hamper builder parent is hidden from listings and has one URL', () => 
   const rule = rows.find((r) => r.source === `/hampers/${BUILDER_PARENT_HANDLE}`)
   assert.ok(rule, 'the old product URL needs a redirect to the builder')
   assert.equal(rule.destination, '/build-your-own-hamper')
+})
+
+test('every Build a Box shelf is a collection the build checks', async () => {
+  const { PICKER_SHELVES } = await import('../src/lib/hamper-builder.ts')
+  const checked = new Set(BUILDER_SHELF_COLLECTIONS)
+  for (const shelf of PICKER_SHELVES) {
+    assert.ok(
+      checked.has(shelf.collection),
+      `the ${shelf.id} shelf reads ${shelf.collection}, which collections:validate would not check`,
+    )
+  }
+  const mapped = new Set(MAPPED_COLLECTION_HANDLES)
+  for (const handle of BUILDER_SHELF_COLLECTIONS) {
+    assert.ok(mapped.has(handle), `${handle} is missing from MAPPED_COLLECTION_HANDLES`)
+  }
 })

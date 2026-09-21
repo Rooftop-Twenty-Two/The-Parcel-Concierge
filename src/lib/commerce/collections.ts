@@ -783,9 +783,36 @@ export const PENDING_MERCHANT_COLLECTIONS: ReadonlySet<string> = new Set([
  * COLLECTIONS) so collections:validate keeps checking every mapped handle
  * regardless of the seasonal flag.
  */
+/**
+ * The Build a Box picker's shelves, by collection handle.
+ *
+ * Kept here rather than read from hamper-builder.ts so this module stays
+ * free of runtime imports: the ingest tool, the redirect validator and
+ * collections:validate all read it directly. A test asserts this list and
+ * PICKER_SHELVES agree, so they cannot drift.
+ *
+ * They are listed so the build checks them. A picker shelf pointing at a
+ * collection that does not exist is a dead shelf in the builder, and
+ * before this the build had no opinion about it.
+ */
+export const BUILDER_SHELF_COLLECTIONS: readonly string[] = [
+  'all-gifts',
+  'all-food',
+  'chocolate-confectionery-1',
+  'fine-wines-1',
+  'champagne-and-prosecco-1',
+  'candles-diffusers',
+  'beauty',
+  'homeware',
+  'baby',
+  'jewellery',
+  'greeting-cards',
+]
+
 export const MAPPED_COLLECTION_HANDLES: readonly string[] = [
   ...new Set([
     HAMPERS_COLLECTION,
     ...ALL_LISTINGS.map((c) => c.query.collection).filter((h): h is string => typeof h === 'string'),
+    ...BUILDER_SHELF_COLLECTIONS,
   ]),
 ]

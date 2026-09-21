@@ -234,18 +234,25 @@ that differs from the original is Tags.
 
 | Classification | Products | What was applied |
 |---|---:|---|
-| Build a Box item | 2,606 | no `type:` tag, plus occasion, recipient, price and alcohol where identifiable |
-| Wine | 356 | `type:wine`, `contains:alcohol`, and country, region, grape and colour tags where the site could not already read one |
-| Add-on gift | 144 | `type:addon` (candles and diffusers, chocolate, crystal and glassware) |
-| Hamper | 46 | `type:hamper` |
-| Spirit | 13 | `type:spirit`, `contains:alcohol` |
+| Build a Box item | 2,435 | All Gifts plus its shelf, and occasion, recipient, price and alcohol where identifiable |
+| Wine | 357 | `type:wine`, `contains:alcohol`, Fine Wines, and colour, country, region and grape |
+| Add-on gift | 294 | `type:addon` plus its /gifts listing |
+| Hamper | 66 | `type:hamper` and All Hampers |
+| Spirit | 13 | `type:spirit`, `contains:alcohol`, Fine Wines |
 | Build a Box mechanism | 2 | untouched |
 | Gift card | 1 | untouched |
 
-5,686 tags added, 0 removed. 596 products flagged for review: 526 have no
-product type and no tags at all, and 70 are wines missing a country or a
-colour.
+**The export cannot describe its own hampers.** All 20 live hampers carry
+no product type and no tags: the merchant keeps them in a collection by
+hand. Classifying from the file alone tagged 46 retired drafts as the
+range and missed all 20, which would have emptied the hamper collection
+the moment it was automated. `data/catalogue/hampers.json` and
+`wines.json`, the client's own export as the site reads it, are checked
+first for that reason. A further 528 products say nothing about
+themselves at all; those are shelved by vendor, where a vendor's
+classifiable products agree at 70% or better across three or more items.
 
 Validation, all passing: 4,835 rows in and out; 105 columns in the same
 order; zero differences in any column other than Tags; all 3,168 handles
-unchanged; no original tag dropped.
+unchanged; no original tag dropped; no product left untagged; every
+product reaching at least one collection.

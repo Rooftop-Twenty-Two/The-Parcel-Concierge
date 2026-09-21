@@ -1,6 +1,6 @@
 Collection handle,Condition to set,Products this import tags,What it feeds on the site
-christmas-2026,Product tag is equal to All Hampers,46,"/hampers, its four price bands, /occasions/christmas and the homepage band"
-fine-wines-1,Product tag is equal to Fine Wines,373,"/wine, /wine/fine-wines, the three wine price bands and the Build a Box wine shelf"
+christmas-2026,Product tag is equal to All Hampers,66,"/hampers, its four price bands, /occasions/christmas and the homepage band"
+fine-wines-1,Product tag is equal to Fine Wines,374,"/wine, /wine/fine-wines, the three wine price bands and the Build a Box wine shelf"
 red-wines-1,Product tag is equal to Red Wines,133,/wine/red
 white-wines-1,Product tag is equal to White Wines,100,/wine/white
 rose,Product tag is equal to Rose Wine,17,/wine/rose
@@ -9,13 +9,13 @@ port-and-sherry-1,Product tag is equal to Port and Sherry,18,/wine/port-dessert
 organic-wine,Product tag is equal to Organic Wine,47,/wine/organic-biodynamic
 non-alcoholic-1,Product tag is equal to Non-Alcoholic,1,/wine/alcohol-free
 wine-gift-sets,Product tag is equal to Wine Gift Sets,31,/wine/gift-sets
-all-gifts,Product tag is equal to All Gifts,2750,the Build a Box Everything shelf. Not a shopper-facing listing: Gifts by budget was retired in September 2026
-all-food,Product tag is equal to All Food,316,the Build a Box food shelf
-chocolate-confectionery-1,Product tag is equal to Chocolate & Confectionery,149,/gifts/chocolate-treats and the Build a Box chocolate shelf
+all-gifts,Product tag is equal to All Gifts,2729,the Build a Box Everything shelf. Not a shopper-facing listing: Gifts by budget was retired in September 2026
+all-food,Product tag is equal to All Food,329,the Build a Box food shelf
+chocolate-confectionery-1,Product tag is equal to Chocolate & Confectionery,154,/gifts/chocolate-treats and the Build a Box chocolate shelf
 candles-diffusers,Product tag is equal to Candles & Diffusers,88,/gifts/candles-diffusers and the Build a Box candles shelf
-glassware-crystal,Product tag is equal to Glassware & Crystal,33,/gifts/crystal-glassware
-beauty,Product tag is equal to Beauty,172,the Build a Box beauty shelf
-homeware,Product tag is equal to Homeware,449,the Build a Box homeware shelf
-baby,Product tag is equal to Baby,134,the Build a Box baby shelf
-jewellery,Product tag is equal to Jewellery,398,the Build a Box jewellery shelf
-greeting-cards,Product tag is equal to Greeting Cards,692,the Build a Box cards shelf
+glassware-crystal,Product tag is equal to Glassware & Crystal,52,/gifts/crystal-glassware
+beauty,Product tag is equal to Beauty,185,the Build a Box beauty shelf
+homeware,Product tag is equal to Homeware,470,the Build a Box homeware shelf
+baby,Product tag is equal to Baby,137,the Build a Box baby shelf
+jewellery,Product tag is equal to Jewellery,408,the Build a Box jewellery shelf
+greeting-cards,Product tag is equal to Greeting Cards,765,the Build a Box cards shelf

@@ -292,6 +292,53 @@ const rows = await readCsv(input)
 const byHandle = new Map()
 for (const r of rows) { const h = r.Handle; if (!h) continue; if (!byHandle.has(h)) byHandle.set(h, []); byHandle.get(h).push(r) }
 
+/**
+ * Ground truth for the two groups the export cannot describe itself.
+ *
+ * The 20 live hampers carry no product type and no tags at all: the
+ * merchant keeps them in a collection by hand and the export shows an
+ * empty row. Classifying from the file alone tagged 46 retired drafts as
+ * the hamper range and missed all 20, which would have emptied the
+ * hamper collection the moment it was automated.
+ *
+ * data/catalogue/*.json is the client's own export as read by the site,
+ * so it is the authority on which handles are hampers and which are
+ * bottles. Both lists are checked first, before anything is inferred.
+ */
+const KNOWN_HAMPERS = new Set(
+  (await import('../../data/catalogue/hampers.json', { with: { type: 'json' } })).default.products.map((p) => p.handle),
+)
+const KNOWN_WINES = new Set(
+  (await import('../../data/catalogue/wines.json', { with: { type: 'json' } })).default.products.map((p) => p.handle),
+)
+
+/**
+ * Vendor as a last resort for a product with no type, tags or usable
+ * title. Read from the data rather than guessed: a vendor whose
+ * classifiable products land overwhelmingly on one shelf puts its
+ * unclassifiable ones there too. Tipperary Crystal sells homeware, Card
+ * Boutique sells cards, and 528 products in this export say nothing at
+ * all about themselves.
+ */
+const vendorShelfTally = new Map()
+for (const [, group] of byHandle) {
+  const head = group.find((r) => (r.Title || '').trim()) || group[0]
+  const vendor = (head.Vendor || '').trim()
+  if (!vendor) continue
+  const shelf = shelfFor((head.Type || '').trim(), tagList(head.Tags), (head.Title || '').trim())
+  if (!shelf) continue
+  if (!vendorShelfTally.has(vendor)) vendorShelfTally.set(vendor, new Map())
+  const t = vendorShelfTally.get(vendor)
+  t.set(shelf, (t.get(shelf) || 0) + 1)
+}
+const VENDOR_SHELF = new Map()
+for (const [vendor, tally] of vendorShelfTally) {
+  const total = [...tally.values()].reduce((a, b) => a + b, 0)
+  const [top, n] = [...tally.entries()].sort((a, b) => b[1] - a[1])[0]
+  // Three or more classified products and at least 70% agreement.
+  if (total >= 3 && n / total >= 0.7) VENDOR_SHELF.set(vendor, top)
+}
+
 const audit = []
 const review = []
 const collectionCounts = new Map()
@@ -315,8 +362,8 @@ for (const [handle, group] of byHandle) {
 
   const isGiftCard = lower(head['Gift Card']) === 'true'
   const isMechanism = HIDDEN_HANDLES.has(handle) || type === 'GIST_BUILDER_PRODUCT'
-  const isHamper = /hamper/i.test(type) || lowerSet.has('all hampers') || lowerSet.has('hampers')
-  const wineish = isWineish(type, original, title)
+  const isHamper = KNOWN_HAMPERS.has(handle) || /hamper/i.test(type) || lowerSet.has('all hampers') || lowerSet.has('hampers')
+  const wineish = KNOWN_WINES.has(handle) || isWineish(type, original, title)
   const spiritTitle = SPIRITY.test(title) && !NOT_A_BOTTLE.test(title)
   const isSpirit = spiritTitle && !/\b(wine|champagne|prosecco|port|sherry)\b/i.test(title)
 
@@ -374,9 +421,12 @@ for (const [handle, group] of byHandle) {
     // Everything that is not a hamper or a bottle. It is not a standalone
     // shopping category, so it goes to the Build a Box shelves: All Gifts
     // (the Everything shelf) plus its own shelf.
-    const shelf = shelfFor(type, original, title)
+    const fromData = shelfFor(type, original, title)
+    const fromVendor = fromData ? null : VENDOR_SHELF.get((head.Vendor || '').trim()) ?? null
+    const shelf = fromData ?? fromVendor
     set.add(COLLECTION_TAG.allGifts)
     if (shelf) set.add(shelf)
+    if (fromVendor) notes.push(`Shelf read from the vendor: ${(head.Vendor || '').trim()} products are overwhelmingly ${fromVendor}.`)
     const isAddon = original.some((t) => ADDON_TAGS.has(lower(t))) ||
       shelf === COLLECTION_TAG.candles || shelf === COLLECTION_TAG.chocolate || shelf === COLLECTION_TAG.crystal
     if (isAddon) {

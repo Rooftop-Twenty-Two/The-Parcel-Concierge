@@ -16,7 +16,7 @@ import {
 } from '../shopify/queries'
 import { fixtureAllHandles, fixtureFacetOptions, fixtureProduct, fixtureQuery } from './fixtures'
 import { money } from './money'
-import { grapeFromLabel, priceBandForMinor } from './taxonomy'
+import { countryFromLabel, grapeFromLabel, priceBandForMinor, regionFromLabel } from './taxonomy'
 import type { Money, Product, ProductCard, ProductQuery, ProductQueryResult } from './types'
 
 /**
@@ -43,10 +43,19 @@ function cardFacetValues(card: ProductCard, facet: string): string[] {
         .filter((g): g is string => g !== null)
       return [...new Set([...fromMeta, ...fromTags])]
     }
+    // Region and country: the wine.* metafield when the product has one,
+    // otherwise the store's own tags ("French Wines", "Rioja"), read through
+    // the same normalising lookups as grape. The metafields are not on the
+    // live store yet, so without the tag fallback these two filters were
+    // empty on every wine listing (client, September 2026).
     case 'region':
-      return card.wineFacets?.region ? [card.wineFacets.region] : []
+      return card.wineFacets?.region
+        ? [card.wineFacets.region]
+        : uniqueLabels(card.tags, regionFromLabel)
     case 'country':
-      return card.wineFacets?.country ? [card.wineFacets.country] : []
+      return card.wineFacets?.country
+        ? [card.wineFacets.country]
+        : uniqueLabels(card.tags, countryFromLabel)
     case 'style':
       return card.wineFacets?.style ?? []
     case 'price':
@@ -61,6 +70,11 @@ function cardFacetValues(card: ProductCard, facet: string): string[] {
 }
 
 /** Values within one facet are ORed; different facets are ANDed. */
+/** The distinct labels a lookup reads out of a tag list, in tag order. */
+function uniqueLabels(tags: readonly string[], lookup: (tag: string) => string | null): string[] {
+  return [...new Set(tags.map(lookup).filter((label): label is string => label !== null))]
+}
+
 function matchesFacets(card: ProductCard, facets: Record<string, string[]>): boolean {
   for (const [facet, wanted] of Object.entries(facets)) {
     if (!wanted.length) continue

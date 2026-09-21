@@ -242,3 +242,113 @@ const GRAPE_BY_KEY = new Map(GRAPE_VARIETIES.map((name) => [normaliseGrapeKey(na
 export function grapeFromLabel(value: string): string | null {
   return GRAPE_BY_KEY.get(normaliseGrapeKey(value)) ?? null
 }
+
+/**
+ * Countries, read the same way out of the store's tags. The old site tagged
+ * a bottle "French Wines", "Spanish Wine", "South African Wines", and was
+ * never consistent about the plural or the form, so every spelling the
+ * export was found to use maps to one label. Bare names ("France") and
+ * demonyms ("French") are accepted too, so the vocabulary can be tidied
+ * without the filter going dark.
+ *
+ * Read only when the wine.country metafield is absent, which on the live
+ * store is always: the metafields are not on the store yet. This is what
+ * makes the Country filter work today.
+ */
+const COUNTRY_KEYS: Record<string, string> = {
+  france: 'France',
+  french: 'France',
+  spain: 'Spain',
+  spanish: 'Spain',
+  italy: 'Italy',
+  italian: 'Italy',
+  argentina: 'Argentina',
+  argentinian: 'Argentina',
+  argentine: 'Argentina',
+  'new zealand': 'New Zealand',
+  portugal: 'Portugal',
+  portuguese: 'Portugal',
+  'south africa': 'South Africa',
+  'south african': 'South Africa',
+  australia: 'Australia',
+  australian: 'Australia',
+  chile: 'Chile',
+  chilean: 'Chile',
+  germany: 'Germany',
+  german: 'Germany',
+  'united states': 'United States',
+  usa: 'United States',
+  american: 'United States',
+  california: 'United States',
+  californian: 'United States',
+  austria: 'Austria',
+  austrian: 'Austria',
+  greece: 'Greece',
+  greek: 'Greece',
+  ireland: 'Ireland',
+  irish: 'Ireland',
+  england: 'England',
+  english: 'England',
+  hungary: 'Hungary',
+  hungarian: 'Hungary',
+  lebanon: 'Lebanon',
+  lebanese: 'Lebanon',
+}
+
+/** The country a tag names, or null. "French Wines", "france", "FRENCH WINE" all give France. */
+export function countryFromLabel(value: string): string | null {
+  return COUNTRY_KEYS[normaliseGrapeKey(value)] ?? null
+}
+
+/**
+ * Regions worth a filter value. Exact match on the tag after the same
+ * normalisation, so "Rioja Wines" and "rioja" both resolve, and a region
+ * word inside a longer tag ("Rioja Reserva Gift Set") does not.
+ */
+export const WINE_REGIONS = [
+  'Bordeaux',
+  'Burgundy',
+  'Chablis',
+  'Beaujolais',
+  'Champagne',
+  'Loire',
+  'Alsace',
+  'Provence',
+  'Rhône',
+  'Languedoc',
+  'Rioja',
+  'Ribera del Duero',
+  'Rueda',
+  'Priorat',
+  'Penedès',
+  'Rías Baixas',
+  'Douro',
+  'Chianti',
+  'Barolo',
+  'Tuscany',
+  'Piedmont',
+  'Veneto',
+  'Sicily',
+  'Puglia',
+  'Prosecco',
+  'Mosel',
+  'Marlborough',
+  'Central Otago',
+  "Hawke's Bay",
+  'Mendoza',
+  'Stellenbosch',
+  'Swartland',
+  'Western Cape',
+  'Barossa',
+  'McLaren Vale',
+  'Napa Valley',
+  'Sonoma',
+  'Maipo',
+] as const
+
+const REGION_BY_KEY = new Map(WINE_REGIONS.map((name) => [normaliseGrapeKey(name), name]))
+
+/** The region a tag names, or null. */
+export function regionFromLabel(value: string): string | null {
+  return REGION_BY_KEY.get(normaliseGrapeKey(value)) ?? null
+}

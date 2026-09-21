@@ -1,3 +1,4 @@
+import type { ListingHeroContent } from '@/components/listing/ListingHero'
 import type { ProductCard } from './types'
 
 /**
@@ -46,6 +47,30 @@ export type ChristmasImage = { src: string; alt: string }
  * client wants the everyday photograph on those.
  */
 export const CHRISTMAS_IMAGE_PATHS: ReadonlySet<string> = new Set(['/occasions/christmas'])
+
+/**
+ * The Christmas listing's full-bleed hero.
+ *
+ * /occasions/christmas is a landing page people arrive on from a
+ * newsletter or an ad, not a page they browse into, so it gets the
+ * homepage treatment rather than a line of type over cream. The headline
+ * and the intro still come from the listing registry and the CMS: only
+ * the photograph, the eyebrow and the buttons live here.
+ *
+ * Keyed by path so adding one to another seasonal listing is a row, and
+ * so the January retirement is deleting this object.
+ */
+export const LISTING_HEROES: Readonly<Record<string, ListingHeroContent>> = {
+  '/occasions/christmas': {
+    image: {
+      src: '/photography/christmas/hero.webp',
+      alt: 'An Irish food hamper dressed for Christmas on a wooden table, holding Keogh’s crisps, Blanco Niño tortilla chips, a Ballymaloe relish set, coffee bags and Chocolate Garden chocolates, with pine, holly and gold ribbon around it',
+    },
+    eyebrow: 'Christmas 2026',
+    cta: { label: 'Shop Christmas hampers', href: '#grid' },
+    secondary: { label: 'Corporate Christmas gifting', href: '/corporate-gifting' },
+  },
+}
 
 export const CHRISTMAS_IMAGES: Readonly<Record<string, ChristmasImage>> = {
   'large-basket': {

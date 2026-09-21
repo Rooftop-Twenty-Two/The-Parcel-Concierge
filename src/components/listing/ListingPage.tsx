@@ -7,7 +7,12 @@ import { AgeGate } from '@/components/commerce/AgeGate'
 import { InkWaves } from '@/components/ui/Stamp'
 import { getCuratedListing, getListingCopy } from '@/lib/cms'
 import { facetOptions, queryListing, queryProducts } from '@/lib/commerce'
-import { CHRISTMAS_IMAGE_PATHS, withChristmasImages } from '@/lib/commerce/christmas-images'
+import {
+  CHRISTMAS_IMAGE_PATHS,
+  LISTING_HEROES,
+  withChristmasImages,
+} from '@/lib/commerce/christmas-images'
+import { ListingHero } from '@/components/listing/ListingHero'
 import {
   MIN_PRODUCTS_PER_LISTING,
   type CollectionDef,
@@ -133,9 +138,16 @@ export async function ListingPage({
     { name: collection.title, path: collection.path },
   ]
 
+  const hero = LISTING_HEROES[collection.path]
+
   return (
     <>
       {collection.alcohol ? <AgeGate context="listing" /> : null}
+
+      {/* A listing with a hero leads with it, full bleed, and the
+          breadcrumb follows on cream. Pushing the breadcrumb above would
+          put a thin strip of chrome over the one image on the page. */}
+      {hero ? <ListingHero content={hero} h1={collection.h1} intro={copy?.intro ?? null} /> : null}
 
       <nav aria-label="Breadcrumb" className="mx-auto max-w-[1400px] px-4 pt-6 lg:px-8">
         <ol className="flex flex-wrap gap-2 text-sm text-ink-muted">
@@ -154,14 +166,18 @@ export async function ListingPage({
         </ol>
       </nav>
 
-      <header className="mx-auto max-w-[1400px] px-4 pt-6 lg:px-8">
-        <h1 className="font-display text-[length:var(--text-display)] text-navy">{collection.h1}</h1>
-        {copy ? (
-          <p className="prose-tpc mt-4 text-lg text-ink-muted">{copy.intro}</p>
-        ) : null}
-      </header>
+      {/* The hero already carries the h1 and the intro, so a listing with
+          one does not repeat them here. */}
+      {hero ? null : (
+        <header className="mx-auto max-w-[1400px] px-4 pt-6 lg:px-8">
+          <h1 className="font-display text-[length:var(--text-display)] text-navy">
+            {collection.h1}
+          </h1>
+          {copy ? <p className="prose-tpc mt-4 text-lg text-ink-muted">{copy.intro}</p> : null}
+        </header>
+      )}
 
-      <div className="mx-auto max-w-[1400px] px-4 py-10 lg:px-8">
+      <div id="grid" className="mx-auto max-w-[1400px] px-4 py-10 lg:px-8">
         <div
           className={
             showFilters ? 'lg:grid lg:grid-cols-[240px_1fr] lg:gap-10 lg:items-start' : undefined

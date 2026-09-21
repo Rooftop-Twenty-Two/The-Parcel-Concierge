@@ -153,6 +153,20 @@ export const CHRISTMAS_IMAGES: Readonly<Record<string, ChristmasImage>> = {
     alt: 'The New Home Luxury Hamper dressed for Christmas, a bottle of Henriot Champagne beside a Rathbornes candle, a framed ogham print and a boxed pair of Galway Crystal Champagne flutes',
   },
 
+  // Supplied as a matched pair, September 2026: this Christmas dressing
+  // and an everyday one shot on linen with olive branches. The everyday
+  // shot is the product's own image, so it lives in Shopify (and in
+  // data/catalogue/hampers.json for preview builds), not here. That pair
+  // is exactly the arrangement this whole file exists to serve.
+  //
+  // Checks out item for item: the Baileys Strawberries and Cream
+  // chocolates and the Baie d'Azur rosé are the hamper as sold, and
+  // nothing else is in the box.
+  'the-perfect-duo': {
+    src: '/photography/christmas/the-perfect-duo.webp',
+    alt: 'The Perfect Duo dressed for Christmas, a red gift box holding a bottle of Baie d’Azur rosé and a tube of Baileys Strawberries and Cream chocolates, with pine, holly and pinecones around it',
+  },
+
   // Square rather than 4:3, same as the New Home hamper above: the box is
   // centred in the frame, so the card cropping the top and bottom is fine.
   //

@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Parcel Concierge — Shopify Training Manual</title>
+<style>
+  @page { size: A4; margin: 18mm 16mm 20mm 16mm; }
+  @page:first { margin: 0; }
+
+  :root {
+    --navy:#2c4349; --green:#326a68; --green-light:#9bb7a8;
+    --cream:#f5f2e9; --gold:#d7b371; --wine:#9f3226; --red:#e1472f;
+    --beige:#f5e4d2; --ink:#2c4349; --muted:#5c7278; --rule:#d8d3c4;
+  }
+
+  * { box-sizing:border-box; }
+  body {
+    font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size:9.6pt; line-height:1.5; color:var(--ink); margin:0;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }
+
+  /* ---------- cover ---------- */
+  .cover {
+    height:297mm; background:var(--green); color:var(--cream);
+    padding:34mm 24mm; page-break-after:always; position:relative;
+  }
+  .cover .eyebrow { font-size:8.5pt; letter-spacing:.26em; text-transform:uppercase; color:var(--gold); margin-bottom:22mm; }
+  .cover h1 { font-size:38pt; line-height:1.02; margin:0 0 8mm; font-weight:800; letter-spacing:-.01em; }
+  .cover .sub { font-size:13pt; line-height:1.45; color:rgba(245,242,233,.92); max-width:118mm; margin-bottom:16mm; }
+  .cover .rule { width:38mm; height:3px; background:var(--gold); margin-bottom:9mm; }
+  .cover .meta { font-size:9pt; color:rgba(245,242,233,.78); line-height:1.8; }
+  .cover .foot { position:absolute; bottom:24mm; left:24mm; right:24mm; font-size:8.5pt; color:rgba(245,242,233,.6); border-top:1px solid rgba(245,242,233,.25); padding-top:5mm; }
+
+  /* ---------- structure ---------- */
+  h2 {
+    font-size:16pt; color:var(--green); margin:0 0 4mm; padding-bottom:2.5mm;
+    border-bottom:2px solid var(--gold); page-break-after:avoid; font-weight:800;
+  }
+  h3 { font-size:11.5pt; color:var(--navy); margin:7mm 0 2.5mm; page-break-after:avoid; font-weight:700; }
+  h4 { font-size:10pt; color:var(--green); margin:5mm 0 1.5mm; page-break-after:avoid; }
+  p { margin:0 0 3mm; }
+  ul,ol { margin:0 0 3.5mm; padding-left:5.5mm; }
+  li { margin-bottom:1.6mm; }
+  .part { page-break-before:always; }
+  .lead { font-size:10.5pt; color:var(--muted); margin-bottom:5mm; }
+  code { font-family:"SFMono-Regular",Menlo,Consolas,monospace; font-size:8.6pt;
+         background:var(--cream); border:1px solid var(--rule); border-radius:2px; padding:.4mm 1.2mm; color:var(--wine); }
+  strong { color:var(--navy); }
+
+  /* ---------- tables ---------- */
+  table { width:100%; border-collapse:collapse; margin:0 0 5mm; font-size:8.5pt; page-break-inside:auto; }
+  thead { display:table-header-group; }
+  tr { page-break-inside:avoid; }
+  th { background:var(--green); color:var(--cream); text-align:left; padding:2mm 2.2mm; font-size:8pt;
+       text-transform:uppercase; letter-spacing:.06em; font-weight:700; }
+  td { padding:1.8mm 2.2mm; border-bottom:1px solid var(--rule); vertical-align:top; }
+  tbody tr:nth-child(even) td { background:#faf8f2; }
+  td code { font-size:8pt; }
+
+  /* ---------- callouts ---------- */
+  .box { padding:3.5mm 4mm; margin:0 0 5mm; border-left:3.5px solid; page-break-inside:avoid; border-radius:0 2px 2px 0; }
+  .box p:last-child { margin-bottom:0; }
+  .box .t { font-weight:800; font-size:8.6pt; text-transform:uppercase; letter-spacing:.08em; margin-bottom:1.5mm; display:block; }
+  .never { background:#fdeeeb; border-color:var(--red); }
+  .never .t { color:var(--wine); }
+  .note  { background:#eef4f4; border-color:var(--green); }
+  .note .t { color:var(--green); }
+  .warn  { background:#fdf6e8; border-color:var(--gold); }
+  .warn .t { color:#8a6b28; }
+
+  /* ---------- rules strip ---------- */
+  .rules { display:table; width:100%; border-spacing:0 2mm; margin-bottom:4mm; }
+  .rules > div { display:table-row; }
+  .rules .n {
+    display:table-cell; width:9mm; background:var(--gold); color:var(--navy);
+    font-weight:800; text-align:center; font-size:11pt; vertical-align:middle; border-radius:2px;
+  }
+  .rules .b { display:table-cell; padding-left:3.5mm; vertical-align:middle; }
+
+  /* ---------- flow ---------- */
+  .flow { border:1px solid var(--rule); border-radius:3px; overflow:hidden; margin-bottom:5mm; page-break-inside:avoid; }
+  .flow .q { background:var(--navy); color:var(--cream); padding:2.4mm 3.5mm; font-weight:700; font-size:9pt; }
+  .flow .r { padding:3mm 3.5mm; border-bottom:1px solid var(--rule); }
+  .flow .r:last-child { border-bottom:0; }
+  .flow .r b { color:var(--green); }
+  .arrow { color:var(--gold); font-weight:800; padding:0 1.5mm; }
+
+  /* ---------- example cards ---------- */
+  .eg { border:1px solid var(--rule); border-left:3.5px solid var(--green); padding:3.5mm 4mm; margin-bottom:4mm; page-break-inside:avoid; background:#fbfaf6; }
+  .eg h4 { margin-top:0; }
+  .eg table { margin-bottom:0; font-size:8.3pt; }
+  .eg td { border-bottom:1px dotted var(--rule); }
+  .eg td:first-child { width:38mm; color:var(--muted); }
+
+  .tag { background:var(--cream); border:1px solid var(--rule); border-radius:2px;
+         padding:.4mm 1.4mm; font-family:Menlo,monospace; font-size:8pt; color:var(--wine); white-space:nowrap; }
+  .live { color:#1d6b3f; font-weight:700; }
+  .dormant { color:#9a6a12; font-weight:700; }
+  .toc td { padding:2mm 2.2mm; border-bottom:1px solid var(--rule); }
+  .toc td:first-child { width:12mm; color:var(--gold); font-weight:800; }
+  .toc td:last-child { color:var(--muted); font-size:8.2pt; }
+</style>
+</head>
+<body>
+
+<!-- ============ COVER ============ -->
+<div class="cover">
+  <div class="eyebrow">The Parcel Concierge &middot; Operations</div>
+  <h1>Shopify<br>Training Manual</h1>
+  <div class="rule"></div>
+  <div class="sub">
+    How to add a product to Shopify, which collection to put it in, and exactly
+    where it will appear on theparcelconcierge.com.
+  </div>
+  <div class="meta">
+    Version 1.0 &middot; 21 September 2026<br>
+    Prepared by Rooftop Twenty Two<br>
+    Written from the live website code, not from convention
+  </div>
+  <div class="foot">
+    Every rule in this manual was read out of the running site. Where the manual
+    says a page reads a collection, that is the handle the code asks Shopify for.
+  </div>
+</div>
+
+<!-- ============ CONTENTS ============ -->
+<h2>What is in this manual</h2>
+<table class="toc">
+  <tr><td>1</td><td><strong>The one idea that explains everything</strong></td><td>Collections, tags and what each one controls</td></tr>
+  <tr><td>2</td><td><strong>The seven rules</strong></td><td>Read once, follow always</td></tr>
+  <tr><td>3</td><td><strong>Adding a product</strong></td><td>Field by field, including the import checkbox that catches everyone</td></tr>
+  <tr><td>4</td><td><strong>Where do I put it?</strong></td><td>The decision tree</td></tr>
+  <tr><td>5</td><td><strong>The collection map</strong></td><td>Every collection and the page it feeds</td></tr>
+  <tr><td>6</td><td><strong>The tag dictionary</strong></td><td>Every tag the site reads, and the ones it ignores</td></tr>
+  <tr><td>7</td><td><strong>Build a Gift</strong></td><td>The eleven shelves</td></tr>
+  <tr><td>8</td><td><strong>Worked examples</strong></td><td>Five real products, start to finish</td></tr>
+  <tr><td>9</td><td><strong>It is not showing up</strong></td><td>Fault-finding in order</td></tr>
+  <tr><td>10</td><td><strong>Dormant collections</strong></td><td>The six that are switched off, and how to switch one back on</td></tr>
+</table>
+
+<div class="note box">
+  <span class="t">Who this is for</span>
+  <p>Anyone at The Parcel Concierge who adds or edits products in Shopify. You do not
+  need to understand the website to use it — follow the decision tree in section 4 and
+  the product will land in the right place.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<h2 class="part">1 &nbsp;The one idea that explains everything</h2>
+<p class="lead">The website asks Shopify three separate questions about every product.
+Three questions, three different answers, three different things you control.</p>
+
+<table>
+  <thead><tr><th style="width:26%">The question</th><th style="width:25%">What answers it</th><th>What it controls</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>What page does it appear on?</strong></td>
+      <td>The <strong>collection</strong> it is in</td>
+      <td>Whether it shows on /hampers, /wine, /occasions/christmas, a Build a Gift shelf, and so on. This is the big one.</td>
+    </tr>
+    <tr>
+      <td><strong>What kind of thing is it?</strong></td>
+      <td>The <code>type:</code> <strong>tag</strong></td>
+      <td>Its web address, which page template it uses, and whether the over-18 gate appears.</td>
+    </tr>
+    <tr>
+      <td><strong>How do shoppers narrow it down?</strong></td>
+      <td>All the <strong>other tags</strong></td>
+      <td>The filters down the side of a listing — grape, country, region, occasion, recipient.</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="never box">
+  <span class="t">The single most important consequence</span>
+  <p>A Shopify product CSV <strong>has no column for collections</strong>. So a spreadsheet
+  import can classify and tag every product in the shop, and it still cannot put one single
+  product onto a page. Collections are added in the Shopify admin, by hand or by an automated
+  rule. <strong>Importing a CSV and expecting products to appear on the site will not work.</strong></p>
+</div>
+
+<h3>Said another way</h3>
+<div class="flow">
+  <div class="q">Think of the website as a shop floor</div>
+  <div class="r"><b>The collection</b> <span class="arrow">=</span> which shelf you physically put the box on. If it is on no shelf, no customer walks past it.</div>
+  <div class="r"><b>The <code>type:</code> tag</b> <span class="arrow">=</span> the label on the box saying what it is, so the shop knows whether to card the buyer.</div>
+  <div class="r"><b>The other tags</b> <span class="arrow">=</span> the little signs a customer uses to find "red wine, French, under €25".</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<h2 class="part">2 &nbsp;The seven rules</h2>
+
+<div class="rules">
+  <div><div class="n">1</div><div class="b"><strong>If it is not in a collection, it is not on the website.</strong>
+    It can be published, in stock and perfectly tagged, and still be invisible. Search will find it; no page will list it.</div></div>
+  <div><div class="n">2</div><div class="b"><strong>Every product goes in at least one collection.</strong>
+    Hampers and wines have their own. Everything else goes in <span class="tag">all-gifts</span> plus one Build a Gift shelf.</div></div>
+  <div><div class="n">3</div><div class="b"><strong>Never remove the old tags.</strong>
+    Tags like "French Wines" and "Chenin Blanc Wine" are not legacy clutter — they are what fills the Country and Grape filters today. Add to them; do not tidy them away.</div></div>
+  <div><div class="n">4</div><div class="b"><strong>Never put <span class="tag">type:builder-item</span> on a real product.</strong>
+    It removes the product from every listing, from search, from the sitemap and from Build a Gift. See section 6.</div></div>
+  <div><div class="n">5</div><div class="b"><strong>A page needs four products to open.</strong>
+    Under four, the page redirects to its parent. This is deliberate — an empty page is worse than no page.</div></div>
+  <div><div class="n">6</div><div class="b"><strong>Out of stock means off the site.</strong>
+    Listings and search hide anything unavailable. You do not need to unpublish it.</div></div>
+  <div><div class="n">7</div><div class="b"><strong>Changes take up to an hour to appear.</strong>
+    The site caches pages for speed. Nothing is broken; wait, or ask Rooftop Twenty Two to clear it.</div></div>
+</div>
+
+<!-- ============ 3 ============ -->
+<h2 class="part">3 &nbsp;Adding a product</h2>
+<p class="lead">Two ways in: one at a time in the admin, or in bulk by CSV. The fields are the same.</p>
+
+<h3>3.1 &nbsp;The fields that matter to the website</h3>
+<table>
+  <thead><tr><th style="width:24%">Field</th><th style="width:20%">Required?</th><th>What the site does with it</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Title</strong></td><td>Yes</td><td>Shown on the card and the product page. Also what site search matches on.</td></tr>
+    <tr><td><strong>Handle</strong></td><td>Auto</td><td>The web address. <strong>Never change a handle on a live product</strong> — it breaks every existing link and any Google ranking.</td></tr>
+    <tr><td><strong>Description</strong></td><td>Yes</td><td>The product page body. Worth writing properly; it is what ranks.</td></tr>
+    <tr><td><strong>Images</strong></td><td>Yes</td><td>First image is the card image. Landscape 4:3 works best.</td></tr>
+    <tr><td><strong>Price</strong></td><td>Yes</td><td>Price bands are worked out from this automatically. There is no price tag to set.</td></tr>
+    <tr><td><strong>Inventory</strong></td><td>Yes</td><td>Zero stock hides it everywhere.</td></tr>
+    <tr><td><strong>Published</strong></td><td>Yes</td><td>Unpublished is invisible, full stop.</td></tr>
+    <tr><td><strong>Product type</strong></td><td>No</td><td>Leave blank unless it is a Build a Gift box, which uses <code>GIST_BUILDER_PRODUCT</code>. Do not set that yourself.</td></tr>
+    <tr><td><strong>Tags</strong></td><td>Yes</td><td>See section 6.</td></tr>
+    <tr><td><strong>Collections</strong></td><td>Yes</td><td>See sections 4 and 5. <strong>This is the one that decides where it shows.</strong></td></tr>
+  </tbody>
+</table>
+
+<h3>3.2 &nbsp;Adding one product by hand</h3>
+<ol>
+  <li><strong>Products → Add product.</strong> Fill in title, description, images, price, stock.</li>
+  <li><strong>Tags.</strong> Work through section 6 and add every tag that applies.</li>
+  <li><strong>Collections.</strong> In the right-hand panel, add it to the collections section 4 tells you.
+      <em>If a collection is automated, you cannot add it here — it joins by itself once the tags match.</em></li>
+  <li><strong>Save</strong>, then check it on the site within the hour.</li>
+</ol>
+
+<h3>3.3 &nbsp;Importing by CSV</h3>
+<div class="never box">
+  <span class="t">Tick the overwrite box</span>
+  <p>On <strong>Products → Import</strong>, you must tick
+  <strong>"Overwrite any current products that have the same handle"</strong>.</p>
+  <p>Without it, Shopify <strong>silently skips</strong> every product whose handle already exists.
+  On a re-tagging import that means almost nothing changes and the file looks like it did not work.
+  This has already caught us once: a wine collection came back with 314 products instead of 373.</p>
+</div>
+<ol>
+  <li>Export first: <strong>Products → Export → All products → CSV</strong>. That is your rollback.</li>
+  <li>Import the new file with the overwrite box <strong>ticked</strong>.</li>
+  <li>Wait for the confirmation email. Large files take several minutes.</li>
+  <li>Spot-check five products: right tags, right price, images still there.</li>
+  <li><strong>Now do the collections</strong>, which the CSV could not touch.</li>
+</ol>
+
+<!-- ============ 4 ============ -->
+<h2 class="part">4 &nbsp;Where do I put it? The decision tree</h2>
+<p class="lead">Start at the top. The first line that matches is your answer.</p>
+
+<div class="flow">
+  <div class="q">Is it a finished hamper or gift box we sell as one product?</div>
+  <div class="r">
+    <b>Yes →</b> Collection: <span class="tag">christmas-2026</span> (titled "General Hampers 2026")<br>
+    Tag: <span class="tag">type:hamper</span><br>
+    <em>Appears on: /hampers, the matching price band, the homepage hamper band, and /occasions/christmas. The price band is chosen automatically from the price — you do nothing.</em>
+  </div>
+</div>
+
+<div class="flow">
+  <div class="q">Is it wine, Champagne, port or sherry?</div>
+  <div class="r">
+    <b>Yes →</b> Collections: <span class="tag">fine-wines-1</span> <strong>and</strong> its colour or style collection
+    (<span class="tag">red-wines-1</span>, <span class="tag">white-wines-1</span>, <span class="tag">rose</span>,
+    <span class="tag">champagne-and-prosecco-1</span>, <span class="tag">port-and-sherry-1</span>,
+    <span class="tag">organic-wine</span>, <span class="tag">non-alcoholic-1</span>, <span class="tag">wine-gift-sets</span>)<br>
+    Tags: <span class="tag">type:wine</span>, <span class="tag">contains:alcohol</span>, plus country, region and grape<br>
+    <em>Appears on: /wine, the colour page, the right price band. Filters need the country/region/grape tags.</em>
+  </div>
+</div>
+
+<div class="flow">
+  <div class="q">Is it a spirit or liqueur?</div>
+  <div class="r">
+    <b>Yes →</b> Collection: <span class="tag">fine-wines-1</span><br>
+    Tags: <span class="tag">type:spirit</span>, <span class="tag">contains:alcohol</span>
+  </div>
+</div>
+
+<div class="flow">
+  <div class="q">Anything else — chocolate, candles, crystal, baby, cards, homeware, food</div>
+  <div class="r">
+    <b>→</b> Collections: <span class="tag">all-gifts</span> <strong>and</strong> one shelf from section 7<br>
+    Tag: <span class="tag">type:addon</span>, plus <span class="tag">contains:alcohol</span> if it contains any<br>
+    <em>Appears in: Build a Gift, on the shelf you chose. It will not have a section of its own, and that is by design.</em>
+  </div>
+</div>
+
+<div class="note box">
+  <span class="t">Why there is no gifts section any more</span>
+  <p>The site sells <strong>hampers and wine</strong> as its products. Everything else is sold as
+  something you put into a hamper, through Build a Gift. A chocolate bar is not missing from the
+  site because it has no gifts page — it is on the chocolate shelf of the builder, which is where
+  it is meant to be.</p>
+</div>
+
+<div class="warn box">
+  <span class="t">The collection with the confusing name</span>
+  <p>The hamper collection's handle is <span class="tag">christmas-2026</span> but its title is
+  <strong>"General Hampers 2026"</strong>. It was renamed in Shopify and Shopify keeps the original
+  handle when you rename. The website asks for it by handle, so it still works.</p>
+  <p><strong>Put every hamper in it, all year round</strong> — not only Christmas ones. It is the
+  hamper range, despite the name. Renaming it will not change the handle; creating a new
+  collection to replace it would empty the hamper pages, so please talk to us first.</p>
+</div>
+
+<!-- ============ 5 ============ -->
+<h2 class="part">5 &nbsp;The collection map</h2>
+<p class="lead">Every collection the website reads, and the exact page it feeds.
+If a collection is not on this list, the website does not look at it.</p>
+
+<h3>5.1 &nbsp;Hampers</h3>
+<table>
+  <thead><tr><th style="width:30%">Collection handle</th><th style="width:34%">Feeds these pages</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><span class="tag">christmas-2026</span><br><em>"General Hampers 2026"</em></td>
+        <td>/hampers<br>/hampers/under-75<br>/hampers/75-125<br>/hampers/125-200<br>/hampers/luxury-200-plus<br>/occasions/christmas<br>homepage hamper band</td>
+        <td class="live">LIVE — one collection feeds all seven. Price bands split it automatically: under €75, €75–125, €125–200, over €200.</td></tr>
+  </tbody>
+</table>
+
+<h3>5.2 &nbsp;Wine</h3>
+<table>
+  <thead><tr><th style="width:30%">Collection handle</th><th style="width:34%">Feeds this page</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><span class="tag">fine-wines-1</span></td><td>/wine/fine-wines<br>/wine/under-25<br>/wine/25-50<br>/wine/50-plus</td><td class="live">LIVE — the master wine collection. <strong>Every wine goes in here</strong>, as well as its colour collection. The three price bands are split from it automatically.</td></tr>
+    <tr><td><span class="tag">red-wines-1</span></td><td>/wine/red</td><td class="live">LIVE</td></tr>
+    <tr><td><span class="tag">white-wines-1</span></td><td>/wine/white</td><td class="live">LIVE</td></tr>
+    <tr><td><span class="tag">rose</span></td><td>/wine/rose</td><td class="live">LIVE</td></tr>
+    <tr><td><span class="tag">champagne-and-prosecco-1</span></td><td>/wine/champagne-sparkling</td><td class="live">LIVE — also a Build a Gift shelf</td></tr>
+    <tr><td><span class="tag">port-and-sherry-1</span></td><td>/wine/port-dessert</td><td class="live">LIVE</td></tr>
+    <tr><td><span class="tag">organic-wine</span></td><td>/wine/organic-biodynamic</td><td class="live">LIVE</td></tr>
+    <tr><td><span class="tag">non-alcoholic-1</span></td><td>/wine/alcohol-free</td><td class="live">LIVE</td></tr>
+    <tr><td><span class="tag">wine-gift-sets</span></td><td>/wine/gift-sets</td><td class="live">LIVE</td></tr>
+    <tr><td><span class="tag">exclusive-to-us</span></td><td>/wine/exclusive-to-us</td><td class="dormant">NOT CREATED YET — the page is built and waiting. Create the collection and the page turns on.</td></tr>
+    <tr><td><em>none — hand-picked</em></td><td>/wine/value-edit</td><td class="live">LIVE — curated by us in the site content, not by a collection.</td></tr>
+  </tbody>
+</table>
+
+<h3>5.3 &nbsp;Occasions</h3>
+<table>
+  <thead><tr><th style="width:30%">Collection handle</th><th style="width:34%">Feeds this page</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><span class="tag">christmas-2026</span></td><td>/occasions/christmas</td><td class="live">LIVE — the hamper collection again</td></tr>
+    <tr><td><span class="tag">mothers-day-gifts</span></td><td>/occasions/mothers-day</td><td class="dormant">DORMANT — see section 10</td></tr>
+    <tr><td><span class="tag">fathers-day</span></td><td>/occasions/fathers-day</td><td class="dormant">DORMANT</td></tr>
+    <tr><td><span class="tag">valentines-day</span></td><td>/occasions/valentines</td><td class="dormant">DORMANT</td></tr>
+    <tr><td><span class="tag">easter-1</span></td><td>/occasions/easter</td><td class="dormant">DORMANT</td></tr>
+    <tr><td><span class="tag">gifts-for-baby</span></td><td>/occasions/new-baby</td><td class="dormant">DORMANT</td></tr>
+    <tr><td><span class="tag">wedding-anniversary</span></td><td>/occasions/wedding-engagement</td><td class="dormant">DORMANT</td></tr>
+    <tr><td><span class="tag">sympathy</span></td><td>/occasions/sympathy</td><td class="dormant">NEVER CREATED</td></tr>
+    <tr><td><span class="tag">get-well</span></td><td>/occasions/get-well</td><td class="dormant">NEVER CREATED</td></tr>
+  </tbody>
+</table>
+
+<h3>5.4 &nbsp;Build a Gift shelves</h3>
+<p>These eleven feed the Build a Gift picker only. They have no page of their own.
+Full list with shelf names in section 7.</p>
+<p>
+<span class="tag">all-gifts</span> <span class="tag">all-food</span>
+<span class="tag">chocolate-confectionery-1</span> <span class="tag">fine-wines-1</span>
+<span class="tag">champagne-and-prosecco-1</span> <span class="tag">candles-diffusers</span>
+<span class="tag">beauty</span> <span class="tag">homeware</span>
+<span class="tag">baby</span> <span class="tag">jewellery</span>
+<span class="tag">greeting-cards</span>
+</p>
+
+<div class="never box">
+  <span class="t">Do not delete a collection on this list</span>
+  <p>Deleting one darks its page instantly. If a collection is no longer wanted, tell us first —
+  we take the page down in the same release, so nobody lands on an empty one.</p>
+</div>
+
+<!-- ============ 6 ============ -->
+<h2 class="part">6 &nbsp;The tag dictionary</h2>
+<p class="lead">Tags are case-sensitive in Shopify but the website is forgiving about
+spelling, case and accents on the wine tags. Type them exactly as shown anyway.</p>
+
+<h3>6.1 &nbsp;Kind tags — one per product</h3>
+<table>
+  <thead><tr><th style="width:25%">Tag</th><th style="width:26%">Use it for</th><th>What it does</th></tr></thead>
+  <tbody>
+    <tr><td><span class="tag">type:hamper</span></td><td>Finished hampers</td><td>Address becomes /hampers/&lt;name&gt;; hamper template</td></tr>
+    <tr><td><span class="tag">type:wine</span></td><td>Wine, Champagne, port, sherry</td><td>Address becomes /wine/&lt;name&gt;; wine template; <strong>arms the over-18 gate</strong></td></tr>
+    <tr><td><span class="tag">type:spirit</span></td><td>Spirits and liqueurs</td><td>As above, with the age gate</td></tr>
+    <tr><td><span class="tag">type:addon</span></td><td>Everything else</td><td>Marks it as something that goes into a hamper</td></tr>
+  </tbody>
+</table>
+<div class="never box">
+  <span class="t">Never use type:builder-item</span>
+  <p>It exists for internal test data only. On the live shop it <strong>removes the product from the
+  Build a Gift picker, from every listing, from search and from the sitemap</strong>, leaving it with
+  no way to be bought at all. If you see it on a real product, take it off.</p>
+</div>
+
+<h3>6.2 &nbsp;Filter tags</h3>
+<table>
+  <thead><tr><th style="width:25%">Tag family</th><th style="width:38%">Allowed values</th><th>Fills this filter</th></tr></thead>
+  <tbody>
+    <tr><td><span class="tag">occasion:</span></td>
+        <td>christmas, new-baby, sympathy, anniversary, thank-you, birthday, wedding, corporate</td>
+        <td>"Occasion" on listings that show it</td></tr>
+    <tr><td><span class="tag">recipient:</span></td>
+        <td>her, him, couple, family, client</td>
+        <td>"Recipient"</td></tr>
+    <tr><td><em>Country words</em></td>
+        <td>"France", "French Wines", "Italy", "Spain"… any spelling</td>
+        <td>"Country" on wine listings</td></tr>
+    <tr><td><em>Region words</em></td>
+        <td>"Bordeaux", "Rioja", "Chianti" — the region on its own</td>
+        <td>"Region"</td></tr>
+    <tr><td><em>Grape words</em></td>
+        <td>"Syrah", "Chenin Blanc Wine", "malbec"… any spelling</td>
+        <td>"Grape"</td></tr>
+  </tbody>
+</table>
+<p><em>Example: a French Bordeaux would carry <span class="tag">France</span>, <span class="tag">Bordeaux</span>
+and <span class="tag">Cabernet Sauvignon</span> — three plain tags, no prefix.</em></p>
+
+<h3>6.3 &nbsp;Behaviour tags</h3>
+<table>
+  <thead><tr><th style="width:25%">Tag</th><th>What it does</th></tr></thead>
+  <tbody>
+    <tr><td><span class="tag">contains:alcohol</span></td>
+        <td>Arms the over-18 gate for a Build a Gift item, and marks a corporate gift as alcoholic.
+            <strong>Put it on beer, cider, liqueur chocolates and anything else with alcohol in it</strong> —
+            these are missed most often.</td></tr>
+    <tr><td><span class="tag">badge:*</span></td>
+        <td>Card flags. Leave these to us; <span class="tag">badge:exclusive</span> needs a matching
+            setting the store does not have yet.</td></tr>
+  </tbody>
+</table>
+
+<h3>6.4 &nbsp;Tags the site ignores</h3>
+<table>
+  <thead><tr><th style="width:25%">Tag</th><th>Why it does nothing</th></tr></thead>
+  <tbody>
+    <tr><td><span class="tag">price:*</span></td><td>Price bands are worked out from the actual price. Harmless but pointless.</td></tr>
+    <tr><td><span class="tag">aisle:*</span></td><td>Nothing reads it. <strong>Do not add it.</strong></td></tr>
+  </tbody>
+</table>
+
+<div class="warn box">
+  <span class="t">Once more, because it is the expensive mistake</span>
+  <p>Tags do not put a product on a page. Only collections do. A wine tagged perfectly and in no
+  collection appears on no wine page — that is exactly what happened to the Tokara Director's
+  Reserve White, which was correctly tagged "White Wine" and "Fine Wines" and was in neither
+  collection.</p>
+</div>
+
+<!-- ============ 7 ============ -->
+<h2 class="part">7 &nbsp;Build a Gift — the eleven shelves</h2>
+<p class="lead">When a customer builds their own hamper they browse shelves. A shelf is a
+collection. Membership of these eleven is the <strong>only</strong> thing that decides what
+they can pick.</p>
+
+<table>
+  <thead><tr><th style="width:34%">Shelf the customer sees</th><th style="width:34%">Collection handle</th><th>Alcohol?</th></tr></thead>
+  <tbody>
+    <tr><td>Everything</td><td><span class="tag">all-gifts</span></td><td>No</td></tr>
+    <tr><td>Food and larder</td><td><span class="tag">all-food</span></td><td>No</td></tr>
+    <tr><td>Chocolate and sweet things</td><td><span class="tag">chocolate-confectionery-1</span></td><td>No</td></tr>
+    <tr><td>Wine and Champagne</td><td><span class="tag">fine-wines-1</span></td><td>Yes</td></tr>
+    <tr><td>Champagne and sparkling</td><td><span class="tag">champagne-and-prosecco-1</span></td><td>Yes</td></tr>
+    <tr><td>Candles and fragrance</td><td><span class="tag">candles-diffusers</span></td><td>No</td></tr>
+    <tr><td>Beauty and bath</td><td><span class="tag">beauty</span></td><td>No</td></tr>
+    <tr><td>Homeware and kitchen</td><td><span class="tag">homeware</span></td><td>No</td></tr>
+    <tr><td>Baby and children</td><td><span class="tag">baby</span></td><td>No</td></tr>
+    <tr><td>Jewellery and accessories</td><td><span class="tag">jewellery</span></td><td>No</td></tr>
+    <tr><td>Cards and stationery</td><td><span class="tag">greeting-cards</span></td><td>No</td></tr>
+  </tbody>
+</table>
+
+<div class="note box">
+  <span class="t">Put it on two shelves</span>
+  <p><span class="tag">all-gifts</span> is the "Everything" shelf, so a product should be in
+  <strong>all-gifts plus its specific shelf</strong>. In all-gifts only, it is findable but buried.
+  In a specific shelf only, it is missing from "Everything", which is the shelf most customers open first.</p>
+</div>
+
+<!-- ============ 8 ============ -->
+<h2 class="part">8 &nbsp;Worked examples</h2>
+
+<div class="eg">
+  <h4>A &nbsp;New hamper — "The Winter Table", €145</h4>
+  <table>
+    <tr><td>Collections</td><td><span class="tag">christmas-2026</span></td></tr>
+    <tr><td>Tags</td><td><span class="tag">type:hamper</span> <span class="tag">contains:alcohol</span> <span class="tag">occasion:christmas</span> <span class="tag">recipient:family</span></td></tr>
+    <tr><td>Appears on</td><td>/hampers &middot; /hampers/125-200 <em>(from the price, automatically)</em> &middot; /occasions/christmas &middot; homepage hamper band &middot; search</td></tr>
+    <tr><td>Watch for</td><td>It has wine in it, so <span class="tag">contains:alcohol</span> is not optional.</td></tr>
+  </table>
+</div>
+
+<div class="eg">
+  <h4>B &nbsp;New wine — Château Les Moutins Bordeaux 2021, €22</h4>
+  <table>
+    <tr><td>Collections</td><td><span class="tag">fine-wines-1</span> <strong>and</strong> <span class="tag">red-wines-1</span></td></tr>
+    <tr><td>Tags</td><td><span class="tag">type:wine</span> <span class="tag">contains:alcohol</span> <span class="tag">France</span> <span class="tag">Bordeaux</span> <span class="tag">Cabernet Sauvignon</span></td></tr>
+    <tr><td>Appears on</td><td>/wine/fine-wines &middot; /wine/red &middot; /wine/under-25 <em>(automatic)</em> &middot; Build a Gift "Wine and Champagne" shelf</td></tr>
+    <tr><td>Watch for</td><td>Two collections, not one. In red-wines-1 alone it is missing from the main wine page and every price band.</td></tr>
+  </table>
+</div>
+
+<div class="eg">
+  <h4>C &nbsp;Box of chocolates — Butlers Festive Collection, €12</h4>
+  <table>
+    <tr><td>Collections</td><td><span class="tag">all-gifts</span> <strong>and</strong> <span class="tag">chocolate-confectionery-1</span></td></tr>
+    <tr><td>Tags</td><td><span class="tag">type:addon</span> <span class="tag">occasion:christmas</span></td></tr>
+    <tr><td>Appears on</td><td>Build a Gift, on "Everything" and "Chocolate and sweet things" &middot; search</td></tr>
+    <tr><td>Watch for</td><td>No page of its own, and that is correct. If they were <em>liqueur</em> chocolates, add <span class="tag">contains:alcohol</span>.</td></tr>
+  </table>
+</div>
+
+<div class="eg">
+  <h4>D &nbsp;Baby blanket — McNutt of Donegal lambswool, €45</h4>
+  <table>
+    <tr><td>Collections</td><td><span class="tag">all-gifts</span> <strong>and</strong> <span class="tag">baby</span></td></tr>
+    <tr><td>Tags</td><td><span class="tag">type:addon</span> <span class="tag">occasion:new-baby</span> <span class="tag">recipient:family</span></td></tr>
+    <tr><td>Appears on</td><td>Build a Gift, on "Everything" and "Baby and children" &middot; search</td></tr>
+    <tr><td>Watch for</td><td>It will <em>not</em> appear on /occasions/new-baby — that page is dormant. See section 10.</td></tr>
+  </table>
+</div>
+
+<div class="eg">
+  <h4>E &nbsp;Alcohol-free sparkling — Noughty Rosé, €14</h4>
+  <table>
+    <tr><td>Collections</td><td><span class="tag">fine-wines-1</span> <strong>and</strong> <span class="tag">non-alcoholic-1</span></td></tr>
+    <tr><td>Tags</td><td><span class="tag">type:wine</span> <span class="tag">Spain</span> — <strong>no</strong> <span class="tag">contains:alcohol</span></td></tr>
+    <tr><td>Appears on</td><td>/wine/fine-wines &middot; /wine/alcohol-free &middot; /wine/under-25</td></tr>
+    <tr><td>Watch for</td><td>The over-18 gate still arms from <span class="tag">type:wine</span>. That is intentional and consistent.</td></tr>
+  </table>
+</div>
+
+<!-- ============ 9 ============ -->
+<h2 class="part">9 &nbsp;It is not showing up</h2>
+<p class="lead">Work down this list in order. It is ordered by how often each one is the cause.</p>
+
+<table>
+  <thead><tr><th style="width:6%">#</th><th style="width:34%">Check</th><th>Fix</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td><strong>Is it in a collection?</strong></td><td>Open the product, look at the Collections panel. Empty is the answer nine times out of ten. Add it per section 4.</td></tr>
+    <tr><td>2</td><td><strong>Has an hour passed?</strong></td><td>Pages are cached for up to an hour. Wait, or ask us to clear the cache.</td></tr>
+    <tr><td>3</td><td><strong>Is it in stock?</strong></td><td>Zero stock hides it from every listing and from search.</td></tr>
+    <tr><td>4</td><td><strong>Is it published?</strong></td><td>Products → the product → Publishing → make sure the online sales channel is on.</td></tr>
+    <tr><td>5</td><td><strong>Is it in the <em>right</em> collection?</strong></td><td>A wine in red-wines-1 but not fine-wines-1 is missing from /wine and every price band. Check both.</td></tr>
+    <tr><td>6</td><td><strong>Does the page have four products?</strong></td><td>Under four and the page redirects to its parent. Add more, or accept the page stays closed.</td></tr>
+    <tr><td>7</td><td><strong>Is the collection automated?</strong></td><td>If so, the product joins only when its tags match the rule. Check the rule, then the tags.</td></tr>
+    <tr><td>8</td><td><strong>Does it have <span class="tag">type:builder-item</span>?</strong></td><td>Remove it. See section 6.1.</td></tr>
+    <tr><td>9</td><td><strong>Still nothing?</strong></td><td>Send us the product handle and what you expected. Do not start changing handles.</td></tr>
+  </tbody>
+</table>
+
+<h3>9.1 &nbsp;The filter is empty but the products are there</h3>
+<p>Filters are fed by tags, not collections. An empty Country filter means the wines in that
+collection have no country tags. Add them — and remember rule 3: do not remove the old ones.</p>
+
+<!-- ============ 10 ============ -->
+<h2 class="part">10 &nbsp;Dormant collections</h2>
+<p class="lead">Six Occasions collections were removed in the September 2026 clear-out.
+The pages are still built and still wired to them. They are switched off, not deleted.</p>
+
+<table>
+  <thead><tr><th style="width:26%">Create this handle</th><th style="width:26%">Give it this title</th><th style="width:26%">Turns this page on</th><th>Suggested rule</th></tr></thead>
+  <tbody>
+    <tr><td><span class="tag">mothers-day-gifts</span></td><td>Mother's Day Gifts</td><td>/occasions/mothers-day</td><td>Tag is "Mothers Day"</td></tr>
+    <tr><td><span class="tag">fathers-day</span></td><td>Father's Day</td><td>/occasions/fathers-day</td><td>Tag is "Fathers Day"</td></tr>
+    <tr><td><span class="tag">valentines-day</span></td><td>Valentine's Day</td><td>/occasions/valentines</td><td>Tag is "Valentines Day"</td></tr>
+    <tr><td><span class="tag">easter-1</span></td><td>Easter</td><td>/occasions/easter</td><td>Tag is "Easter"</td></tr>
+    <tr><td><span class="tag">gifts-for-baby</span></td><td>Gifts for Baby</td><td>/occasions/new-baby</td><td>Tag is "Gifts for Baby"</td></tr>
+    <tr><td><span class="tag">wedding-anniversary</span></td><td>Wedding and Anniversary</td><td>/occasions/wedding-engagement</td><td>Tag is "Gifts for Wedding"</td></tr>
+  </tbody>
+</table>
+
+<h3>10.1 &nbsp;Switching one back on</h3>
+<ol>
+  <li><strong>Products → Collections → Create collection.</strong></li>
+  <li>Title it as the table says, then <strong>check the handle</strong> at the bottom of the page under
+      Search engine listing. It must match the first column <em>exactly</em>. Shopify adds
+      <code>-1</code> or <code>-2</code> if the handle is taken, and a collection at the wrong handle
+      is invisible to the site.</li>
+  <li>Set it to <strong>Automated</strong> and add the condition in the last column.</li>
+  <li>Check it holds at least four available products.</li>
+  <li>Within the hour the page opens and rejoins the Occasions menu by itself. Nothing needs deploying.</li>
+</ol>
+
+<div class="warn box">
+  <span class="t">The handle is the thing that matters</span>
+  <p>The title is for shoppers; the <strong>handle</strong> is what the website asks for. This is
+  exactly how the hamper collection ended up named "General Hampers 2026" while the site asks for
+  <span class="tag">christmas-2026</span> — the title changed, the handle did not.</p>
+  <p>A manual collection <strong>cannot</strong> be converted to automated after the fact. If you
+  make it manual and want a rule later, you have to delete and recreate — and then watch the
+  handle, because the old one will be taken.</p>
+</div>
+
+<h3>10.2 &nbsp;Still to create, never existed</h3>
+<p><span class="tag">sympathy</span> &rarr; /occasions/sympathy &nbsp;&middot;&nbsp;
+   <span class="tag">get-well</span> &rarr; /occasions/get-well &nbsp;&middot;&nbsp;
+   <span class="tag">exclusive-to-us</span> &rarr; /wine/exclusive-to-us</p>
+<p>Same procedure. All three pages are built and waiting.</p>
+
+<div class="note box">
+  <span class="t">In short</span>
+  <p><strong>Collection = which page. <code>type:</code> tag = what it is. Other tags = the filters.</strong>
+  If you remember only that, and rule 1, you will not go far wrong.</p>
+  <p style="margin-top:2.5mm">Questions, or anything that looks wrong on the site:
+  Rooftop Twenty Two &middot; cathal@rooftoptwentytwo.ie</p>
+</div>
+
+</body>
+</html>

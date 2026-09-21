@@ -36,8 +36,16 @@ test('a hamper we hold Christmas photography for gets it, and nothing else chang
   assert.equal(swapped!.availableForSale, true)
 })
 
+// Deliberately not a real handle. This used to name a hamper that had no
+// photograph yet, which made the test a hostage to the photography: the day
+// every hamper had one, the test failed for the best possible reason. The
+// behaviour under test is "handle not in the map", so the handle should be
+// one that cannot be in the map.
+const UNPHOTOGRAPHED = 'a-hamper-we-hold-no-christmas-photograph-for'
+
 test('a hamper we hold no Christmas photograph for keeps its own image', () => {
-  const [kept] = withChristmasImages([card('the-perfect-duo')])
+  assert.ok(!(UNPHOTOGRAPHED in CHRISTMAS_IMAGES))
+  const [kept] = withChristmasImages([card(UNPHOTOGRAPHED)])
   assert.equal(kept!.image!.url, 'https://cdn.shopify.com/everyday.png')
 })
 
@@ -71,5 +79,5 @@ test('the product page opens on the Christmas photograph, keeping every other im
 
 test('a hamper with no Christmas photograph keeps its gallery exactly', () => {
   const everyday = [{ url: 'https://cdn.shopify.com/a.png', alt: 'a', width: 1, height: 1 }]
-  assert.deepEqual(withChristmasGallery('the-perfect-duo', everyday), everyday)
+  assert.deepEqual(withChristmasGallery(UNPHOTOGRAPHED, everyday), everyday)
 })

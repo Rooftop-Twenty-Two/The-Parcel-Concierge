@@ -121,6 +121,10 @@ export const CHRISTMAS_IMAGES: Readonly<Record<string, ChristmasImage>> = {
     src: '/photography/christmas/bubbles-bliss-luxury-hamper.webp',
     alt: 'The Bubbles and Bliss Luxury Hamper dressed for Christmas, two small bottles of Moët and Chandon Champagne either side of a Jo Browne body oil gift set',
   },
+  '5-2': {
+    src: '/photography/christmas/5-2.webp',
+    alt: 'The Italian Job dressed for Christmas, Doppio Passo red and Messer del Fauno white beside Sheridans crackers, a Filligan’s jar, a Chocolate Garden of Ireland box and a walnut board with slate',
+  },
   // Square rather than 4:3, so the card crops the top and bottom of the
   // frame. The box is centred, which is why that is fine here.
   'new-home-luxury-hamper': {

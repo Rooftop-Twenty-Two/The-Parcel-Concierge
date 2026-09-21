@@ -809,10 +809,19 @@ export const BUILDER_SHELF_COLLECTIONS: readonly string[] = [
   'greeting-cards',
 ]
 
+/**
+ * Derived from the ACTIVE registry, not from ALL_LISTINGS.
+ *
+ * A suppressed listing reads a retired collection by definition: the
+ * hamper themes point at last year's merchant collections and the site
+ * does not render them. Checking those failed the build over collections
+ * nobody is allowed to see, which is a build that cries wolf. Only
+ * collections something on the site actually reads are checked.
+ */
 export const MAPPED_COLLECTION_HANDLES: readonly string[] = [
   ...new Set([
     HAMPERS_COLLECTION,
-    ...ALL_LISTINGS.map((c) => c.query.collection).filter((h): h is string => typeof h === 'string'),
+    ...COLLECTIONS.map((c) => c.query.collection).filter((h): h is string => typeof h === 'string'),
     ...BUILDER_SHELF_COLLECTIONS,
   ]),
 ]

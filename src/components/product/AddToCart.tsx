@@ -1,13 +1,28 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useState, useTransition } from 'react'
+import { useId, useState, useTransition } from 'react'
 import { addToCartAction } from '@/app/actions/cart'
 import { useVariantSelection } from '@/components/product/VariantSelector'
 import { Button } from '@/components/ui/Button'
 import { trackAddToCart, toAnalyticsItem } from '@/lib/analytics/events'
 import { formatMoney } from '@/lib/commerce/money'
+import { DELIVERY } from '@/lib/site-config'
 import type { CartLineAttribute, PersonalisationOption, Product } from '@/lib/commerce/types'
+
+/**
+ * How high the quantity menu counts. Ten is the cart's own ceiling, so the
+ * two agree; a bottle stops at the per-order limit instead, because picking
+ * a number the order can never carry is a rejection waiting to happen.
+ *
+ * This is a courtesy, not the enforcement. addToCartAction re-checks the
+ * bottle limit against the whole cart and the stock against Shopify, and it
+ * is the one that decides — a menu cannot know what is already in the cart.
+ */
+function maxQuantity(isBottle: boolean): number {
+  const bottles = DELIVERY.maxBottlesPerOrder
+  return isBottle && bottles !== null ? Math.min(10, bottles) : 10
+}
 
 /**
  * Add to cart, with personalisation.
@@ -29,14 +44,17 @@ export function AddToCart({
   confirmation?: string
 }) {
   const router = useRouter()
+  const quantityId = useId()
   const [pending, startTransition] = useTransition()
   const [status, setStatus] = useState<{ kind: 'ok' | 'error'; message: string } | null>(null)
   const [values, setValues] = useState<Record<string, string>>({})
+  const [quantity, setQuantity] = useState(1)
 
   // The variant comes from the shared selection so the button always adds the
   // variant the shopper picked, at the price it shows.
   const { selectedVariant: variant } = useVariantSelection()
   const options = product.hamper?.personalisation ?? []
+  const isBottle = product.kind === 'wine' || product.kind === 'spirit'
 
   function attributesFromValues(): CartLineAttribute[] {
     return Object.entries(values)
@@ -50,15 +68,24 @@ export function AddToCart({
 
     startTransition(async () => {
       const result = await addToCartAction({
-        lines: [{ variantId: variant.id, quantity: 1, attributes: attributesFromValues() }],
+        lines: [{ variantId: variant.id, quantity, attributes: attributesFromValues() }],
         // The page knows what it is selling; the cart only learns once the
-        // line is written. See DELIVERY.maxBottlesPerOrder.
-        bottlesAdded: product.kind === 'wine' || product.kind === 'spirit' ? 1 : 0,
+        // line is written. See DELIVERY.maxBottlesPerOrder. Three bottles
+        // is three against the limit, so this counts the quantity rather
+        // than the line.
+        bottlesAdded: isBottle ? quantity : 0,
       })
 
       if (result.ok) {
         setStatus({ kind: 'ok', message: confirmation })
-        trackAddToCart([toAnalyticsItem(product)], variant.price)
+        trackAddToCart([toAnalyticsItem(product, quantity)], {
+          ...variant.price,
+          amountMinor: variant.price.amountMinor * quantity,
+        })
+        // Back to one. Otherwise a second click on a page that still reads
+        // "3" quietly adds three more, and the first thing the shopper
+        // knows about it is the cart.
+        setQuantity(1)
         router.refresh()
       } else {
         setStatus({ kind: 'error', message: result.message })
@@ -72,6 +99,7 @@ export function AddToCart({
   if (!variant) return null
 
   const soldOut = !variant.availableForSale
+  const max = maxQuantity(isBottle)
 
   return (
     <form onSubmit={onSubmit} className="mt-8">
@@ -89,9 +117,46 @@ export function AddToCart({
         </fieldset>
       ) : null}
 
-      <Button type="submit" size="large" disabled={pending || soldOut} className="w-full sm:w-auto">
-        {soldOut ? 'Sold out' : pending ? 'One moment' : `${label}, ${formatMoney(variant.price)}`}
-      </Button>
+      {/* Quantity sits beside the button rather than above it, so the two
+          decisions — how many, and buy — read as one action. items-end
+          lines the button up with the foot of the select, since the select
+          carries a label and the button does not. */}
+      <div className="flex flex-wrap items-end gap-3">
+        <div>
+          <label htmlFor={quantityId} className="mb-2 block text-sm font-medium text-navy">
+            Quantity
+          </label>
+          <select
+            id={quantityId}
+            value={quantity}
+            disabled={pending || soldOut}
+            onChange={(event) => setQuantity(Number(event.target.value))}
+            className="border border-rule bg-white px-4 py-4 text-lg disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {Array.from({ length: max }).map((_, i) => (
+              <option key={i + 1} value={i + 1}>
+                {i + 1}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <Button
+          type="submit"
+          size="large"
+          disabled={pending || soldOut}
+          className="min-w-0 flex-1 sm:flex-none"
+        >
+          {soldOut
+            ? 'Sold out'
+            : pending
+              ? 'One moment'
+              : `${label}, ${formatMoney({
+                  ...variant.price,
+                  amountMinor: variant.price.amountMinor * quantity,
+                })}`}
+        </Button>
+      </div>
 
       {status ? (
         <p

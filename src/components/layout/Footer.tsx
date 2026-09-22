@@ -68,6 +68,25 @@ export function Footer() {
             site.
           </p>
         </div>
+
+        {/* Agency credit. Its own row under the legal line rather than
+            squeezed alongside it: the line above carries the company, the
+            place and the age restriction, and none of those should have to
+            share a row with a byline. rel="noopener" because it opens a
+            third-party site in a new tab. */}
+        <div className="pt-4 text-xs text-cream/50">
+          <p>
+            Designed and developed by{' '}
+            <a
+              href="https://rooftoptwentytwo.ie"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-4 hover:text-cream"
+            >
+              Rooftop Twenty Two
+            </a>
+          </p>
+        </div>
       </div>
     </footer>
   )

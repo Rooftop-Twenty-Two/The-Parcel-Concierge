@@ -16,11 +16,32 @@ export const metadata: Metadata = {
     template: '%s | The Parcel Concierge',
   },
   description:
-    'Hampers packed by hand in Dunshaughlin, over three hundred wines chosen by us, corporate gifting and a hamper you can build yourself. Free hand delivery locally, €8.95 anywhere else in Ireland and free over €100.',
+    'Hampers packed by hand in Dunshaughlin, over three hundred wines chosen by us, and corporate gifting. Free local delivery, €8.95 across Ireland.',
   openGraph: {
     type: 'website',
     locale: 'en_IE',
     siteName: SITE.name,
+    // The site had no share image at all, so every link posted to
+    // WhatsApp, Messenger, Slack or LinkedIn — which is most of how a gift
+    // shop gets shared — rendered as a bare grey box. A product page
+    // overrides this with its own photograph; everything else inherits it.
+    //
+    // A real hamper in the branded box rather than a logo card: the logo
+    // says who sent the link, the box says what is being sold.
+    images: [
+      {
+        url: '/og-default.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'A Parcel Concierge hamper in its green gift box, holding Champagne, a Rathbornes candle, an ogham print and boxed Galway Crystal flutes',
+      },
+    ],
+  },
+  // Without this a shared link is a small thumbnail beside the text rather
+  // than the full-width card. It governs X and is read by several other
+  // scrapers that fall back to Twitter tags before Open Graph.
+  twitter: {
+    card: 'summary_large_image',
   },
   // Noindex while on fixtures (a snapshot, not the shop) or while an
   // environment is held back from launch (SITE_NOINDEX) — e.g. the production

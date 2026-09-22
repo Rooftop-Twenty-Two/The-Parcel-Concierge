@@ -173,7 +173,12 @@ export async function ListingPage({
           <h1 className="font-display text-[length:var(--text-display)] text-navy">
             {collection.h1}
           </h1>
-          {copy ? <p className="prose-tpc mt-4 text-lg text-ink-muted">{copy.intro}</p> : null}
+          {/* copy?.intro, not copy: an entry can now carry a title and a
+              meta description with no page copy, and `copy ?` would render
+              an empty paragraph under the h1 for every one of those. */}
+          {copy?.intro ? (
+            <p className="prose-tpc mt-4 text-lg text-ink-muted">{copy.intro}</p>
+          ) : null}
         </header>
       )}
 
@@ -324,10 +329,29 @@ export async function listingMetadata(
 
   return {
     title: copy?.metaTitle ?? collection.title,
-    description: copy?.metaDescription ?? copy?.intro?.slice(0, 155),
+    // A written description first, then the intro cut to length. The cut
+    // used to be a bare slice(0, 155), which lands mid-word about as often
+    // as not — "…chosen by us, with someth". Google rewrites a description
+    // it does not like, and a truncated word is the clearest signal there
+    // is that nobody wrote one.
+    description: copy?.metaDescription ?? truncateAtWord(copy?.intro, 155),
     alternates: { canonical: collection.path },
     // A filtered view is shareable and crawlable, but it must not compete
     // with the listing it came from.
     robots: filtered ? { index: false, follow: true } : undefined,
   }
+}
+
+/**
+ * `text` cut to at most `max` characters, ending on a word and then an
+ * ellipsis. Returns undefined for undefined so it can be handed an optional
+ * straight through, and returns the text untouched when it already fits.
+ */
+export function truncateAtWord(text: string | undefined, max: number): string | undefined {
+  if (!text) return undefined
+  if (text.length <= max) return text
+  // Leave room for the ellipsis, then step back to the last space.
+  const cut = text.slice(0, max - 1)
+  const lastSpace = cut.lastIndexOf(' ')
+  return `${(lastSpace > 0 ? cut.slice(0, lastSpace) : cut).replace(/[,;:.\s]+$/, '')}…`
 }

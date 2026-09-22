@@ -10,7 +10,7 @@ import { DELIVERY, handDeliveryZone, ukDeliveryPrice } from '@/lib/site-config'
 export const metadata: Metadata = {
   title: 'Delivery',
   description:
-    'Free local delivery within the A85 eircode area, €8.95 elsewhere in Ireland with An Post and free over €100, and from €40 to the UK. Cut-off times, alcohol restrictions and what happens if nobody is home.',
+    'Free local delivery in the A85 eircode area, €8.95 elsewhere in Ireland and free over €100. Cut-off times, alcohol rules and UK delivery from €40.',
   alternates: { canonical: '/delivery' },
 }
 

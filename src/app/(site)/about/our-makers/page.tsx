@@ -6,7 +6,7 @@ export const revalidate = 3600
 export const metadata: Metadata = {
   title: 'Our makers',
   description:
-    'The Irish brands and producers we stock. The Handmade Soap Company, Filligan’s and McNutt of Donegal, The Chocolate Garden of Ireland, Rathbornes 1488, Tipperary Crystal, Kybalion, Pestle and Mortar, Butlers, Julie Clarke and La Bougie.',
+    'The Irish makers we stock: The Handmade Soap Company, Filligan’s, McNutt of Donegal, The Chocolate Garden of Ireland, Rathbornes 1488 and more.',
   alternates: { canonical: '/about/our-makers' },
 }
 

@@ -14,9 +14,12 @@ import { breadcrumbJsonLd } from '@/lib/seo/structured-data'
 export const revalidate = 1800
 
 export const metadata: Metadata = {
-  title: 'The Wine Vault Club, a personalised wine subscription',
+  // Trimmed to fit. With the " | The Parcel Concierge" template a title has
+  // about 37 characters to play with before Google cuts it, and the old one
+  // ran to 76 — the brand and half the promise were lost to an ellipsis.
+  title: 'Wine subscription built to your taste',
   description:
-    'Tell us what you like eating and drinking, and we build you a case from over three hundred wines. Set the size, budget and how often. Pause or cancel any time.',
+    'Tell us what you like eating and drinking, and we build you a case from over three hundred wines. Set the size, budget and how often. Pause any time.',
   alternates: { canonical: '/wine-club' },
 }
 

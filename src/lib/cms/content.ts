@@ -134,7 +134,7 @@ export const CONTENT: CmsData = {
       // delivery wording. An empty seoBlock renders nothing at all rather
       // than an empty band.
       seoBlock: '',
-      metaTitle: 'Irish hampers, hand packed in Co. Meath',
+      metaTitle: 'Irish hampers, packed by hand',
       metaDescription:
         'Hampers packed by hand in Dunshaughlin, from makers we choose ourselves. Shop by budget, occasion or contents. Free local hand delivery, €8.95 nationwide.',
     },
@@ -214,7 +214,7 @@ export const CONTENT: CmsData = {
         'Discover over three hundred bottles in The Wine Vault, with something to suit every taste, occasion and budget. Filter by grape, country, wine style or budget, whether you are looking for a favourite, discovering something new, choosing for a special occasion or finding the right bottle to add to a gift.',
       seoBlock:
         '<p>We are a gifting business that takes wine seriously, which is an unusual combination and the reason this list looks the way it does. We buy directly from estates where we can. Everything else on the list is here because we drank it and wanted to sell it.</p><p>Grape, region and style are filters on this page rather than separate sections, so you can start from Malbec, or from Spain, or from "something full bodied under €25", and get to the same place. If you would rather start from the money, the three budget pages will do it faster.</p><p>Wine is alcohol, so we can only deliver to somebody over 18 and there are places we cannot ship to. The delivery page sets out exactly where.</p>',
-      metaTitle: 'The Wine Vault: wine and Champagne, chosen by us',
+      metaTitle: 'Wine and Champagne, chosen by us',
       metaDescription:
         'Over three hundred wines and Champagnes chosen by us. Filter by grape, country, style or budget.',
     },
@@ -241,10 +241,143 @@ export const CONTENT: CmsData = {
         'A case of wine, chosen by us from the list on this site, as often as you want it. You set the size, the budget per bottle and the style.',
       seoBlock:
         '<p>Everything about the club is built on the list we already sell. There is no separate subscription range bought in cheap: the bottles that turn up are the bottles on this site, chosen for you rather than by you.</p><p>You decide four things. How many bottles, roughly what per bottle, red or white or a mix, and how often it arrives. We do the rest, and every case comes with a card explaining each bottle and what to eat with it.</p><p>Pause, skip a case or cancel from your account, with no notice period. Over 18 only, and somebody over 18 has to take the delivery in.</p>',
-      metaTitle: 'The Wine Vault Club, a wine subscription from Co. Meath',
+      metaTitle: 'Wine subscription from Co. Meath',
       metaDescription:
         'A case of wine chosen by us, as often as you want it. Set the size, the budget per bottle and the style. Pause or cancel any time.',
     },
+    // ------------------------------------------------------------------
+    // Metadata-only entries.
+    //
+    // These listings had a bare registry title and no meta description at
+    // all, so a search result for them read "Red wine | The Parcel
+    // Concierge" with whatever sentence Google chose to scrape underneath.
+    // Seventeen of the twenty-seven listings were in that state.
+    //
+    // They carry no intro and no seoBlock on purpose. Page copy is a
+    // separate job and an invented paragraph about a range we have not
+    // described is worse than none; the entries above show what a finished
+    // one looks like. Adding an intro here is additive and changes nothing
+    // else.
+    //
+    // Each description leads with what the page is, names the filters that
+    // page actually offers, and ends on the delivery line that applies —
+    // written to sit under 155 characters so it is not cut in the result.
+    // ------------------------------------------------------------------
+    {
+      path: '/wine/red',
+      metaTitle: 'Red wine, chosen by us',
+      metaDescription:
+        'Red wine from growers we buy from directly, with Malbec, Rioja, Bordeaux and Chianti among them. Filter by grape, country or budget. Over 18s only.',
+    },
+    {
+      path: '/wine/white',
+      metaTitle: 'White wine, chosen by us',
+      metaDescription:
+        'White wine from Sancerre and Chablis to Albariño and Chenin Blanc. Filter by grape, country or budget, and send any bottle in a hamper. Over 18s only.',
+    },
+    {
+      path: '/wine/rose',
+      metaTitle: 'Rosé wine',
+      metaDescription:
+        'Rosé from Provence and beyond, dry to fruity, chosen for drinking rather than for the bottle. Filter by country or budget. Over 18s only.',
+    },
+    {
+      path: '/wine/champagne-sparkling',
+      metaTitle: 'Champagne and sparkling wine',
+      metaDescription:
+        'Champagne, Prosecco, Cava and Crémant for celebrating, gifting or a Tuesday. Add a bottle to any hamper you build. Over 18s only.',
+    },
+    {
+      path: '/wine/port-dessert',
+      metaTitle: 'Port, sherry and dessert wine',
+      metaDescription:
+        'Port, sherry and dessert wine: the after-dinner end of the list, and one of the easiest gifts to get right. Over 18s only.',
+    },
+    {
+      path: '/wine/organic-biodynamic',
+      metaTitle: 'Organic and biodynamic wine',
+      metaDescription:
+        'Certified organic and biodynamic wine from growers working that way by conviction, not by marketing. Filter by grape, country or budget. Over 18s only.',
+    },
+    {
+      path: '/wine/alcohol-free',
+      metaTitle: 'Alcohol free wine and sparkling',
+      metaDescription:
+        'Alcohol free wine and sparkling worth putting on the table, for the driver, the pregnant guest and anyone off it this month. No age restriction.',
+    },
+    {
+      path: '/wine/under-25',
+      metaTitle: 'Wine under €25',
+      metaDescription:
+        'Every wine on our list under €25, the everyday end of the Wine Vault. Filter by grape, country or style. Free delivery over €100. Over 18s only.',
+    },
+    {
+      path: '/wine/25-50',
+      metaTitle: 'Wine from €25 to €50',
+      metaDescription:
+        'Wine between €25 and €50, the range most gift bottles come from. Filter by grape, country or style. Free delivery over €100. Over 18s only.',
+    },
+    {
+      path: '/wine/50-plus',
+      metaTitle: 'Wine over €50',
+      metaDescription:
+        'Wine over €50: the bottles we buy in small quantities and open ourselves before listing. Free delivery over €100. Over 18s only.',
+    },
+
+    // The occasions listings below are dark while their Shopify collections
+    // are retired (September 2026) and are excluded from the sitemap, so
+    // none of this is indexed today. It is written now because restoring a
+    // collection turns the page back on within the hour, and a page that
+    // returns without a description is a page nobody remembers to fix.
+    {
+      path: '/occasions/new-baby',
+      metaTitle: 'New baby gifts and hampers',
+      metaDescription:
+        'New baby hampers and gifts, for the baby and for whoever did the work. Hand packed in Co. Meath, delivered anywhere in Ireland from €8.95.',
+    },
+    {
+      path: '/occasions/sympathy',
+      metaTitle: 'Sympathy gifts and hampers',
+      metaDescription:
+        'Sympathy hampers chosen to be useful rather than showy, with a handwritten card. Hand packed in Co. Meath and delivered anywhere in Ireland.',
+    },
+    {
+      path: '/occasions/wedding-engagement',
+      metaTitle: 'Wedding and engagement gifts',
+      metaDescription:
+        'Wedding and engagement gifts, from Champagne and glassware to a hamper you build yourself. Hand packed in Co. Meath, delivered across Ireland.',
+    },
+    {
+      path: '/occasions/get-well',
+      metaTitle: 'Get well gifts and hampers',
+      metaDescription:
+        'Get well hampers of things worth having when you are stuck at home. Hand packed in Co. Meath, delivered anywhere in Ireland from €8.95.',
+    },
+    {
+      path: '/occasions/mothers-day',
+      metaTitle: 'Mother’s Day gifts and hampers',
+      metaDescription:
+        'Mother’s Day hampers, wine and pamper gifts, hand packed in Co. Meath. Free local delivery, €8.95 anywhere else in Ireland and free over €100.',
+    },
+    {
+      path: '/occasions/fathers-day',
+      metaTitle: 'Father’s Day gifts and hampers',
+      metaDescription:
+        'Father’s Day hampers, wine, whiskey and Guinness gifts, hand packed in Co. Meath. Free local delivery and €8.95 anywhere else in Ireland.',
+    },
+    {
+      path: '/occasions/valentines',
+      metaTitle: 'Valentine’s gifts and hampers',
+      metaDescription:
+        'Valentine’s hampers, Champagne and chocolate, hand packed in Co. Meath with a handwritten card. Free local delivery, €8.95 across Ireland.',
+    },
+    {
+      path: '/occasions/easter',
+      metaTitle: 'Easter gifts and hampers',
+      metaDescription:
+        'Easter hampers and Irish chocolate, hand packed in Co. Meath. Free local delivery, €8.95 anywhere else in Ireland and free over €100.',
+    },
+
     {
       path: '/wine/exclusive-to-us',
       intro:

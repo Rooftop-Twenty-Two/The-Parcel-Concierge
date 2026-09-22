@@ -9,9 +9,12 @@ import { VOLUME_TIERS } from '@/lib/corporate/types'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Corporate Gifting Made Easy',
+  // Sentence case, per docs/copy-style-guide.md. It was the only Title Case
+  // title on the site, and it read as a different brand beside "Build your
+  // own hamper" and "Frequently asked questions" in a results page.
+  title: 'Corporate gifting, one invoice',
   description:
-    'Choose your budget and your gifts, share one private link, and your team choose their own hamper and delivery address. No spreadsheets, no collecting addresses, one invoice.',
+    'Choose the budget and the gifts, share one private link, and your team pick their own hamper and address. No spreadsheets, one invoice.',
   alternates: { canonical: '/corporate-gifting' },
 }
 

@@ -3,7 +3,6 @@ import { AgeGate } from '@/components/commerce/AgeGate'
 import { DeliveryPromise } from '@/components/commerce/DeliveryPromise'
 import { AddToCart } from '@/components/product/AddToCart'
 import { ProductGallery } from '@/components/product/ProductGallery'
-import { ProductGrid } from '@/components/product/ProductCard'
 import { ProductCarousel } from '@/components/product/ProductCarousel'
 import {
   VariantPrice,
@@ -33,12 +32,10 @@ import { demoteHeadings } from '@/lib/seo/demote-headings'
 export function HamperProductPage({
   product,
   trust,
-  crossSell,
   similar,
 }: {
   product: Product
   trust: { rating: number; reviewCount: number }
-  crossSell: ProductCard[]
   /** More from the same range, for the carousel at the foot of the page. */
   similar: ProductCard[]
 }) {
@@ -125,21 +122,14 @@ export function HamperProductPage({
         </VariantSelectionProvider>
       </div>
 
-      {crossSell.length ? (
-        <section className="border-t border-rule bg-beige">
-          <div className="mx-auto max-w-[1400px] px-4 py-14 lg:px-8">
-            <h2 className="font-display text-[length:var(--text-display)] text-navy">
-              Finish the gift
-            </h2>
-            <p className="mt-2 max-w-xl text-ink-muted">
-              Small things that go in the same box. We add them before we tie the ribbon.
-            </p>
-            <div className="mt-8">
-              <ProductGrid products={crossSell} />
-            </div>
-          </div>
-        </section>
-      ) : null}
+      {/* The "Finish the gift" add-on band was here. Taken off at the
+          client's request, September 2026: it read the four cheapest
+          add-ons in the shop, and the shop's cheapest add-ons are stock
+          lines with no photograph and no price — "Chaos SS Crystal, €0"
+          sat under every hamper on the site. The add-ons still sell
+          through Build a Gift and through the same band in the cart,
+          which is priced and photographed because the customer chose
+          what is in the box by then. */}
 
       {similar.length ? (
         <section className="border-t border-rule">

@@ -46,7 +46,7 @@ export const CONTENT: CmsData = {
       },
       {
         kind: 'christmas',
-        title: 'Christmas, sorted early',
+        title: 'Christmas coming soon',
         body: 'We are working on more Christmas hampers now, and they will be ready to go from November once all the Christmas stock has arrived. Every hamper on the site is ready to send today, and corporate Christmas campaigns are open.',
         ctaLabel: 'Shop Christmas',
         ctaHref: '/occasions/christmas',

@@ -32,7 +32,14 @@ const catalogue: Catalogue = {
   ),
 }
 const handles = new Set(catalogue.products.map((p) => p.handle))
-const withCopy = new Set(CONTENT.listingCopy.map((c) => c.path))
+// Page copy and metadata are separate commitments now: an entry can carry
+// a title and a meta description without an intro or an SEO block. Counting
+// every entry as "copy written" reported 36 of 31 routes done and hid the
+// ones that still have no words on the page.
+const withCopy = new Set(CONTENT.listingCopy.filter((c) => c.intro).map((c) => c.path))
+const withMeta = new Set(
+  CONTENT.listingCopy.filter((c) => c.metaDescription ?? c.intro).map((c) => c.path),
+)
 
 let problems = 0
 
@@ -44,11 +51,26 @@ console.log()
 // --- 1. Listing copy --------------------------------------------------------
 
 const missingCopy = COLLECTIONS.filter((c) => !withCopy.has(c.path))
-console.log(`Listing copy: ${withCopy.size} of ${COLLECTIONS.length + 4} routes written.`)
+const missingMeta = COLLECTIONS.filter((c) => !withMeta.has(c.path))
+console.log(
+  `Listing copy: ${COLLECTIONS.length - missingCopy.length} of ${COLLECTIONS.length} listings have page copy.`,
+)
+console.log(
+  `Listing metadata: ${COLLECTIONS.length - missingMeta.length} of ${COLLECTIONS.length} listings have a meta description.`,
+)
+if (missingMeta.length) {
+  problems += 1
+  console.log()
+  console.log(`  NO META DESCRIPTION (${missingMeta.length}). These compete in search with`)
+  console.log('  whatever sentence Google chooses to scrape. Write one.')
+  for (const collection of missingMeta) {
+    console.log(`    ${collection.path}`)
+  }
+}
 if (missingCopy.length) {
   console.log()
   console.log(`  Still to write (${missingCopy.length}). These routes render without an intro or`)
-  console.log('  an SEO block until they are done. Phase 7.')
+  console.log('  an SEO block until they are done. Not blocking.')
   for (const collection of missingCopy) {
     console.log(`    ${collection.path}`)
   }

@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { CartCount } from '@/components/layout/CartCount'
+import { SearchForm } from '@/components/layout/SearchForm'
 import { formatMinor } from '@/lib/commerce/money'
 import { NAV } from '@/lib/routes'
 import { DELIVERY, handDeliveryZone, ukDeliveryPrice } from '@/lib/site-config'
@@ -22,6 +23,7 @@ import { DELIVERY, handDeliveryZone, ukDeliveryPrice } from '@/lib/site-config'
 export function Header() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
   const navRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
@@ -29,6 +31,7 @@ export function Header() {
       if (event.key === 'Escape') {
         setOpenIndex(null)
         setMobileOpen(false)
+        setSearchOpen(false)
       }
     }
     document.addEventListener('keydown', onKey)
@@ -90,6 +93,27 @@ export function Header() {
             Build your own hamper
           </Link>
 
+          {/* Search opens a row under the bar rather than an input in it:
+              the bar is full at desktop width, and a box wide enough to
+              type a wine's name into would not fit. Same control at every
+              width, so it is where a phone user expects it too. */}
+          <button
+            type="button"
+            className="inline-flex items-center gap-1.5 px-2 py-2 text-sm text-navy"
+            aria-expanded={searchOpen}
+            aria-controls="site-search-row"
+            onClick={() => {
+              setSearchOpen((open) => !open)
+              setMobileOpen(false)
+            }}
+          >
+            <svg aria-hidden="true" viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <circle cx="8.5" cy="8.5" r="5.5" />
+              <path d="M13 13l4.5 4.5" strokeLinecap="round" />
+            </svg>
+            Search
+          </button>
+
           <Link
             href="/cart"
             className="relative inline-flex items-center gap-2 px-2 py-2 text-sm text-navy"
@@ -103,12 +127,28 @@ export function Header() {
             className="inline-flex items-center px-2 py-2 text-sm text-navy lg:hidden"
             aria-expanded={mobileOpen}
             aria-controls="mobile-nav"
-            onClick={() => setMobileOpen((open) => !open)}
+            onClick={() => {
+              setMobileOpen((open) => !open)
+              setSearchOpen(false)
+            }}
           >
             {mobileOpen ? 'Close' : 'Menu'}
           </button>
         </div>
       </div>
+
+      {searchOpen ? (
+        <div id="site-search-row" className="border-t border-rule bg-cream">
+          <div className="mx-auto max-w-[1400px] px-4 py-3 lg:px-8">
+            <div className="max-w-2xl">
+              {/* No close-on-submit: a form unmounted inside its own submit
+                  event is never sent. The GET is a full navigation, which
+                  resets the header anyway. */}
+              <SearchForm autoFocus />
+            </div>
+          </div>
+        </div>
+      ) : null}
 
       {mobileOpen ? <MobileNav onNavigate={() => setMobileOpen(false)} /> : null}
     </header>
@@ -209,6 +249,11 @@ function MobileNav({ onNavigate }: { onNavigate: () => void }) {
       aria-label="Main"
       className="max-h-[75vh] overflow-y-auto border-t border-rule bg-cream lg:hidden"
     >
+      {/* The box is in the bar too, but the drawer is where a phone user
+          goes looking for anything, so it is the first thing in it. */}
+      <div className="px-4 pt-4">
+        <SearchForm />
+      </div>
       <ul className="divide-y divide-rule px-4 pb-8">
         {NAV.map((item) => (
           <li key={item.href} className="py-3">

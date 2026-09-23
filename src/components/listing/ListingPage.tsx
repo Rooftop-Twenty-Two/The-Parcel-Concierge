@@ -8,6 +8,12 @@ import { InkWaves } from '@/components/ui/Stamp'
 import { getCuratedListing, getListingCopy } from '@/lib/cms'
 import { facetOptions, queryListing, queryProducts } from '@/lib/commerce'
 import {
+  CHRISTMAS_IMAGE_PATHS,
+  LISTING_HEROES,
+  withChristmasImages,
+} from '@/lib/commerce/christmas-images'
+import { ListingHero } from '@/components/listing/ListingHero'
+import {
   MIN_PRODUCTS_PER_LISTING,
   type CollectionDef,
   type FacetKey,
@@ -93,12 +99,20 @@ export async function ListingPage({
   const pageSize = collection.query.first ?? 24
   const query = await buildListingQuery(collection, facets, step)
 
-  const [copy, result] = await Promise.all([
+  const [copy, fetched] = await Promise.all([
     getListingCopy(collection.path),
     collection.curated
       ? queryProducts(query)
       : queryListing(collection.path, query),
   ])
+
+  // The Christmas listing shows the hampers dressed for Christmas; every
+  // other listing shows the product's own image. Same products, same
+  // prices, same links: only the photograph changes. See
+  // commerce/christmas-images.ts, and remove this in January.
+  const result = CHRISTMAS_IMAGE_PATHS.has(collection.path)
+    ? { ...fetched, items: withChristmasImages(fetched.items) }
+    : fetched
 
   // The min-four rule applies to the unfiltered listing. A filter that
   // returns nothing is a legitimate empty state, not a broken route.
@@ -124,9 +138,16 @@ export async function ListingPage({
     { name: collection.title, path: collection.path },
   ]
 
+  const hero = LISTING_HEROES[collection.path]
+
   return (
     <>
       {collection.alcohol ? <AgeGate context="listing" /> : null}
+
+      {/* A listing with a hero leads with it, full bleed, and the
+          breadcrumb follows on cream. Pushing the breadcrumb above would
+          put a thin strip of chrome over the one image on the page. */}
+      {hero ? <ListingHero content={hero} h1={collection.h1} intro={copy?.intro ?? null} /> : null}
 
       <nav aria-label="Breadcrumb" className="mx-auto max-w-[1400px] px-4 pt-6 lg:px-8">
         <ol className="flex flex-wrap gap-2 text-sm text-ink-muted">
@@ -145,14 +166,23 @@ export async function ListingPage({
         </ol>
       </nav>
 
-      <header className="mx-auto max-w-[1400px] px-4 pt-6 lg:px-8">
-        <h1 className="font-display text-[length:var(--text-display)] text-navy">{collection.h1}</h1>
-        {copy ? (
-          <p className="prose-tpc mt-4 text-lg text-ink-muted">{copy.intro}</p>
-        ) : null}
-      </header>
+      {/* The hero already carries the h1 and the intro, so a listing with
+          one does not repeat them here. */}
+      {hero ? null : (
+        <header className="mx-auto max-w-[1400px] px-4 pt-6 lg:px-8">
+          <h1 className="font-display text-[length:var(--text-display)] text-navy">
+            {collection.h1}
+          </h1>
+          {/* copy?.intro, not copy: an entry can now carry a title and a
+              meta description with no page copy, and `copy ?` would render
+              an empty paragraph under the h1 for every one of those. */}
+          {copy?.intro ? (
+            <p className="prose-tpc mt-4 text-lg text-ink-muted">{copy.intro}</p>
+          ) : null}
+        </header>
+      )}
 
-      <div className="mx-auto max-w-[1400px] px-4 py-10 lg:px-8">
+      <div id="grid" className="mx-auto max-w-[1400px] px-4 py-10 lg:px-8">
         <div
           className={
             showFilters ? 'lg:grid lg:grid-cols-[240px_1fr] lg:gap-10 lg:items-start' : undefined
@@ -299,10 +329,29 @@ export async function listingMetadata(
 
   return {
     title: copy?.metaTitle ?? collection.title,
-    description: copy?.metaDescription ?? copy?.intro?.slice(0, 155),
+    // A written description first, then the intro cut to length. The cut
+    // used to be a bare slice(0, 155), which lands mid-word about as often
+    // as not — "…chosen by us, with someth". Google rewrites a description
+    // it does not like, and a truncated word is the clearest signal there
+    // is that nobody wrote one.
+    description: copy?.metaDescription ?? truncateAtWord(copy?.intro, 155),
     alternates: { canonical: collection.path },
     // A filtered view is shareable and crawlable, but it must not compete
     // with the listing it came from.
     robots: filtered ? { index: false, follow: true } : undefined,
   }
+}
+
+/**
+ * `text` cut to at most `max` characters, ending on a word and then an
+ * ellipsis. Returns undefined for undefined so it can be handed an optional
+ * straight through, and returns the text untouched when it already fits.
+ */
+export function truncateAtWord(text: string | undefined, max: number): string | undefined {
+  if (!text) return undefined
+  if (text.length <= max) return text
+  // Leave room for the ellipsis, then step back to the last space.
+  const cut = text.slice(0, max - 1)
+  const lastSpace = cut.lastIndexOf(' ')
+  return `${(lastSpace > 0 ? cut.slice(0, lastSpace) : cut).replace(/[,;:.\s]+$/, '')}…`
 }

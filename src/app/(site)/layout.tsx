@@ -4,7 +4,7 @@ import { Header } from '@/components/layout/Header'
 import { FixtureModeBanner } from '@/components/layout/FixtureModeBanner'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { isFixtureMode } from '@/lib/commerce'
-import { localBusinessJsonLd } from '@/lib/seo/structured-data'
+import { localBusinessJsonLd, websiteJsonLd } from '@/lib/seo/structured-data'
 import { getTrustSummary } from '@/lib/trustpilot'
 
 /**
@@ -34,6 +34,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       <Footer />
 
       <JsonLd data={localBusinessJsonLd(trust)} />
+      <JsonLd data={websiteJsonLd()} />
       <Analytics />
     </>
   )

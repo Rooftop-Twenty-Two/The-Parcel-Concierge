@@ -35,6 +35,13 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
       title: product.title,
       description: productMetaDescription(product, PRODUCT_DELIVERY_LINE),
       alternates: { canonical: `/gifts/${product.handle}` },
+      // The hamper and wine templates already did this; this one did not,
+      // so an add-on shared anywhere fell back to the site-wide image and
+      // showed a hamper instead of the product.
+      openGraph: {
+        title: product.title,
+        images: product.images.slice(0, 1).map((i) => ({ url: i.url, alt: i.alt })),
+      },
       robots: product.availableForSale ? undefined : { index: false, follow: true },
     }
   }

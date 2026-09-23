@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { ListingPage, listingMetadata, type ListingSearchParams } from '@/components/listing/ListingPage'
 import { HamperProductPage } from '@/components/product/HamperProductPage'
-import { queryProducts } from '@/lib/commerce'
 import { similarProducts } from '@/lib/commerce/similar'
 import { resolveHubSlug } from '@/lib/resolve-route'
 import { hubStaticParams } from '@/lib/static-params'
@@ -60,19 +59,11 @@ export default async function HamperSlugPage({ params, searchParams }: Props) {
 
   const { product } = resolved
 
-  const [trust, crossSell, similar] = await Promise.all([
-    getTrustSummary(),
-    // "Finish the gift": the add-on band exists to be added to a hamper.
-    queryProducts({ kinds: ['addon'], first: 4, sort: 'price-asc' }),
-    similarProducts(product),
-  ])
+  // The "Finish the gift" add-on query was here, and came off with the
+  // band it fed (see HamperProductPage). Sorting the shop's add-ons by
+  // price ascending surfaced the unphotographed, unpriced stock lines
+  // first, which is the opposite of a cross-sell.
+  const [trust, similar] = await Promise.all([getTrustSummary(), similarProducts(product)])
 
-  return (
-    <HamperProductPage
-      product={product}
-      trust={trust}
-      crossSell={crossSell.items}
-      similar={similar}
-    />
-  )
+  return <HamperProductPage product={product} trust={trust} similar={similar} />
 }

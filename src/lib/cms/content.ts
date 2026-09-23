@@ -35,7 +35,14 @@ export const CONTENT: CmsData = {
           'Visit us in our bricks and mortar store in Dunshaughlin or shop with us online from anywhere. Enjoy free local delivery within the A85 eircode area, personally delivered by our team, with nationwide delivery through An Post, free on orders over €100.',
         ctaLabel: 'Shop all hampers',
         ctaHref: '/hampers',
-        imageHandle: 'large-basket',
+        // The client's own hero photograph (September 2026): the wicker
+        // hamper on the table with the wines, Butlers, biscuits and preserves
+        // laid out in front of it. Replaced the large-basket product shot.
+        imageHandle: null,
+        image: {
+          src: '/photography/tpc-hero-hamper-table.webp',
+          alt: 'A wicker hamper on a wooden table with red, white and sparkling wines, Butlers chocolates, luxury biscuits, preserves and candles laid out in front of it',
+        },
       },
       {
         kind: 'christmas',
@@ -127,7 +134,7 @@ export const CONTENT: CmsData = {
       // delivery wording. An empty seoBlock renders nothing at all rather
       // than an empty band.
       seoBlock: '',
-      metaTitle: 'Irish hampers, hand packed in Co. Meath',
+      metaTitle: 'Irish hampers, packed by hand',
       metaDescription:
         'Hampers packed by hand in Dunshaughlin, from makers we choose ourselves. Shop by budget, occasion or contents. Free local hand delivery, €8.95 nationwide.',
     },
@@ -207,7 +214,7 @@ export const CONTENT: CmsData = {
         'Discover over three hundred bottles in The Wine Vault, with something to suit every taste, occasion and budget. Filter by grape, country, wine style or budget, whether you are looking for a favourite, discovering something new, choosing for a special occasion or finding the right bottle to add to a gift.',
       seoBlock:
         '<p>We are a gifting business that takes wine seriously, which is an unusual combination and the reason this list looks the way it does. We buy directly from estates where we can. Everything else on the list is here because we drank it and wanted to sell it.</p><p>Grape, region and style are filters on this page rather than separate sections, so you can start from Malbec, or from Spain, or from "something full bodied under €25", and get to the same place. If you would rather start from the money, the three budget pages will do it faster.</p><p>Wine is alcohol, so we can only deliver to somebody over 18 and there are places we cannot ship to. The delivery page sets out exactly where.</p>',
-      metaTitle: 'The Wine Vault: wine and Champagne, chosen by us',
+      metaTitle: 'Wine and Champagne, chosen by us',
       metaDescription:
         'Over three hundred wines and Champagnes chosen by us. Filter by grape, country, style or budget.',
     },
@@ -234,10 +241,143 @@ export const CONTENT: CmsData = {
         'A case of wine, chosen by us from the list on this site, as often as you want it. You set the size, the budget per bottle and the style.',
       seoBlock:
         '<p>Everything about the club is built on the list we already sell. There is no separate subscription range bought in cheap: the bottles that turn up are the bottles on this site, chosen for you rather than by you.</p><p>You decide four things. How many bottles, roughly what per bottle, red or white or a mix, and how often it arrives. We do the rest, and every case comes with a card explaining each bottle and what to eat with it.</p><p>Pause, skip a case or cancel from your account, with no notice period. Over 18 only, and somebody over 18 has to take the delivery in.</p>',
-      metaTitle: 'The Wine Vault Club, a wine subscription from Co. Meath',
+      metaTitle: 'Wine subscription from Co. Meath',
       metaDescription:
         'A case of wine chosen by us, as often as you want it. Set the size, the budget per bottle and the style. Pause or cancel any time.',
     },
+    // ------------------------------------------------------------------
+    // Metadata-only entries.
+    //
+    // These listings had a bare registry title and no meta description at
+    // all, so a search result for them read "Red wine | The Parcel
+    // Concierge" with whatever sentence Google chose to scrape underneath.
+    // Seventeen of the twenty-seven listings were in that state.
+    //
+    // They carry no intro and no seoBlock on purpose. Page copy is a
+    // separate job and an invented paragraph about a range we have not
+    // described is worse than none; the entries above show what a finished
+    // one looks like. Adding an intro here is additive and changes nothing
+    // else.
+    //
+    // Each description leads with what the page is, names the filters that
+    // page actually offers, and ends on the delivery line that applies —
+    // written to sit under 155 characters so it is not cut in the result.
+    // ------------------------------------------------------------------
+    {
+      path: '/wine/red',
+      metaTitle: 'Red wine, chosen by us',
+      metaDescription:
+        'Red wine from growers we buy from directly, with Malbec, Rioja, Bordeaux and Chianti among them. Filter by grape, country or budget. Over 18s only.',
+    },
+    {
+      path: '/wine/white',
+      metaTitle: 'White wine, chosen by us',
+      metaDescription:
+        'White wine from Sancerre and Chablis to Albariño and Chenin Blanc. Filter by grape, country or budget, and send any bottle in a hamper. Over 18s only.',
+    },
+    {
+      path: '/wine/rose',
+      metaTitle: 'Rosé wine',
+      metaDescription:
+        'Rosé from Provence and beyond, dry to fruity, chosen for drinking rather than for the bottle. Filter by country or budget. Over 18s only.',
+    },
+    {
+      path: '/wine/champagne-sparkling',
+      metaTitle: 'Champagne and sparkling wine',
+      metaDescription:
+        'Champagne, Prosecco, Cava and Crémant for celebrating, gifting or a Tuesday. Add a bottle to any hamper you build. Over 18s only.',
+    },
+    {
+      path: '/wine/port-dessert',
+      metaTitle: 'Port, sherry and dessert wine',
+      metaDescription:
+        'Port, sherry and dessert wine: the after-dinner end of the list, and one of the easiest gifts to get right. Over 18s only.',
+    },
+    {
+      path: '/wine/organic-biodynamic',
+      metaTitle: 'Organic and biodynamic wine',
+      metaDescription:
+        'Certified organic and biodynamic wine from growers working that way by conviction, not by marketing. Filter by grape, country or budget. Over 18s only.',
+    },
+    {
+      path: '/wine/alcohol-free',
+      metaTitle: 'Alcohol free wine and sparkling',
+      metaDescription:
+        'Alcohol free wine and sparkling worth putting on the table, for the driver, the pregnant guest and anyone off it this month. No age restriction.',
+    },
+    {
+      path: '/wine/under-25',
+      metaTitle: 'Wine under €25',
+      metaDescription:
+        'Every wine on our list under €25, the everyday end of the Wine Vault. Filter by grape, country or style. Free delivery over €100. Over 18s only.',
+    },
+    {
+      path: '/wine/25-50',
+      metaTitle: 'Wine from €25 to €50',
+      metaDescription:
+        'Wine between €25 and €50, the range most gift bottles come from. Filter by grape, country or style. Free delivery over €100. Over 18s only.',
+    },
+    {
+      path: '/wine/50-plus',
+      metaTitle: 'Wine over €50',
+      metaDescription:
+        'Wine over €50: the bottles we buy in small quantities and open ourselves before listing. Free delivery over €100. Over 18s only.',
+    },
+
+    // The occasions listings below are dark while their Shopify collections
+    // are retired (September 2026) and are excluded from the sitemap, so
+    // none of this is indexed today. It is written now because restoring a
+    // collection turns the page back on within the hour, and a page that
+    // returns without a description is a page nobody remembers to fix.
+    {
+      path: '/occasions/new-baby',
+      metaTitle: 'New baby gifts and hampers',
+      metaDescription:
+        'New baby hampers and gifts, for the baby and for whoever did the work. Hand packed in Co. Meath, delivered anywhere in Ireland from €8.95.',
+    },
+    {
+      path: '/occasions/sympathy',
+      metaTitle: 'Sympathy gifts and hampers',
+      metaDescription:
+        'Sympathy hampers chosen to be useful rather than showy, with a handwritten card. Hand packed in Co. Meath and delivered anywhere in Ireland.',
+    },
+    {
+      path: '/occasions/wedding-engagement',
+      metaTitle: 'Wedding and engagement gifts',
+      metaDescription:
+        'Wedding and engagement gifts, from Champagne and glassware to a hamper you build yourself. Hand packed in Co. Meath, delivered across Ireland.',
+    },
+    {
+      path: '/occasions/get-well',
+      metaTitle: 'Get well gifts and hampers',
+      metaDescription:
+        'Get well hampers of things worth having when you are stuck at home. Hand packed in Co. Meath, delivered anywhere in Ireland from €8.95.',
+    },
+    {
+      path: '/occasions/mothers-day',
+      metaTitle: 'Mother’s Day gifts and hampers',
+      metaDescription:
+        'Mother’s Day hampers, wine and pamper gifts, hand packed in Co. Meath. Free local delivery, €8.95 anywhere else in Ireland and free over €100.',
+    },
+    {
+      path: '/occasions/fathers-day',
+      metaTitle: 'Father’s Day gifts and hampers',
+      metaDescription:
+        'Father’s Day hampers, wine, whiskey and Guinness gifts, hand packed in Co. Meath. Free local delivery and €8.95 anywhere else in Ireland.',
+    },
+    {
+      path: '/occasions/valentines',
+      metaTitle: 'Valentine’s gifts and hampers',
+      metaDescription:
+        'Valentine’s hampers, Champagne and chocolate, hand packed in Co. Meath with a handwritten card. Free local delivery, €8.95 across Ireland.',
+    },
+    {
+      path: '/occasions/easter',
+      metaTitle: 'Easter gifts and hampers',
+      metaDescription:
+        'Easter hampers and Irish chocolate, hand packed in Co. Meath. Free local delivery, €8.95 anywhere else in Ireland and free over €100.',
+    },
+
     {
       path: '/wine/exclusive-to-us',
       intro:
@@ -253,67 +393,11 @@ export const CONTENT: CmsData = {
         '<p>We compared our list against the other Irish retailers stocking the same wines, bottle for bottle and vintage for vintage. On the matches we could verify, we were at or below the cheapest Irish price about seven times out of ten. This page is the part of that we can stand over.</p><p>A wine only appears here when we hold a dated, verified comparison for it, and it comes off the page when the comparison goes stale. We do not name other retailers or quote their prices, because prices move and a claim that was true last month is a problem this month.</p><p>Everything on this page is also in the main list, filtered and sorted the usual way.</p>',
     },
     {
-      path: '/gifts-by-budget/under-50',
-      intro:
-        'Everything we sell under €50, hampers and bottles together. This is the page for a Kris Kringle, a thank you, or a gift where the budget was set by somebody else.',
-      seoBlock:
-        '<p>Buying to a ceiling is the most common way people shop for a gift and the hardest thing to do on most websites. This page exists so you can start from the number rather than working backwards from a category.</p><p>Under €50 is bottle territory: a very good red, a crisp white, or Champagne in a half bottle. The hampers pick up one band above, starting with The Perfect Duo at €55.</p><p>Sorted from the top of the band down, so the most you can get for the money is first. Free hand delivery locally, €8.95 anywhere else in Ireland.</p>',
-    },
-    {
-      path: '/gifts-by-budget/50-100',
-      intro:
-        'Gifts from €50 to €100, hampers and bottles together. The widest band we have and the one most people land in.',
-      seoBlock:
-        '<p>This is the band where a gift stops needing an apology. The Perfect Duo at €55 is rosé and chocolates in one box. For the Guinness Lover at €68 covers the man who has everything and drinks coffee. Bubbles and Bliss at €80 pairs two Proseccos with Jo Browne body oils, and the Taste of Ireland Gluten Free Hamper at €92 feeds the house nobody can usually buy for.</p><p>Because the band covers so much, the filters on this page earn their keep. Narrow by occasion if you know what it is for, or by recipient if you know who it is for, and the list gets manageable quickly.</p><p>Everything here is hand packed and hand tied, with a card written by hand. Free hand delivery locally, €8.95 anywhere else in Ireland.</p>',
-    },
-    {
-      path: '/gifts-by-budget/100-150',
-      intro:
-        'Gifts from €100 to €150. Bigger hampers, better bottles, and the glassware to go with them.',
-      seoBlock:
-        '<p>At this level you are buying something with a name on it. A McNutt of Donegal lambswool scarf beside a Sicilian red. Two Italian wines with a Caulfield Country walnut board to serve on. A Tipperary Crystal robin mug with Prosecco and chocolate. The box is built around one thing worth talking about rather than lots of things worth nothing.</p><p>This is also where our corporate range starts, so if you are buying more than ten of anything on this page it is worth looking at the corporate gifting section first for volume pricing.</p><p>Free hand delivery locally, €8.95 anywhere else in Ireland, free over €100.</p>',
-    },
-    {
-      path: '/gifts-by-budget/150-plus',
-      intro:
-        'Gifts at €150 and over. Champagne with the crystal to drink it from, lambswool, and the biggest baskets we pack.',
-      seoBlock:
-        '<p>Above €150 the boxes are built around things that stay in the house. Galway Crystal flutes with Henriot Champagne for a new home. A Tipperary Crystal vase beside a La Bougie diffuser. A lambswool blanket for a new baby, with a bottle for the parents.</p><p>The Grand Indulgence at €495 tops the range: Louis Roederer Champagne, Bordeaux, Rioja and a basket of food and fragrance to carry them.</p><p>Sorted from the bottom of the band up. Free delivery anywhere in Ireland at this level.</p>',
-    },
-    {
-      path: '/gifts-for/her',
-      intro:
-        'Gifts for her, across hampers, wine and the pamper range. Filter by occasion or budget to narrow it down.',
-      seoBlock:
-        '<p>This page is a starting point rather than an answer. What is actually on it is the part of our range that people most often buy for a woman: the pamper boxes built around The Handmade Soap Company in Slane, the lighter wines, and the food hampers that lean sweet rather than savoury.</p><p>If you know the occasion, the occasion pages will get you there faster. If you know the budget, the budget pages will. And if you know the person well enough to know what they actually like, build the box yourself and put exactly that in it.</p><p>Free hand delivery locally, €8.95 anywhere else in Ireland.</p>',
-    },
-    {
-      path: '/gifts-for/him',
-      intro:
-        'Gifts for him, across red wine, Guinness treats and the food hampers. Filter by occasion or budget to narrow it down.',
-      seoBlock:
-        '<p>Mostly red wine, Guinness chocolate and the food hampers that lean savoury. That is an honest description of what people buy from this page rather than a claim about what men like.</p><p>The Classic Gentleman’s Hamper wraps a McNutt of Donegal lambswool scarf around a bottle of Nero d’Avola and a box of Guinness truffles. For the Guinness Lover does the same job at a smaller budget, with an enamel mug he will actually use.</p><p>If you know the occasion or the budget, those pages will narrow it faster than this one. Free hand delivery locally, €8.95 anywhere else in Ireland.</p>',
-    },
-    {
-      path: '/gifts-for/clients',
-      intro:
-        'Client gifts, from a single box to a list of two hundred. Alcohol free options, branding on the card, and volume pricing over ten units.',
-      seoBlock:
-        '<p>A client gift has to do two things: look like it cost something, and not create a problem. Ours are built from Irish producers, which handles the first, and the alcohol free options handle the second, because sending wine to a list you have not checked is a risk nobody needs.</p><p>Branding goes on a printed card inside the lid rather than across the outside of the box, which is what most people actually want. For more than ten units, the corporate gifting enquiry form takes your numbers, your address list and your deadline in one go, and we quote from there.</p><p>We can deliver to individual home addresses or to one office. Tell us which on the form.</p>',
-    },
-    {
       path: '/occasions/christmas',
       intro:
         'Christmas hampers and gifts. We are working on more Christmas hampers now and they will be ready to go from November, once all the Christmas stock has arrived. Everything on this page is ready to send today.',
       seoBlock:
         '<p>If you are buying for a list rather than a person, the corporate section has volume pricing and will take your address list in one go. If you are buying one box for one house, the budget bands are the fastest way in.</p><p>Christmas delivery dates are published on the delivery page as soon as An Post confirm them. Order ahead of the last posting date rather than on it, because the last week is the week things go wrong.</p>',
-    },
-    {
-      path: '/gifts',
-      intro:
-        'Small things to add to a hamper. Candles, chocolate, crystal and boards. These are here to finish a gift rather than to be the gift.',
-      seoBlock:
-        '<p>This is a deliberately small section. It exists because people building a hamper often want one more thing in the box, not because we are trying to be a general gift shop. Everything here is something we already put in our own hampers, sold separately.</p><p>The candles and diffusers are poured in Ireland, including the Aran Candle range from Julie Clarke. The chocolate is from The Chocolate Garden of Ireland and Butlers. The crystal is the same glassware that goes in our wine boxes.</p><p>Add any of it at the cart, or build a hamper from scratch and put it in there.</p>',
     },
   ],
 
@@ -530,7 +614,7 @@ export const CONTENT: CmsData = {
       publishedAt: '2026-08-01',
       updatedAt: '2026-08-01',
       productHandles: [],
-      relatedPaths: ['/gifts-by-budget/under-50', '/hampers/under-75', '/hampers/125-200'],
+      relatedPaths: ['/hampers/under-75', '/hampers/75-125', '/hampers/125-200'],
     },
     {
       slug: 'corporate-gifting-that-does-not-embarrass-anyone',
@@ -541,7 +625,7 @@ export const CONTENT: CmsData = {
       publishedAt: '2026-08-10',
       updatedAt: '2026-08-10',
       productHandles: [],
-      relatedPaths: ['/corporate-gifting', '/hampers/corporate', '/gifts-for/clients'],
+      relatedPaths: ['/corporate-gifting', '/hampers/corporate'],
     },
   ],
 

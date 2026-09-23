@@ -33,7 +33,7 @@ export default function NotFound() {
           { href: '/hampers', label: 'All hampers' },
           { href: '/build-your-own-hamper', label: 'Build your own hamper' },
           { href: '/wine', label: 'The Wine Vault' },
-          { href: '/gifts-by-budget/50-100', label: 'Shop by budget' },
+          { href: '/hampers/75-125', label: 'Hampers by budget' },
         ].map((link) => (
           <li key={link.href}>
             <Link

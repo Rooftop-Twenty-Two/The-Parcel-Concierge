@@ -99,16 +99,20 @@ const HAMPER_BASE: ProductQuery = { sort: 'featured', first: 24 }
 const WINE_BASE: ProductQuery = { sort: 'featured', first: 24 }
 
 /**
- * SEASONAL — Christmas (client request via Cathal, September 2026).
+ * SEASONAL — one live hamper range (client request via Cathal, September 2026).
  *
  * The client's live hamper range is one merchant collection; the year-round
- * hampers are retired for the season. While CHRISTMAS_HAMPERS_ONLY is true:
+ * hampers are retired for the season. While SEASONAL_HAMPERS_ONLY is true:
  *   - the /hampers hub grid reads HAMPERS_COLLECTION (see hampers/page.tsx)
  *   - the homepage featured band reads it too
  *   - /occasions/christmas reads it
- *   - every hamper sub-listing (price bands + themes) is dropped from the
- *     active COLLECTIONS below, so no off-season or old-catalogue hamper can
- *     surface in the nav, the sitemap, static params or route resolution.
+ *   - "More hampers" on a product page reads it (commerce/similar.ts)
+ *   - the hamper price bands read it too, so "Shop by budget" on the
+ *     homepage and the hub's cards lead to the live range
+ *   - every hamper THEME sub-listing (wine, food, pamper, baby, ...) is
+ *     dropped from the active COLLECTIONS below, because those read the old
+ *     merchant collections and would surface off-season or old-catalogue
+ *     hampers in the nav, the sitemap, static params or route resolution.
  *
  * ONE CONSTANT, read everywhere. The handle used to be typed out in three
  * places and had already drifted into two different values, which is how a
@@ -120,26 +124,39 @@ const WINE_BASE: ProductQuery = { sort: 'featured', first: 24 }
  * the store, so the deploy fails loudly rather than serving an empty shop.
  *
  * Hamper *products* still resolve at /hampers/<handle>: resolveHubSlug reads
- * the product, not this registry. To restore the full year-round hamper range
- * post-Christmas, set CHRISTMAS_HAMPERS_ONLY to false.
+ * the product, not this registry. To restore the full year-round hamper range,
+ * set SEASONAL_HAMPERS_ONLY to false.
  */
-export const CHRISTMAS_HAMPERS_ONLY = true
+export const SEASONAL_HAMPERS_ONLY = true
 
-/** The merchant's "Christmas 2026" collection. */
-export const CHRISTMAS_HAMPERS_COLLECTION = 'christmas-2026'
+/**
+ * The merchant's "General Hampers 2026" range. NOTE: its Shopify handle is
+ * `christmas-2026`, NOT `general-hampers-2026`. The merchant renamed the
+ * collection's *title* to "General Hampers 2026" in September 2026, but Shopify
+ * keeps the handle from when it was titled "Christmas 2026". Verified against
+ * the live store (20 products, all available, updated 2026-09-18). Read the
+ * handle from the collection's admin URL, not its title, if this changes again
+ * — a title-derived guess (general-hampers-2026) is a dead handle here and
+ * fails the build via collections:validate.
+ */
+export const SEASONAL_HAMPERS_COLLECTION = 'christmas-2026'
 
-export const HAMPERS_COLLECTION = CHRISTMAS_HAMPERS_ONLY
-  ? CHRISTMAS_HAMPERS_COLLECTION
+export const HAMPERS_COLLECTION = SEASONAL_HAMPERS_ONLY
+  ? SEASONAL_HAMPERS_COLLECTION
   : 'all-hampers-1'
 
 /**
  * The full listing registry. The active `COLLECTIONS` below is derived from
- * this, dropping the hamper sub-listings while CHRISTMAS_HAMPERS_ONLY is on.
+ * this, dropping the hamper sub-listings while SEASONAL_HAMPERS_ONLY is on.
  */
 const ALL_LISTINGS: readonly CollectionDef[] = [
   // ---------------------------------------------------------------------
-  // Hampers. Budget bands read the master All Hampers collection with a
-  // price filter. Budget bands first: highest-intent, real indexable routes.
+  // Hampers. Budget bands read the LIVE hamper range (HAMPERS_COLLECTION)
+  // with a price filter, so they follow the seasonal swap and stay active
+  // while SEASONAL_HAMPERS_ONLY is on. They are what the homepage "Shop by
+  // budget" cards link to: the client's ask (September 2026) is that those
+  // cards lead to hampers, not to the mixed All Gifts collection.
+  // Budget bands first: highest-intent, real indexable routes.
   // ---------------------------------------------------------------------
   {
     slug: 'under-75',
@@ -147,7 +164,7 @@ const ALL_LISTINGS: readonly CollectionDef[] = [
     path: '/hampers/under-75',
     title: 'Hampers under €75',
     h1: 'Hampers under €75',
-    query: { ...HAMPER_BASE, collection: 'all-hampers-1', maxPriceMinor: 7499, sort: 'price-desc' },
+    query: { ...HAMPER_BASE, collection: HAMPERS_COLLECTION, maxPriceMinor: 7499, sort: 'price-desc' },
     alcohol: true,
     facets: ['occasion', 'recipient'],
     parentPath: '/hampers',
@@ -158,7 +175,7 @@ const ALL_LISTINGS: readonly CollectionDef[] = [
     path: '/hampers/75-125',
     title: 'Hampers €75 to €125',
     h1: 'Hampers from €75 to €125',
-    query: { ...HAMPER_BASE, collection: 'all-hampers-1', minPriceMinor: 7500, maxPriceMinor: 12499 },
+    query: { ...HAMPER_BASE, collection: HAMPERS_COLLECTION, minPriceMinor: 7500, maxPriceMinor: 12499 },
     alcohol: true,
     facets: ['occasion', 'recipient'],
     parentPath: '/hampers',
@@ -169,7 +186,7 @@ const ALL_LISTINGS: readonly CollectionDef[] = [
     path: '/hampers/125-200',
     title: 'Hampers €125 to €200',
     h1: 'Hampers from €125 to €200',
-    query: { ...HAMPER_BASE, collection: 'all-hampers-1', minPriceMinor: 12500, maxPriceMinor: 19999 },
+    query: { ...HAMPER_BASE, collection: HAMPERS_COLLECTION, minPriceMinor: 12500, maxPriceMinor: 19999 },
     alcohol: true,
     facets: ['occasion', 'recipient'],
     parentPath: '/hampers',
@@ -180,7 +197,7 @@ const ALL_LISTINGS: readonly CollectionDef[] = [
     path: '/hampers/luxury-200-plus',
     title: 'Luxury hampers over €200',
     h1: 'Luxury hampers, €200 and over',
-    query: { ...HAMPER_BASE, collection: 'all-hampers-1', minPriceMinor: 20000, sort: 'price-asc' },
+    query: { ...HAMPER_BASE, collection: HAMPERS_COLLECTION, minPriceMinor: 20000, sort: 'price-asc' },
     alcohol: true,
     facets: ['occasion', 'recipient'],
     parentPath: '/hampers',
@@ -461,7 +478,10 @@ const ALL_LISTINGS: readonly CollectionDef[] = [
     path: '/occasions/christmas',
     title: 'Christmas gifts and hampers',
     h1: 'Christmas gifts and hampers',
-    query: { collection: CHRISTMAS_HAMPERS_COLLECTION, sort: 'featured', first: 24 },
+    // Reads the live hamper range, not a Christmas-specific collection: while
+    // SEASONAL_HAMPERS_ONLY is on there is exactly one range and this page
+    // must not disagree with the hub about what is in it.
+    query: { collection: HAMPERS_COLLECTION, sort: 'featured', first: 24 },
     alcohol: true,
     facets: ['price', 'recipient'],
     parentPath: '/occasions',
@@ -692,13 +712,46 @@ const ALL_LISTINGS: readonly CollectionDef[] = [
   },
 ]
 
+/** A listing that slices its collection by price rather than by theme. */
+export function isPriceBand(c: CollectionDef): boolean {
+  return c.query.minPriceMinor !== undefined || c.query.maxPriceMinor !== undefined
+}
+
 /**
- * The active listing registry. While CHRISTMAS_HAMPERS_ONLY is on, the hamper
- * hub's sub-listings are suppressed so the nav, sitemap, static params and
- * route resolution all see only what should show this season.
+ * The active listing registry. While SEASONAL_HAMPERS_ONLY is on, the hamper
+ * hub's theme sub-listings are suppressed so the nav, sitemap, static params
+ * and route resolution all see only what should show this season. The price
+ * bands stay: they read the live range, so they can only show what is in it.
  */
+/**
+ * There is no gift section (client, September 2026).
+ *
+ * The site sells hampers and wine. Everything else the shop carries is
+ * sold as something you put in a hamper, so it reaches a shopper through
+ * /build-your-own-hamper and nowhere else. Three hubs are retired:
+ *
+ *   - gifts-by-budget: its four bands read All Gifts, which is the Build
+ *     a Box "Everything" shelf. Once every standalone item is tagged into
+ *     it so the builder can reach them, those pages become a shop window
+ *     of socks, cards and homeware.
+ *   - gifts: the candles, chocolate and crystal listings. Small, but a
+ *     browsable gift category all the same.
+ *   - gifts-for: her, him, couples and clients. Nothing in the nav
+ *     pointed at them.
+ *
+ * Their paths redirect to /build-your-own-hamper, except the budget bands
+ * which go to the hamper bands (data/redirects/redirects.csv).
+ *
+ * ADD-ON PRODUCTS KEEP THEIR PAGES. /gifts/<handle> still resolves, so a
+ * candle found in search, offered at the cart or suggested on a hamper
+ * page has somewhere to land. What is gone is the browsable category
+ * above it, not the product.
+ */
+const RETIRED_HUBS: ReadonlySet<CollectionHub> = new Set(['gifts-by-budget', 'gifts', 'gifts-for'])
+
 export const COLLECTIONS: readonly CollectionDef[] = ALL_LISTINGS.filter(
-  (c) => !(CHRISTMAS_HAMPERS_ONLY && c.hub === 'hampers'),
+  (c) =>
+    !RETIRED_HUBS.has(c.hub) && !(SEASONAL_HAMPERS_ONLY && c.hub === 'hampers' && !isPriceBand(c)),
 )
 
 const BY_PATH = new Map(COLLECTIONS.map((c) => [c.path, c]))
@@ -732,6 +785,21 @@ export const PENDING_MERCHANT_COLLECTIONS: ReadonlySet<string> = new Set([
   'sympathy',
   'get-well',
   'exclusive-to-us',
+  // The six Occasions collections. They existed on the old store and were
+  // removed in the September 2026 collection clear-out; the client's call,
+  // 21 September, is that they are not being recreated for now. The site
+  // stays pre-wired to them so restoring one is creating the collection and
+  // nothing else — see data/shopify-import/collections-to-restore.csv.
+  //
+  // Until then each route darks: under the four-product floor a listing
+  // redirects to /occasions, and the hub below no longer offers a card for
+  // it, so nothing links into the dark.
+  'mothers-day-gifts',
+  'fathers-day',
+  'valentines-day',
+  'easter-1',
+  'gifts-for-baby',
+  'wedding-anniversary',
 ])
 
 /**
@@ -741,9 +809,45 @@ export const PENDING_MERCHANT_COLLECTIONS: ReadonlySet<string> = new Set([
  * COLLECTIONS) so collections:validate keeps checking every mapped handle
  * regardless of the seasonal flag.
  */
+/**
+ * The Build a Box picker's shelves, by collection handle.
+ *
+ * Kept here rather than read from hamper-builder.ts so this module stays
+ * free of runtime imports: the ingest tool, the redirect validator and
+ * collections:validate all read it directly. A test asserts this list and
+ * PICKER_SHELVES agree, so they cannot drift.
+ *
+ * They are listed so the build checks them. A picker shelf pointing at a
+ * collection that does not exist is a dead shelf in the builder, and
+ * before this the build had no opinion about it.
+ */
+export const BUILDER_SHELF_COLLECTIONS: readonly string[] = [
+  'all-gifts',
+  'all-food',
+  'chocolate-confectionery-1',
+  'fine-wines-1',
+  'champagne-and-prosecco-1',
+  'candles-diffusers',
+  'beauty',
+  'homeware',
+  'baby',
+  'jewellery',
+  'greeting-cards',
+]
+
+/**
+ * Derived from the ACTIVE registry, not from ALL_LISTINGS.
+ *
+ * A suppressed listing reads a retired collection by definition: the
+ * hamper themes point at last year's merchant collections and the site
+ * does not render them. Checking those failed the build over collections
+ * nobody is allowed to see, which is a build that cries wolf. Only
+ * collections something on the site actually reads are checked.
+ */
 export const MAPPED_COLLECTION_HANDLES: readonly string[] = [
   ...new Set([
     HAMPERS_COLLECTION,
-    ...ALL_LISTINGS.map((c) => c.query.collection).filter((h): h is string => typeof h === 'string'),
+    ...COLLECTIONS.map((c) => c.query.collection).filter((h): h is string => typeof h === 'string'),
+    ...BUILDER_SHELF_COLLECTIONS,
   ]),
 ]

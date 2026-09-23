@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { ProductGrid } from '@/components/product/ProductCard'
 import { TrustpilotStars } from '@/components/trust/TrustpilotStars'
 import { ButtonLink } from '@/components/ui/Button'
-import { Snowfall } from '@/components/ui/Snowfall'
+import { HollySprig } from '@/components/ui/Festive'
 import { InkWaves, PostmarkRoundel, StampFrame } from '@/components/ui/Stamp'
 import { NewsletterSignup } from '@/components/marketing/NewsletterSignup'
 import { VisitTheShop } from '@/components/VisitTheShop'
@@ -12,6 +12,7 @@ import { getHomepage, getMakers } from '@/lib/cms'
 import type { HomepageSlot } from '@/lib/cms/types'
 import { getProduct, queryProducts } from '@/lib/commerce'
 import { getCollectionByPath, HAMPERS_COLLECTION } from '@/lib/commerce/collections'
+import { populatedListings } from '@/lib/commerce/populated'
 import type { ProductCard } from '@/lib/commerce/types'
 import { getTrustSummary } from '@/lib/trustpilot'
 
@@ -38,22 +39,16 @@ export const metadata: Metadata = {
 export default async function HomePage() {
   const [homepage, trust] = await Promise.all([getHomepage(), getTrustSummary()])
 
-  // One switch for the whole seasonal treatment: the snow on the hero is
-  // on only while the Christmas band is in the slot list, so pulling that
-  // band in January takes the snow with it and nobody has to remember a
-  // second place.
-  const festive = homepage.slots.some((slot) => slot.kind === 'christmas')
+  // The seasonal treatment is the Christmas band and the holly on it, so
+  // pulling that band from the slot list in January takes the lot with it.
+  // The page-wide snowfall and the string of lights over the hero both
+  // came off at the client's request in September 2026: they sat over the
+  // hero photograph.
 
   return (
     <>
       {homepage.slots.map((slot, index) => (
-        <Slot
-          key={`${slot.kind}-${index}`}
-          slot={slot}
-          trust={trust}
-          first={index === 0}
-          festive={festive}
-        />
+        <Slot key={`${slot.kind}-${index}`} slot={slot} trust={trust} first={index === 0} />
       ))}
     </>
   )
@@ -63,16 +58,14 @@ async function Slot({
   slot,
   trust,
   first,
-  festive,
 }: {
   slot: HomepageSlot
   trust: { rating: number; reviewCount: number }
   first: boolean
-  festive: boolean
 }) {
   switch (slot.kind) {
     case 'hero':
-      return <Hero slot={slot} trust={trust} priority={first} festive={festive} />
+      return <Hero slot={slot} trust={trust} priority={first} />
     case 'christmas':
       return <ChristmasBand slot={slot} />
     case 'budget-bands':
@@ -121,13 +114,53 @@ async function Hero({
   slot,
   trust,
   priority,
-  festive,
 }: {
   slot: Extract<HomepageSlot, { kind: 'hero' }>
   trust: { rating: number; reviewCount: number }
   priority: boolean
-  festive: boolean
 }) {
+  const copy = <HeroCopy slot={slot} trust={trust} />
+
+  // A supplied photograph is the whole hero: full bleed, with the copy and
+  // the CTA sitting on top of it. The client's table shot puts the hamper
+  // and the bottles on the right and leaves the left third as empty linen,
+  // which is exactly where the copy goes.
+  if (slot.image) {
+    return (
+      <section className="relative isolate overflow-hidden bg-green">
+        <Image
+          src={slot.image.src}
+          alt={slot.image.alt}
+          fill
+          priority={priority}
+          sizes="100vw"
+          // The focal point is the basket, two thirds of the way across.
+          // On a phone the frame is tall and narrow, so that keeps the
+          // basket in shot rather than the right-hand bottles alone.
+          className="object-cover object-[67%_center] lg:object-right"
+        />
+        {/* Legibility wash. Brand green under the copy on the left, and
+            gone by the middle so the photograph is the hero, not the wash:
+            the products start just under halfway across at desktop widths
+            and the client wants them unobscured. The subhead keeps to the
+            left third, where the wash is still strong enough to carry
+            cream text over the pale linen. On a phone the copy spans the
+            width, so a lighter even wash does too. */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 -z-0 bg-green/60 lg:bg-transparent lg:bg-linear-to-r lg:from-green/90 lg:via-green/55 lg:via-30% lg:to-green/0 lg:to-55%"
+        />
+
+        <div className="relative mx-auto flex max-w-[1400px] items-center px-4 py-16 lg:min-h-[680px] lg:px-8 lg:py-24">
+          <div className="max-w-xl">{copy}</div>
+        </div>
+
+        <InkWaves className="relative h-16 w-full text-cream/25" lines={4} />
+      </section>
+    )
+  }
+
+  // No photograph: the copy beside a product shot in a stamp frame.
   const product = slot.imageHandle ? await getProduct(slot.imageHandle) : null
   const image = product?.images[0] ?? null
 
@@ -143,37 +176,8 @@ async function Hero({
         className="pointer-events-none absolute -right-24 -top-24 hidden w-[560px] opacity-[0.07] lg:block"
       />
 
-      {festive ? <Snowfall className="z-0 text-cream" /> : null}
       <div className="relative mx-auto grid max-w-[1400px] items-center gap-10 px-4 py-14 lg:grid-cols-2 lg:gap-16 lg:px-8 lg:py-20">
-        <div className="animate-rise text-cream">
-          <p className="mb-4 text-xs uppercase tracking-[0.24em] text-gold">
-            Dunshaughlin, Co. Meath
-          </p>
-          <h1 className="font-display text-[length:var(--text-hero)] leading-[0.92]">
-            {slot.headline}
-          </h1>
-          <p className="mt-5 max-w-md text-lg text-cream/90">{slot.subhead}</p>
-
-          <div className="mt-8 flex flex-wrap items-center gap-4">
-            <ButtonLink href={slot.ctaHref} size="large">
-              {slot.ctaLabel}
-            </ButtonLink>
-            <Link
-              href="/build-your-own-hamper"
-              className="text-cream underline underline-offset-4 hover:text-gold"
-            >
-              Or build your own
-            </Link>
-          </div>
-
-          <div className="mt-8">
-            <TrustpilotStars
-              rating={trust.rating}
-              reviewCount={trust.reviewCount}
-              variant="light"
-            />
-          </div>
-        </div>
+        {copy}
 
         <div className="relative animate-rise" style={{ animationDelay: '120ms' }}>
           <StampFrame className="bg-beige">
@@ -209,9 +213,48 @@ async function Hero({
   )
 }
 
+/** The hero's words: eyebrow, headline, subhead, CTAs and the Trustpilot line. */
+function HeroCopy({
+  slot,
+  trust,
+}: {
+  slot: Extract<HomepageSlot, { kind: 'hero' }>
+  trust: { rating: number; reviewCount: number }
+}) {
+  return (
+    <div className="animate-rise text-cream">
+      <p className="mb-4 text-xs uppercase tracking-[0.24em] text-gold">
+        Dunshaughlin, Co. Meath
+      </p>
+      <h1 className="font-display text-[length:var(--text-hero)] leading-[0.92]">
+        {slot.headline}
+      </h1>
+      <p className="mt-5 max-w-md text-lg text-cream/90">{slot.subhead}</p>
+
+      <div className="mt-8 flex flex-wrap items-center gap-4">
+        <ButtonLink href={slot.ctaHref} size="large">
+          {slot.ctaLabel}
+        </ButtonLink>
+        <Link
+          href="/build-your-own-hamper"
+          className="text-cream underline underline-offset-4 hover:text-gold"
+        >
+          Or build your own
+        </Link>
+      </div>
+
+      <div className="mt-8">
+        <TrustpilotStars rating={trust.rating} reviewCount={trust.reviewCount} variant="light" />
+      </div>
+    </div>
+  )
+}
+
 /**
  * The Christmas band. Premium and quiet: deep red ground, gold type, one
- * photograph in a stamp frame. No snow, no clip art.
+ * photograph in a stamp frame, and a sprig of holly drawn in gold line
+ * work in the corner. No clip art. The snow falling over it belongs to
+ * the page, not the band.
  *
  * The frame takes either a photograph from /public or a product shot that
  * links to its product. It is a photograph today because the seasonal
@@ -225,6 +268,11 @@ async function ChristmasBand({ slot }: { slot: Extract<HomepageSlot, { kind: 'ch
     <section className="relative overflow-hidden bg-wine text-cream">
       <div className="relative mx-auto grid max-w-[1400px] items-center gap-10 px-4 py-14 lg:grid-cols-[1.2fr_1fr] lg:px-8">
         <div>
+          {/* In the flow rather than pinned to a corner, so it can never
+              land under the photograph or on top of the title at any
+              width. The negative margin lines the left leaf up with the
+              text edge. */}
+          <HollySprig className="-ml-2 mb-3 h-16 w-auto text-gold lg:h-20" />
           <p className="mb-3 text-xs uppercase tracking-[0.24em] text-gold">Christmas 2026</p>
           <h2 className="font-display text-[length:var(--text-display)]">{slot.title}</h2>
           <p className="mt-4 max-w-xl text-lg text-cream/90">{slot.body}</p>
@@ -281,24 +329,42 @@ async function ChristmasBand({ slot }: { slot: Extract<HomepageSlot, { kind: 'ch
   )
 }
 
+/**
+ * The hamper price bands, not the gifts ones. The cards used to link to
+ * /gifts-by-budget, which reads the mixed All Gifts collection, and the
+ * client's report was that "Under €50" opened candles and wine when the
+ * page had promised hampers (September 2026). These read the live hamper
+ * range with a price filter, so a click lands on hampers in that band.
+ */
 const BUDGET_BAND_PATHS = [
-  '/gifts-by-budget/under-50',
-  '/gifts-by-budget/50-100',
-  '/gifts-by-budget/100-150',
-  '/gifts-by-budget/150-plus',
+  '/hampers/under-75',
+  '/hampers/75-125',
+  '/hampers/125-200',
+  '/hampers/luxury-200-plus',
 ]
 
-function BudgetBands() {
-  const bands = BUDGET_BAND_PATHS.map((path) => getCollectionByPath(path)).filter(
+/** "Hampers under €75" → "Under €75"; "Luxury hampers over €200" → "Over €200". */
+function bandLabel(title: string): string {
+  const stripped = title.replace(/^(luxury )?hampers,? /i, '')
+  return stripped.charAt(0).toUpperCase() + stripped.slice(1)
+}
+
+async function BudgetBands() {
+  const defined = BUDGET_BAND_PATHS.map((path) => getCollectionByPath(path)).filter(
     (c): c is NonNullable<typeof c> => c !== undefined,
   )
+  // A band with too few hampers redirects to the hub, so it is not offered.
+  // A small range can leave one or two bands empty; the section adapts and
+  // disappears altogether if none of them would open.
+  const bands = await populatedListings(defined)
+  if (!bands.length) return null
 
   return (
     <section className="mx-auto max-w-[1400px] px-4 py-16 lg:px-8">
       <SectionHeading
         eyebrow="The fastest way in"
-        title="Shop by budget"
-        body="Most people start with a figure in mind. Pick yours and see everything we can do for it, hampers and wine together."
+        title="Hampers by budget"
+        body="Most people start with a figure in mind. Pick yours and see every hamper we can do for it."
       />
 
       <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -309,7 +375,7 @@ function BudgetBands() {
               className="group flex h-full flex-col justify-between border border-navy/20 bg-beige p-6 transition-colors hover:bg-navy hover:text-cream"
             >
               <span className="font-display text-4xl text-navy group-hover:text-cream">
-                {band.title.replace('Gifts ', '')}
+                {bandLabel(band.title)}
               </span>
               <span className="mt-6 text-sm text-ink-muted group-hover:text-cream/80">
                 Shop this band
@@ -383,10 +449,20 @@ function BuilderBand({ slot }: { slot: Extract<HomepageSlot, { kind: 'hamper-bui
   )
 }
 
-function OccasionBand({ slot }: { slot: Extract<HomepageSlot, { kind: 'occasions' }> }) {
-  const collections = slot.paths
-    .map((path) => getCollectionByPath(path))
-    .filter((c): c is NonNullable<typeof c> => c !== undefined)
+async function OccasionBand({ slot }: { slot: Extract<HomepageSlot, { kind: 'occasions' }> }) {
+  // Through populatedListings like the budget bands and the hubs, so the
+  // band only ever offers an occasion that will open. Without it this
+  // shipped a card for Wedding and engagement, whose collection came out
+  // in the clear-out: the listing is under the four-product floor, so the
+  // card redirected to /occasions.
+  const collections = await populatedListings(
+    slot.paths
+      .map((path) => getCollectionByPath(path))
+      .filter((c): c is NonNullable<typeof c> => c !== undefined),
+  )
+  // One card is not a band worth showing. The slot is CMS-driven, so this
+  // comes back by itself the moment a second occasion has a collection.
+  if (collections.length < 2) return null
 
   return (
     <section className="mx-auto max-w-[1400px] px-4 py-16 lg:px-8">

@@ -9,10 +9,17 @@
 export type ListingCopy = {
   /** The listing route this copy belongs to, e.g. /hampers/under-75. */
   path: string
-  /** 60 to 100 words, rendered above the grid. */
-  intro: string
+  /**
+   * 60 to 100 words, rendered above the grid.
+   *
+   * Optional so a listing can carry a title and a description without also
+   * committing to page copy. Writing an intro and an seoBlock for a page is
+   * a content job; giving it a <title> and a meta description is not, and
+   * making the two one entry meant seventeen listings had neither.
+   */
+  intro?: string
   /** 150 to 250 words, rendered below the grid. HTML. */
-  seoBlock: string
+  seoBlock?: string
   /** Overrides the registry title in <title> when the CMS wants a longer one. */
   metaTitle?: string
   metaDescription?: string
@@ -26,7 +33,20 @@ export type CuratedListing = {
 }
 
 export type HomepageSlot =
-  | { kind: 'hero'; headline: string; subhead: string; ctaLabel: string; ctaHref: string; imageHandle: string | null }
+  /**
+   * The hero. `image` is a photograph from /public; `imageHandle` puts a
+   * product shot in the frame instead. Set one or the other. `image` wins
+   * where both are set, and the product is not fetched at all.
+   */
+  | {
+      kind: 'hero'
+      headline: string
+      subhead: string
+      ctaLabel: string
+      ctaHref: string
+      imageHandle: string | null
+      image?: { src: string; alt: string }
+    }
   /**
    * The seasonal band. Understated by design: type, one photograph and a
    * CTA, no seasonal clip art. Remove the slot from the list when the

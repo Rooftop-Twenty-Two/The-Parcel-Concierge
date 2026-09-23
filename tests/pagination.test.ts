@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import {
   MAX_FIRST,
+  MAX_LISTING,
   MAX_STEPS,
   firstForStep,
   hasMore,
@@ -19,8 +20,16 @@ test('a missing or unparseable step is the first page', () => {
 
 test('a crafted step cannot ask for an unbounded page', () => {
   assert.equal(parseStep('999999'), MAX_STEPS)
-  assert.ok(firstForStep(24, MAX_STEPS) <= MAX_FIRST)
-  assert.ok(firstForStep(48, MAX_STEPS) <= MAX_FIRST)
+  assert.ok(firstForStep(24, MAX_STEPS) <= MAX_LISTING)
+  assert.ok(firstForStep(48, MAX_STEPS) <= MAX_LISTING)
+})
+
+test('a listing can show more than one Storefront page', () => {
+  // The wine range is bigger than a Storefront page. A listing that stopped
+  // at one page put every wine past position 250 on no listing at all.
+  assert.ok(MAX_LISTING > MAX_FIRST)
+  assert.ok(firstForStep(24, MAX_STEPS) > MAX_FIRST)
+  assert.equal(hasMore({ hasNextPage: true }, 11, 24), true)
 })
 
 test('each step asks for one more page worth, from the start', () => {
@@ -58,8 +67,8 @@ test('there is no next step past the caps, whatever the source says', () => {
   const more = { hasNextPage: true }
   assert.equal(hasMore(more, 1, 24), true)
   assert.equal(hasMore(more, MAX_STEPS, 24), false)
-  // 48 a page hits the Storefront ceiling before the step ceiling.
-  assert.equal(hasMore(more, 6, 48), false)
+  // 48 a page hits the listing ceiling before the step ceiling.
+  assert.equal(hasMore(more, Math.ceil(MAX_LISTING / 48), 48), false)
 })
 
 test('there is no next step when the source says there is nothing left', () => {

@@ -273,7 +273,7 @@ export const GRAPE_VARIETIES = [
   'Grenache Rosé',
 ] as const
 
-function normaliseWineLabel(value: string): string {
+function normaliseGrapeKey(value: string): string {
   return value
     .toLowerCase()
     .normalize('NFD')
@@ -283,7 +283,7 @@ function normaliseWineLabel(value: string): string {
     .trim()
 }
 
-const GRAPE_BY_KEY = new Map(GRAPE_VARIETIES.map((name) => [normaliseWineLabel(name), name]))
+const GRAPE_BY_KEY = new Map(GRAPE_VARIETIES.map((name) => [normaliseGrapeKey(name), name]))
 
 /**
  * The canonical grape for a tag or collection label, or null when it is not a
@@ -291,54 +291,115 @@ const GRAPE_BY_KEY = new Map(GRAPE_VARIETIES.map((name) => [normaliseWineLabel(n
  * "Syrah Wine" all resolve to "Syrah", while "Red Wines" resolves to null.
  */
 export function grapeFromLabel(value: string): string | null {
-  return GRAPE_BY_KEY.get(normaliseWineLabel(value)) ?? null
+  return GRAPE_BY_KEY.get(normaliseGrapeKey(value)) ?? null
 }
 
 /**
- * Countries a wine can come from, and the demonyms the store tags them with.
- * The live catalogue tags country the way it tags grape — "French Wines",
- * "Italian Wines" — so each country lists the aliases that resolve to it. The
- * country name resolves to itself too, so a store that later fills a proper
- * country field also works. A country the store sells that is missing here
- * simply will not appear as a filter value; add it and it shows up.
+ * Countries, read the same way out of the store's tags. The old site tagged
+ * a bottle "French Wines", "Spanish Wine", "South African Wines", and was
+ * never consistent about the plural or the form, so every spelling the
+ * export was found to use maps to one label. Bare names ("France") and
+ * demonyms ("French") are accepted too, so the vocabulary can be tidied
+ * without the filter going dark.
+ *
+ * Read only when the wine.country metafield is absent, which on the live
+ * store is always: the metafields are not on the store yet. This is what
+ * makes the Country filter work today.
  */
-const WINE_COUNTRIES: { name: string; aliases: string[] }[] = [
-  { name: 'France', aliases: ['French'] },
-  { name: 'Italy', aliases: ['Italian'] },
-  { name: 'Spain', aliases: ['Spanish'] },
-  { name: 'Portugal', aliases: ['Portuguese'] },
-  { name: 'Germany', aliases: ['German'] },
-  { name: 'Austria', aliases: ['Austrian'] },
-  { name: 'Australia', aliases: ['Australian'] },
-  { name: 'New Zealand', aliases: ['New Zealander'] },
-  { name: 'Argentina', aliases: ['Argentine', 'Argentinian'] },
-  { name: 'Chile', aliases: ['Chilean'] },
-  { name: 'United States', aliases: ['American', 'USA', 'US', 'Californian'] },
-  { name: 'South Africa', aliases: ['South African'] },
-  { name: 'Greece', aliases: ['Greek'] },
-  { name: 'Hungary', aliases: ['Hungarian'] },
-  { name: 'Georgia', aliases: ['Georgian'] },
-  { name: 'Lebanon', aliases: ['Lebanese'] },
-  { name: 'Romania', aliases: ['Romanian'] },
-  { name: 'Croatia', aliases: ['Croatian'] },
-  { name: 'Slovenia', aliases: ['Slovenian'] },
-  { name: 'Switzerland', aliases: ['Swiss'] },
-  { name: 'England', aliases: ['English'] },
-  { name: 'Ireland', aliases: ['Irish'] },
-]
+const COUNTRY_KEYS: Record<string, string> = {
+  france: 'France',
+  french: 'France',
+  spain: 'Spain',
+  spanish: 'Spain',
+  italy: 'Italy',
+  italian: 'Italy',
+  argentina: 'Argentina',
+  argentinian: 'Argentina',
+  argentine: 'Argentina',
+  'new zealand': 'New Zealand',
+  portugal: 'Portugal',
+  portuguese: 'Portugal',
+  'south africa': 'South Africa',
+  'south african': 'South Africa',
+  australia: 'Australia',
+  australian: 'Australia',
+  chile: 'Chile',
+  chilean: 'Chile',
+  germany: 'Germany',
+  german: 'Germany',
+  'united states': 'United States',
+  usa: 'United States',
+  american: 'United States',
+  california: 'United States',
+  californian: 'United States',
+  austria: 'Austria',
+  austrian: 'Austria',
+  greece: 'Greece',
+  greek: 'Greece',
+  ireland: 'Ireland',
+  irish: 'Ireland',
+  england: 'England',
+  english: 'England',
+  hungary: 'Hungary',
+  hungarian: 'Hungary',
+  lebanon: 'Lebanon',
+  lebanese: 'Lebanon',
+}
 
-const COUNTRY_BY_KEY = new Map(
-  WINE_COUNTRIES.flatMap(({ name, aliases }) =>
-    [name, ...aliases].map((label) => [normaliseWineLabel(label), name] as const),
-  ),
-)
+/** The country a tag names, or null. "French Wines", "france", "FRENCH WINE" all give France. */
+export function countryFromLabel(value: string): string | null {
+  return COUNTRY_KEYS[normaliseGrapeKey(value)] ?? null
+}
 
 /**
- * The canonical country for a tag or collection label, or null when it is not
- * a country. Handles the store's demonym tags ("French Wines" -> "France") as
- * well as a plain country name ("Italy" -> "Italy"); "Red Wines" resolves to
- * null.
+ * Regions worth a filter value. Exact match on the tag after the same
+ * normalisation, so "Rioja Wines" and "rioja" both resolve, and a region
+ * word inside a longer tag ("Rioja Reserva Gift Set") does not.
  */
-export function countryFromLabel(value: string): string | null {
-  return COUNTRY_BY_KEY.get(normaliseWineLabel(value)) ?? null
+export const WINE_REGIONS = [
+  'Bordeaux',
+  'Burgundy',
+  'Chablis',
+  'Beaujolais',
+  'Champagne',
+  'Loire',
+  'Alsace',
+  'Provence',
+  'Rhône',
+  'Languedoc',
+  'Rioja',
+  'Ribera del Duero',
+  'Rueda',
+  'Priorat',
+  'Penedès',
+  'Rías Baixas',
+  'Douro',
+  'Chianti',
+  'Barolo',
+  'Tuscany',
+  'Piedmont',
+  'Veneto',
+  'Sicily',
+  'Puglia',
+  'Prosecco',
+  'Mosel',
+  'Marlborough',
+  'Central Otago',
+  "Hawke's Bay",
+  'Mendoza',
+  'Stellenbosch',
+  'Swartland',
+  'Western Cape',
+  'Barossa',
+  'McLaren Vale',
+  'Napa Valley',
+  'Sonoma',
+  'Maipo',
+] as const
+
+const REGION_BY_KEY = new Map(WINE_REGIONS.map((name) => [normaliseGrapeKey(name), name]))
+
+/** The region a tag names, or null. */
+export function regionFromLabel(value: string): string | null {
+  return REGION_BY_KEY.get(normaliseGrapeKey(value)) ?? null
 }

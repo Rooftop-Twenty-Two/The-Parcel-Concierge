@@ -88,9 +88,26 @@ Restrained, as the brief asks:
 - A page-load sequence on the hero and hub headers (`.animate-rise`, 700ms,
   one 120ms stagger)
 - A 3% scale on product card images on hover
+- The postmark roundel's slow turn
 - Nothing else. No autoplay, no carousels, no scroll-triggered anything
 
 All of it is disabled outright under `prefers-reduced-motion: reduce`.
+
+### Seasonal
+
+While the Christmas band is in the homepage slot list, and only then, the
+homepage adds three decorations. All are drawn in CSS and SVG in the brand
+palette, none is an image asset, and none ships JavaScript.
+
+- Snow falling over the whole page, in three depths, pinned to the
+  viewport behind the header (`Snowfall`)
+- A string of fairy lights along the top of the hero, whose glow twinkles
+  (`FairyLights`)
+- A sprig of holly in gold line work on the Christmas band (`HollySprig`)
+
+Under reduced motion the snow renders as nothing, and the lights hold still
+at a steady glow. Pulling the Christmas band from the CMS in January removes
+all three.
 
 ## Mobile
 

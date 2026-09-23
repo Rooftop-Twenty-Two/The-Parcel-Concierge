@@ -81,6 +81,39 @@ async function countAvailable(handle: string): Promise<Count> {
   }
 }
 
+/**
+ * Every collection handle on the store, for suggesting the right one when a
+ * mapped handle is missing. Shopify derives a handle from the title and
+ * appends -1, -2 when the handle is taken, so "General Hampers 2026" can
+ * land as general-hampers-2026-1 and nobody would know from the admin
+ * screen. A failed deploy that names the near miss fixes itself in one
+ * edit; one that only says "missing" needs a session with store access.
+ */
+async function storeHandles(): Promise<string[] | null> {
+  try {
+    const res = await fetch(`https://${DOMAIN}/api/${VERSION}/graphql.json`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Shopify-Storefront-Access-Token': TOKEN,
+      },
+      body: JSON.stringify({ query: `{ collections(first: 250) { nodes { handle title } } }` }),
+    })
+    if (!res.ok) return null
+    const json = (await res.json()) as {
+      data?: { collections?: { nodes: { handle: string; title: string }[] } }
+    }
+    return json.data?.collections?.nodes.map((n) => `${n.handle}  ("${n.title}")`) ?? null
+  } catch {
+    return null
+  }
+}
+
+function nearMisses(missing: string, all: string[]): string[] {
+  const words = missing.split('-').filter((w) => w.length > 3 && !/^\d+$/.test(w))
+  return all.filter((entry) => words.some((w) => entry.toLowerCase().includes(w)))
+}
+
 const handles = MAPPED_COLLECTION_HANDLES
 console.log(`[collections:validate] checking ${handles.length} mapped collections on ${DOMAIN}\n`)
 
@@ -123,5 +156,21 @@ if (missing > 0) {
     `\n[collections:validate] FAILED: ${missing} mapped collection(s) no longer exist on the store. ` +
       `Fix the handle in src/lib/commerce/collections.ts or mark it pending.`,
   )
+  const all = await storeHandles()
+  if (all) {
+    const unmatched: string[] = []
+    for (const { handle, available } of results) {
+      if (available !== -1 || PENDING_MERCHANT_COLLECTIONS.has(handle)) continue
+      const near = nearMisses(handle, all)
+      if (near.length) console.error(`\n  ${handle}: did you mean one of these?\n    ${near.join('\n    ')}`)
+      else unmatched.push(handle)
+    }
+    if (unmatched.length) {
+      console.error(
+        `\n  Nothing on the store resembles: ${unmatched.join(', ')}.` +
+          `\n  The ${all.length} collection handles on the store:\n    ${all.join('\n    ')}`,
+      )
+    }
+  }
   process.exit(1)
 }

@@ -7,7 +7,27 @@ import {
   isKnownTag,
   PRICE_BANDS,
   priceBandForMinor,
+  regionFromLabel,
 } from '../src/lib/commerce/taxonomy.ts'
+
+test('a country is read out of every spelling the store uses', () => {
+  // The export tags the same thing "French Wine", "French Wines" and "France".
+  assert.equal(countryFromLabel('French Wines'), 'France')
+  assert.equal(countryFromLabel('french wine'), 'France')
+  assert.equal(countryFromLabel('France'), 'France')
+  assert.equal(countryFromLabel('South African Wines'), 'South Africa')
+  assert.equal(countryFromLabel('Californian Wines'), 'United States')
+  assert.equal(countryFromLabel('Red Wines'), null, 'a colour is not a country')
+  assert.equal(countryFromLabel('Irish Made'), null, 'a badge is not a country')
+})
+
+test('a region is an exact tag, not a word inside one', () => {
+  assert.equal(regionFromLabel('Rioja'), 'Rioja')
+  assert.equal(regionFromLabel('rioja wines'), 'Rioja')
+  assert.equal(regionFromLabel('Rias Baixas'), 'Rías Baixas', 'accents fold both ways')
+  assert.equal(regionFromLabel('Rioja Reserva Gift Set'), null)
+  assert.equal(regionFromLabel('Spain'), null, 'a country is not a region')
+})
 
 test('the taxonomy is locked: free tagging is rejected', () => {
   assert.ok(isKnownTag('occasion:christmas'))

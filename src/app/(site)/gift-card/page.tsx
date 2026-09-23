@@ -58,7 +58,7 @@ export default async function GiftCardPage() {
           hamper builder
         </Link>{' '}
         lets you put exactly the right things in a box, and the{' '}
-        <Link href="/gifts-by-budget/under-50" className="underline underline-offset-4">
+        <Link href="/hampers/under-75" className="underline underline-offset-4">
           budget pages
         </Link>{' '}
         will get you to something good quickly if you are working to a number.

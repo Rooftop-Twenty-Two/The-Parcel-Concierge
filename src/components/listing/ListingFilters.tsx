@@ -59,7 +59,9 @@ function toggleHref(
           ? entry.selected.filter((v) => v !== value)
           : [...entry.selected, value]
         : entry.selected
-    if (values.length) params.set(entry.facet, values.join(','))
+    // Sorted, so one selection is one URL whatever order it was clicked in.
+    // Click order made every set of six grapes 720 different pages.
+    if (values.length) params.set(entry.facet, [...values].sort().join(','))
   }
   const query = params.toString()
   return query ? `${basePath}?${query}` : basePath

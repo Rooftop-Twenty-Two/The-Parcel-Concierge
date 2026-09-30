@@ -56,7 +56,13 @@ export const HIDDEN_FROM_LISTINGS: ReadonlySet<string> = new Set([
  * site's ~50 grape sub-collections do not appear here by design.
  */
 
-export type FacetKey = 'grape' | 'region' | 'country' | 'style' | 'price' | 'occasion' | 'recipient'
+/**
+ * Every listing filter's query parameter. robots.txt disallows each of them,
+ * because the filter combinations are endless and every one renders fresh.
+ */
+export const FACET_KEYS = ['grape', 'region', 'country', 'style', 'price', 'occasion', 'recipient'] as const
+
+export type FacetKey = (typeof FACET_KEYS)[number]
 
 export type CollectionHub =
   | 'hampers'

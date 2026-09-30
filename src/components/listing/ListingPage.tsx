@@ -336,9 +336,10 @@ export async function listingMetadata(
     // is that nobody wrote one.
     description: copy?.metaDescription ?? truncateAtWord(copy?.intro, 155),
     alternates: { canonical: collection.path },
-    // A filtered view is shareable and crawlable, but it must not compete
-    // with the listing it came from.
-    robots: filtered ? { index: false, follow: true } : undefined,
+    // A filtered view is shareable, but it must not compete with the listing
+    // it came from, and its links only lead to more filter combinations, so a
+    // crawler is told not to follow them either.
+    robots: filtered ? { index: false, follow: false } : undefined,
   }
 }
 

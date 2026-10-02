@@ -38,10 +38,16 @@ export function AddToCart({
   product,
   label = 'Add to cart',
   confirmation = 'Added to cart',
+  afterAdded,
 }: {
   product: Product
   label?: string
   confirmation?: string
+  /**
+   * Shown once this product is in the cart, e.g. the greeting card offer.
+   * Its buttons must be type="button": it renders inside this form.
+   */
+  afterAdded?: React.ReactNode
 }) {
   const router = useRouter()
   const quantityId = useId()
@@ -174,6 +180,8 @@ export function AddToCart({
           ) : null}
         </p>
       ) : null}
+
+      {status?.kind === 'ok' ? afterAdded : null}
     </form>
   )
 }

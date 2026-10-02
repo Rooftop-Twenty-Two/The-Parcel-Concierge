@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { DeliveryPromise } from '@/components/commerce/DeliveryPromise'
 import { AddToCart } from '@/components/product/AddToCart'
+import { CardUpsell } from '@/components/product/CardUpsell'
 import { ProductGallery } from '@/components/product/ProductGallery'
 import { ProductCarousel } from '@/components/product/ProductCarousel'
 import {
@@ -32,9 +33,12 @@ export function HamperProductPage({
   product,
   trust,
   similar,
+  cards = [],
 }: {
   product: Product
   trust: { rating: number; reviewCount: number }
+  /** Greeting cards offered once the hamper is in the cart. */
+  cards?: ProductCard[]
   /** More from the same range, for the carousel at the foot of the page. */
   similar: ProductCard[]
 }) {
@@ -110,7 +114,12 @@ export function HamperProductPage({
             />
 
             <VariantSelector />
-            <AddToCart product={product} label="Add to cart" confirmation="Added to cart" />
+            <AddToCart
+              product={product}
+              label="Add to cart"
+              confirmation="Added to cart"
+              afterAdded={<CardUpsell cards={cards} />}
+            />
 
             {hamper ? <HamperDetails product={product} /> : null}
             </div>

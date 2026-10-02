@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useState, useTransition } from 'react'
+import { useEffect, useState, useTransition, type ReactNode } from 'react'
 import { removeLineAction, setGiftMessageAction, updateLineAction } from '@/app/actions/cart'
 import { Button } from '@/components/ui/Button'
 import {
@@ -30,7 +30,14 @@ import { AGE_GATE, DELIVERY } from '@/lib/site-config'
  * real enforcement is the delivery, where An Post hand alcohol only to
  * somebody over 18.
  */
-export function CartView({ cart }: { cart: Cart }) {
+export function CartView({
+  cart,
+  cardOffer,
+}: {
+  cart: Cart
+  /** The greeting card offer, shown above the gift message that goes in it. */
+  cardOffer?: ReactNode
+}) {
   // The per-order bottle limit. The server actions refuse to write past it;
   // this is the visible half, and it also catches a cart that went over
   // before the limit existed.
@@ -172,6 +179,8 @@ export function CartView({ cart }: { cart: Cart }) {
           </li>
         ))}
       </ul>
+
+      {cardOffer}
 
       <section className="mt-8">
         <label htmlFor="cart-gift-message" className="block font-serif text-lg text-navy">

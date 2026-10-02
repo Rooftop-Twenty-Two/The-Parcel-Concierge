@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { ListingPage, listingMetadata, type ListingSearchParams } from '@/components/listing/ListingPage'
 import { HamperProductPage } from '@/components/product/HamperProductPage'
+import { greetingCards } from '@/lib/commerce'
 import { similarProducts } from '@/lib/commerce/similar'
 import { resolveHubSlug } from '@/lib/resolve-route'
 import { hubStaticParams } from '@/lib/static-params'
@@ -63,7 +64,11 @@ export default async function HamperSlugPage({ params, searchParams }: Props) {
   // band it fed (see HamperProductPage). Sorting the shop's add-ons by
   // price ascending surfaced the unphotographed, unpriced stock lines
   // first, which is the opposite of a cross-sell.
-  const [trust, similar] = await Promise.all([getTrustSummary(), similarProducts(product)])
+  const [trust, similar, cards] = await Promise.all([
+    getTrustSummary(),
+    similarProducts(product),
+    greetingCards(),
+  ])
 
-  return <HamperProductPage product={product} trust={trust} similar={similar} />
+  return <HamperProductPage product={product} trust={trust} similar={similar} cards={cards} />
 }

@@ -611,6 +611,29 @@ function searchWords(term: string): string[] {
   return foldForSearch(term).split(/\s+/).filter(Boolean)
 }
 
+/**
+ * Greeting cards to offer once a hamper is in the cart.
+ *
+ * Read from the greeting-cards collection (the same shelf the builder
+ * uses), keeping only cards that can be shown honestly and added in one
+ * click: in stock, photographed, priced above zero, with a buyable
+ * variant. The add-on band that used to sit under every hamper came off for
+ * showing unphotographed €0 stock lines, so this one filters them out.
+ */
+export async function greetingCards(limit = 8): Promise<ProductCard[]> {
+  const result = await queryProducts({ collection: 'greeting-cards', sort: 'featured', first: 48 })
+  return result.items
+    .filter(
+      (card) =>
+        card.kind !== 'builder-item' &&
+        card.availableForSale &&
+        card.image !== null &&
+        card.defaultVariantId !== null &&
+        (card.defaultVariantPriceMinor ?? card.priceRange.min.amountMinor) > 0,
+    )
+    .slice(0, limit)
+}
+
 export async function allProductHandles(): Promise<string[]> {
   if (isFixtureMode()) return fixtureAllHandles()
   const handles: string[] = []

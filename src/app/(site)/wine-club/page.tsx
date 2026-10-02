@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
-import { AgeGate } from '@/components/commerce/AgeGate'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { ButtonLink } from '@/components/ui/Button'
 import { InkWaves, StampFrame } from '@/components/ui/Stamp'
@@ -49,8 +48,6 @@ export default async function WineClubLanding() {
 
   return (
     <>
-      <AgeGate context="listing" />
-
       <section className="bg-green text-cream">
         <div className="mx-auto grid max-w-[1400px] items-center gap-10 px-4 py-16 lg:grid-cols-[1.1fr_1fr] lg:px-8 lg:py-24">
           <div className="animate-rise">

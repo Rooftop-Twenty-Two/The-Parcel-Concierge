@@ -2,7 +2,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { ProductGrid } from '@/components/product/ProductCard'
-import { AgeGate } from '@/components/commerce/AgeGate'
 import { ButtonLink } from '@/components/ui/Button'
 import { InkWaves, StampFrame } from '@/components/ui/Stamp'
 import { getListingCopy } from '@/lib/cms'
@@ -27,7 +26,6 @@ export async function HubPage({
   h1,
   heroImage,
   query,
-  alcohol,
   /** Sub-collections to feature as cards, by path. Defaults to all in hub. */
   featuredPaths,
   /** Optional promoted band rendered under the collection cards. */
@@ -61,8 +59,6 @@ export async function HubPage({
 
   return (
     <>
-      {alcohol ? <AgeGate context="listing" /> : null}
-
       <section className="bg-green text-cream">
         <div className="mx-auto grid max-w-[1400px] items-center gap-10 px-4 py-14 lg:grid-cols-[1.05fr_1fr] lg:px-8 lg:py-20">
           <div className="animate-rise">

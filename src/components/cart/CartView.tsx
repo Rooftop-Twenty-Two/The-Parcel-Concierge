@@ -13,7 +13,7 @@ import {
 import { countBottles } from '@/lib/commerce/bottle-limit'
 import { formatMoney, formatMinor } from '@/lib/commerce/money'
 import type { Cart } from '@/lib/commerce/types'
-import { DELIVERY } from '@/lib/site-config'
+import { AGE_GATE, DELIVERY } from '@/lib/site-config'
 
 /**
  * Cart contents, the free-delivery nudge, the gift message and the handoff.
@@ -23,6 +23,12 @@ import { DELIVERY } from '@/lib/site-config'
  * What we do instead is fire the handoff event here and leave the purchase
  * event to Shopify, so revenue is counted once rather than twice across the
  * domain change.
+ *
+ * When the cart holds alcohol the buyer ticks a box to confirm they are over
+ * 18 before the checkout link goes live. That is the whole age check: there
+ * is no popup anywhere else on the site. It is a self-declaration, and the
+ * real enforcement is the delivery, where An Post hand alcohol only to
+ * somebody over 18.
  */
 export function CartView({ cart }: { cart: Cart }) {
   // The per-order bottle limit. The server actions refuse to write past it;
@@ -37,6 +43,8 @@ export function CartView({ cart }: { cart: Cart }) {
     cart.lines.flatMap((l) => l.attributes).find((a) => a.key === 'Gift message')?.value ?? '',
   )
   const [saved, setSaved] = useState(false)
+  const [overAge, setOverAge] = useState(false)
+  const needsAgeConfirmation = cart.containsAlcohol && !overAge
 
   useEffect(() => {
     trackViewCart(
@@ -240,13 +248,39 @@ export function CartView({ cart }: { cart: Cart }) {
             </span>
           </>
         ) : (
-          <a
-            href={cart.checkoutUrl}
-            onClick={onCheckout}
-            className="mt-6 block bg-red px-6 py-4 text-center text-lg text-cream transition-colors hover:bg-wine"
-          >
-            Go to checkout
-          </a>
+          <>
+            {cart.containsAlcohol ? (
+              <label className="mt-6 flex cursor-pointer items-start gap-3 border border-rule bg-white px-4 py-3 text-sm text-navy">
+                <input
+                  type="checkbox"
+                  checked={overAge}
+                  onChange={(event) => setOverAge(event.target.checked)}
+                  className="mt-0.5 h-4 w-4 shrink-0 accent-green"
+                />
+                <span>
+                  I confirm I am over {AGE_GATE.minimumAge}. This order contains alcohol, and
+                  somebody over {AGE_GATE.minimumAge} has to take the delivery in. We may ask for
+                  proof of age.
+                </span>
+              </label>
+            ) : null}
+            {needsAgeConfirmation ? (
+              <span
+                aria-disabled="true"
+                className="mt-4 block cursor-not-allowed bg-red/40 px-6 py-4 text-center text-lg text-cream"
+              >
+                Go to checkout
+              </span>
+            ) : (
+              <a
+                href={cart.checkoutUrl}
+                onClick={onCheckout}
+                className={`${cart.containsAlcohol ? 'mt-4' : 'mt-6'} block bg-red px-6 py-4 text-center text-lg text-cream transition-colors hover:bg-wine`}
+              >
+                Go to checkout
+              </a>
+            )}
+          </>
         )}
 
         <p className="mt-3 text-center text-xs text-ink-muted">

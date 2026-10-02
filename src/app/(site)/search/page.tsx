@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { AgeGate } from '@/components/commerce/AgeGate'
 import { SearchForm } from '@/components/layout/SearchForm'
 import { ProductGrid } from '@/components/product/ProductCard'
 import { searchProducts } from '@/lib/commerce'
@@ -27,13 +26,9 @@ export default async function SearchPage({
   const raw = (await searchParams).q
   const term = (Array.isArray(raw) ? raw[0] : raw)?.trim() ?? ''
   const { items, total } = term ? await searchProducts(term, RESULT_COUNT) : { items: [], total: 0 }
-  // Wine can turn up for any query, so the gate arms whenever it does.
-  const alcohol = items.some((item) => item.kind === 'wine' || item.kind === 'spirit')
 
   return (
     <>
-      {alcohol ? <AgeGate context="listing" /> : null}
-
       <section className="bg-green text-cream">
         <div className="mx-auto max-w-[1400px] px-4 py-12 lg:px-8 lg:py-16">
           <h1 className="font-display text-[length:var(--text-display)] leading-[0.92]">

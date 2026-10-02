@@ -221,10 +221,10 @@ export const NEWSLETTER = {
   incentive: '10% off your first order',
 } as const
 
-/** Age verification. Applied to alcohol routes and alcohol in the cart. */
+/**
+ * Age verification. A tick box beside the checkout button, shown only when
+ * the cart holds alcohol. There is no site-wide age popup.
+ */
 export const AGE_GATE = {
   minimumAge: 18,
-  /** How long a confirmed age check is remembered, in seconds. */
-  cookieMaxAge: 60 * 60 * 24 * 30,
-  cookieName: 'tpc_age_ok',
 } as const

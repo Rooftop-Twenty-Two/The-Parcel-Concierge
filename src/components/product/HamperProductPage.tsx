@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { AgeGate } from '@/components/commerce/AgeGate'
 import { DeliveryPromise } from '@/components/commerce/DeliveryPromise'
 import { AddToCart } from '@/components/product/AddToCart'
 import { ProductGallery } from '@/components/product/ProductGallery'
@@ -40,7 +39,6 @@ export function HamperProductPage({
   similar: ProductCard[]
 }) {
   const hamper = product.hamper
-  const containsAlcohol = hamper?.containsAlcohol ?? false
 
   const crumbs = [
     { name: 'Home', path: '/' },
@@ -50,8 +48,6 @@ export function HamperProductPage({
 
   return (
     <>
-      {containsAlcohol ? <AgeGate context="product" /> : null}
-
       <div className="mx-auto max-w-[1400px] px-4 py-8 lg:px-8">
         <nav aria-label="Breadcrumb" className="mb-6">
           <ol className="flex flex-wrap gap-2 text-sm text-ink-muted">

@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { AgeGate } from '@/components/commerce/AgeGate'
 import { CartView } from '@/components/cart/CartView'
 import { DeliveryPromise } from '@/components/commerce/DeliveryPromise'
 import { ProductGrid } from '@/components/product/ProductCard'
@@ -51,8 +50,6 @@ export default async function CartPage() {
 
   return (
     <>
-      {cart.containsAlcohol ? <AgeGate context="cart" /> : null}
-
       <div className="mx-auto max-w-[1400px] px-4 py-12 lg:px-8">
         <h1 className="font-display text-[length:var(--text-hero)] text-navy">Your cart</h1>
 

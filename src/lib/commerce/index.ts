@@ -549,6 +549,13 @@ export async function facetOptions(
  *
  * Builder box products and builder items are mechanisms with no page of
  * their own and are dropped, the same as on every listing.
+ *
+ * Shopify's search matches descriptions, tags and vendors too, so
+ * "sancerre" brought back picture frames whose copy happened to mention it.
+ * Results are narrowed to products whose title holds every word searched,
+ * the same rule the fixture search uses. Only when no title matches at all
+ * (a descriptive search like "red wine") do Shopify's wider results stand,
+ * so a search never comes back empty when something relevant exists.
  */
 export async function searchProducts(
   term: string,
@@ -567,7 +574,8 @@ export async function searchProducts(
     search: { totalCount: number; nodes: Parameters<typeof normaliseProductCard>[0][] }
   }>({
     query: SEARCH_PRODUCTS,
-    variables: { term: trimmed, first: Math.min(first, MAX_FIRST) },
+    // Ask for the full page: the title filter below throws most of it away.
+    variables: { term: trimmed, first: MAX_FIRST },
     tags: [TAG_ALL_PRODUCTS],
     revalidate: REVALIDATE.listing,
   })
@@ -579,7 +587,28 @@ export async function searchProducts(
     .filter((node) => typeof node?.handle === 'string' && !hidden.has(node.handle))
     .map(normaliseProductCard)
     .filter((card) => card.kind !== 'builder-item')
-  return { items, total: Math.max(items.length, data.search.totalCount - (data.search.nodes.length - items.length)) }
+
+  const words = searchWords(trimmed)
+  const titleMatches = items.filter((card) => {
+    const title = foldForSearch(card.title)
+    return words.every((word) => title.includes(word))
+  })
+  if (titleMatches.length > 0) {
+    return { items: titleMatches.slice(0, first), total: titleMatches.length }
+  }
+  return {
+    items: items.slice(0, first),
+    total: Math.max(items.length, data.search.totalCount - (data.search.nodes.length - items.length)),
+  }
+}
+
+/** Lower case with accents stripped, so "gerard" finds Gérard. */
+function foldForSearch(value: string): string {
+  return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+}
+
+function searchWords(term: string): string[] {
+  return foldForSearch(term).split(/\s+/).filter(Boolean)
 }
 
 export async function allProductHandles(): Promise<string[]> {

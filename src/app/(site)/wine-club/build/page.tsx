@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import { AgeGate } from '@/components/commerce/AgeGate'
 import { WineClubFlow } from '@/components/wine-club/Flow'
 import { isClubBuyable } from '@/lib/wine-club'
 
@@ -13,10 +12,5 @@ export const metadata: Metadata = {
 }
 
 export default function WineClubBuildPage() {
-  return (
-    <>
-      <AgeGate context="listing" />
-      <WineClubFlow clubBuyable={isClubBuyable()} />
-    </>
-  )
+  return <WineClubFlow clubBuyable={isClubBuyable()} />
 }

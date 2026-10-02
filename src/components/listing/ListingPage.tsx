@@ -3,7 +3,6 @@ import { notFound, redirect } from 'next/navigation'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { ProductGrid } from '@/components/product/ProductCard'
 import { ListingFilters } from '@/components/listing/ListingFilters'
-import { AgeGate } from '@/components/commerce/AgeGate'
 import { InkWaves } from '@/components/ui/Stamp'
 import { getCuratedListing, getListingCopy } from '@/lib/cms'
 import { facetOptions, queryListing, queryProducts } from '@/lib/commerce'
@@ -142,8 +141,6 @@ export async function ListingPage({
 
   return (
     <>
-      {collection.alcohol ? <AgeGate context="listing" /> : null}
-
       {/* A listing with a hero leads with it, full bleed, and the
           breadcrumb follows on cream. Pushing the breadcrumb above would
           put a thin strip of chrome over the one image on the page. */}

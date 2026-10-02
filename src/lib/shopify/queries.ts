@@ -401,6 +401,12 @@ const CART_FIELDS = /* GraphQL */ `
                   handle
                 }
               }
+              hamperContainsAlcohol: metafield(namespace: "hamper", key: "contains_alcohol") {
+                value
+              }
+              wineIsAlcoholFree: metafield(namespace: "wine", key: "is_alcohol_free") {
+                value
+              }
             }
           }
         }

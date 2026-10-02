@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { AgeGate } from '@/components/commerce/AgeGate'
 import { DeliveryPromise } from '@/components/commerce/DeliveryPromise'
 import { AddToCart } from '@/components/product/AddToCart'
 import { ProductGallery } from '@/components/product/ProductGallery'
@@ -61,9 +60,6 @@ export function WineProductPage({
 
   return (
     <>
-      {/* Alcohol free wine is not alcohol, so it is not gated. */}
-      {wine?.isAlcoholFree ? null : <AgeGate context="product" />}
-
       <div className="mx-auto max-w-[1400px] px-4 py-8 lg:px-8">
         <nav aria-label="Breadcrumb" className="mb-6">
           <ol className="flex flex-wrap gap-2 text-sm text-ink-muted">

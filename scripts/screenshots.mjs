@@ -69,7 +69,6 @@ const context = await browser.newContext({ deviceScaleFactor: 1 })
 
 // Confirm the age gate once so alcohol pages are not screenshotted behind it.
 await context.addCookies([
-  { name: 'tpc_age_ok', value: 'true', domain: 'localhost', path: '/' },
 ])
 
 for (const [path, name, viewport, fullPage] of pages) {

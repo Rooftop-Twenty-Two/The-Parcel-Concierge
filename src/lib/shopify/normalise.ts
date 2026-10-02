@@ -434,6 +434,8 @@ type RawCart = {
           title: string
           tags: string[]
           collections?: { nodes: { handle: string }[] }
+          hamperContainsAlcohol?: MetafieldValue
+          wineIsAlcoholFree?: MetafieldValue
         }
       }
     }[]
@@ -445,6 +447,19 @@ function isBottleLine(node: RawCart['lines']['nodes'][number]): boolean {
   const handles = product.collections?.nodes.map((n) => n.handle) ?? []
   const kind = kindFromMembership(handles, product.tags, null)
   return kind === 'wine' || kind === 'spirit'
+}
+
+/**
+ * Whether a cart line is alcohol, which puts the over-18 tick box on the
+ * cart. Wider than isBottleLine: a hamper with a bottle in it, or a beer
+ * tagged contains:alcohol, counts here without counting toward the bottle
+ * limit. Alcohol-free wine is a bottle but not alcohol.
+ */
+function isAlcoholLine(node: RawCart['lines']['nodes'][number]): boolean {
+  const product = node.merchandise.product
+  if (product.tags.includes('contains:alcohol')) return true
+  if (bool(product.hamperContainsAlcohol)) return true
+  return isBottleLine(node) && !bool(product.wineIsAlcoholFree)
 }
 
 export function normaliseCart(raw: RawCart): Cart {
@@ -465,7 +480,7 @@ export function normaliseCart(raw: RawCart): Cart {
     isBottle: isBottleLine(node),
   }))
 
-  const containsAlcohol = lines.some((line) => line.isBottle)
+  const containsAlcohol = raw.lines.nodes.some(isAlcoholLine)
 
   return {
     id: raw.id,

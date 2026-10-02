@@ -5,14 +5,12 @@ import Link from 'next/link'
 import { useEffect, useMemo, useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { addBuiltHamperAction } from '@/app/actions/hamper-builder'
-import { AgeGateDialog } from '@/components/commerce/AgeGateDialog'
 import { ItemsPicker, type PickerItem } from '@/components/builder/ItemsPicker'
 import { Button } from '@/components/ui/Button'
 import { trackHamperBuilderStep } from '@/lib/analytics/events'
 import { formatMinor } from '@/lib/commerce/money'
 import type { Product } from '@/lib/commerce/types'
 import { BOX_OPTIONS, boxById } from '@/lib/hamper-builder'
-import { AGE_GATE } from '@/lib/site-config'
 
 /**
  * The builder, as a four step wizard.
@@ -85,18 +83,7 @@ export function BuilderWizard({
   const [giftMessage, setGiftMessage] = useState('')
   const [bowAdded, setBowAdded] = useState(false)
   const [status, setStatus] = useState<{ kind: 'ok' | 'error'; message: string } | null>(null)
-  const [showAgeGate, setShowAgeGate] = useState(false)
-  const [ageConfirmed, setAgeConfirmed] = useState(false)
   const [hydrated, setHydrated] = useState(false)
-
-  // The age cookie is httpOnly, so the only way to know is to ask. Asked
-  // once on mount; confirming through the dialog updates it directly.
-  useEffect(() => {
-    fetch('/api/age-check')
-      .then((r) => (r.ok ? r.json() : { confirmed: false }))
-      .then((body: { confirmed?: boolean }) => setAgeConfirmed(Boolean(body.confirmed)))
-      .catch(() => setAgeConfirmed(false))
-  }, [])
 
   // Restore a half-built box after a reload.
   useEffect(() => {
@@ -179,10 +166,6 @@ export function BuilderWizard({
 
   function addToCart() {
     if (!boxVariant) return
-    if (containsAlcohol && !ageConfirmed) {
-      setShowAgeGate(true)
-      return
-    }
 
     startTransition(async () => {
       const result = await addBuiltHamperAction({
@@ -212,17 +195,6 @@ export function BuilderWizard({
 
   return (
     <>
-      {showAgeGate ? (
-        <AgeGateDialog
-          minimumAge={AGE_GATE.minimumAge}
-          context="cart"
-          onConfirmed={() => {
-            setShowAgeGate(false)
-            setAgeConfirmed(true)
-          }}
-        />
-      ) : null}
-
       <header className="bg-navy py-10 text-cream">
         <div className="mx-auto max-w-[1400px] px-4 lg:px-8">
           <p className="mb-2 text-xs uppercase tracking-[0.24em] text-gold">Made to order</p>

@@ -40,13 +40,15 @@ export async function GET(request: NextRequest) {
 
   const result = await queryProducts(query)
   // The builder box products themselves must never appear in the picker,
-  // and neither does anything priced at €0: on this store a €0 product is a
-  // placeholder or a mechanism, not something to put in a hamper.
+  // and neither does anything priced at €0 or without a photo: on this
+  // store those are placeholders or stock codes ("A04 3"), not something
+  // a shopper can choose by looking at it.
   const priceOf = (item: (typeof result.items)[number]) =>
     item.defaultVariantPriceMinor ?? item.priceRange.min.amountMinor
   const exclude = q ? undefined : shelf.exclude
   const pickable = result.items.filter(
-    (item) => item.kind !== 'builder-item' && priceOf(item) > 0 && !exclude?.test(item.title),
+    (item) =>
+      item.kind !== 'builder-item' && priceOf(item) > 0 && Boolean(item.image?.url) && !exclude?.test(item.title),
   )
   const start = PAGE_SIZE * (page - 1)
   const items = pickable.slice(start, start + PAGE_SIZE)

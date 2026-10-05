@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import { addBuiltHamperAction } from '@/app/actions/hamper-builder'
 import { ItemsPicker, type PickerItem, type PickerTab } from '@/components/builder/ItemsPicker'
 import { Button } from '@/components/ui/Button'
+import { announceCartChanged } from '@/lib/cart-events'
 import { trackHamperBuilderStep } from '@/lib/analytics/events'
 import { formatMinor } from '@/lib/commerce/money'
 import type { ResolvedBox } from '@/lib/hamper-builder'
@@ -189,6 +190,7 @@ export function BuilderWizard({
         } catch {
           // Losing the cleanup is harmless.
         }
+        announceCartChanged()
         router.refresh()
       } else {
         setStatus({ kind: 'error', message: result.message })

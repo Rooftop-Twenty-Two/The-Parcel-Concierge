@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState, useTransition } from 'react'
 import { removeLineAction, setGiftMessageAction, updateLineAction } from '@/app/actions/cart'
+import { announceCartChanged } from '@/lib/cart-events'
 import { Button } from '@/components/ui/Button'
 import {
   toAnalyticsItem,
@@ -141,6 +142,7 @@ export function CartView({ cart }: { cart: Cart }) {
                     onChange={(event) =>
                       startTransition(async () => {
                         await updateLineAction(line.id, Number(event.target.value))
+                        announceCartChanged()
                       })
                     }
                     className="border border-rule bg-white px-2 py-1"
@@ -159,6 +161,7 @@ export function CartView({ cart }: { cart: Cart }) {
                   onClick={() =>
                     startTransition(async () => {
                       await removeLineAction(line.id)
+                      announceCartChanged()
                     })
                   }
                   className="text-sm text-ink-muted underline underline-offset-4 hover:text-red"

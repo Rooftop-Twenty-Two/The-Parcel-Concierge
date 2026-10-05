@@ -5,6 +5,7 @@ import { useId, useState, useTransition } from 'react'
 import { addToCartAction } from '@/app/actions/cart'
 import { useVariantSelection } from '@/components/product/VariantSelector'
 import { Button } from '@/components/ui/Button'
+import { announceCartChanged } from '@/lib/cart-events'
 import { trackAddToCart, toAnalyticsItem } from '@/lib/analytics/events'
 import { formatMoney } from '@/lib/commerce/money'
 import { DELIVERY } from '@/lib/site-config'
@@ -86,6 +87,7 @@ export function AddToCart({
         // "3" quietly adds three more, and the first thing the shopper
         // knows about it is the cart.
         setQuantity(1)
+        announceCartChanged()
         router.refresh()
       } else {
         setStatus({ kind: 'error', message: result.message })

@@ -82,6 +82,7 @@ export const NAV = [
           { label: 'Organic and biodynamic', href: '/wine/organic-biodynamic' },
           { label: 'Wine gift sets', href: '/wine/gift-sets' },
           { label: 'Non alcoholic', href: '/wine/alcohol-free' },
+          { label: 'Liqueurs and cider', href: '/wine/liqueurs-cider' },
           { label: 'The Wine Vault Club', href: '/wine-club' },
         ],
       },

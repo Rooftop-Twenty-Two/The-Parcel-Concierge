@@ -435,6 +435,18 @@ const ALL_LISTINGS: readonly CollectionDef[] = [
     parentPath: '/wine',
   },
   {
+    slug: 'liqueurs-cider',
+    hub: 'wine',
+    path: '/wine/liqueurs-cider',
+    title: 'Liqueurs and cider',
+    h1: 'Liqueurs and cider',
+    // The merchant's Liqueurs and Cider collection (October 2026).
+    query: { ...WINE_BASE, collection: 'liqueurs-and-cider' },
+    alcohol: true,
+    facets: ['country', 'price'],
+    parentPath: '/wine',
+  },
+  {
     slug: 'port-dessert',
     hub: 'wine',
     path: '/wine/port-dessert',

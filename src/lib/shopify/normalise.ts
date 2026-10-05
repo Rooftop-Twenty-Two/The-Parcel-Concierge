@@ -121,6 +121,7 @@ const WINE_COLLECTION_HANDLES = new Set<string>([
   'port-and-sherry-1',
   'sherry-1',
   'liqueurs-1',
+  'liqueurs-and-cider',
   'sweet-wine',
   'non-alcoholic',
   'non-alcoholic-1',

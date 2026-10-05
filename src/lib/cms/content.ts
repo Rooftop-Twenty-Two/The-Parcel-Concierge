@@ -294,6 +294,12 @@ export const CONTENT: CmsData = {
         'Port, sherry and dessert wine: the after-dinner end of the list, and one of the easiest gifts to get right. Over 18s only.',
     },
     {
+      path: '/wine/liqueurs-cider',
+      metaTitle: 'Liqueurs and cider',
+      metaDescription:
+        'Liqueurs for after dinner and Irish cider for the table, from the shop in Dunshaughlin. Add a bottle to any hamper you build. Over 18s only.',
+    },
+    {
       path: '/wine/organic-biodynamic',
       metaTitle: 'Organic and biodynamic wine',
       metaDescription:
@@ -301,7 +307,7 @@ export const CONTENT: CmsData = {
     },
     {
       path: '/wine/alcohol-free',
-      metaTitle: 'Alcohol free wine and sparkling',
+      metaTitle: 'Non alcoholic wine and drinks',
       metaDescription:
         'Alcohol free wine and sparkling worth putting on the table, for the driver, the pregnant guest and anyone off it this month. No age restriction.',
     },

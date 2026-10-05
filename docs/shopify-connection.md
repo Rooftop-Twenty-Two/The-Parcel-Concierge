@@ -71,10 +71,15 @@ Check, in this order:
 
 ### 5. Webhooks, so the site updates itself
 
-Without this, a price change in Shopify takes up to an hour to appear.
+Without this, a product or price change in Shopify waits for the cache
+to expire: a minute for collection pages, up to an hour for product pages.
 
 Shopify admin → **Settings → Notifications → Webhooks**. Point all five at
-`https://<site>/api/webhooks/shopify`, format JSON:
+`https://the-parcel-concierge.vercel.app/api/webhooks/shopify`, format JSON,
+API version 2025-07. Not `www.theparcelconcierge.com`: that domain is also
+connected to the Shopify store, and Shopify refuses webhooks to the store's
+own domains ("Address cannot be any of the domains…"). The `.vercel.app`
+address is the same production site.
 
 - `products/create`
 - `products/update`

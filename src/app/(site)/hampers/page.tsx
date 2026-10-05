@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { HubPage } from '@/components/listing/HubPage'
-import { HAMPERS_COLLECTION } from '@/lib/commerce/collections'
+import { HAMPERS_COLLECTION, LISTING_PAGE_SIZE } from '@/lib/commerce/collections'
 import { getListingCopy } from '@/lib/cms'
 
 export const revalidate = 1800
@@ -24,7 +24,7 @@ export default function HampersHub() {
         src: '/photography/tpc-09-full.jpg',
         alt: 'An Irish food hamper packed with crisps, tea, preserves and coffee in a green gift box',
       }}
-      query={{ collection: HAMPERS_COLLECTION, sort: 'featured', first: 24 }}
+      query={{ collection: HAMPERS_COLLECTION, sort: 'featured', first: LISTING_PAGE_SIZE }}
       alcohol
       // The cards are the hamper price bands: while SEASONAL_HAMPERS_ONLY
       // is on (commerce/collections.ts) they are the only sub-listings in

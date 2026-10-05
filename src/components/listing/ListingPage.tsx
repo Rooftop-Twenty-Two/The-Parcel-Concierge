@@ -13,6 +13,7 @@ import {
 } from '@/lib/commerce/christmas-images'
 import { ListingHero } from '@/components/listing/ListingHero'
 import {
+  LISTING_PAGE_SIZE,
   MIN_PRODUCTS_PER_LISTING,
   type CollectionDef,
   type FacetKey,
@@ -72,7 +73,7 @@ export async function buildListingQuery(
 
   // Paging asks for more from the start rather than carrying a cursor in
   // the URL. See src/lib/commerce/pagination.ts for why.
-  query.first = firstForStep(collection.query.first ?? 24, step)
+  query.first = firstForStep(collection.query.first ?? LISTING_PAGE_SIZE, step)
 
   if (collection.curated) {
     const curated = await getCuratedListing(collection.path)
@@ -95,7 +96,7 @@ export async function ListingPage({
 }) {
   const facets = parseFacets(searchParams, collection.facets)
   const step = parseStep(searchParams.more)
-  const pageSize = collection.query.first ?? 24
+  const pageSize = collection.query.first ?? LISTING_PAGE_SIZE
   const query = await buildListingQuery(collection, facets, step)
 
   const [copy, fetched, shopifyIntro] = await Promise.all([

@@ -190,3 +190,12 @@ test('the Christmas page shows every product in its collection, sold out or not'
   assert.ok(christmas, '/occasions/christmas is in the registry')
   assert.equal(christmas.query.includeOutOfStock, true)
 })
+
+test('every collection listing shows 50 products per page', async () => {
+  const { LISTING_PAGE_SIZE } = await import('../src/lib/commerce/collections.ts')
+  assert.equal(LISTING_PAGE_SIZE, 50)
+  for (const c of COLLECTIONS) {
+    if (c.curated) continue
+    assert.equal(c.query.first, LISTING_PAGE_SIZE, `${c.path} shows ${c.query.first} per page`)
+  }
+})

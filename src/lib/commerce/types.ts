@@ -215,8 +215,9 @@ export type ProductQuery = {
   /**
    * A native Shopify collection handle. When set, the listing reads
    * collection(handle){products} instead of a tag/product_type search — this
-   * is the live store's real taxonomy. Price bounds below ride as Storefront
-   * collection filters; `sort` maps to ProductCollectionSortKeys.
+   * is the live store's real taxonomy. Listings read in the collection's
+   * manual (drag) order, with price bounds and stock applied in code;
+   * `sort` maps to ProductCollectionSortKeys.
    */
   collection?: string
   /**

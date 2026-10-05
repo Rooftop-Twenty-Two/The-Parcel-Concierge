@@ -121,15 +121,18 @@ const SORT_KEYS: Record<NonNullable<ProductQuery['sort']>, { sortKey: string; re
 
 /**
  * Collection product sorting uses ProductCollectionSortKeys, a different enum
- * from product search. `featured` maps to the collection's own manual order
- * (COLLECTION_DEFAULT) so a curated collection reads as the merchant arranged
- * it, not by best-seller.
+ * from product search. `featured` maps to MANUAL: the order the merchant
+ * dragged the products into in Shopify admin. Not COLLECTION_DEFAULT, which
+ * follows whatever sort the collection happens to be set to (best selling,
+ * newest, …), so a collection left on a non-manual sort silently ignored the
+ * arrangement. Every registry listing reads `featured`; the price sorts are
+ * left for the hamper builder's shelves.
  */
 const COLLECTION_SORT_KEYS: Record<
   NonNullable<ProductQuery['sort']>,
   { sortKey: string; reverse: boolean }
 > = {
-  featured: { sortKey: 'COLLECTION_DEFAULT', reverse: false },
+  featured: { sortKey: 'MANUAL', reverse: false },
   'price-asc': { sortKey: 'PRICE', reverse: false },
   'price-desc': { sortKey: 'PRICE', reverse: true },
   newest: { sortKey: 'CREATED', reverse: true },
@@ -228,15 +231,15 @@ async function productsByCollection(
   const hasPriceBand = query.minPriceMinor !== undefined || query.maxPriceMinor !== undefined
   const lo = query.minPriceMinor
   const hi = query.maxPriceMinor
-  // Manually-arranged collections (sort 'featured' -> COLLECTION_DEFAULT) must
-  // read in the merchant's drag order. Passing ANY Storefront `filters`
-  // argument routes the connection through Shopify's filter engine, which does
-  // not honour a collection's manual order, so an all-in-stock collection
-  // comes back reshuffled — the Easter listing regression, September 2026.
-  // For that case we send no filters and drop out-of-stock products in code
-  // instead. Price-banded or price-sorted listings are not in manual order to
-  // begin with, so they keep the efficient Storefront filter.
-  const preserveManualOrder = (query.sort ?? 'featured') === 'featured' && !hasPriceBand
+  // Collection listings (sort 'featured' -> MANUAL) must read in the
+  // merchant's drag order. Passing ANY Storefront `filters` argument routes
+  // the connection through Shopify's filter engine, which does not honour a
+  // collection's manual order, so an all-in-stock collection comes back
+  // reshuffled — the Easter listing regression, September 2026. For that case
+  // we send no filters and drop out-of-stock products, and products outside a
+  // price band, in code instead. Only an explicit price sort (the builder's
+  // shelves) keeps the Storefront filters.
+  const preserveManualOrder = (query.sort ?? 'featured') === 'featured'
   const dropOutOfStock = preserveManualOrder && !query.includeOutOfStock
   // Offset pagination (see pagination.ts) asks for `pageSize * step` products
   // from the start of the collection. When we drop out-of-stock in code, that
@@ -281,17 +284,16 @@ async function productsByCollection(
     // availability filter to preserve manual order (above). Otherwise Shopify
     // has already excluded them.
     .filter((node) => !dropOutOfStock || node.availableForSale !== false)
-    .map((node) => {
+    .flatMap((node) => {
       const card = normaliseProductCard(node)
-      if (!hasPriceBand) return card
+      if (!hasPriceBand) return [card]
       // Re-price to the cheapest AVAILABLE variant that is in the band, so a
       // multi-variant product reads its in-band price (and the quick-add adds
-      // that same variant). Falls back to the product's own range when none of
-      // the fetched variants land in the band.
+      // that same variant).
       const inBand = (node.variants?.nodes ?? [])
         .filter(
           (v): v is typeof v & { price: { amount: string; currencyCode: string } } =>
-            v.availableForSale !== false && Boolean(v.price),
+            (query.includeOutOfStock || v.availableForSale !== false) && Boolean(v.price),
         )
         .map((v) => ({ id: v.id, minor: money(v.price.amount, v.price.currencyCode).amountMinor }))
         .filter((v) => (lo === undefined || v.minor >= lo) && (hi === undefined || v.minor <= hi))
@@ -305,8 +307,13 @@ async function productsByCollection(
         }
         card.defaultVariantId = cheapest.id
         card.defaultVariantPriceMinor = cheapest.minor
+        return [card]
       }
-      return card
+      // No variant in the band. On the manual-order path the band is applied
+      // here, the same rule as Shopify's price filter (a product belongs when
+      // any variant is in range), so the product is out. On the filtered path
+      // Shopify already put it in the band; keep it on its own range.
+      return preserveManualOrder ? [] : [card]
     })
 
   // Narrow to the selected facets in code (only ever set on the manual-order
@@ -486,6 +493,23 @@ export async function queryListing(path: string, query: ProductQuery): Promise<P
   return { items, pageInfo: data.products.pageInfo, totalKnown: items.length }
 }
 
+/**
+ * Whether any of a collection product's variants is priced inside the
+ * query's band. Mirrors the band rule in productsByCollection, so a price-band
+ * listing's facet counts match its grid.
+ */
+function inPriceBand(node: CollectionNode, query: ProductQuery): boolean {
+  const lo = query.minPriceMinor
+  const hi = query.maxPriceMinor
+  if (lo === undefined && hi === undefined) return true
+  return (node.variants?.nodes ?? []).some((v) => {
+    if (!v.price) return false
+    if (!query.includeOutOfStock && v.availableForSale === false) return false
+    const minor = money(v.price.amount, v.price.currencyCode).amountMinor
+    return (lo === undefined || minor >= lo) && (hi === undefined || minor <= hi)
+  })
+}
+
 export async function facetOptions(
   query: ProductQuery,
   facet: string,
@@ -526,6 +550,7 @@ export async function facetOptions(
   for (const node of nodes) {
     if (hidden.has(node.handle)) continue
     if (!includeOutOfStock && node.availableForSale === false) continue
+    if (!inPriceBand(node, query)) continue
     const card = normaliseProductCard(node)
     if (!matchesFacets(card, others)) continue
     for (const value of cardFacetValues(card, facet)) {

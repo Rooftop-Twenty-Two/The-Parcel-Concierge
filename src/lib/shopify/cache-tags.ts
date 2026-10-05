@@ -25,14 +25,17 @@ export function cmsTag(documentType: string): string {
 /**
  * Revalidation windows.
  *
- * Product and listing pages are statically generated and revalidated on
- * demand by webhook, so the time-based window is a long backstop for a
- * missed webhook rather than the primary freshness mechanism. Stock and
- * price are verified live at add-to-cart regardless, so a stale page can
- * never complete a sale for something that is gone.
+ * Product and listing pages are revalidated on demand by webhook, and these
+ * windows are the backstop. Listings re-read Shopify every minute: dragging
+ * products into a new order in a collection does not reliably send a
+ * webhook, and the client expects the site to follow their order within a
+ * minute or two (October 2026). Storefront reads are cheap and cached
+ * between, so a minute costs one read per collection per minute at most.
+ * Stock and price are verified live at add-to-cart regardless, so a stale
+ * page can never complete a sale for something that is gone.
  */
 export const REVALIDATE = {
   product: 60 * 60,
-  listing: 60 * 30,
+  listing: 60,
   content: 60 * 60,
 } as const

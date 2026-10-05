@@ -10,7 +10,7 @@ import { productMetaDescription } from '@/lib/seo/meta-description'
 import { PRODUCT_DELIVERY_LINE } from '@/lib/seo/product-delivery-line'
 import { getTrustSummary } from '@/lib/trustpilot'
 
-export const revalidate = 3600
+export const revalidate = 60
 
 export async function generateStaticParams() {
   return hubStaticParams('wine')

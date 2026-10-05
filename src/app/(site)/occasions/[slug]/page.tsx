@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import { ListingPage, listingMetadata, type ListingSearchParams } from '@/components/listing/ListingPage'
 import { getCollection } from '@/lib/commerce/collections'
 
-export const revalidate = 1800
+export const revalidate = 60
 
 type Props = {
   params: Promise<{ slug: string }>

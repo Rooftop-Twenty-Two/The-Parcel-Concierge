@@ -3,7 +3,7 @@ import { HubPage } from '@/components/listing/HubPage'
 import { HAMPERS_COLLECTION, LISTING_PAGE_SIZE } from '@/lib/commerce/collections'
 import { getListingCopy } from '@/lib/cms'
 
-export const revalidate = 1800
+export const revalidate = 60
 
 export async function generateMetadata(): Promise<Metadata> {
   const copy = await getListingCopy('/hampers')

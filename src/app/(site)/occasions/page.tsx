@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { collectionsInHub } from '@/lib/commerce/collections'
 import { populatedListings } from '@/lib/commerce/populated'
 
-export const revalidate = 1800
+export const revalidate = 60
 
 export const metadata: Metadata = {
   title: 'Shop by occasion',

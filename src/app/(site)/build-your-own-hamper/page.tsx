@@ -8,7 +8,7 @@ import { visibleBuilderTabs } from '@/lib/builder-picker'
 import { BOX_OPTIONS, BUILDER_PARENT_HANDLE, type ResolvedBox } from '@/lib/hamper-builder'
 import { breadcrumbJsonLd } from '@/lib/seo/structured-data'
 
-export const revalidate = 900
+export const revalidate = 60
 
 export const metadata: Metadata = {
   title: 'Build your own hamper',

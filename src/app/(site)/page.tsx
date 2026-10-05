@@ -16,7 +16,7 @@ import { populatedListings } from '@/lib/commerce/populated'
 import type { ProductCard } from '@/lib/commerce/types'
 import { getTrustSummary } from '@/lib/trustpilot'
 
-export const revalidate = 1800
+export const revalidate = 60
 
 /**
  * The homepage is reachable as `/`, as `/?utm_source=...` from every

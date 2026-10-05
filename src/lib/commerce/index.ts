@@ -121,39 +121,19 @@ const SORT_KEYS: Record<NonNullable<ProductQuery['sort']>, { sortKey: string; re
 }
 
 /**
- * Collection product sorting uses ProductCollectionSortKeys, a different enum
- * from product search. `featured` maps to MANUAL: the order the merchant
- * dragged the products into in Shopify admin. Not COLLECTION_DEFAULT, which
- * follows whatever sort the collection happens to be set to (best selling,
- * newest, …), so a collection left on a non-manual sort silently ignored the
- * arrangement. Every registry listing reads `featured`; the price sorts are
- * left for the hamper builder's shelves.
+ * Every collection on the site reads in the merchant's manual order: the
+ * order the products are dragged into in Shopify admin (client rule,
+ * October 2026). Whatever sort a query asks for, a collection read ignores
+ * it. MANUAL, not COLLECTION_DEFAULT: the latter follows whatever sort the
+ * collection happens to be set to (best selling, newest, …), so a collection
+ * left on a non-manual sort silently ignored the arrangement.
+ *
+ * No Storefront `filters` are ever sent with it either: any filter routes
+ * the read through Shopify's filter engine, which does not honour manual
+ * order (the Easter listing regression, September 2026). Stock and price
+ * bands are applied in code instead.
  */
-const COLLECTION_SORT_KEYS: Record<
-  NonNullable<ProductQuery['sort']>,
-  { sortKey: string; reverse: boolean }
-> = {
-  featured: { sortKey: 'MANUAL', reverse: false },
-  'price-asc': { sortKey: 'PRICE', reverse: false },
-  'price-desc': { sortKey: 'PRICE', reverse: true },
-  newest: { sortKey: 'CREATED', reverse: true },
-}
-
-/**
- * Price band and stock as Storefront collection filters, because
- * collection.products has no free-text query arg. Mirrors buildSearchQuery:
- * out-of-stock excluded by default, min defaults to 0, max left open.
- */
-function buildCollectionFilters(query: ProductQuery): Record<string, unknown>[] {
-  const filters: Record<string, unknown>[] = []
-  if (!query.includeOutOfStock) filters.push({ available: true })
-  if (query.minPriceMinor !== undefined || query.maxPriceMinor !== undefined) {
-    const price: { min: number; max?: number } = { min: (query.minPriceMinor ?? 0) / 100 }
-    if (query.maxPriceMinor !== undefined) price.max = query.maxPriceMinor / 100
-    filters.push({ price })
-  }
-  return filters
-}
+const COLLECTION_ORDER = { sortKey: 'MANUAL', reverse: false } as const
 
 /**
  * Reads a listing from a native Shopify collection — the live store's real
@@ -224,7 +204,6 @@ async function productsByCollection(
   query: ProductQuery,
   tags: string[],
 ): Promise<ProductQueryResult> {
-  const sort = COLLECTION_SORT_KEYS[query.sort ?? 'featured']
   // A price band ("gifts €50-100") is a Storefront collection filter: Shopify
   // keeps any product with a VARIANT in range, so a "From €25" product with a
   // €60 option correctly belongs in €50-100. We then re-price the card to the
@@ -232,16 +211,9 @@ async function productsByCollection(
   const hasPriceBand = query.minPriceMinor !== undefined || query.maxPriceMinor !== undefined
   const lo = query.minPriceMinor
   const hi = query.maxPriceMinor
-  // Collection listings (sort 'featured' -> MANUAL) must read in the
-  // merchant's drag order. Passing ANY Storefront `filters` argument routes
-  // the connection through Shopify's filter engine, which does not honour a
-  // collection's manual order, so an all-in-stock collection comes back
-  // reshuffled — the Easter listing regression, September 2026. For that case
-  // we send no filters and drop out-of-stock products, and products outside a
-  // price band, in code instead. Only an explicit price sort (the builder's
-  // shelves) keeps the Storefront filters.
-  const preserveManualOrder = (query.sort ?? 'featured') === 'featured'
-  const dropOutOfStock = preserveManualOrder && !query.includeOutOfStock
+  // Always the merchant's manual order, with stock and price bands applied
+  // in code. See COLLECTION_ORDER.
+  const dropOutOfStock = !query.includeOutOfStock
   // Offset pagination (see pagination.ts) asks for `pageSize * step` products
   // from the start of the collection. When we drop out-of-stock in code, that
   // window comes up short — a sold-out product among the first 24 leaves 23, so
@@ -257,19 +229,17 @@ async function productsByCollection(
   // when a metafield facet is actually in play, so unfiltered listings and the
   // common card query stay lean.
   const activeFacets = Object.entries(query.facets ?? {}).filter(([, values]) => values.length > 0)
-  const facetFiltering = preserveManualOrder && activeFacets.length > 0
+  const facetFiltering = activeFacets.length > 0
   const withFacets = facetFiltering && activeFacets.some(([key]) => METAFIELD_FACETS.has(key))
   const products = await collectionPages(
     {
       handle: query.collection!,
-      sortKey: sort.sortKey,
-      reverse: sort.reverse,
-      filters: preserveManualOrder ? null : buildCollectionFilters(query),
+      ...COLLECTION_ORDER,
+      filters: null,
       withFacets,
     },
     tags,
-    preserveManualOrder ? MAX_LISTING : requested,
-    preserveManualOrder ? null : (query.after ?? null),
+    MAX_LISTING,
   )
   if (!products) {
     // Unknown collection handle: dark this one route rather than 500 the page.
@@ -281,9 +251,8 @@ async function productsByCollection(
   const hidden = new Set(HIDDEN_FROM_LISTINGS)
   const filtered = products.nodes
     .filter((node) => !hidden.has(node.handle))
-    // Out-of-stock is filtered in code only when we dropped the Storefront
-    // availability filter to preserve manual order (above). Otherwise Shopify
-    // has already excluded them.
+    // Out-of-stock is filtered in code: a Storefront availability filter
+    // would reshuffle the manual order. See COLLECTION_ORDER.
     .filter((node) => !dropOutOfStock || node.availableForSale !== false)
     .flatMap((node) => {
       const card = normaliseProductCard(node)
@@ -310,34 +279,25 @@ async function productsByCollection(
         card.defaultVariantPriceMinor = cheapest.minor
         return [card]
       }
-      // No variant in the band. On the manual-order path the band is applied
-      // here, the same rule as Shopify's price filter (a product belongs when
-      // any variant is in range), so the product is out. On the filtered path
-      // Shopify already put it in the band; keep it on its own range.
-      return preserveManualOrder ? [] : [card]
+      // No variant in the band. The band is applied here, the same rule as
+      // Shopify's price filter (a product belongs when any variant is in
+      // range), so the product is out.
+      return []
     })
 
-  // Narrow to the selected facets in code (only ever set on the manual-order
-  // path), preserving order. No-op when nothing is selected.
+  // Narrow to the selected facets in code, preserving order. No-op when
+  // nothing is selected.
   const faceted = facetFiltering
     ? filtered.filter((card) => matchesFacets(card, query.facets ?? {}))
     : filtered
 
-  if (preserveManualOrder) {
-    // We over-fetched the whole collection, so `faceted` is every in-stock
-    // product that matches the filters, in manual order. Hand back the
-    // requested window and report the true total, so the grid fills and
-    // "Show more" is accurate.
-    return {
-      items: faceted.slice(0, requested),
-      pageInfo: { hasNextPage: faceted.length > requested, endCursor: null },
-      totalKnown: faceted.length,
-    }
-  }
-
+  // We over-fetched the whole collection, so `faceted` is every in-stock
+  // product that matches the filters, in manual order. Hand back the
+  // requested window and report the true total, so the grid fills and
+  // "Show more" is accurate.
   return {
-    items: faceted,
-    pageInfo: { hasNextPage: products.hasNextPage, endCursor: null },
+    items: faceted.slice(0, requested),
+    pageInfo: { hasNextPage: faceted.length > requested, endCursor: null },
     totalKnown: faceted.length,
   }
 }
@@ -520,7 +480,6 @@ export async function facetOptions(
   // products in the collection, so a non-collection query has nothing to offer.
   if (!query.collection) return []
 
-  const sort = COLLECTION_SORT_KEYS[query.sort ?? 'featured']
   // The whole collection, so the counts match the whole grid. No Storefront
   // filters: we tally in code so options match the grid, and filters would
   // reshuffle the collection. Always fetch the metafields — building the
@@ -528,8 +487,7 @@ export async function facetOptions(
   const products = await collectionPages(
     {
       handle: query.collection,
-      sortKey: sort.sortKey,
-      reverse: sort.reverse,
+      ...COLLECTION_ORDER,
       filters: null,
       withFacets: true,
     },

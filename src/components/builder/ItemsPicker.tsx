@@ -221,11 +221,6 @@ function PickerCard({
         ) : (
           <div className="aspect-square w-full bg-beige" />
         )}
-        {item.alcohol ? (
-          <span className="absolute left-2 top-2 bg-navy px-1.5 py-0.5 text-[10px] uppercase tracking-[0.12em] text-cream">
-            Over 18s
-          </span>
-        ) : null}
       </div>
 
       <div className="flex flex-1 flex-col p-2">

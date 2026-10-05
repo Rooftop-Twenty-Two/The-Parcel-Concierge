@@ -24,6 +24,17 @@ export const BUILDER_PREMIUM_HANDLE = 'build-a-premium-hamper'
 export const BUILDER_BOW_HANDLE = 'gift-bow'
 
 /**
+ * The wicker baskets, offered as containers on the builder's first step
+ * alongside the display hampers. The medium basket's live handle really is
+ * `small-basket`.
+ */
+export const WICKER_BASKET_HANDLES = {
+  small: 'small-wicker-basket',
+  medium: 'small-basket',
+  large: 'large-wicker-basket',
+} as const
+
+/**
  * Products that exist in Shopify but must never appear in a listing, in a
  * grid, in the sitemap, or at a product URL of their own.
  *
@@ -36,6 +47,9 @@ export const HIDDEN_FROM_LISTINGS: ReadonlySet<string> = new Set([
   BUILDER_PARENT_HANDLE,
   BUILDER_PREMIUM_HANDLE,
   BUILDER_BOW_HANDLE,
+  // A basket on its own is not a gift; it is sold only as the container of
+  // a built hamper. Hiding it here also keeps it off the picker's shelves.
+  ...Object.values(WICKER_BASKET_HANDLES),
 ])
 
 /**

@@ -65,11 +65,18 @@ export async function addBuiltHamperAction(input: {
     }
   }
 
+  if (box.maxBottles !== undefined && (input.bottlesAdded ?? 0) > box.maxBottles) {
+    return {
+      ok: false,
+      message: `The ${box.title} takes ${box.maxBottles === 1 ? 'one bottle' : `${box.maxBottles} bottles`} at most. Take a bottle out, or pick a bigger basket.`,
+    }
+  }
+
   const total = input.components.reduce((sum, c) => sum + c.quantity, 0)
   if (total > box.capacity) {
     return {
       ok: false,
-      message: `${box.variantTitle} holds ${box.capacity} things. Take ${total - box.capacity} out, or move up a box size.`,
+      message: `${box.title} holds ${box.capacity} things. Take ${total - box.capacity} out, or move up a box size.`,
     }
   }
 
@@ -96,7 +103,7 @@ export async function addBuiltHamperAction(input: {
   const parentAttributes: CartLineAttribute[] = [
     { key: BUNDLE_ATTRIBUTES.id, value: bundleId },
     { key: BUNDLE_ATTRIBUTES.role, value: 'parent' },
-    { key: BUNDLE_ATTRIBUTES.box, value: box.variantTitle },
+    { key: BUNDLE_ATTRIBUTES.box, value: box.title },
   ]
   if (input.giftMessage.trim()) {
     parentAttributes.push({
@@ -113,7 +120,7 @@ export async function addBuiltHamperAction(input: {
     { key: BUNDLE_ATTRIBUTES.role, value: 'component' },
     // Visible to the customer and on the packing slip, so a component line
     // never reads as a loose item somebody added by accident.
-    { key: BUNDLE_ATTRIBUTES.componentOf, value: box.variantTitle },
+    { key: BUNDLE_ATTRIBUTES.componentOf, value: box.title },
   ]
 
   const cart = await addLines([

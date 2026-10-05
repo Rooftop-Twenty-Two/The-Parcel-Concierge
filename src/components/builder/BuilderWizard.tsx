@@ -9,8 +9,7 @@ import { ItemsPicker, type PickerItem } from '@/components/builder/ItemsPicker'
 import { Button } from '@/components/ui/Button'
 import { trackHamperBuilderStep } from '@/lib/analytics/events'
 import { formatMinor } from '@/lib/commerce/money'
-import type { Product } from '@/lib/commerce/types'
-import { BOX_OPTIONS, boxById } from '@/lib/hamper-builder'
+import type { ResolvedBox } from '@/lib/hamper-builder'
 
 /**
  * The builder, as a four step wizard.
@@ -67,10 +66,11 @@ function loadPersisted(): PersistedState | null {
 }
 
 export function BuilderWizard({
-  parent,
+  boxes,
   bow,
 }: {
-  parent: Product
+  /** The containers on offer, boxes then baskets, with live prices. */
+  boxes: readonly ResolvedBox[]
   /** The gift-bow product's buyable variant, or null when the store has none. */
   bow: { variantId: string; priceMinor: number } | null
 }) {
@@ -78,7 +78,7 @@ export function BuilderWizard({
   const [pending, startTransition] = useTransition()
 
   const [step, setStep] = useState<StepId>('box')
-  const [boxId, setBoxId] = useState(BOX_OPTIONS[1]?.id ?? BOX_OPTIONS[0]!.id)
+  const [boxId, setBoxId] = useState(boxes.find((b) => b.id === 'medium')?.id ?? boxes[0]!.id)
   const [chosen, setChosen] = useState<Record<string, Chosen>>({})
   const [giftMessage, setGiftMessage] = useState('')
   const [bowAdded, setBowAdded] = useState(false)
@@ -110,8 +110,8 @@ export function BuilderWizard({
     }
   }, [hydrated, step, boxId, chosen, giftMessage, bowAdded])
 
-  const box = boxById(boxId) ?? BOX_OPTIONS[0]!
-  const boxVariant = parent.variants.find((v) => v.title === box.variantTitle) ?? parent.variants[0]
+  // A persisted id for a container no longer offered falls back to the first.
+  const box = boxes.find((b) => b.id === boxId) ?? boxes[0]!
 
   const chosenList = useMemo(
     () => Object.values(chosen).filter((c) => c.quantity > 0 && c.item.variantId),
@@ -120,9 +120,11 @@ export function BuilderWizard({
   const itemCount = chosenList.reduce((sum, c) => sum + c.quantity, 0)
   const contentsMinor = chosenList.reduce((sum, c) => sum + c.item.priceMinor * c.quantity, 0)
   const bowMinor = bowAdded && bow ? bow.priceMinor : 0
-  const totalMinor = contentsMinor + bowMinor + (boxVariant?.price.amountMinor ?? 0)
+  const totalMinor = contentsMinor + bowMinor + box.priceMinor
   const overCapacity = itemCount > box.capacity
   const containsAlcohol = chosenList.some((c) => c.item.alcohol)
+  const bottleCount = chosenList.reduce((sum, c) => sum + (c.item.alcohol ? c.quantity : 0), 0)
+  const overBottles = box.maxBottles !== undefined && bottleCount > box.maxBottles
 
   function adjust(item: PickerItem, delta: number) {
     setStatus(null)
@@ -156,6 +158,7 @@ export function BuilderWizard({
       case 'items':
         if (itemCount === 0) return 'Put something in it'
         if (overCapacity) return `${box.capacity} fit in this one`
+        if (overBottles) return `${box.maxBottles === 1 ? 'One bottle fits' : `${box.maxBottles} bottles fit`} in this one`
         return null
       case 'extras':
         return null
@@ -165,16 +168,14 @@ export function BuilderWizard({
   })()
 
   function addToCart() {
-    if (!boxVariant) return
-
     startTransition(async () => {
       const result = await addBuiltHamperAction({
-        boxVariantId: boxVariant.id,
+        boxVariantId: box.variantId,
         boxId: box.id,
         components: chosenList.map((c) => ({ variantId: c.item.variantId!, quantity: c.quantity })),
         giftMessage,
         bowVariantId: bowAdded && bow ? bow.variantId : null,
-        bottlesAdded: chosenList.reduce((sum, c) => sum + (c.item.alcohol ? c.quantity : 0), 0),
+        bottlesAdded: bottleCount,
       })
 
       if (result.ok) {
@@ -214,29 +215,40 @@ export function BuilderWizard({
       <main className="mx-auto max-w-[1400px] px-4 pb-44 pt-10 lg:px-8">
         {step === 'box' ? (
           <StepShell title="Choose your hamper box or wicker basket" lede="Every size is packed the same way: by hand, hand tied, built so nothing moves.">
-            <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {BOX_OPTIONS.map((option) => {
-                const variant = parent.variants.find((v) => v.title === option.variantTitle)
-                return (
-                  <li key={option.id}>
-                    <CardChoice
-                      selected={boxId === option.id}
-                      onSelect={() => setBoxId(option.id)}
-                      title={option.variantTitle}
-                      price={variant ? formatMinor(variant.price.amountMinor) : undefined}
-                      body={option.description}
-                    />
-                  </li>
-                )
-              })}
-            </ul>
+            {(
+              [
+                { kind: 'box', heading: 'Hamper boxes' },
+                { kind: 'basket', heading: 'Wicker baskets' },
+              ] as const
+            ).map(({ kind, heading }) => {
+              const options = boxes.filter((option) => option.kind === kind)
+              if (!options.length) return null
+              return (
+                <section key={kind} className="mt-8 first:mt-0">
+                  <h3 className="mb-4 text-xs uppercase tracking-[0.24em] text-ink-muted">{heading}</h3>
+                  <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {options.map((option) => (
+                      <li key={option.id}>
+                        <CardChoice
+                          selected={box.id === option.id}
+                          onSelect={() => setBoxId(option.id)}
+                          title={option.title}
+                          price={formatMinor(option.priceMinor)}
+                          body={option.description}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )
+            })}
           </StepShell>
         ) : null}
 
         {step === 'items' ? (
           <StepShell
             title="Fill it"
-            lede={`${box.variantTitle} holds up to ${box.capacity} things. Browse the shelves or search the whole shop.`}
+            lede={`${box.title} holds up to ${box.capacity} things. Browse the shelves or search the whole shop.`}
           >
             <ItemsPicker
               quantities={Object.fromEntries(chosenList.map((c) => [c.item.id, c.quantity]))}
@@ -295,7 +307,7 @@ export function BuilderWizard({
               <div>
                 <ReviewRow
                   label="Box or basket"
-                  value={`${box.variantTitle}${boxVariant ? `, ${formatMinor(boxVariant.price.amountMinor)}` : ''}`}
+                  value={`${box.title}, ${formatMinor(box.priceMinor)}`}
                   onEdit={() => goTo('box')}
                 />
                 <ReviewRow
@@ -357,8 +369,8 @@ export function BuilderWizard({
                 <h3 className="font-serif text-xl text-navy">Your hamper</h3>
                 <dl className="mt-4 space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <dt className="text-ink-muted">{box.variantTitle}</dt>
-                    <dd className="text-navy">{boxVariant ? formatMinor(boxVariant.price.amountMinor) : ''}</dd>
+                    <dt className="text-ink-muted">{box.title}</dt>
+                    <dd className="text-navy">{formatMinor(box.priceMinor)}</dd>
                   </div>
                   <div className="flex justify-between">
                     <dt className="text-ink-muted">
@@ -418,7 +430,7 @@ export function BuilderWizard({
         <div className="mx-auto flex max-w-[1400px] flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3 lg:px-8">
           <div className="min-w-0">
             <p className="truncate text-sm text-navy">
-              {box.variantTitle}
+              {box.title}
               <span className={overCapacity ? 'text-red' : 'text-ink-muted'}>
                 {' '}
                 · {itemCount}/{box.capacity} things

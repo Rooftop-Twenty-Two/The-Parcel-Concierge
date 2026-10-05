@@ -4,7 +4,7 @@ import { BuilderWizard } from '@/components/builder/BuilderWizard'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { getProduct } from '@/lib/commerce'
 import { BUILDER_BOW_HANDLE } from '@/lib/commerce/collections'
-import { BUILDER_PARENT_HANDLE } from '@/lib/hamper-builder'
+import { BOX_OPTIONS, BUILDER_PARENT_HANDLE, type ResolvedBox } from '@/lib/hamper-builder'
 import { breadcrumbJsonLd } from '@/lib/seo/structured-data'
 
 export const revalidate = 900
@@ -31,9 +31,13 @@ export const metadata: Metadata = {
  * page itself ships only the box options.
  */
 export default async function BuildYourOwnHamperPage() {
-  const [parent, bowProduct] = await Promise.all([
+  const basketHandles = [
+    ...new Set(BOX_OPTIONS.filter((b) => b.kind === 'basket').map((b) => b.productHandle)),
+  ]
+  const [parent, bowProduct, ...basketProducts] = await Promise.all([
     getProduct(BUILDER_PARENT_HANDLE),
     getProduct(BUILDER_BOW_HANDLE),
+    ...basketHandles.map((handle) => getProduct(handle)),
   ])
   if (!parent) {
     // Without the parent product there is no box to sell, and half a
@@ -48,9 +52,27 @@ export default async function BuildYourOwnHamperPage() {
   const bowVariant = bowProduct?.variants[0] ?? null
   const bow = bowVariant ? { variantId: bowVariant.id, priceMinor: bowVariant.price.amountMinor } : null
 
+  // Each container resolved to its live variant and price. A box is a
+  // variant of the parent product; a basket is a product of its own. A
+  // container whose product or variant is missing, or a basket that is sold
+  // out, is simply not offered. (The boxes are not stock-tracked the same
+  // way, and the add-to-cart action verifies stock for both anyway.)
+  const products = new Map(
+    [parent, ...basketProducts].filter((p) => p !== null).map((p) => [p.handle, p]),
+  )
+  const boxes: ResolvedBox[] = BOX_OPTIONS.flatMap((option) => {
+    const product = products.get(option.productHandle)
+    const variant = option.variantTitle
+      ? product?.variants.find((v) => v.title === option.variantTitle)
+      : product?.variants[0]
+    if (!variant || (option.kind === 'basket' && variant.availableForSale === false)) return []
+    return [{ ...option, variantId: variant.id, priceMinor: variant.price.amountMinor }]
+  })
+  if (!boxes.length) notFound()
+
   return (
     <>
-      <BuilderWizard parent={parent} bow={bow} />
+      <BuilderWizard boxes={boxes} bow={bow} />
       <JsonLd
         data={breadcrumbJsonLd([
           { name: 'Home', path: '/' },

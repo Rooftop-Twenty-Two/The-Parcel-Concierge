@@ -46,41 +46,104 @@
  * Defined in the collection registry, which also hides it from every
  * listing, and re-exported here so the builder has one import.
  */
-export { BUILDER_PARENT_HANDLE } from './commerce/collections'
+import { BUILDER_PARENT_HANDLE, WICKER_BASKET_HANDLES } from './commerce/collections'
+export { BUILDER_PARENT_HANDLE }
 
+/**
+ * What the hamper goes in. Two kinds, chosen on the same first step:
+ *
+ *   box     a display hamper, one variant of the build-a-hamper parent
+ *           product, picked by variant title.
+ *   basket  a wicker basket, which on the live store is a product of its
+ *           own (one variant each), picked by handle.
+ *
+ * Either way the chosen variant becomes the bundle's parent cart line.
+ */
 export type BoxOption = {
   id: string
-  /** Must match the parent product's variant title in Shopify. */
-  variantTitle: string
+  kind: 'box' | 'basket'
+  /** The name the shopper sees, and the Box attribute on the order. */
+  title: string
+  /** The Shopify product the container is sold as. */
+  productHandle: string
+  /**
+   * For a box: must match the parent product's variant title in Shopify.
+   * Unset for a basket, whose product has a single variant.
+   */
+  variantTitle?: string
   description: string
   /** How many components fit. */
   capacity: number
+  /** Most bottles it takes, when the container has a limit of its own. */
+  maxBottles?: number
 }
 
-// variantTitle values must match the live build-a-hamper product's variant
-// titles EXACTLY (note the lower-case "medium"). Capacities are our own
-// guidance — the real per-box limits live in a Giftship app metafield the
-// Storefront token cannot read, so these are sensible defaults.
+// Box variantTitle values must match the live build-a-hamper product's
+// variant titles EXACTLY (note the lower-case "medium"). Box capacities are
+// our own guidance — the real per-box limits live in a Giftship app
+// metafield the Storefront token cannot read, so these are sensible
+// defaults. Basket capacities and bottle limits are the ones in the wicker
+// basket product titles. Prices are never set here: they are read live
+// from Shopify.
 export const BOX_OPTIONS: readonly BoxOption[] = [
   {
     id: 'small',
+    kind: 'box',
+    title: 'Display Hamper (Small)',
+    productHandle: BUILDER_PARENT_HANDLE,
     variantTitle: 'Display Hamper (Small)',
     description: 'Our small display hamper, packed and hand tied by us. Room for up to four things.',
     capacity: 4,
   },
   {
     id: 'medium',
+    kind: 'box',
+    title: 'Display Hamper (Medium)',
+    productHandle: BUILDER_PARENT_HANDLE,
     variantTitle: 'Display Hamper (medium)',
     description: 'The medium display hamper. Room for up to six things, including a bottle.',
     capacity: 6,
   },
   {
     id: 'large',
+    kind: 'box',
+    title: 'Display Hamper (Large)',
+    productHandle: BUILDER_PARENT_HANDLE,
     variantTitle: 'Display Hamper (Large)',
     description: 'The large display hamper, with room for bottles. Up to nine things.',
     capacity: 9,
   },
+  {
+    id: 'wicker-small',
+    kind: 'basket',
+    title: 'Small Wicker Basket',
+    productHandle: WICKER_BASKET_HANDLES.small,
+    description: 'A wicker basket to keep. Room for up to nine things, with one bottle of wine.',
+    capacity: 9,
+    maxBottles: 1,
+  },
+  {
+    id: 'wicker-medium',
+    kind: 'basket',
+    title: 'Medium Wicker Basket',
+    productHandle: WICKER_BASKET_HANDLES.medium,
+    description: 'A wicker basket to keep. Room for up to twelve things, with two bottles of wine.',
+    capacity: 12,
+    maxBottles: 2,
+  },
+  {
+    id: 'wicker-large',
+    kind: 'basket',
+    title: 'Large Wicker Basket',
+    productHandle: WICKER_BASKET_HANDLES.large,
+    description: 'Our largest wicker basket. Room for up to eighteen things, with two bottles of wine.',
+    capacity: 18,
+    maxBottles: 2,
+  },
 ]
+
+/** A container with its live Shopify variant and price, as the wizard sees it. */
+export type ResolvedBox = BoxOption & { variantId: string; priceMinor: number }
 
 /**
  * The optional hand tied bow. The charge rides on the gift-bow mechanism
@@ -136,6 +199,12 @@ export type PickerShelf = {
   collection: string
   /** True when everything on the shelf is alcohol. */
   alcohol: boolean
+  /**
+   * Titles to keep off this shelf. For when the merchant's collection holds
+   * things that do not belong on it; the products stay findable by search
+   * and on the shelves they do belong to.
+   */
+  exclude?: RegExp
 }
 
 export const PICKER_SHELVES: readonly PickerShelf[] = [
@@ -148,7 +217,15 @@ export const PICKER_SHELVES: readonly PickerShelf[] = [
   { id: 'beauty', label: 'Beauty and bath', collection: 'beauty', alcohol: false },
   { id: 'homeware', label: 'Homeware and kitchen', collection: 'homeware', alcohol: false },
   { id: 'baby', label: 'Baby and children', collection: 'baby', alcohol: false },
-  { id: 'jewellery', label: 'Jewellery and accessories', collection: 'jewellery', alcohol: false },
+  {
+    id: 'jewellery',
+    label: 'Jewellery and accessories',
+    collection: 'jewellery',
+    alcohol: false,
+    // The live Jewellery collection also holds socks and keyrings (client
+    // report, October 2026).
+    exclude: /\bsocks?\b|key[\s-]?rings?/i,
+  },
   { id: 'cards', label: 'Cards and stationery', collection: 'greeting-cards', alcohol: false },
 ]
 

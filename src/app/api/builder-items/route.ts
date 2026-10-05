@@ -39,8 +39,15 @@ export async function GET(request: NextRequest) {
     : { collection: shelf.collection, sort: 'price-asc', first: PAGE_SIZE * page }
 
   const result = await queryProducts(query)
-  // The builder box products themselves must never appear in the picker.
-  const pickable = result.items.filter((item) => item.kind !== 'builder-item')
+  // The builder box products themselves must never appear in the picker,
+  // and neither does anything priced at €0: on this store a €0 product is a
+  // placeholder or a mechanism, not something to put in a hamper.
+  const priceOf = (item: (typeof result.items)[number]) =>
+    item.defaultVariantPriceMinor ?? item.priceRange.min.amountMinor
+  const exclude = q ? undefined : shelf.exclude
+  const pickable = result.items.filter(
+    (item) => item.kind !== 'builder-item' && priceOf(item) > 0 && !exclude?.test(item.title),
+  )
   const start = PAGE_SIZE * (page - 1)
   const items = pickable.slice(start, start + PAGE_SIZE)
 
@@ -50,11 +57,13 @@ export async function GET(request: NextRequest) {
         id: item.id,
         handle: item.handle,
         title: item.title,
-        priceMinor: item.defaultVariantPriceMinor ?? item.priceRange.min.amountMinor,
+        priceMinor: priceOf(item),
         image: item.image ? { url: item.image.url, alt: item.image.alt } : null,
         variantId: item.defaultVariantId,
-        // The age gate arms off this: wine and spirits always, and the
-        // stray beers and cream liqueurs the importer flagged.
+        // Counts bottles against the basket's limit and the order cap, and
+        // arms the over-18 delivery note at review. No badge on the card.
+        // Wine and spirits always, plus the stray beers and cream liqueurs
+        // the importer flagged.
         alcohol:
           item.kind === 'wine' || item.kind === 'spirit' || item.tags.includes('contains:alcohol'),
       })),

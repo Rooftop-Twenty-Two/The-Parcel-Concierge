@@ -393,8 +393,8 @@ async function FeaturedHampers({
 }: {
   slot: Extract<HomepageSlot, { kind: 'featured-hampers' }>
 }) {
-  // The seasonal hamper collection, read from the one constant the hub and
-  // /occasions/christmas also read, so the homepage can never end up showing
+  // The general hamper collection, read from the one constant the hub and
+  // the budget bands also read, so the homepage can never end up showing
   // a different range from the rest of the site. slot.title drives the
   // heading; the slot no longer carries handles, because this band has not
   // been a hand-picked list since the range went Christmas-only.

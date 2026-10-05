@@ -7,6 +7,7 @@ import { storefront } from '../shopify/client'
 import { hasStorefrontCredentials } from '../shopify/env'
 import { normaliseProduct, normaliseProductCard } from '../shopify/normalise'
 import {
+  COLLECTION_DESCRIPTION,
   PRODUCT_BY_HANDLE,
   PRODUCT_CARD_BY_HANDLE,
   PRODUCTS_BY_COLLECTION,
@@ -677,6 +678,26 @@ export async function allProductHandles(): Promise<string[]> {
     after = data.products.pageInfo.endCursor
   }
   return handles
+}
+
+/**
+ * The merchant's description of a collection, trimmed, or null when there is
+ * none, the collection is missing, or Shopify cannot be reached. Page copy
+ * that reads it always has a fallback, so a failure here is never an error.
+ */
+export async function collectionDescription(handle: string): Promise<string | null> {
+  if (isFixtureMode()) return null
+  try {
+    const data = await storefront<{ collection: { description: string } | null }>({
+      query: COLLECTION_DESCRIPTION,
+      variables: { handle },
+      tags: [TAG_ALL_PRODUCTS],
+      revalidate: REVALIDATE.listing,
+    })
+    return data.collection?.description.trim() || null
+  } catch {
+    return null
+  }
 }
 
 // ---------------------------------------------------------------------------

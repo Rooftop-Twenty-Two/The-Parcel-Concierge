@@ -181,53 +181,10 @@ export function componentCount(selection: Pick<BuilderSelection, 'components'>):
 }
 
 /**
- * The picker's shelves, in the order the chips appear.
- *
- * The full shop is behind these: every published product in the client's
- * export is either on the main site (wine, offered here from the live
- * catalogue) or a quarantined builder item in one of the importer's aisles.
- * Each shelf maps to a query the commerce layer can answer, so adding one
- * does not mean touching the builder UI.
- *
- * Hamper staples come first. Cards are late on purpose: a card is the last
- * thing you pick up in the shop too.
+ * The picker's tabs live in src/lib/build-a-hamper-tabs.ts, one Shopify
+ * collection each, so they can be renamed, reordered or added to without
+ * touching the builder.
  */
-export type PickerShelf = {
-  id: string
-  label: string
-  /** The native Shopify collection whose products fill the shelf. */
-  collection: string
-  /** True when everything on the shelf is alcohol. */
-  alcohol: boolean
-  /**
-   * Titles to keep off this shelf. For when the merchant's collection holds
-   * things that do not belong on it; the products stay findable by search
-   * and on the shelves they do belong to.
-   */
-  exclude?: RegExp
-}
-
-export const PICKER_SHELVES: readonly PickerShelf[] = [
-  { id: 'all', label: 'Everything', collection: 'all-gifts', alcohol: false },
-  { id: 'food', label: 'Food and larder', collection: 'all-food', alcohol: false },
-  { id: 'chocolate', label: 'Chocolate and sweet things', collection: 'chocolate-confectionery-1', alcohol: false },
-  { id: 'wine', label: 'Wine and Champagne', collection: 'fine-wines-1', alcohol: true },
-  { id: 'cellar', label: 'Champagne and sparkling', collection: 'champagne-and-prosecco-1', alcohol: true },
-  { id: 'candles', label: 'Candles and fragrance', collection: 'candles-diffusers', alcohol: false },
-  { id: 'beauty', label: 'Beauty and bath', collection: 'beauty', alcohol: false },
-  { id: 'homeware', label: 'Homeware and kitchen', collection: 'homeware', alcohol: false },
-  { id: 'baby', label: 'Baby and children', collection: 'baby', alcohol: false },
-  {
-    id: 'jewellery',
-    label: 'Jewellery and accessories',
-    collection: 'jewellery',
-    alcohol: false,
-    // The live Jewellery collection also holds socks and keyrings (client
-    // report, October 2026).
-    exclude: /\bsocks?\b|key[\s-]?rings?/i,
-  },
-  { id: 'cards', label: 'Cards and stationery', collection: 'greeting-cards', alcohol: false },
-]
 
 // There is no delivery-country choice: we deliver within the Republic of
 // Ireland only (confirmed by the client, August 2026). The wizard used to

@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { queryProducts } from '@/lib/commerce'
-import type { ProductQuery } from '@/lib/commerce/types'
-import { PICKER_SHELVES } from '@/lib/hamper-builder'
+import type { ProductCard } from '@/lib/commerce/types'
+import { BUILDER_TABS } from '@/lib/build-a-hamper-tabs'
+import { isPickable, tabItems, toPickerCard } from '@/lib/builder-picker'
 
 export const dynamic = 'force-dynamic'
 
@@ -9,7 +10,8 @@ export const dynamic = 'force-dynamic'
  * The hamper builder's picker, served a page at a time.
  *
  * Two thousand products cannot ride into the page as props, so the picker
- * asks for a shelf at a time: GET /api/builder-items?shelf=food&q=&page=1.
+ * asks for a tab at a time: GET /api/builder-items?shelf=food&q=&page=1.
+ * The tabs and their collections live in src/lib/build-a-hamper-tabs.ts.
  *
  * This is the only surface on the site that will answer a query for the
  * quarantined `builder-item` kind. It returns card data, never full
@@ -21,57 +23,38 @@ const MAX_PAGE = 20
 
 export async function GET(request: NextRequest) {
   const params = request.nextUrl.searchParams
-  const shelfId = params.get('shelf') ?? 'all'
+  const shelfId = params.get('shelf') ?? ''
   const q = (params.get('q') ?? '').slice(0, 60).trim()
   const page = Math.min(Math.max(Number.parseInt(params.get('page') ?? '1', 10) || 1, 1), MAX_PAGE)
 
-  const shelf = PICKER_SHELVES.find((s) => s.id === shelfId)
-  if (!shelf) {
-    return NextResponse.json({ error: 'No such shelf' }, { status: 400 })
+  let pickable: ProductCard[]
+  let shopifyHasMore = false
+  if (q) {
+    // A collection has no free-text arg, so a search runs across the whole
+    // shop by title, whichever tab is open. The dull paging trade again (see
+    // src/lib/commerce/pagination.ts): ask for everything up to this page
+    // and slice.
+    const result = await queryProducts({ text: q, sort: 'price-asc', first: PAGE_SIZE * page })
+    pickable = result.items.filter(isPickable)
+    shopifyHasMore = result.pageInfo.hasNextPage
+  } else {
+    const tab = BUILDER_TABS.find((t) => t.id === shelfId)
+    if (!tab) {
+      return NextResponse.json({ error: 'No such shelf' }, { status: 400 })
+    }
+    // The whole tab, in the collection's manual order. See tabItems.
+    pickable = await tabItems(tab)
   }
 
-  // A native collection has no free-text arg, so a search runs across the
-  // whole shop by title; an unsearched shelf reads its collection. The dull
-  // paging trade again (see src/lib/commerce/pagination.ts): ask for
-  // everything up to this page and slice.
-  const query: ProductQuery = q
-    ? { text: q, sort: 'price-asc', first: PAGE_SIZE * page }
-    : { collection: shelf.collection, sort: 'price-asc', first: PAGE_SIZE * page }
-
-  const result = await queryProducts(query)
-  // The builder box products themselves must never appear in the picker,
-  // and neither does anything priced at €0 or without a photo: on this
-  // store those are placeholders or stock codes ("A04 3"), not something
-  // a shopper can choose by looking at it.
-  const priceOf = (item: (typeof result.items)[number]) =>
-    item.defaultVariantPriceMinor ?? item.priceRange.min.amountMinor
-  const exclude = q ? undefined : shelf.exclude
-  const pickable = result.items.filter(
-    (item) =>
-      item.kind !== 'builder-item' && priceOf(item) > 0 && Boolean(item.image?.url) && !exclude?.test(item.title),
-  )
   const start = PAGE_SIZE * (page - 1)
   const items = pickable.slice(start, start + PAGE_SIZE)
 
   return NextResponse.json(
     {
-      items: items.map((item) => ({
-        id: item.id,
-        handle: item.handle,
-        title: item.title,
-        priceMinor: priceOf(item),
-        image: item.image ? { url: item.image.url, alt: item.image.alt } : null,
-        variantId: item.defaultVariantId,
-        // Counts bottles against the basket's limit and the order cap, and
-        // arms the over-18 delivery note at review. No badge on the card.
-        // Wine and spirits always, plus the stray beers and cream liqueurs
-        // the importer flagged.
-        alcohol:
-          item.kind === 'wine' || item.kind === 'spirit' || item.tags.includes('contains:alcohol'),
-      })),
+      items: items.map(toPickerCard),
       page,
-      hasMore: pickable.length > start + PAGE_SIZE || result.pageInfo.hasNextPage,
-      total: result.totalKnown,
+      hasMore: pickable.length > start + PAGE_SIZE || shopifyHasMore,
+      total: pickable.length,
     },
     // The catalogue moves slowly; the picker does not need to be fresher
     // than the listings are. Netlify-Vary is load bearing: Netlify's CDN

@@ -308,6 +308,9 @@ export const CONTENT: CmsData = {
     {
       path: '/wine/alcohol-free',
       metaTitle: 'Non alcoholic wine and drinks',
+      // Shown only when the Shopify collection has no description of its own.
+      intro:
+        'Alcohol-free wine and sparkling worth putting on the table, for the driver, the pregnant guest and anyone off it this month.',
       metaDescription:
         'Alcohol free wine and sparkling worth putting on the table, for the driver, the pregnant guest and anyone off it this month. No age restriction.',
     },

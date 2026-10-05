@@ -519,3 +519,15 @@ export const SEARCH_PRODUCTS = /* GraphQL */ `
     }
   }
 `
+
+/**
+ * A collection's own description, as the merchant wrote it in Shopify admin.
+ * Plain text, so it can sit in a paragraph without being trusted as HTML.
+ */
+export const COLLECTION_DESCRIPTION = /* GraphQL */ `
+  query CollectionDescription($handle: String!) {
+    collection(handle: $handle) {
+      description
+    }
+  }
+`

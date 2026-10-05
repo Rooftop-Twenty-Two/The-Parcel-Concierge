@@ -113,6 +113,19 @@ export type CollectionDef = {
    * matching path.
    */
   curated?: boolean
+  /**
+   * Lead with the Shopify collection's own description as the intro when it
+   * has one, ahead of the CMS intro. For pages whose copy the merchant
+   * keeps in Shopify admin.
+   */
+  introFromShopify?: boolean
+  /**
+   * For a listing linked from the menu before it has stock. Under the
+   * four-product floor it renders this message in place of the grid, kept
+   * out of search, instead of redirecting to its parent: a menu link that
+   * bounces to a different page looks broken.
+   */
+  comingSoon?: string
 }
 
 const HAMPER_BASE: ProductQuery = { sort: 'featured', first: 24 }
@@ -125,7 +138,6 @@ const WINE_BASE: ProductQuery = { sort: 'featured', first: 24 }
  * hampers are retired for the season. While SEASONAL_HAMPERS_ONLY is true:
  *   - the /hampers hub grid reads HAMPERS_COLLECTION (see hampers/page.tsx)
  *   - the homepage featured band reads it too
- *   - /occasions/christmas reads it
  *   - "More hampers" on a product page reads it (commerce/similar.ts)
  *   - the hamper price bands read it too, so "Shop by budget" on the
  *     homepage and the hub's cards lead to the live range
@@ -160,6 +172,22 @@ export const SEASONAL_HAMPERS_ONLY = true
  * fails the build via collections:validate.
  */
 export const SEASONAL_HAMPERS_COLLECTION = 'christmas-2026'
+
+/**
+ * The merchant's "Christmas 2026" collection, which fills /occasions/christmas
+ * in its manual order. It is a separate collection from General Hampers 2026
+ * (client, October 2026), and the two stay separate on the site: the hampers
+ * hub, homepage band and budget bands read HAMPERS_COLLECTION, never this.
+ *
+ * Not to be confused with the handle `christmas-2026` above, which belongs to
+ * General Hampers 2026. Shopify will have given the new collection a
+ * different handle (likely with a -1 suffix); read it from the collection's
+ * admin URL or `npm run builder:tabs`, never from the title.
+ *
+ * Null until the handle is confirmed against the store. While null, the
+ * Christmas page falls back to the general range, as it did before.
+ */
+export const CHRISTMAS_COLLECTION: string | null = null
 
 export const HAMPERS_COLLECTION = SEASONAL_HAMPERS_ONLY
   ? SEASONAL_HAMPERS_COLLECTION
@@ -381,11 +409,12 @@ const ALL_LISTINGS: readonly CollectionDef[] = [
     hub: 'wine',
     path: '/wine/alcohol-free',
     title: 'Non alcoholic',
-    h1: 'Non alcoholic',
+    h1: 'Non-alcoholic wine and drinks',
     // The merchant's new Non Alcoholic collection (October 2026), which
     // replaces the older non-alcoholic-1. The URL stays /wine/alcohol-free
     // so existing links and search results keep working.
     query: { ...WINE_BASE, collection: 'non-alcoholic' },
+    introFromShopify: true,
     alcohol: false,
     facets: ['style'],
     parentPath: '/wine',
@@ -442,6 +471,10 @@ const ALL_LISTINGS: readonly CollectionDef[] = [
     h1: 'Liqueurs and cider',
     // The merchant's Liqueurs and Cider collection (October 2026).
     query: { ...WINE_BASE, collection: 'liqueurs-and-cider' },
+    // Empty until the merchant tags products into it (October 2026), and it
+    // is in the menu already.
+    comingSoon:
+      'Our liqueurs and cider are on their way to the shelf. In the meantime, the rest of the Wine Vault is open.',
     alcohol: true,
     facets: ['country', 'price'],
     parentPath: '/wine',
@@ -513,10 +546,9 @@ const ALL_LISTINGS: readonly CollectionDef[] = [
     path: '/occasions/christmas',
     title: 'Christmas gifts and hampers',
     h1: 'Christmas gifts and hampers',
-    // Reads the live hamper range, not a Christmas-specific collection: while
-    // SEASONAL_HAMPERS_ONLY is on there is exactly one range and this page
-    // must not disagree with the hub about what is in it.
-    query: { collection: HAMPERS_COLLECTION, sort: 'featured', first: 24 },
+    // The merchant's Christmas 2026 collection, in its manual order. See
+    // CHRISTMAS_COLLECTION for the interim fallback.
+    query: { collection: CHRISTMAS_COLLECTION ?? HAMPERS_COLLECTION, sort: 'featured', first: 24 },
     alcohol: true,
     facets: ['price', 'recipient'],
     parentPath: '/occasions',
@@ -844,31 +876,6 @@ export const PENDING_MERCHANT_COLLECTIONS: ReadonlySet<string> = new Set([
  * COLLECTIONS) so collections:validate keeps checking every mapped handle
  * regardless of the seasonal flag.
  */
-/**
- * The Build a Box picker's shelves, by collection handle.
- *
- * Kept here rather than read from hamper-builder.ts so this module stays
- * free of runtime imports: the ingest tool, the redirect validator and
- * collections:validate all read it directly. A test asserts this list and
- * PICKER_SHELVES agree, so they cannot drift.
- *
- * They are listed so the build checks them. A picker shelf pointing at a
- * collection that does not exist is a dead shelf in the builder, and
- * before this the build had no opinion about it.
- */
-export const BUILDER_SHELF_COLLECTIONS: readonly string[] = [
-  'all-gifts',
-  'all-food',
-  'chocolate-confectionery-1',
-  'fine-wines-1',
-  'champagne-and-prosecco-1',
-  'candles-diffusers',
-  'beauty',
-  'homeware',
-  'baby',
-  'jewellery',
-  'greeting-cards',
-]
 
 /**
  * Derived from the ACTIVE registry, not from ALL_LISTINGS.
@@ -883,6 +890,5 @@ export const MAPPED_COLLECTION_HANDLES: readonly string[] = [
   ...new Set([
     HAMPERS_COLLECTION,
     ...COLLECTIONS.map((c) => c.query.collection).filter((h): h is string => typeof h === 'string'),
-    ...BUILDER_SHELF_COLLECTIONS,
   ]),
 ]

@@ -3,7 +3,6 @@ import { test } from 'node:test'
 import { join } from 'node:path'
 import {
   BUILDER_PARENT_HANDLE,
-  BUILDER_SHELF_COLLECTIONS,
   COLLECTIONS,
   MAPPED_COLLECTION_HANDLES,
   HIDDEN_FROM_LISTINGS,
@@ -143,17 +142,45 @@ test('the hamper builder parent is hidden from listings and has one URL', () => 
   assert.equal(rule.destination, '/build-your-own-hamper')
 })
 
-test('every Build a Box shelf is a collection the build checks', async () => {
-  const { PICKER_SHELVES } = await import('../src/lib/hamper-builder.ts')
-  const checked = new Set(BUILDER_SHELF_COLLECTIONS)
-  for (const shelf of PICKER_SHELVES) {
-    assert.ok(
-      checked.has(shelf.collection),
-      `the ${shelf.id} shelf reads ${shelf.collection}, which collections:validate would not check`,
-    )
+test('the Build a Hamper tabs are the thirteen agreed, in order', async () => {
+  const { BUILDER_TABS } = await import('../src/lib/build-a-hamper-tabs.ts')
+  assert.deepEqual(
+    BUILDER_TABS.map((t) => t.label),
+    [
+      'Food & Larder',
+      'Chocolate & Sweet Things',
+      'Red Wine',
+      'White Wine',
+      'Champagne',
+      'Sparkling',
+      'Candles & Fragrance',
+      'Beauty & Bath',
+      'Homeware & Kitchen',
+      'Baby & Children',
+      'Jewellery',
+      'Accessories',
+      'Cards & Stationery',
+    ],
+  )
+  assert.equal(new Set(BUILDER_TABS.map((t) => t.id)).size, BUILDER_TABS.length, 'tab ids must be unique')
+  assert.equal(new Set(BUILDER_TABS.map((t) => t.order)).size, BUILDER_TABS.length, 'tab orders must be unique')
+  for (const tab of BUILDER_TABS) {
+    assert.match(tab.title, /^Build a Hamper – /, `${tab.id} should read a Build a Hamper collection`)
   }
-  const mapped = new Set(MAPPED_COLLECTION_HANDLES)
-  for (const handle of BUILDER_SHELF_COLLECTIONS) {
-    assert.ok(mapped.has(handle), `${handle} is missing from MAPPED_COLLECTION_HANDLES`)
+})
+
+test('the Build a Hamper tabs never read a main-site collection', async () => {
+  // The builder has its own collections so the client can stock it without
+  // touching a listing. A tab pointed at, say, red-wines-1 would tie them.
+  const { BUILDER_TAB_HANDLES } = await import('../src/lib/build-a-hamper-tabs.ts')
+  const listings = new Set(MAPPED_COLLECTION_HANDLES)
+  for (const handle of BUILDER_TAB_HANDLES) {
+    assert.ok(!listings.has(handle), `${handle} is a main-site collection`)
   }
+  assert.equal(new Set(BUILDER_TAB_HANDLES).size, BUILDER_TAB_HANDLES.length, 'two tabs share a collection')
+})
+
+test('Christmas and the general hamper range are separate collections', async () => {
+  const { CHRISTMAS_COLLECTION, HAMPERS_COLLECTION } = await import('../src/lib/commerce/collections.ts')
+  assert.notEqual(CHRISTMAS_COLLECTION, HAMPERS_COLLECTION)
 })

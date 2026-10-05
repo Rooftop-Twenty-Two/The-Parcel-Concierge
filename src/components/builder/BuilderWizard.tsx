@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useEffect, useMemo, useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { addBuiltHamperAction } from '@/app/actions/hamper-builder'
-import { ItemsPicker, type PickerItem } from '@/components/builder/ItemsPicker'
+import { ItemsPicker, type PickerItem, type PickerTab } from '@/components/builder/ItemsPicker'
 import { Button } from '@/components/ui/Button'
 import { trackHamperBuilderStep } from '@/lib/analytics/events'
 import { formatMinor } from '@/lib/commerce/money'
@@ -68,9 +68,12 @@ function loadPersisted(): PersistedState | null {
 export function BuilderWizard({
   boxes,
   bow,
+  tabs,
 }: {
   /** The containers on offer, boxes then baskets, with live prices. */
   boxes: readonly ResolvedBox[]
+  /** The picker's tabs, already stripped of empty ones. */
+  tabs: readonly PickerTab[]
   /** The gift-bow product's buyable variant, or null when the store has none. */
   bow: { variantId: string; priceMinor: number } | null
 }) {
@@ -251,6 +254,7 @@ export function BuilderWizard({
             lede={`${box.title} holds up to ${box.capacity} things. Browse the shelves or search the whole shop.`}
           >
             <ItemsPicker
+              tabs={tabs}
               quantities={Object.fromEntries(chosenList.map((c) => [c.item.id, c.quantity]))}
               onAdjust={adjust}
             />

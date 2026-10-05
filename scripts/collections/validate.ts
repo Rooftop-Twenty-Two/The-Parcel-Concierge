@@ -20,6 +20,7 @@ import {
   MIN_PRODUCTS_PER_LISTING,
   PENDING_MERCHANT_COLLECTIONS,
 } from '../../src/lib/commerce/collections.ts'
+import { BUILDER_TABS } from '../../src/lib/build-a-hamper-tabs.ts'
 
 function readEnv(): Record<string, string> {
   const env: Record<string, string> = {}
@@ -144,6 +145,22 @@ for (const { handle, available } of results.sort((a, b) => a.handle.localeCompar
   } else {
     console.log(`  ✓  ${available === 50 ? '50+' : available} available: ${handle}`)
   }
+}
+
+// The Build a Hamper tabs. Warnings only: the picker hides a tab whose
+// collection is missing or empty, so a builder collection the client
+// removes must not block a deploy of the whole site.
+console.log('\n[collections:validate] Build a Hamper tabs (warnings only)')
+for (const tab of BUILDER_TABS) {
+  if (!tab.handle) {
+    console.warn(`  …  no handle yet, tab hidden: ${tab.label} ("${tab.title}")`)
+    continue
+  }
+  const { available } = await countAvailable(tab.handle)
+  if (available === 'error') console.warn(`  ?  could not verify (API error): ${tab.handle}`)
+  else if (available === -1) console.warn(`  ✗  missing on the store, tab hidden: ${tab.handle}`)
+  else if (available === 0) console.warn(`  ~  nothing available, tab hidden: ${tab.handle}`)
+  else console.log(`  ✓  ${available === 50 ? '50+' : available} available: ${tab.handle}`)
 }
 
 console.log(

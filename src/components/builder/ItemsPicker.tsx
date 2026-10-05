@@ -4,7 +4,6 @@ import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui/Button'
 import { formatMinor } from '@/lib/commerce/money'
-import { PICKER_SHELVES } from '@/lib/hamper-builder'
 
 /**
  * The picker: the whole shop, one shelf at a time.
@@ -32,15 +31,21 @@ type PickerResponse = {
   total: number
 }
 
+/** A tab the picker offers. The server decides which, see builder-picker.ts. */
+export type PickerTab = { id: string; label: string }
+
 export function ItemsPicker({
+  tabs,
   quantities,
   onAdjust,
 }: {
+  /** The tabs with something on them, in order. Empty ones never arrive. */
+  tabs: readonly PickerTab[]
   /** item.id → quantity, owned by the wizard so the box survives step changes. */
   quantities: Record<string, number>
   onAdjust: (item: PickerItem, delta: number) => void
 }) {
-  const [shelf, setShelf] = useState('all')
+  const [shelf, setShelf] = useState(tabs[0]?.id ?? '')
   const [search, setSearch] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
   const [pages, setPages] = useState<PickerItem[][]>([])
@@ -57,6 +62,14 @@ export function ItemsPicker({
   }, [search])
 
   useEffect(() => {
+    // No tabs and no search: nothing to ask for.
+    if (!shelf && !debouncedSearch) {
+      setPages([])
+      setHasMore(false)
+      setTotal(null)
+      setLoading(false)
+      return
+    }
     let cancelled = false
     const seq = ++requestSeq.current
     setLoading(true)
@@ -111,7 +124,7 @@ export function ItemsPicker({
     <div>
       {/* The aisles. */}
       <div className="flex gap-2 overflow-x-auto pb-2" role="tablist" aria-label="Categories">
-        {PICKER_SHELVES.map((s) => (
+        {tabs.map((s) => (
           <button
             key={s.id}
             type="button"
@@ -176,7 +189,9 @@ export function ItemsPicker({
 
       {!loading && !failed && items.length === 0 ? (
         <div className="mt-8 border border-rule bg-beige px-6 py-10 text-center text-ink-muted">
-          Nothing matches. Try another word, or another shelf.
+          {shelf || debouncedSearch
+            ? 'Nothing matches. Try another word, or another shelf.'
+            : 'Search the whole shop above to fill your hamper.'}
         </div>
       ) : null}
 

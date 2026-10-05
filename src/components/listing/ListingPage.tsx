@@ -5,7 +5,7 @@ import { ProductGrid } from '@/components/product/ProductCard'
 import { ListingFilters } from '@/components/listing/ListingFilters'
 import { InkWaves } from '@/components/ui/Stamp'
 import { getCuratedListing, getListingCopy } from '@/lib/cms'
-import { facetOptions, queryListing, queryProducts } from '@/lib/commerce'
+import { collectionDescription, facetOptions, queryListing, queryProducts } from '@/lib/commerce'
 import {
   CHRISTMAS_IMAGE_PATHS,
   LISTING_HEROES,
@@ -98,12 +98,18 @@ export async function ListingPage({
   const pageSize = collection.query.first ?? 24
   const query = await buildListingQuery(collection, facets, step)
 
-  const [copy, fetched] = await Promise.all([
+  const [copy, fetched, shopifyIntro] = await Promise.all([
     getListingCopy(collection.path),
     collection.curated
       ? queryProducts(query)
       : queryListing(collection.path, query),
+    collection.introFromShopify && collection.query.collection
+      ? collectionDescription(collection.query.collection)
+      : null,
   ])
+  // The merchant's own words from Shopify lead where the listing asks for
+  // them; the CMS intro is the fallback.
+  const intro = shopifyIntro ?? copy?.intro ?? null
 
   // The Christmas listing shows the hampers dressed for Christmas; every
   // other listing shows the product's own image. Same products, same
@@ -114,8 +120,14 @@ export async function ListingPage({
     : fetched
 
   // The min-four rule applies to the unfiltered listing. A filter that
-  // returns nothing is a legitimate empty state, not a broken route.
-  if (!hasActiveFilters(facets) && result.items.length < MIN_PRODUCTS_PER_LISTING) {
+  // returns nothing is a legitimate empty state, not a broken route. A
+  // listing marked comingSoon is already in the menu, so it stays put and
+  // says so rather than bouncing the reader somewhere else.
+  const comingSoon =
+    collection.comingSoon !== undefined &&
+    !hasActiveFilters(facets) &&
+    result.items.length < MIN_PRODUCTS_PER_LISTING
+  if (!comingSoon && !hasActiveFilters(facets) && result.items.length < MIN_PRODUCTS_PER_LISTING) {
     if (collection.parentPath === collection.path) notFound()
     redirect(collection.parentPath)
   }
@@ -144,7 +156,7 @@ export async function ListingPage({
       {/* A listing with a hero leads with it, full bleed, and the
           breadcrumb follows on cream. Pushing the breadcrumb above would
           put a thin strip of chrome over the one image on the page. */}
-      {hero ? <ListingHero content={hero} h1={collection.h1} intro={copy?.intro ?? null} /> : null}
+      {hero ? <ListingHero content={hero} h1={collection.h1} intro={intro} /> : null}
 
       <nav aria-label="Breadcrumb" className="mx-auto max-w-[1400px] px-4 pt-6 lg:px-8">
         <ol className="flex flex-wrap gap-2 text-sm text-ink-muted">
@@ -170,12 +182,10 @@ export async function ListingPage({
           <h1 className="font-display text-[length:var(--text-display)] text-navy">
             {collection.h1}
           </h1>
-          {/* copy?.intro, not copy: an entry can now carry a title and a
+          {/* The intro, not copy: an entry can now carry a title and a
               meta description with no page copy, and `copy ?` would render
               an empty paragraph under the h1 for every one of those. */}
-          {copy?.intro ? (
-            <p className="prose-tpc mt-4 text-lg text-ink-muted">{copy.intro}</p>
-          ) : null}
+          {intro ? <p className="prose-tpc mt-4 text-lg text-ink-muted">{intro}</p> : null}
         </header>
       )}
 
@@ -194,7 +204,9 @@ export async function ListingPage({
           ) : null}
 
           <div className={showFilters ? 'mt-6 lg:mt-0' : undefined}>
-            {result.items.length ? (
+            {comingSoon && result.items.length === 0 ? (
+              <ComingSoonState message={collection.comingSoon!} parentPath={collection.parentPath} />
+            ) : result.items.length ? (
               <>
                 <ProductGrid products={result.items} priorityCount={4} />
                 <ShowMore
@@ -279,6 +291,18 @@ export function ShowMore({
   )
 }
 
+function ComingSoonState({ message, parentPath }: { message: string; parentPath: string }) {
+  return (
+    <div className="mt-10 border border-rule bg-beige px-6 py-14 text-center">
+      <h2 className="font-serif text-2xl text-navy">Coming soon</h2>
+      <p className="mx-auto mt-2 max-w-xl text-ink-muted">{message}</p>
+      <Link href={parentPath} className="mt-5 inline-block text-navy underline underline-offset-4">
+        Browse the rest
+      </Link>
+    </div>
+  )
+}
+
 function EmptyFilterState({ basePath }: { basePath: string }) {
   return (
     <div className="mt-10 border border-rule bg-beige px-6 py-14 text-center">
@@ -323,6 +347,11 @@ export async function listingMetadata(
   const copy = await getListingCopy(collection.path)
   const facets = parseFacets(searchParams, collection.facets)
   const filtered = hasActiveFilters(facets)
+  // A coming-soon listing with nothing on it yet is kept out of search
+  // until it fills. The same cached read the page makes.
+  const empty =
+    collection.comingSoon !== undefined &&
+    (await queryListing(collection.path, collection.query)).items.length < MIN_PRODUCTS_PER_LISTING
 
   return {
     title: copy?.metaTitle ?? collection.title,
@@ -336,7 +365,11 @@ export async function listingMetadata(
     // A filtered view is shareable, but it must not compete with the listing
     // it came from, and its links only lead to more filter combinations, so a
     // crawler is told not to follow them either.
-    robots: filtered ? { index: false, follow: false } : undefined,
+    robots: filtered
+      ? { index: false, follow: false }
+      : empty
+        ? { index: false, follow: true }
+        : undefined,
   }
 }
 

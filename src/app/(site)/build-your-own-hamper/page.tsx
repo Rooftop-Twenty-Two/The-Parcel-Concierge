@@ -4,6 +4,7 @@ import { BuilderWizard } from '@/components/builder/BuilderWizard'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { getProduct } from '@/lib/commerce'
 import { BUILDER_BOW_HANDLE } from '@/lib/commerce/collections'
+import { visibleBuilderTabs } from '@/lib/builder-picker'
 import { BOX_OPTIONS, BUILDER_PARENT_HANDLE, type ResolvedBox } from '@/lib/hamper-builder'
 import { breadcrumbJsonLd } from '@/lib/seo/structured-data'
 
@@ -27,13 +28,16 @@ export const metadata: Metadata = {
  * The full shop is behind it. The main site sells hampers and wine; every
  * other product the client publishes is a quarantined builder item, and
  * this wizard is the only place it can be seen or bought. The picker
- * fetches the catalogue a shelf at a time from /api/builder-items, so the
- * page itself ships only the box options.
+ * fetches the catalogue a tab at a time from /api/builder-items, so the
+ * page itself ships only the box options and the tab list. The tabs are
+ * configured in src/lib/build-a-hamper-tabs.ts; an empty one is not offered.
  */
 export default async function BuildYourOwnHamperPage() {
   const basketHandles = [
     ...new Set(BOX_OPTIONS.filter((b) => b.kind === 'basket').map((b) => b.productHandle)),
   ]
+  // Started first so it runs alongside the product reads.
+  const tabsRead = visibleBuilderTabs()
   const [parent, bowProduct, ...basketProducts] = await Promise.all([
     getProduct(BUILDER_PARENT_HANDLE),
     getProduct(BUILDER_BOW_HANDLE),
@@ -69,10 +73,11 @@ export default async function BuildYourOwnHamperPage() {
     return [{ ...option, variantId: variant.id, priceMinor: variant.price.amountMinor }]
   })
   if (!boxes.length) notFound()
+  const tabs = await tabsRead
 
   return (
     <>
-      <BuilderWizard boxes={boxes} bow={bow} />
+      <BuilderWizard boxes={boxes} bow={bow} tabs={tabs} />
       <JsonLd
         data={breadcrumbJsonLd([
           { name: 'Home', path: '/' },

@@ -1,5 +1,5 @@
 import { money } from '../commerce/money'
-import { HAMPERS_COLLECTION } from '../commerce/collections'
+import { CHRISTMAS_COLLECTION, HAMPERS_COLLECTION } from '../commerce/collections'
 import type {
   Cart,
   CartLine,
@@ -138,8 +138,11 @@ const WINE_COLLECTION_HANDLES = new Set<string>([
  * So it is listed here explicitly. Without this, a product whose only
  * collection is the seasonal one and which carries no type: tag reads as a
  * gift: its card links to /gifts/ and its /hampers/<handle> page 404s.
+ * The Christmas 2026 collection is a hamper range too, with its own handle.
  */
-const HAMPER_COLLECTION_HANDLES = new Set<string>([HAMPERS_COLLECTION])
+const HAMPER_COLLECTION_HANDLES = new Set<string>(
+  [HAMPERS_COLLECTION, CHRISTMAS_COLLECTION].filter((h): h is string => h !== null),
+)
 
 export function kindFromMembership(
   collectionHandles: readonly string[],

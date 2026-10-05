@@ -380,9 +380,12 @@ const ALL_LISTINGS: readonly CollectionDef[] = [
     slug: 'alcohol-free',
     hub: 'wine',
     path: '/wine/alcohol-free',
-    title: 'Alcohol free',
-    h1: 'Alcohol free wine',
-    query: { ...WINE_BASE, collection: 'non-alcoholic-1' },
+    title: 'Non alcoholic',
+    h1: 'Non alcoholic',
+    // The merchant's new Non Alcoholic collection (October 2026), which
+    // replaces the older non-alcoholic-1. The URL stays /wine/alcohol-free
+    // so existing links and search results keep working.
+    query: { ...WINE_BASE, collection: 'non-alcoholic' },
     alcohol: false,
     facets: ['style'],
     parentPath: '/wine',

@@ -3,18 +3,27 @@ import 'server-only'
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import type { Campaign } from './types'
+import { redisConfig, redisStore, type CampaignStore } from './redis-store'
+
+export type { CampaignStore }
 
 /**
  * Where campaigns live.
  *
- * Two backends behind one interface, picked by environment:
+ * Three backends behind one interface, picked by environment:
  *
- *   - On Netlify, Netlify Blobs: durable, zero configuration, and already
- *     part of the hosting we deploy to. Each campaign is one blob keyed by
- *     id, plus a slug index blob.
+ *   - Redis over Upstash's REST API, when its credentials are set. This is
+ *     production: the site is hosted on Vercel, whose functions have no
+ *     writable disk, and Upstash is the Redis Vercel offers under Storage.
+ *     Connecting it to the project sets KV_REST_API_URL and
+ *     KV_REST_API_TOKEN (UPSTASH_REDIS_REST_URL / _TOKEN also work). Plain
+ *     fetch, so no client library. Reads are strongly consistent.
+ *   - On Netlify, Netlify Blobs: durable and zero configuration there.
  *   - Everywhere else (local dev, tests), a JSON file under .data/. The
  *     file is gitignored; in-memory alone was proven wrong by the fixture
- *     cart, which lost state across serverless instances.
+ *     cart, which lost state across serverless instances. On Vercel with
+ *     no Redis configured it is not used: its writes would fail or vanish
+ *     with the function instance. Saves fail loudly there instead.
  *
  * The interface is the seam for the real database later (the brief
  * suggests Postgres): swap the implementation, keep every caller.
@@ -25,13 +34,6 @@ import type { Campaign } from './types'
  * promise, and true row-level safety arrives with the database. Documented
  * in docs/corporate-gifting.md.
  */
-
-export type CampaignStore = {
-  get(id: string): Promise<Campaign | null>
-  getBySlug(slug: string): Promise<Campaign | null>
-  list(): Promise<Campaign[]>
-  save(campaign: Campaign): Promise<void>
-}
 
 // ---------------------------------------------------------------------------
 // Netlify Blobs backend.
@@ -108,11 +110,48 @@ function fileStore(): CampaignStore {
 }
 
 // ---------------------------------------------------------------------------
+// Vercel with no Redis connected.
+// ---------------------------------------------------------------------------
+
+const NOT_CONFIGURED =
+  '[corporate store] No campaign storage on Vercel. Connect Upstash Redis under the ' +
+  "project's Storage tab (it sets KV_REST_API_URL and KV_REST_API_TOKEN) and redeploy."
+
+/**
+ * Reads find nothing, so a gift link shows its not-found page rather than
+ * a server error, and a save fails loudly with what to do about it. The
+ * file backend would accept the save and lose it with the instance.
+ */
+function unconfiguredStore(): CampaignStore {
+  return {
+    async get() {
+      console.error(NOT_CONFIGURED)
+      return null
+    },
+    async getBySlug() {
+      console.error(NOT_CONFIGURED)
+      return null
+    },
+    async list() {
+      console.error(NOT_CONFIGURED)
+      return []
+    },
+    async save() {
+      throw new Error(NOT_CONFIGURED)
+    },
+  }
+}
+
+// ---------------------------------------------------------------------------
 
 let cached: CampaignStore | null = null
 
 export async function campaignStore(): Promise<CampaignStore> {
   if (cached) return cached
-  cached = blobsAvailable() ? await blobsStore() : fileStore()
+  const redis = redisConfig()
+  if (redis) cached = redisStore(redis)
+  else if (blobsAvailable()) cached = await blobsStore()
+  else if (process.env.VERCEL) cached = unconfiguredStore()
+  else cached = fileStore()
   return cached
 }

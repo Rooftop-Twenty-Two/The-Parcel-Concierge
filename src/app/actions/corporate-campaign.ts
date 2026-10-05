@@ -3,7 +3,7 @@
 import { randomBytes, randomUUID } from 'node:crypto'
 import { queryProducts } from '@/lib/commerce'
 import { createRecipientOrder } from '@/lib/corporate/orders'
-import { campaignStore } from '@/lib/corporate/store'
+import { campaignStore, type CampaignStore } from '@/lib/corporate/store'
 import {
   campaignOpen,
   redemptionFor,
@@ -149,8 +149,25 @@ export async function createCampaignAction(
     createdAt: new Date().toISOString(),
   }
 
-  await store.save(campaign)
+  if (!(await saved(store, campaign))) return { ok: false, message: SAVE_FAILED }
   return { ok: true, slug, dashboardToken: campaign.dashboardToken }
+}
+
+const SAVE_FAILED =
+  'We could not save that just now. Please try again in a minute, or email us and we will sort it out.'
+
+/**
+ * A save the shopper is waiting on. A storage failure (see store.ts) is
+ * logged and reported as a message, not thrown into an error page.
+ */
+async function saved(store: CampaignStore, campaign: Campaign): Promise<boolean> {
+  try {
+    await store.save(campaign)
+    return true
+  } catch (error) {
+    console.error('[corporate] campaign save failed', error)
+    return false
+  }
 }
 
 async function uniqueSlug(
@@ -313,7 +330,7 @@ export async function redeemGiftAction(
   recipient.status = redemption.shopifyOrderId ? 'ORDER_CREATED' : 'SELECTED'
   recipient.selectedAt = redemption.redeemedAt
 
-  await store.save(campaign)
+  if (!(await saved(store, campaign))) return { ok: false, message: SAVE_FAILED }
   return { ok: true, orderReference, firstName: recipient.firstName }
 }
 

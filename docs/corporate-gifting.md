@@ -46,9 +46,12 @@ campaign.
 
 ## Where the data lives
 
-`src/lib/corporate/store.ts` is one interface with two backends: Netlify
-Blobs in production (durable, zero config on the hosting we already
-deploy to) and a gitignored JSON file locally. Each campaign is one
+`src/lib/corporate/store.ts` is one interface with three backends. In
+production, on Vercel, it is Redis via Upstash (`redis-store.ts`), which
+Vercel provides under the project's Storage tab. On Netlify it is Netlify
+Blobs, and locally a gitignored JSON file. Vercel functions have no
+writable disk, so on Vercel without Redis a campaign save fails with a
+message saying so, rather than appearing to work and losing it. Each campaign is one
 self-contained document. The interface is the seam for PostgreSQL when
 the platform grows into recurring gifting, HR integrations and corporate
 wallets, none of which V1 pretends to have.
@@ -80,6 +83,10 @@ recipient sees.
 CORPORATE_ADMIN_KEY=   # gates /admin/corporate and campaign activation
 ```
 
-Netlify Blobs needs nothing. Reminders are copy-to-send from the
+On Vercel: project → **Storage** → create or connect an **Upstash for
+Redis** database to this project. That sets `KV_REST_API_URL` and
+`KV_REST_API_TOKEN` (the `UPSTASH_REDIS_REST_URL` / `_TOKEN` pair also
+works). Redeploy so the functions see them. Netlify Blobs needs nothing.
+Reminders are copy-to-send from the
 dashboard (they land better from the HR manager's own address); automated
 deadline reminders arrive with the email infrastructure.

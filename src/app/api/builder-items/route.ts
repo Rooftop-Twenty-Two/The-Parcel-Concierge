@@ -56,15 +56,17 @@ export async function GET(request: NextRequest) {
       hasMore: pickable.length > start + PAGE_SIZE || shopifyHasMore,
       total: pickable.length,
     },
-    // The catalogue moves slowly; the picker does not need to be fresher
-    // than the listings are. Netlify-Vary is load bearing: Netlify's CDN
-    // does not key cached function responses on the query string unless
-    // told to, so without it every shelf and search was served whichever
-    // response got cached first and the filters appeared dead in
-    // production while working everywhere else.
+    // Cached at the edge for a minute, then served stale for up to five
+    // while it refreshes. The Storefront reads underneath are tagged, so a
+    // Shopify webhook or /api/revalidate clears them; this short edge
+    // window is all that stands between a change in Shopify admin and the
+    // picker. The site runs on Vercel, whose edge cache keys on the full
+    // URL including the query. Netlify-Vary does the same job on Netlify,
+    // which netlify.toml still supports: there, without it, every shelf and
+    // search was served whichever response got cached first.
     {
       headers: {
-        'Cache-Control': 'public, max-age=0, s-maxage=900, stale-while-revalidate=3600',
+        'Cache-Control': 'public, max-age=0, s-maxage=60, stale-while-revalidate=300',
         'Netlify-Vary': 'query',
       },
     },

@@ -49,6 +49,14 @@ export function ProductCardTile({
               {TAG_LABELS[badge] ?? badge}
             </span>
           ) : null}
+
+          {/* Only listings that ask for sold-out products ever get one, so
+              the shopper is told before they click through. */}
+          {product.availableForSale ? null : (
+            <span className="absolute right-3 top-3 bg-cream px-2 py-1 text-[11px] uppercase tracking-[0.14em] text-navy">
+              Sold out
+            </span>
+          )}
         </StampFrame>
 
         <h3 className="mt-3 font-serif text-lg leading-snug font-semibold text-navy group-hover:underline">

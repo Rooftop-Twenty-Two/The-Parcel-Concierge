@@ -543,9 +543,16 @@ const ALL_LISTINGS: readonly CollectionDef[] = [
     path: '/occasions/christmas',
     title: 'Christmas gifts and hampers',
     h1: 'Christmas gifts and hampers',
-    // The merchant's Christmas 2026 collection, in its manual order. See
-    // CHRISTMAS_COLLECTION for the interim fallback.
-    query: { collection: CHRISTMAS_COLLECTION ?? HAMPERS_COLLECTION, sort: 'featured', first: 24 },
+    // The merchant's Christmas 2026 collection, in its manual order. Every
+    // product in it shows, sold out or not (client, October 2026): a sold-out
+    // card is marked as such and its product page will not add it to a cart.
+    // See CHRISTMAS_COLLECTION for the interim fallback.
+    query: {
+      collection: CHRISTMAS_COLLECTION ?? HAMPERS_COLLECTION,
+      sort: 'featured',
+      first: 24,
+      includeOutOfStock: true,
+    },
     alcohol: true,
     facets: ['price', 'recipient'],
     parentPath: '/occasions',

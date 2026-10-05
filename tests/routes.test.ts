@@ -184,3 +184,9 @@ test('Christmas and the general hamper range are separate collections', async ()
   const { CHRISTMAS_COLLECTION, HAMPERS_COLLECTION } = await import('../src/lib/commerce/collections.ts')
   assert.notEqual(CHRISTMAS_COLLECTION, HAMPERS_COLLECTION)
 })
+
+test('the Christmas page shows every product in its collection, sold out or not', () => {
+  const christmas = getCollectionByPath('/occasions/christmas')
+  assert.ok(christmas, '/occasions/christmas is in the registry')
+  assert.equal(christmas.query.includeOutOfStock, true)
+})

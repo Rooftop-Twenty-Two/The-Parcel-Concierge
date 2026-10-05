@@ -179,15 +179,12 @@ export const SEASONAL_HAMPERS_COLLECTION = 'christmas-2026'
  * (client, October 2026), and the two stay separate on the site: the hampers
  * hub, homepage band and budget bands read HAMPERS_COLLECTION, never this.
  *
- * Not to be confused with the handle `christmas-2026` above, which belongs to
- * General Hampers 2026. Shopify will have given the new collection a
- * different handle (likely with a -1 suffix); read it from the collection's
- * admin URL or `npm run builder:tabs`, never from the title.
- *
- * Null until the handle is confirmed against the store. While null, the
- * Christmas page falls back to the general range, as it did before.
+ * Mind the crossed handles: "Christmas 2026" is `christmas-2027`, and
+ * `christmas-2026` above is General Hampers 2026. Confirmed from the store's
+ * collection list, October 2026. Read handles from the admin URL, never the
+ * title. Null would fall the Christmas page back to the general range.
  */
-export const CHRISTMAS_COLLECTION: string | null = null
+export const CHRISTMAS_COLLECTION: string | null = 'christmas-2027'
 
 export const HAMPERS_COLLECTION = SEASONAL_HAMPERS_ONLY
   ? SEASONAL_HAMPERS_COLLECTION

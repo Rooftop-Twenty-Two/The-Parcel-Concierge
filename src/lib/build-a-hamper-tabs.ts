@@ -19,8 +19,9 @@
  *             (…/collections/<handle>), never guessed from the title:
  *             Shopify appends -1, -2 when a handle is taken. Run
  *             `npm run builder:tabs` to look every handle up on the store
- *             and check this file against it. Null until confirmed; a tab
- *             with no handle is hidden, never shown empty.
+ *             and check this file against it. Null hides the tab.
+ *             Handles confirmed from the store's collection list,
+ *             October 2026.
  *
  * Products in a tab appear in the collection's manual order, the order the
  * client drags them into in Shopify admin. A tab whose collection is empty,
@@ -39,42 +40,42 @@ export type BuilderTab = {
 }
 
 const TABS: readonly BuilderTab[] = [
-  { order: 10, id: 'food', label: 'Food & Larder', title: 'Build a Hamper – Food & Larder', handle: null },
+  { order: 10, id: 'food', label: 'Food & Larder', title: 'Build a Hamper – Food & Larder', handle: 'build-a-hamper-food-larder' },
   {
     order: 20,
     id: 'chocolate',
     label: 'Chocolate & Sweet Things',
     title: 'Build a Hamper – Chocolate & Sweet Things',
-    handle: null,
+    handle: 'build-a-hamper-chocolate-sweet-things',
   },
-  { order: 30, id: 'red-wine', label: 'Red Wine', title: 'Build a Hamper – Red Wine', handle: null },
-  { order: 40, id: 'white-wine', label: 'White Wine', title: 'Build a Hamper – White Wine', handle: null },
-  { order: 50, id: 'champagne', label: 'Champagne', title: 'Build a Hamper – Champagne', handle: null },
-  { order: 60, id: 'sparkling', label: 'Sparkling', title: 'Build a Hamper – Sparkling', handle: null },
+  { order: 30, id: 'red-wine', label: 'Red Wine', title: 'Build a Hamper – Red Wine', handle: 'build-a-hamper-red-wine' },
+  { order: 40, id: 'white-wine', label: 'White Wine', title: 'Build a Hamper – White Wine', handle: 'build-a-hamper-white-wine' },
+  { order: 50, id: 'champagne', label: 'Champagne', title: 'Build a Hamper – Champagne', handle: 'build-a-hamper-champagne' },
+  { order: 60, id: 'sparkling', label: 'Sparkling', title: 'Build a Hamper – Sparkling', handle: 'build-a-hamper-sparkling' },
   {
     order: 70,
     id: 'candles',
     label: 'Candles & Fragrance',
     title: 'Build a Hamper – Candles & Fragrance',
-    handle: null,
+    handle: 'build-a-hamper-candles-fragrance',
   },
-  { order: 80, id: 'beauty', label: 'Beauty & Bath', title: 'Build a Hamper – Beauty & Bath', handle: null },
+  { order: 80, id: 'beauty', label: 'Beauty & Bath', title: 'Build a Hamper – Beauty & Bath', handle: 'build-a-hamper-beauty-bath' },
   {
     order: 90,
     id: 'homeware',
     label: 'Homeware & Kitchen',
     title: 'Build a Hamper – Homeware & Kitchen',
-    handle: null,
+    handle: 'build-a-hamper-homeware-kitchen',
   },
-  { order: 100, id: 'baby', label: 'Baby & Children', title: 'Build a Hamper – Baby & Children', handle: null },
-  { order: 110, id: 'jewellery', label: 'Jewellery', title: 'Build a Hamper – Jewellery', handle: null },
-  { order: 120, id: 'accessories', label: 'Accessories', title: 'Build a Hamper – Accessories', handle: null },
+  { order: 100, id: 'baby', label: 'Baby & Children', title: 'Build a Hamper – Baby & Children', handle: 'build-a-hamper-baby-children' },
+  { order: 110, id: 'jewellery', label: 'Jewellery', title: 'Build a Hamper – Jewellery', handle: 'build-a-hamper-jewellery' },
+  { order: 120, id: 'accessories', label: 'Accessories', title: 'Build a Hamper – Accessories', handle: 'build-a-hamper-accessories' },
   {
     order: 130,
     id: 'cards',
     label: 'Cards & Stationery',
     title: 'Build a Hamper – Cards & Stationery',
-    handle: null,
+    handle: 'build-a-hamper-cards-stationery',
   },
 ]
 

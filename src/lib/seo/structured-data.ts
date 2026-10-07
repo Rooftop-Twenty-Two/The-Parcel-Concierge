@@ -34,7 +34,9 @@ export function localBusinessJsonLd(trust: { rating: number; reviewCount: number
     '@id': absoluteUrl('/#business'),
     name: SITE.name,
     url: SITE.url,
-    telephone: CONTACT.phone,
+    // International form for machines: (01) only makes sense dialled from
+    // inside Ireland. The page itself keeps the local form people read.
+    telephone: internationalPhone(CONTACT.phone),
     email: CONTACT.email,
     image: absoluteUrl('/og-default.jpg'),
     logo: absoluteUrl('/brand/logo.svg'),
@@ -162,4 +164,11 @@ export function stripHtml(html: string): string {
     .replace(/<[^>]+>/g, ' ')
     .replace(/\s+/g, ' ')
     .trim()
+}
+
+/** "(01) 801 9810" -> "+353 1 801 9810". Leaves anything already international alone. */
+function internationalPhone(local: string): string {
+  if (local.trim().startsWith('+')) return local
+  const match = local.match(/^\(?0(\d{1,2})\)?\s*(.+)$/)
+  return match ? `+353 ${match[1]} ${match[2]}` : local
 }

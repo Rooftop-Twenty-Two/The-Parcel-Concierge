@@ -120,7 +120,7 @@ It takes about a minute.`
                 max={5000}
                 value={addCount}
                 onChange={(e) => setAddCount(Math.max(1, Number(e.target.value) || 1))}
-                className="w-20 border border-navy/25 bg-cream px-2 py-1 text-sm text-navy outline-none"
+                className="w-20 border border-navy/25 bg-cream px-2 py-1 text-sm text-navy"
                 aria-label="Custom number of recipients to add"
               />
             </div>

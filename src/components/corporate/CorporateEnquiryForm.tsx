@@ -38,6 +38,7 @@ export function CorporateEnquiryForm() {
   }
 
   const errors = state?.ok === false ? state.errors : {}
+  const values = (state?.ok === false ? state.values : undefined) ?? {}
 
   return (
     <form action={formAction} className="mt-10 space-y-6">
@@ -48,10 +49,10 @@ export function CorporateEnquiryForm() {
       ) : null}
 
       <div className="grid gap-6 sm:grid-cols-2">
-        <Field label="Company" name="company" error={errors.company} required autoComplete="organization" />
-        <Field label="Your name" name="name" error={errors.name} required autoComplete="name" />
-        <Field label="Email" name="email" type="email" error={errors.email} required autoComplete="email" />
-        <Field label="Phone" name="phone" type="tel" autoComplete="tel" hint="Optional, but it speeds things up." />
+        <Field label="Company" name="company" error={errors.company} required autoComplete="organization" defaultValue={values.company} />
+        <Field label="Your name" name="name" error={errors.name} required autoComplete="name" defaultValue={values.name} />
+        <Field label="Email" name="email" type="email" error={errors.email} required autoComplete="email" defaultValue={values.email} />
+        <Field label="Phone" name="phone" type="tel" autoComplete="tel" hint="Optional, but it speeds things up." defaultValue={values.phone} />
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2">
@@ -62,6 +63,7 @@ export function CorporateEnquiryForm() {
           min={1}
           error={errors.quantity}
           required
+          defaultValue={values.quantity}
           hint={`An estimate is fine. Volume pricing starts at ${BULK_ORDER_MINIMUM}.`}
         />
         <Field
@@ -71,6 +73,7 @@ export function CorporateEnquiryForm() {
           min={1}
           step="1"
           error={errors.budgetPerUnitEuro}
+          defaultValue={values.budgetPerUnit}
           hint="In euro, excluding delivery. Leave it blank if you would rather we suggested."
         />
       </div>
@@ -80,12 +83,19 @@ export function CorporateEnquiryForm() {
         <div className="mt-2 space-y-2">
           {DELIVERY_MODES.map((mode) => (
             <label key={mode.value} className="flex items-start gap-3 text-sm text-ink-muted">
-              <input type="radio" name="deliveryMode" value={mode.value} className="mt-1" />
+              <input
+                type="radio"
+                name="deliveryMode"
+                value={mode.value}
+                defaultChecked={values.deliveryMode === mode.value}
+                aria-describedby={errors.deliveryMode ? 'deliveryMode-error' : undefined}
+                className="mt-1"
+              />
               {mode.label}
             </label>
           ))}
         </div>
-        {errors.deliveryMode ? <FieldError message={errors.deliveryMode} /> : null}
+        {errors.deliveryMode ? <FieldError id="deliveryMode-error" message={errors.deliveryMode} /> : null}
       </fieldset>
 
       {/*
@@ -101,17 +111,18 @@ export function CorporateEnquiryForm() {
         placeholder="Week of 15 December"
         error={errors.deadline}
         required
+        defaultValue={values.deadline}
         hint="The week they should be with recipients, not the date you want to order. We work to the week because we cannot guarantee which day An Post deliver on."
       />
 
       <fieldset className="space-y-3">
         <legend className="block text-sm font-medium text-navy">Anything we should know?</legend>
         <label className="flex items-start gap-3 text-sm text-ink-muted">
-          <input type="checkbox" name="branding" className="mt-1" />
+          <input type="checkbox" name="branding" defaultChecked={values.branding === 'on'} className="mt-1" />
           We want our branding on the card inside the lid
         </label>
         <label className="flex items-start gap-3 text-sm text-ink-muted">
-          <input type="checkbox" name="alcoholAllowed" className="mt-1" />
+          <input type="checkbox" name="alcoholAllowed" defaultChecked={values.alcoholAllowed === 'on'} className="mt-1" />
           Alcohol is fine for this list
         </label>
       </fieldset>
@@ -125,6 +136,7 @@ export function CorporateEnquiryForm() {
           name="notes"
           rows={4}
           maxLength={2000}
+          defaultValue={values.notes}
           className="mt-2 w-full border border-rule bg-white px-3 py-2 text-base"
           placeholder="Allergies, a theme, a previous order you liked, a hard deadline we should know about."
         />

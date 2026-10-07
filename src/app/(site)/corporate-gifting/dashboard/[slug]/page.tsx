@@ -4,6 +4,7 @@ import { DashboardTools } from '@/components/corporate/DashboardTools'
 import { formatMinor } from '@/lib/commerce/money'
 import { campaignStore } from '@/lib/corporate/store'
 import { campaignStats, campaignValueMinor, volumeTierFor } from '@/lib/corporate/types'
+import { secretsMatch } from '@/lib/secure-compare'
 
 export const dynamic = 'force-dynamic'
 
@@ -36,7 +37,7 @@ export default async function CampaignDashboardPage({
   const store = await campaignStore()
   const campaign = await store.getBySlug(slug)
   // Wrong token behaves exactly like no campaign: the URL reveals nothing.
-  if (!campaign || !token || token !== campaign.dashboardToken) notFound()
+  if (!campaign || !secretsMatch(token, campaign.dashboardToken)) notFound()
 
   const stats = campaignStats(campaign)
   const giftByRecipient = new Map(

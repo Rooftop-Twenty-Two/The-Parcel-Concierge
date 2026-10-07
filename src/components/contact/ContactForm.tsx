@@ -31,6 +31,7 @@ export function ContactForm() {
   }
 
   const errors = state?.ok === false ? state.errors : {}
+  const values = state?.ok === false ? state.values : undefined
 
   return (
     <form action={formAction} className="space-y-6">
@@ -47,7 +48,14 @@ export function ContactForm() {
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2">
-        <Field label="Your name" name="name" error={errors.name} required autoComplete="name" />
+        <Field
+          label="Your name"
+          name="name"
+          error={errors.name}
+          required
+          autoComplete="name"
+          defaultValue={values?.name}
+        />
         <Field
           label="Email"
           name="email"
@@ -55,6 +63,7 @@ export function ContactForm() {
           error={errors.email}
           required
           autoComplete="email"
+          defaultValue={values?.email}
         />
         <Field
           label="Phone"
@@ -62,8 +71,9 @@ export function ContactForm() {
           type="tel"
           autoComplete="tel"
           hint="Optional, but it speeds things up."
+          defaultValue={values?.phone}
         />
-        <Field label="Subject" name="subject" hint="Optional." />
+        <Field label="Subject" name="subject" hint="Optional." defaultValue={values?.subject} />
       </div>
 
       <div>
@@ -75,6 +85,7 @@ export function ContactForm() {
           name="message"
           rows={6}
           required
+          defaultValue={values?.message}
           aria-invalid={errors.message ? true : undefined}
           aria-describedby={errors.message ? 'message-error' : undefined}
           className={`mt-2 w-full border bg-white px-3 py-2 text-base ${

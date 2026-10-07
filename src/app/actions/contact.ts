@@ -20,7 +20,15 @@ export type ContactMessage = {
 
 export type ContactResult =
   | { ok: true }
-  | { ok: false; errors: Partial<Record<keyof ContactMessage, string>>; message?: string }
+  | {
+      ok: false
+      errors: Partial<Record<keyof ContactMessage, string>>
+      message?: string
+      // What was typed, so the form can put it back. React clears a form
+      // after its action runs, so without this one validation error wiped
+      // the whole message.
+      values?: ContactMessage
+    }
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -49,7 +57,9 @@ export async function submitContactMessage(
   if (!EMAIL.test(email)) errors.email = 'That email address does not look right.'
   if (message.length < 10) errors.message = 'Tell us a little more so we can help.'
 
-  if (Object.keys(errors).length) return { ok: false, errors }
+  const values: ContactMessage = { name, email, phone, subject, message }
+
+  if (Object.keys(errors).length) return { ok: false, errors, values }
 
   const contact: ContactMessage = {
     name: name.slice(0, 120),
@@ -67,6 +77,7 @@ export async function submitContactMessage(
     return {
       ok: false,
       errors: {},
+      values,
       message:
         'That did not send. Email us directly and we will pick it up, or try again in a minute.',
     }

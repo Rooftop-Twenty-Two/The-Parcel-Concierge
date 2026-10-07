@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { fontVariables } from '@/lib/brand/fonts'
 import { isFixtureMode } from '@/lib/commerce'
+import { DEFAULT_OG_IMAGE } from '@/lib/seo/og'
 import {
   GOOGLE_SITE_VERIFICATION,
   SITE,
@@ -28,14 +29,7 @@ export const metadata: Metadata = {
     //
     // A real hamper in the branded box rather than a logo card: the logo
     // says who sent the link, the box says what is being sold.
-    images: [
-      {
-        url: '/og-default.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'A Parcel Concierge hamper in its green gift box, holding Champagne, a Rathbornes candle, an ogham print and boxed Galway Crystal flutes',
-      },
-    ],
+    images: [DEFAULT_OG_IMAGE],
   },
   // Without this a shared link is a small thumbnail beside the text rather
   // than the full-width card. It governs X and is read by several other

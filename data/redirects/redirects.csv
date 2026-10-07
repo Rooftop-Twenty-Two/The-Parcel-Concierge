@@ -82,8 +82,8 @@ source,destination,type,note
 # something, and the link equity should follow the topic.
 /collections/cards,/build-your-own-hamper,301,The 254-SKU card estate is removed. Nearest add-on band.
 /collections/greeting-cards,/build-your-own-hamper,301,The 254-SKU card estate is removed. Nearest add-on band.
-/collections/beauty,/hampers/pamper,301,Beauty range removed. Pamper hampers are the nearest thing we still sell.
-/collections/skincare,/hampers/pamper,301,Beauty range removed. Pamper hampers are the nearest thing we still sell.
+/collections/beauty,/hampers,301,Beauty range removed. Was /hampers/pamper, which 404s while the pamper-hampers-1 collection is missing; restore that row when it is back.
+/collections/skincare,/hampers,301,Beauty range removed. Was /hampers/pamper, which 404s while the pamper-hampers-1 collection is missing; restore that row when it is back.
 /collections/homeware,/build-your-own-hamper,301,Homeware narrowed to crystal and glassware
 /collections/jewellery,/build-your-own-hamper,301,Pending the client retain/remove decision. Revisit before launch.
 #
@@ -116,6 +116,7 @@ source,destination,type,note
 # docs/redirects.md.
 # ---------------------------------------------------------------------------
 /build-a-hamper,/build-your-own-hamper,301,On-domain builder
+/hampers/build-a-hamper,/build-your-own-hamper,301,The builder's parent product has no product page of its own. Was a 404 after launch
 /custom-hamper,/build-your-own-hamper,301,On-domain builder
 /pages/build-your-own,/build-your-own-hamper,301,On-domain builder
 /hampers/build-your-own-hamper,/build-your-own-hamper,301,The builder has one URL and this is not it
@@ -127,11 +128,13 @@ source,destination,type,note
 /pages/delivery,/delivery,301,Direct equivalent
 /pages/about-us,/about,301,Direct equivalent
 /pages/contact-us,/contact,301,Direct equivalent
+/pages/contact,/contact,301,Shopify's default contact page handle. Was a 404 after launch
 /pages/faq,/faq,301,Direct equivalent
 /pages/corporate,/corporate-gifting,301,Now a full B2B flow
 /policies/terms-of-service,/legal/terms,301,Direct equivalent
 /policies/privacy-policy,/legal/privacy,301,Direct equivalent
 /policies/refund-policy,/legal/returns,301,Direct equivalent
+/policies/shipping-policy,/delivery,301,Shopify's shipping policy URL. Was a 404 after launch
 #
 # ---------------------------------------------------------------------------
 # Products: worked examples of the two per-product patterns
@@ -142,10 +145,13 @@ source,destination,type,note
 # The full set is generated from the retain/remove list in phase 2 by
 # scripts/redirects/generate-product-redirects.ts. Do not hand-write them.
 # ---------------------------------------------------------------------------
-/products/the-meath-larder,/hampers/the-meath-larder,301,Retained hamper
-/products/the-whiskey-collector,/hampers/the-whiskey-collector,301,Retained hamper
-/products/bodegas-aldea-rioja-reserva,/wine/bodegas-aldea-rioja-reserva,301,Retained wine
-/products/wild-gorse-soy-candle,/gifts/wild-gorse-soy-candle,301,Retained add-on
+#
+# Every product still in the shop is now redirected without a row here:
+# /products/<handle> resolves the handle against Shopify and 301s to its new
+# route (src/app/(site)/products/[handle]). The four example rows that sat
+# here named products that do not exist, so they redirected into 404s and
+# were removed. Rows for REMOVED products (handle -> parent listing) still
+# belong here, generated from the retain/remove list.
 /wine/subscription,/wine-club,301,The club moved to its own top level route when the taste quiz landed
 /guides,/hampers,301,Guides section paused by the client in September 2026
 /guides/how-to-choose-a-hamper,/hampers,301,Guides section paused by the client in September 2026

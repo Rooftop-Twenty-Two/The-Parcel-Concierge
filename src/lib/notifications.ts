@@ -57,7 +57,9 @@ async function sendEmail(params: {
       From: CONTACT_FROM,
       To: params.to,
       ReplyTo: params.replyTo,
-      Subject: params.subject,
+      // Visitors type part of the subject. A line break in it would make
+      // Postmark reject the message, so the enquiry would be lost.
+      Subject: params.subject.replace(/[\r\n]+/g, ' ').slice(0, 250),
       TextBody: params.text,
       MessageStream: 'outbound',
     }),

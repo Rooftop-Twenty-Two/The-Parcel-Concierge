@@ -161,12 +161,12 @@
   },
   {
     "source": "/collections/beauty",
-    "destination": "/hampers/pamper",
+    "destination": "/hampers",
     "permanent": true
   },
   {
     "source": "/collections/skincare",
-    "destination": "/hampers/pamper",
+    "destination": "/hampers",
     "permanent": true
   },
   {
@@ -225,6 +225,11 @@
     "permanent": true
   },
   {
+    "source": "/hampers/build-a-hamper",
+    "destination": "/build-your-own-hamper",
+    "permanent": true
+  },
+  {
     "source": "/custom-hamper",
     "destination": "/build-your-own-hamper",
     "permanent": true
@@ -260,6 +265,11 @@
     "permanent": true
   },
   {
+    "source": "/pages/contact",
+    "destination": "/contact",
+    "permanent": true
+  },
+  {
     "source": "/pages/faq",
     "destination": "/faq",
     "permanent": true
@@ -285,23 +295,8 @@
     "permanent": true
   },
   {
-    "source": "/products/the-meath-larder",
-    "destination": "/hampers/the-meath-larder",
-    "permanent": true
-  },
-  {
-    "source": "/products/the-whiskey-collector",
-    "destination": "/hampers/the-whiskey-collector",
-    "permanent": true
-  },
-  {
-    "source": "/products/bodegas-aldea-rioja-reserva",
-    "destination": "/wine/bodegas-aldea-rioja-reserva",
-    "permanent": true
-  },
-  {
-    "source": "/products/wild-gorse-soy-candle",
-    "destination": "/gifts/wild-gorse-soy-candle",
+    "source": "/policies/shipping-policy",
+    "destination": "/delivery",
     "permanent": true
   },
   {

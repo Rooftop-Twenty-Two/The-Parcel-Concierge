@@ -33,7 +33,10 @@ export function ProductGallery({ images, title }: { images: ProductImage[]; titl
   const current = images[active] ?? images[0]
 
   if (!current) {
-    return <div className="aspect-3/2 w-full bg-beige" role="presentation" />
+    // min-w-0: as a grid item, an empty aspect-ratio box takes its minimum
+    // width from its own ratio, and at 1024px it grew to ~1000px and pushed
+    // the title and price off the right of the screen.
+    return <div className="aspect-3/2 w-full min-w-0 bg-beige" role="presentation" />
   }
 
   return (

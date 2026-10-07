@@ -3,6 +3,7 @@ import { listingPathsWithCopy } from '@/lib/cms'
 import { isFixtureMode, queryProducts } from '@/lib/commerce'
 import {
   COLLECTIONS,
+  HIDDEN_FROM_LISTINGS,
   MIN_PRODUCTS_PER_LISTING,
   type CollectionDef,
 } from '@/lib/commerce/collections'
@@ -46,6 +47,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: url('/faq'), priority: 0.5, changeFrequency: 'monthly' },
     { url: url('/contact'), priority: 0.4, changeFrequency: 'yearly' },
     { url: url('/gift-card'), priority: 0.4, changeFrequency: 'monthly' },
+    { url: url('/legal/terms'), priority: 0.2, changeFrequency: 'yearly' },
+    { url: url('/legal/privacy'), priority: 0.2, changeFrequency: 'yearly' },
+    { url: url('/legal/returns'), priority: 0.2, changeFrequency: 'yearly' },
+    { url: url('/legal/cookies'), priority: 0.2, changeFrequency: 'yearly' },
   ]
 
   const withCopy = new Set(listingPathsWithCopy())
@@ -62,6 +67,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   for (let page = 0; page < 8; page += 1) {
     const { items, pageInfo } = await queryProducts({ first: 250, after })
     for (const product of items) {
+      // Hidden products (the builder's boxes and baskets) have no product
+      // URL and 404, and a builder item's only "page" is the builder itself,
+      // which is already listed above. Neither belongs in here.
+      if (HIDDEN_FROM_LISTINGS.has(product.handle) || product.kind === 'builder-item') continue
       productEntries.push({
         url: url(productPathFor(product.kind, product.handle)),
         priority: product.kind === 'hamper' ? 0.8 : 0.6,
@@ -72,7 +81,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     after = pageInfo.endCursor
   }
 
-  return [...staticEntries, ...listingEntries, ...productEntries]
+  // One entry per URL: a listing and a product can never share a path, but
+  // nothing else guarantees it, and a sitemap with duplicates is noise.
+  const seen = new Set<string>()
+  return [...staticEntries, ...listingEntries, ...productEntries].filter((entry) => {
+    if (seen.has(entry.url)) return false
+    seen.add(entry.url)
+    return true
+  })
 }
 
 async function listingEntry(

@@ -11,6 +11,7 @@ import {
   type CampaignGift,
   type RedemptionAddress,
 } from '@/lib/corporate/types'
+import { secretsMatch } from '@/lib/secure-compare'
 
 /**
  * The corporate gifting actions: one file, three audiences.
@@ -346,7 +347,7 @@ export async function addAllocationAction(
 ): Promise<Ok<{ newLimit: number }> | Err> {
   const store = await campaignStore()
   const campaign = await store.getBySlug(slug)
-  if (!campaign || campaign.dashboardToken !== token) {
+  if (!campaign || !secretsMatch(token, campaign.dashboardToken)) {
     return { ok: false, message: 'That dashboard link is not valid.' }
   }
   const add = Math.floor(additional)
@@ -364,7 +365,7 @@ export async function addAllocationAction(
 
 function adminAuthorised(key: string): boolean {
   const expected = process.env.CORPORATE_ADMIN_KEY
-  return Boolean(expected) && key === expected
+  return secretsMatch(key, expected)
 }
 
 export async function setCampaignStatusAction(

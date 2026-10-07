@@ -1,4 +1,9 @@
 import Link from 'next/link'
+import type { Metadata } from 'next'
+
+// Otherwise a 404 inherits the homepage title, and a tab or a search result
+// for a dead URL reads like the front page.
+export const metadata: Metadata = { title: 'Page not found' }
 
 /**
  * The bare 404, for routes outside the shop chrome (an expired or

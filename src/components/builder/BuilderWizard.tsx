@@ -217,7 +217,7 @@ export function BuilderWizard({
       <Progress current={stepIndex} onJump={(i) => i < stepIndex && goTo(STEPS[i]!.id)} />
 
       {/* pb clears the sticky bar. */}
-      <main className="mx-auto max-w-[1400px] px-4 pb-44 pt-10 lg:px-8">
+      <div className="mx-auto max-w-[1400px] px-4 pb-44 pt-10 lg:px-8">
         {step === 'box' ? (
           <StepShell title="Choose your hamper box or wicker basket" lede="Every size is packed the same way: by hand, hand tied, built so nothing moves.">
             {(
@@ -429,7 +429,7 @@ export function BuilderWizard({
             </div>
           </StepShell>
         ) : null}
-      </main>
+      </div>
 
       {/* The bar: total on the left, movement on the right, always on screen. */}
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-rule bg-cream/95 backdrop-blur">

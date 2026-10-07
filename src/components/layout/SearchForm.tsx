@@ -1,3 +1,5 @@
+import { useId } from 'react'
+
 /**
  * The search box. A plain GET form to /search, so it works with
  * JavaScript off and the query lands in the URL where it can be shared
@@ -16,13 +18,15 @@ export function SearchForm({
   autoFocus?: boolean
 }) {
   const light = variant === 'light'
+  // The header and /search can both render one, so the id must be unique.
+  const id = useId()
   return (
     <form action="/search" method="get" role="search" className="flex gap-2">
-      <label htmlFor="site-search" className="sr-only">
+      <label htmlFor={id} className="sr-only">
         Search the shop
       </label>
       <input
-        id="site-search"
+        id={id}
         type="search"
         name="q"
         defaultValue={defaultValue}

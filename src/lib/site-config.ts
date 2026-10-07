@@ -15,7 +15,10 @@ export const SITE = {
   town: 'Dunshaughlin',
   county: 'Co. Meath',
   country: 'IE',
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://theparcelconcierge.com',
+  // The host the site is actually served from. Vercel redirects the apex to
+  // www (308), so canonicals, the sitemap and structured data must name www:
+  // pointing them at the apex sent every one of them through a redirect.
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.theparcelconcierge.com',
   locale: 'en-IE',
   currency: 'EUR',
   /** Guaranteed Irish membership is stated on the current site and in the design. */

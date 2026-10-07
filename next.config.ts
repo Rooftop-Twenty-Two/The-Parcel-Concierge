@@ -44,6 +44,16 @@ const nextConfig: NextConfig = {
           { key: 'X-Content-Type-Options', value: 'nosniff' },
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
           { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+          // The modern form of the line above. Only frame-ancestors, not a
+          // full CSP: a script/style policy needs testing against Shopify,
+          // Trustpilot and the analytics tags before it can be switched on.
+          { key: 'Content-Security-Policy', value: "frame-ancestors 'self'" },
+          // Nothing on the site uses these. Clipboard is left alone: the
+          // corporate tools copy links with it.
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
+          },
         ],
       },
     ]

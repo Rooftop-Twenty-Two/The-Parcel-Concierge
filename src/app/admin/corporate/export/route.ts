@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { campaignStore } from '@/lib/corporate/store'
+import { secretsMatch } from '@/lib/secure-compare'
 
 export const dynamic = 'force-dynamic'
 
@@ -16,7 +17,7 @@ export async function GET(request: NextRequest) {
   const id = request.nextUrl.searchParams.get('id')
   const expected = process.env.CORPORATE_ADMIN_KEY
 
-  if (!expected || key !== expected) {
+  if (!secretsMatch(key, expected)) {
     return NextResponse.json({ error: 'Not authorised.' }, { status: 401 })
   }
   if (!id) return NextResponse.json({ error: 'Which campaign?' }, { status: 400 })
@@ -39,7 +40,7 @@ export async function GET(request: NextRequest) {
   ])
 
   const csv = [header, ...rows]
-    .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+    .map((row) => row.map((cell) => `"${neutraliseFormula(String(cell)).replace(/"/g, '""')}"`).join(','))
     .join('\r\n')
 
   return new NextResponse(csv, {
@@ -49,4 +50,17 @@ export async function GET(request: NextRequest) {
       'Cache-Control': 'no-store',
     },
   })
+}
+
+/**
+ * Recipients type the names, addresses and gift messages in this file, and
+ * the bench opens it in Excel or Sheets. A cell starting with = + - @ (or a
+ * tab or carriage return) is run as a formula there, so `=HYPERLINK(...)` in
+ * a gift message would become a live link or worse. A leading apostrophe
+ * makes the spreadsheet treat it as text. Phone numbers such as +353 87 ...
+ * are left alone: they are digits, not formulas, and are read back as typed.
+ */
+function neutraliseFormula(value: string): string {
+  if (/^\+?[\d\s()-]+$/.test(value)) return value
+  return /^[=+\-@\t\r]/.test(value) ? `'${value}` : value
 }

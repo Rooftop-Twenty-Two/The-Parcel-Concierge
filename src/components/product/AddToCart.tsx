@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useId, useState, useTransition } from 'react'
 import { addToCartAction } from '@/app/actions/cart'
@@ -169,9 +170,9 @@ export function AddToCart({
           {status.kind === 'ok' ? (
             <>
               {' '}
-              <a href="/cart" className="underline underline-offset-4">
+              <Link href="/cart" className="underline underline-offset-4">
                 Go to your cart
-              </a>
+              </Link>
             </>
           ) : null}
         </p>

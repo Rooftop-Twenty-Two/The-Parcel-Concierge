@@ -111,7 +111,10 @@ export function Header() {
               <circle cx="8.5" cy="8.5" r="5.5" />
               <path d="M13 13l4.5 4.5" strokeLinecap="round" />
             </svg>
-            Search
+            {/* Icon only on the narrowest phones (320px), where the label
+                pushed the Menu button off the side of the screen. The word
+                stays for screen readers. */}
+            <span className="max-[359px]:sr-only">Search</span>
           </button>
 
           <Link

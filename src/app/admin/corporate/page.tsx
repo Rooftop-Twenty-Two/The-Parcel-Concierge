@@ -3,6 +3,7 @@ import { AdminCampaignRow } from '@/components/corporate/AdminCampaignRow'
 import { formatMinor } from '@/lib/commerce/money'
 import { campaignStore } from '@/lib/corporate/store'
 import { campaignStats, campaignValueMinor } from '@/lib/corporate/types'
+import { secretsMatch } from '@/lib/secure-compare'
 
 export const dynamic = 'force-dynamic'
 
@@ -42,7 +43,7 @@ export default async function AdminCorporatePage({
     )
   }
 
-  if (key !== expected) {
+  if (!secretsMatch(key, expected)) {
     return (
       <main id="main" className="mx-auto max-w-2xl px-4 py-20">
         <h1 className="font-display text-3xl text-navy">Not authorised</h1>

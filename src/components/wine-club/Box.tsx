@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useState, useTransition } from 'react'
+import { useEffect, useRef, useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { joinWineClubAction } from '@/app/actions/wine-club'
 import { Button } from '@/components/ui/Button'
@@ -201,23 +201,53 @@ function Drawer({
   onClose: () => void
   children: React.ReactNode
 }) {
+  const panel = useRef<HTMLDivElement>(null)
+  // Held in a ref so the effect below runs once per opening. Callers pass an
+  // inline arrow, and re-running on every render would yank focus back to
+  // the panel mid-interaction.
+  const close = useRef(onClose)
+  close.current = onClose
+
   useEffect(() => {
     const previous = document.body.style.overflow
     document.body.style.overflow = 'hidden'
+    // Move focus into the drawer, and give it back to whatever opened it on
+    // close, so keyboard and screen-reader users are not left behind it.
+    const opener = document.activeElement as HTMLElement | null
+    panel.current?.focus()
     function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') onClose()
+      if (e.key === 'Escape') close.current()
+      // Keep Tab inside the drawer while it is open.
+      if (e.key === 'Tab' && panel.current) {
+        const focusable = panel.current.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        )
+        const first = focusable[0]
+        const last = focusable[focusable.length - 1]
+        if (!first || !last) return
+        if (e.shiftKey && (document.activeElement === first || document.activeElement === panel.current)) {
+          e.preventDefault()
+          last.focus()
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault()
+          first.focus()
+        }
+      }
     }
     document.addEventListener('keydown', onKey)
     return () => {
       document.body.style.overflow = previous
       document.removeEventListener('keydown', onKey)
+      opener?.focus?.()
     }
-  }, [onClose])
+  }, [])
 
   return (
     <div className="fixed inset-0 z-100 flex justify-end bg-navy/60" role="dialog" aria-modal="true" aria-label={title}>
-      <button type="button" aria-label="Close" className="flex-1" onClick={onClose} />
-      <div className="h-full w-full max-w-lg overflow-y-auto bg-cream p-6 shadow-2xl">
+      {/* Click-outside to close. Hidden from assistive tech and the tab
+          order: the visible Close button is the accessible way out. */}
+      <button type="button" aria-hidden="true" tabIndex={-1} className="flex-1" onClick={onClose} />
+      <div ref={panel} tabIndex={-1} className="h-full w-full max-w-lg overflow-y-auto bg-cream p-6 shadow-2xl focus:outline-none">
         <div className="flex items-center justify-between">
           <h2 className="font-display text-3xl text-navy">{title}</h2>
           <button type="button" onClick={onClose} className="px-2 py-1 text-navy underline underline-offset-4">

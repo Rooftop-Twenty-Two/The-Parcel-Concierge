@@ -232,7 +232,7 @@ export function WineClubFlow({ clubBuyable }: { clubBuyable: boolean }) {
   const questionNumber = QUESTION_STEPS.indexOf(state.step) + 1
 
   return (
-    <main className="min-h-[70vh] bg-cream pb-40">
+    <div className="min-h-[70vh] bg-cream pb-40">
       {/* Light progress: four words, not a breadcrumb trail. */}
       <nav aria-label="Progress" className="border-b border-rule bg-beige">
         <ol className="mx-auto flex max-w-[800px] items-center justify-center gap-2 px-4 py-3 text-xs sm:gap-4 sm:text-sm">
@@ -473,7 +473,7 @@ export function WineClubFlow({ clubBuyable }: { clubBuyable: boolean }) {
           </div>
         </div>
       ) : null}
-    </main>
+    </div>
   )
 }
 

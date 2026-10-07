@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { PREVIEW_COOKIE, previewToken } from '@/lib/preview-unlock'
+import { secretsMatch } from '@/lib/secure-compare'
 
 export const runtime = 'nodejs'
 
@@ -21,7 +22,7 @@ export async function POST(request: Request) {
 
   // No password configured means no way in. A missing variable must never
   // be the same thing as an open door.
-  if (!expected || !password || password !== expected) {
+  if (!expected || !secretsMatch(password, expected)) {
     const back = new URL('/coming-soon', request.url)
     back.searchParams.set('wrong', '1')
     return NextResponse.redirect(back, { status: 303 })

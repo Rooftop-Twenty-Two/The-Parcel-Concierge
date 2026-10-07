@@ -31,7 +31,9 @@ export default function ContactPage() {
           <dd className="mt-2">
             <a
               href={`mailto:${CONTACT.email}`}
-              className="font-serif text-xl text-navy underline underline-offset-4"
+              // wrap-anywhere: the address is one unbreakable word, and at
+              // 320px it pushed the whole page sideways.
+              className="font-serif text-xl text-navy underline underline-offset-4 wrap-anywhere"
             >
               {CONTACT.email}
             </a>

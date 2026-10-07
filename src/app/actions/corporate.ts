@@ -32,7 +32,14 @@ export type CorporateEnquiry = {
 
 export type EnquiryResult =
   | { ok: true }
-  | { ok: false; errors: Partial<Record<keyof CorporateEnquiry, string>>; message?: string }
+  | {
+      ok: false
+      errors: Partial<Record<keyof CorporateEnquiry, string>>
+      message?: string
+      // What was typed, so the form can put it back: React clears a form
+      // after its action runs, and one error used to wipe every field.
+      values?: Record<string, string>
+    }
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -79,7 +86,21 @@ export async function submitCorporateEnquiry(
     errors.deadline = 'Which week does this need to land?'
   }
 
-  if (Object.keys(errors).length) return { ok: false, errors }
+  const values: Record<string, string> = {
+    company,
+    name,
+    email,
+    phone,
+    quantity: quantityRaw,
+    budgetPerUnit: budgetRaw,
+    deliveryMode,
+    deadline,
+    notes,
+    branding: form.get('branding') === 'on' ? 'on' : '',
+    alcoholAllowed: form.get('alcoholAllowed') === 'on' ? 'on' : '',
+  }
+
+  if (Object.keys(errors).length) return { ok: false, errors, values }
 
   const enquiry: CorporateEnquiry = {
     company,
@@ -105,6 +126,7 @@ export async function submitCorporateEnquiry(
     return {
       ok: false,
       errors: {},
+      values,
       message:
         'That did not send. Email us directly and we will pick it up, or try again in a minute.',
     }

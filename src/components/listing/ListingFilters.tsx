@@ -97,7 +97,7 @@ function FacetSection({
               <Link
                 href={toggleHref(basePath, facets, entry.facet, option.value)}
                 rel="nofollow"
-                aria-pressed={selected}
+                aria-current={selected ? 'true' : undefined}
                 className="group flex items-center gap-2 py-0.5 text-sm text-navy"
               >
                 <span

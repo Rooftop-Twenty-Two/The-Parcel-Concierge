@@ -143,7 +143,7 @@ export function ItemsPicker({
       </div>
 
       <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-        <label className="flex w-full max-w-sm items-center gap-2 border border-navy/25 bg-cream px-3 py-2">
+        <label className="flex w-full max-w-sm items-center gap-2 border border-navy/25 bg-cream px-3 py-2 focus-within:outline-3 focus-within:outline-offset-3 focus-within:outline-red">
           <span className="sr-only">Search the shop</span>
           <input
             type="search"

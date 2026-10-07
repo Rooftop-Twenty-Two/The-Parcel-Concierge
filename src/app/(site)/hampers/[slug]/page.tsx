@@ -8,6 +8,7 @@ import { hubStaticParams } from '@/lib/static-params'
 import { productMetaDescription } from '@/lib/seo/meta-description'
 import { PRODUCT_DELIVERY_LINE } from '@/lib/seo/product-delivery-line'
 import { getTrustSummary } from '@/lib/trustpilot'
+import { DEFAULT_OG_IMAGE } from '@/lib/seo/og'
 
 export const revalidate = 60
 
@@ -36,7 +37,12 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
       alternates: { canonical: `/hampers/${product.handle}` },
       openGraph: {
         title: product.title,
-        images: product.images.slice(0, 1).map((i) => ({ url: i.url, alt: i.alt })),
+        // This object replaces the layout's, so a product with no photograph
+        // must name the site-wide image or it has no og:image at all.
+        images:
+          product.images.length > 0
+            ? product.images.slice(0, 1).map((i) => ({ url: i.url, alt: i.alt }))
+            : [DEFAULT_OG_IMAGE],
       },
       // Success criterion 7: an out-of-stock product is never an indexable,
       // buyable-looking page.

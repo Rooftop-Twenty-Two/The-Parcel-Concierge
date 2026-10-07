@@ -86,11 +86,14 @@ export function CartView({ cart }: { cart: Cart }) {
     <div>
       <FreeDeliveryNudge subtotalMinor={cart.subtotal.amountMinor} />
 
+      {/* Lines link via /products/<handle>, which redirects to the product's
+          own hub. A cart line does not know its kind, and the old hard-coded
+          /hampers/ path 404'd for every wine and add-on. */}
       <ul className="divide-y divide-rule border-y border-rule">
         {cart.lines.map((line) => (
           <li key={line.id} className="flex gap-4 py-5">
             {line.image ? (
-              <Link href={`/hampers/${line.productHandle}`} className="shrink-0">
+              <Link href={`/products/${line.productHandle}`} className="shrink-0">
                 <Image
                   src={line.image.url}
                   alt={line.image.alt}

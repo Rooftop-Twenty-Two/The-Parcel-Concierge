@@ -132,7 +132,7 @@ export type CollectionDef = {
  * Products per page on every collection listing, before "Show more" (client,
  * October 2026). Kept here so one number sets them all.
  */
-export const LISTING_PAGE_SIZE = 50
+export const LISTING_PAGE_SIZE = 100
 
 const HAMPER_BASE: ProductQuery = { sort: 'featured', first: LISTING_PAGE_SIZE }
 const WINE_BASE: ProductQuery = { sort: 'featured', first: LISTING_PAGE_SIZE }

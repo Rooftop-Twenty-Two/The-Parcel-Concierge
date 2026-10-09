@@ -27,6 +27,8 @@ import {
 import type { ProductQuery } from '@/lib/commerce/types'
 import { breadcrumbJsonLd } from '@/lib/seo/structured-data'
 
+const RECIPIENT_FILTER_VALUES = ['her', 'him']
+
 /**
  * Every listing page on the site renders through here.
  *
@@ -136,7 +138,11 @@ export async function ListingPage({
   const facetData = await Promise.all(
     collection.facets.map(async (facet) => ({
       facet,
-      options: await facetOptions({ ...collection.query, facets }, facet),
+      options: (await facetOptions({ ...collection.query, facets }, facet)).filter(
+        // The "For" box offers For her and For him only; For clients and the
+        // rest stay off the rail (client, October 2026).
+        (option) => facet !== 'recipient' || RECIPIENT_FILTER_VALUES.includes(option.value),
+      ),
       selected: facets[facet] ?? [],
     })),
   )

@@ -137,7 +137,9 @@ async function Hero({
           // The focal point is the basket, two thirds of the way across.
           // On a phone the frame is tall and narrow, so that keeps the
           // basket in shot rather than the right-hand bottles alone.
-          className="object-cover object-[67%_center] lg:object-right"
+          className={`object-cover object-[67%_center] ${
+            slot.image.position === 'center' ? 'lg:object-center' : 'lg:object-right'
+          }`}
         />
         {/* Legibility wash. Brand green under the copy on the left, and
             gone by the middle so the photograph is the hero, not the wash:

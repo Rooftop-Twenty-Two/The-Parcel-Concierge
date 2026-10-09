@@ -30,34 +30,22 @@ export const CONTENT: CmsData = {
     slots: [
       {
         kind: 'hero',
-        headline: 'Beautiful hampers, fine wines and thoughtful gifts',
+        headline: 'Christmas has arrived',
         subhead:
           'Visit us in our bricks and mortar store in Dunshaughlin or shop with us online from anywhere. Enjoy free local delivery within the A85 eircode area, personally delivered by our team, with nationwide delivery through An Post, free on orders over €100.',
-        ctaLabel: 'Shop all hampers',
-        ctaHref: '/hampers',
-        // The client's own hero photograph (September 2026): the wicker
-        // hamper on the table with the wines, Butlers, biscuits and preserves
-        // laid out in front of it. Replaced the large-basket product shot.
-        imageHandle: null,
-        image: {
-          src: '/photography/tpc-hero-hamper-table.webp',
-          alt: 'A wicker hamper on a wooden table with red, white and sparkling wines, Butlers chocolates, luxury biscuits, preserves and candles laid out in front of it',
-        },
-      },
-      {
-        kind: 'christmas',
-        title: 'Christmas coming soon',
-        body: 'We are working on more Christmas hampers now, and they will be ready to go from November once all the Christmas stock has arrived. Every hamper on the site is ready to send today, and corporate Christmas campaigns are open.',
         ctaLabel: 'Shop Christmas',
         ctaHref: '/occasions/christmas',
-        // The shop dressed for Christmas rather than a hamper shot. The
-        // hamper frame that used to sit here carried distorted packaging
-        // text ("Hassetts Concierge" across a Butlers box), which the
-        // client flagged in the September 2026 review.
+        // The Christmas listing's hero photograph (October 2026), in place
+        // of the everyday hamper table shot, which is
+        // /photography/tpc-hero-hamper-table.webp when the season ends. The
+        // separate Christmas band ("Christmas coming soon") came off at the
+        // same time: the hero now says it.
         imageHandle: null,
         image: {
-          src: '/photography/tpc-christmas-11.jpg',
-          alt: 'The Parcel Concierge shop in Dunshaughlin dressed for Christmas, the window full of lights and gifts',
+          src: '/photography/christmas/hero.webp',
+          alt: 'A Christmas hamper on a wooden table, holding a Butlers festive chocolate collection, Keogh’s crisps, Hadji Bey’s caramels, a Filligan’s chutney, Shines smoked salmon pâté, Isle of Crackers and a box of mince pies, with pine, holly and pinecones around it',
+          // A 16:9 frame, centred like the Christmas listing's hero.
+          position: 'center',
         },
       },
       { kind: 'budget-bands' },

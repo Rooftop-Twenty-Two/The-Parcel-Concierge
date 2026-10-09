@@ -45,7 +45,11 @@ export type HomepageSlot =
       ctaLabel: string
       ctaHref: string
       imageHandle: string | null
-      image?: { src: string; alt: string }
+      /**
+       * `position` is the desktop crop: 'right' (the default) for the wide
+       * table shot, 'center' for a 16:9 frame like the Christmas hero.
+       */
+      image?: { src: string; alt: string; position?: 'right' | 'center' }
     }
   /**
    * The seasonal band. Understated by design: type, one photograph and a

@@ -45,8 +45,9 @@ export type ChristmasImage = { src: string; alt: string }
 
 /**
  * The listings that show the Christmas photography. Just the one today.
- * The hampers hub and the homepage are deliberately not in here: the
- * client wants the everyday photograph on those.
+ * The hampers hub is deliberately not in here: the client wants the
+ * everyday photograph on it. (The homepage hero borrows the Christmas
+ * hero photograph from October 2026; that is set in the CMS content.)
  */
 export const CHRISTMAS_IMAGE_PATHS: ReadonlySet<string> = new Set(['/occasions/christmas'])
 

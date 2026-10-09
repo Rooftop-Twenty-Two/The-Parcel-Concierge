@@ -98,6 +98,7 @@ function FacetSection({
               <Link
                 href={toggleHref(basePath, facets, entry.facet, option.value)}
                 rel="nofollow"
+                scroll={false}
                 aria-pressed={selected}
                 className="group flex items-center gap-2 py-0.5 text-sm text-navy"
               >
@@ -131,11 +132,16 @@ export function ListingFilters({
   facets: FacetData[]
   resultCount: number
 }) {
+  const active = facets.flatMap((f) => f.selected.map((value) => ({ facet: f.facet, value })))
   // A one-value facet usually covers every product, so it is hidden. Recipient
   // is the exception: only some products carry For her / For him, so even a
-  // lone value narrows the grid.
-  const shown = facets.filter((f) => f.options.length > 1 || (f.facet === 'recipient' && f.options.length === 1))
-  const active = facets.flatMap((f) => f.selected.map((value) => ({ facet: f.facet, value })))
+  // lone value narrows the grid. Once a filter is on, every facet with a value
+  // stays put, so sections do not vanish under the shopper's cursor.
+  const shown = facets.filter(
+    (f) =>
+      f.options.length > 1 ||
+      (f.options.length === 1 && (f.facet === 'recipient' || active.length > 0)),
+  )
 
   const sections = shown.map((entry) => (
     <FacetSection key={entry.facet} basePath={basePath} facets={facets} entry={entry} />
@@ -148,6 +154,7 @@ export function ListingFilters({
           key={`${facet}:${value}`}
           href={toggleHref(basePath, facets, facet, value)}
           rel="nofollow"
+          scroll={false}
           className="inline-flex items-center gap-1.5 border border-navy bg-navy px-2.5 py-1 text-xs text-cream transition-colors hover:bg-navy/85"
         >
           {label(facet, value)}
@@ -155,7 +162,7 @@ export function ListingFilters({
           <span className="sr-only">Remove this filter</span>
         </Link>
       ))}
-      <Link href={basePath} className="text-sm text-navy underline underline-offset-4">
+      <Link href={basePath} scroll={false} className="text-sm text-navy underline underline-offset-4">
         Clear all
       </Link>
     </div>

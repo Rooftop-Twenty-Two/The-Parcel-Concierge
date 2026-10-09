@@ -147,8 +147,12 @@ export async function ListingPage({
     })),
   )
   // A facet with one value or none is not a choice, so the rail only shows when
-  // at least one facet offers a real choice between values.
-  const showFilters = facetData.some((f) => f.options.length > 1)
+  // at least one facet offers a real choice between values, or a For value
+  // (see ListingFilters). Once a filter is on, the rail stays, so the grid
+  // never jumps sideways after a click.
+  const showFilters =
+    hasActiveFilters(facets) ||
+    facetData.some((f) => f.options.length > 1 || (f.facet === 'recipient' && f.options.length === 1))
 
   const crumbs = [
     { name: 'Home', path: '/' },

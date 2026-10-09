@@ -32,7 +32,7 @@ export const CONTENT: CmsData = {
         kind: 'hero',
         headline: 'Christmas has arrived',
         subhead:
-          'Visit us in our bricks and mortar store in Dunshaughlin or shop with us online from anywhere. Enjoy free local delivery within the A85 eircode area, personally delivered by our team, with nationwide delivery through An Post, free on orders over €100.',
+          'Visit us in Dunshaughlin, Co. Meath or shop with us online from anywhere. Enjoy free local delivery within the A85 eircode area, personally delivered by our team, with nationwide delivery through An Post, free on orders over €100.',
         ctaLabel: 'Shop Christmas',
         ctaHref: '/occasions/christmas',
         // The Christmas listing's hero photograph (October 2026), in place

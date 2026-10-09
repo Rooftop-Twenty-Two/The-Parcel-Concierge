@@ -7,6 +7,7 @@ import {
   isKnownTag,
   PRICE_BANDS,
   priceBandForMinor,
+  recipientsFromTags,
   regionFromLabel,
 } from '../src/lib/commerce/taxonomy.ts'
 
@@ -76,4 +77,12 @@ test('a price lands in exactly one band, including on the boundaries', () => {
   assert.equal(priceBandForMinor(14999).tag, 'price:100-150')
   assert.equal(priceBandForMinor(15000).tag, 'price:150-plus')
   assert.equal(priceBandForMinor(99999).tag, 'price:150-plus')
+})
+
+test('the plain For Her / For Him tags feed the recipient filter', () => {
+  assert.deepEqual(recipientsFromTags(['For Her', 'Christmas']), ['her'])
+  assert.deepEqual(recipientsFromTags(['for him', 'Gifts for Him', 'recipient:him']), ['him'])
+  assert.deepEqual(recipientsFromTags(['For Her', 'For Him']), ['her', 'him'])
+  assert.deepEqual(recipientsFromTags(['recipient:client']), ['client'])
+  assert.deepEqual(recipientsFromTags(['Christmas treats for Him']), [])
 })

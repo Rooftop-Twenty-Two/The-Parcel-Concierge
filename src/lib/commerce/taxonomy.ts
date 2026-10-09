@@ -128,6 +128,30 @@ export function priceBandForMinor(amountMinor: number): (typeof PRICE_BANDS)[num
   return band ?? PRICE_BANDS[PRICE_BANDS.length - 1]!
 }
 
+/**
+ * The merchant's own recipient tags in Shopify admin ("For Her", "Gifts for
+ * Him"), mapped to the recipient: facet value. Matched whole and ignoring
+ * case, so "Christmas treats for Him" stays out (client, October 2026).
+ */
+const RECIPIENT_LABELS: Record<string, string> = {
+  'for her': 'her',
+  'gift for her': 'her',
+  'gifts for her': 'her',
+  'for him': 'him',
+  'gift for him': 'him',
+  'gifts for him': 'him',
+}
+
+/** A product's recipient facet values, from recipient: tags and the plain "For Her"/"For Him" tags. */
+export function recipientsFromTags(tags: readonly string[]): string[] {
+  const values = tags.map((tag) =>
+    tag.startsWith('recipient:')
+      ? tag.slice('recipient:'.length)
+      : RECIPIENT_LABELS[tag.trim().toLowerCase().replace(/\s+/g, ' ')] ?? null,
+  )
+  return [...new Set(values.filter((v): v is string => v !== null))]
+}
+
 /** Human labels for tags, used in breadcrumbs, filter chips and analytics. */
 export const TAG_LABELS: Record<string, string> = {
   'occasion:christmas': 'Christmas',

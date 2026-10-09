@@ -17,7 +17,7 @@ import {
 } from '../shopify/queries'
 import { fixtureAllHandles, fixtureFacetOptions, fixtureProduct, fixtureQuery } from './fixtures'
 import { money } from './money'
-import { countryFromLabel, grapeFromLabel, priceBandForMinor, regionFromLabel } from './taxonomy'
+import { countryFromLabel, grapeFromLabel, priceBandForMinor, recipientsFromTags, regionFromLabel } from './taxonomy'
 import type { Money, Product, ProductCard, ProductQuery, ProductQueryResult } from './types'
 
 /**
@@ -64,7 +64,7 @@ function cardFacetValues(card: ProductCard, facet: string): string[] {
     case 'occasion':
       return card.tags.filter((t) => t.startsWith('occasion:')).map((t) => t.slice('occasion:'.length))
     case 'recipient':
-      return card.tags.filter((t) => t.startsWith('recipient:')).map((t) => t.slice('recipient:'.length))
+      return recipientsFromTags(card.tags)
     default:
       return []
   }

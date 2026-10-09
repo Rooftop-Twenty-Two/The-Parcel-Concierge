@@ -5,6 +5,7 @@ import wineJson from '../../../data/catalogue/wines.json'
 import type { Catalogue, CatalogueProduct } from '../catalogue/schema'
 import { HIDDEN_FROM_LISTINGS } from './collections'
 import { money } from './money'
+import { recipientsFromTags } from './taxonomy'
 import type {
   Product,
   ProductCard,
@@ -209,7 +210,7 @@ export function facetValues(product: Product, facet: string): string[] {
     case 'occasion':
       return product.tags.filter((t) => t.startsWith('occasion:')).map((t) => t.slice('occasion:'.length))
     case 'recipient':
-      return product.tags.filter((t) => t.startsWith('recipient:')).map((t) => t.slice('recipient:'.length))
+      return recipientsFromTags(product.tags)
     case 'price':
       return product.tags.filter((t) => t.startsWith('price:')).map((t) => t.slice('price:'.length))
     default:

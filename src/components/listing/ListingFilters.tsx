@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import type { FacetKey } from '@/lib/commerce/collections'
-import { PRICE_BANDS, TAG_LABELS } from '@/lib/commerce/taxonomy'
+import { PRICE_BANDS, RECIPIENT_TAGS, TAG_LABELS } from '@/lib/commerce/taxonomy'
 
 /**
  * Listing filters — a side rail of facets.
@@ -34,15 +34,16 @@ const FACET_LABELS: Record<FacetKey, string> = {
 // Facet values arrive alphabetised, which reads as nonsense for price
 // bands. They follow the band order shoppers expect: low to high.
 const PRICE_ORDER = PRICE_BANDS.map((band) => band.tag.slice('price:'.length))
+// Recipients lead with For her and For him, the two shoppers reach for.
+const RECIPIENT_ORDER = RECIPIENT_TAGS.map((tag) => tag.slice('recipient:'.length))
 
 function orderedOptions(
   facet: FacetKey,
   options: { value: string; count: number }[],
 ): { value: string; count: number }[] {
-  if (facet !== 'price') return options
-  return [...options].sort(
-    (a, b) => PRICE_ORDER.indexOf(a.value) - PRICE_ORDER.indexOf(b.value),
-  )
+  const order = facet === 'price' ? PRICE_ORDER : facet === 'recipient' ? RECIPIENT_ORDER : null
+  if (!order) return options
+  return [...options].sort((a, b) => order.indexOf(a.value) - order.indexOf(b.value))
 }
 
 function toggleHref(
@@ -130,7 +131,10 @@ export function ListingFilters({
   facets: FacetData[]
   resultCount: number
 }) {
-  const shown = facets.filter((f) => f.options.length > 1)
+  // A one-value facet usually covers every product, so it is hidden. Recipient
+  // is the exception: only some products carry For her / For him, so even a
+  // lone value narrows the grid.
+  const shown = facets.filter((f) => f.options.length > 1 || (f.facet === 'recipient' && f.options.length === 1))
   const active = facets.flatMap((f) => f.selected.map((value) => ({ facet: f.facet, value })))
 
   const sections = shown.map((entry) => (

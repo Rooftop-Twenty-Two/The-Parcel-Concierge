@@ -5,9 +5,10 @@ import type { ProductCard, ProductImage } from './types'
  * Christmas photography, shown on the Christmas listing only.
  *
  * One hamper, one Shopify product, one stock level. What changes is the
- * photograph: /occasions/christmas shows the hamper dressed for Christmas,
- * and every other page (the homepage, the hampers hub, the price bands,
- * search, the product page) shows the product's own Shopify image. That is
+ * photograph: /occasions/christmas and the homepage's featured band
+ * (October 2026) show the hamper dressed for Christmas, and every other
+ * page (the hampers hub, the price bands, search, the product page) shows
+ * the product's own Shopify image. That is
  * the client's ask, September 2026, and it is why this is an override on
  * the card rather than a second product or a swapped Shopify image.
  *

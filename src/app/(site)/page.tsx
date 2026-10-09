@@ -11,6 +11,7 @@ import { VisitTheShop } from '@/components/VisitTheShop'
 import { getHomepage, getMakers } from '@/lib/cms'
 import type { HomepageSlot } from '@/lib/cms/types'
 import { getProduct, queryProducts } from '@/lib/commerce'
+import { CHRISTMAS_IMAGES, withChristmasImages } from '@/lib/commerce/christmas-images'
 import { CHRISTMAS_COLLECTION, getCollectionByPath, HAMPERS_COLLECTION } from '@/lib/commerce/collections'
 import { populatedListings } from '@/lib/commerce/populated'
 import type { ProductCard } from '@/lib/commerce/types'
@@ -390,6 +391,9 @@ async function BudgetBands() {
   )
 }
 
+/** Cards in the homepage's featured band: three rows of three. */
+const FEATURED_COUNT = 9
+
 async function FeaturedHampers({
   slot,
 }: {
@@ -404,10 +408,18 @@ async function FeaturedHampers({
   // In season it reads the Christmas collection instead (client, October
   // 2026), in the merchant's manual order like the Christmas page, so the
   // homepage leads with the same range as the hero's Shop Christmas button.
-  const { items } = await queryProducts({
+  //
+  // Nine cards, each on its Christmas photograph (client, October 2026):
+  // only the products we hold a Christmas photograph for, in collection
+  // order, so the band never mixes festive and everyday shots. Read deep
+  // enough that nine photographed hampers turn up wherever they sit.
+  const { items: range } = await queryProducts({
     collection: CHRISTMAS_COLLECTION ?? HAMPERS_COLLECTION,
-    first: 8,
+    first: 60,
   })
+  const items = withChristmasImages(
+    range.filter((product) => CHRISTMAS_IMAGES[product.handle]),
+  ).slice(0, FEATURED_COUNT)
   if (items.length < 3) return null
 
   return (

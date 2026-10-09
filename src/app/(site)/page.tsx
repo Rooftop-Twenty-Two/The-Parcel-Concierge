@@ -11,7 +11,7 @@ import { VisitTheShop } from '@/components/VisitTheShop'
 import { getHomepage, getMakers } from '@/lib/cms'
 import type { HomepageSlot } from '@/lib/cms/types'
 import { getProduct, queryProducts } from '@/lib/commerce'
-import { getCollectionByPath, HAMPERS_COLLECTION } from '@/lib/commerce/collections'
+import { CHRISTMAS_COLLECTION, getCollectionByPath, HAMPERS_COLLECTION } from '@/lib/commerce/collections'
 import { populatedListings } from '@/lib/commerce/populated'
 import type { ProductCard } from '@/lib/commerce/types'
 import { getTrustSummary } from '@/lib/trustpilot'
@@ -400,7 +400,14 @@ async function FeaturedHampers({
   // a different range from the rest of the site. slot.title drives the
   // heading; the slot no longer carries handles, because this band has not
   // been a hand-picked list since the range went Christmas-only.
-  const { items } = await queryProducts({ collection: HAMPERS_COLLECTION, first: 8 })
+  //
+  // In season it reads the Christmas collection instead (client, October
+  // 2026), in the merchant's manual order like the Christmas page, so the
+  // homepage leads with the same range as the hero's Shop Christmas button.
+  const { items } = await queryProducts({
+    collection: CHRISTMAS_COLLECTION ?? HAMPERS_COLLECTION,
+    first: 8,
+  })
   if (items.length < 3) return null
 
   return (
@@ -410,7 +417,7 @@ async function FeaturedHampers({
           eyebrow="Packed by hand in Meath"
           title={slot.title}
           body="Every one of these is built from producers we buy from directly, and packed in our own shop."
-          action={{ href: '/hampers', label: 'See all hampers' }}
+          action={{ href: '/occasions/christmas', label: 'See all Christmas gifts' }}
         />
         <div className="mt-10">
           <ProductGrid products={items} />

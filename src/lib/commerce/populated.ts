@@ -1,5 +1,5 @@
 import { queryListing } from './index'
-import { MIN_PRODUCTS_PER_LISTING, type CollectionDef } from './collections'
+import { minProductsFor, type CollectionDef } from './collections'
 
 /**
  * The listings in `defs` that have enough products to render.
@@ -23,7 +23,7 @@ export async function populatedListings(defs: readonly CollectionDef[]): Promise
       if (def.curated) return true
       try {
         const { items } = await queryListing(def.path, def.query)
-        return items.length >= MIN_PRODUCTS_PER_LISTING
+        return items.length >= minProductsFor(def)
       } catch {
         return true
       }

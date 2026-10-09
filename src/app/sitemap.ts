@@ -3,7 +3,7 @@ import { listingPathsWithCopy } from '@/lib/cms'
 import { isFixtureMode, queryProducts } from '@/lib/commerce'
 import {
   COLLECTIONS,
-  MIN_PRODUCTS_PER_LISTING,
+  minProductsFor,
   type CollectionDef,
 } from '@/lib/commerce/collections'
 import { buildListingQuery } from '@/components/listing/ListingPage'
@@ -82,7 +82,7 @@ async function listingEntry(
 ): Promise<MetadataRoute.Sitemap[number] | null> {
   const query = await buildListingQuery(collection, {})
   const { items } = await queryProducts(query)
-  if (items.length < MIN_PRODUCTS_PER_LISTING) return null
+  if (items.length < minProductsFor(collection)) return null
 
   return {
     url: url(collection.path),

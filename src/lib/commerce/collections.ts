@@ -126,6 +126,12 @@ export type CollectionDef = {
    * bounces to a different page looks broken.
    */
   comingSoon?: string
+  /**
+   * Overrides MIN_PRODUCTS_PER_LISTING for this listing. The hamper price
+   * bands open with a single hamper (client, October 2026): a price card
+   * with one box behind it beats a missing card.
+   */
+  minProducts?: number
 }
 
 /**
@@ -213,12 +219,15 @@ const ALL_LISTINGS: readonly CollectionDef[] = [
     slug: 'under-75',
     hub: 'hampers',
     path: '/hampers/under-75',
-    title: 'Hampers under €75',
-    h1: 'Hampers under €75',
-    query: { ...HAMPER_BASE, collection: HAMPERS_COLLECTION, maxPriceMinor: 7499 },
+    // €50 to €75 at the client's request (October 2026), on the old
+    // under-75 path so existing links and redirects keep working.
+    title: 'Hampers €50 to €75',
+    h1: 'Hampers from €50 to €75',
+    query: { ...HAMPER_BASE, collection: HAMPERS_COLLECTION, minPriceMinor: 5000, maxPriceMinor: 7499 },
     alcohol: true,
     facets: ['occasion', 'recipient'],
     parentPath: '/hampers',
+    minProducts: 1,
   },
   {
     slug: '75-125',
@@ -230,6 +239,7 @@ const ALL_LISTINGS: readonly CollectionDef[] = [
     alcohol: true,
     facets: ['occasion', 'recipient'],
     parentPath: '/hampers',
+    minProducts: 1,
   },
   {
     slug: '125-200',
@@ -241,6 +251,7 @@ const ALL_LISTINGS: readonly CollectionDef[] = [
     alcohol: true,
     facets: ['occasion', 'recipient'],
     parentPath: '/hampers',
+    minProducts: 1,
   },
   {
     slug: 'luxury-200-plus',
@@ -252,6 +263,7 @@ const ALL_LISTINGS: readonly CollectionDef[] = [
     alcohol: true,
     facets: ['occasion', 'recipient'],
     parentPath: '/hampers',
+    minProducts: 1,
   },
 
   // Hamper themes. Wine and food hampers share the merchant's single
@@ -851,6 +863,11 @@ export function collectionsInHub(hub: CollectionHub): CollectionDef[] {
  * sitemap so an under-populated listing is never submitted for indexing.
  */
 export const MIN_PRODUCTS_PER_LISTING = 4
+
+/** The product floor for one listing: its own override, else the default. */
+export function minProductsFor(collection: CollectionDef): number {
+  return collection.minProducts ?? MIN_PRODUCTS_PER_LISTING
+}
 
 /**
  * Collection handles the site is pre-wired to that the merchant has not

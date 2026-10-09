@@ -129,7 +129,7 @@ export const CONTENT: CmsData = {
     {
       path: '/hampers/under-75',
       intro:
-        'Hampers under €75, which is where most people start. Everything here is still hand packed, and none of it looks like a budget gift when the lid comes off.',
+        'Hampers from €50 to €75, which is where most people start. Everything here is still hand packed, and none of it looks like a budget gift when the lid comes off.',
       seoBlock:
         '<p>The temptation at this price is to pad a box out with filler. We would rather send four things worth having than eight things nobody wants, so the boxes in this band are smaller and better rather than bigger and thinner.</p><p>The Perfect Duo at €55 is a bottle of rosé and a box of Baileys chocolates, and it does exactly what it needs to. For the Guinness Lover at €68 packs Guinness chocolates, caramel fudge and coffee around an enamel mug he will keep.</p><p>Both arrive hand packed and hand tied, with your message written on a card inside the lid. Free hand delivery locally, €8.95 anywhere else in Ireland.</p>',
     },

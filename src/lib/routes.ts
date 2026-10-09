@@ -34,31 +34,35 @@ export const PRODUCT_HUBS = ['hampers', 'wine', 'gifts'] as const
 export type ProductHub = (typeof PRODUCT_HUBS)[number]
 
 export const NAV = [
+  // Seasonal: the Christmas entry point gets its own top-level item while
+  // the season runs, first in the bar ahead of Wine and Hampers (client,
+  // October 2026). Remove this row in January.
+  //
+  // It carries a real menu rather than being a bare link. When it was bare
+  // it was one of two items in the bar that dropped nothing on hover, and
+  // the client read the pair as duplicates of each other.
   {
-    label: 'Hampers',
-    href: '/hampers',
-    // Seasonal: the hamper range is one merchant collection only
-    // (SEASONAL_HAMPERS_ONLY in commerce/collections.ts), so the theme
-    // sub-listings are out of the nav. The price bands are live again and
-    // reachable from the homepage and the hub, which drop any band too thin
-    // to open; the nav is static, so it does not list them until the range
-    // is big enough for all four to fill. Restore the theme links when the
-    // full range reopens.
+    label: 'Christmas',
+    href: '/occasions/christmas',
     columns: [
       {
-        title: 'Hampers',
+        title: 'Christmas',
         links: [
-          { label: 'All hampers', href: '/hampers' },
+          { label: 'Christmas gifts and hampers', href: '/occasions/christmas' },
           { label: 'Build your own hamper', href: '/build-your-own-hamper' },
+          { label: 'The Wine Vault', href: '/wine' },
+          { label: 'Corporate Christmas gifting', href: '/corporate-gifting' },
+          { label: 'Delivery and last posting dates', href: '/delivery' },
         ],
       },
     ],
     promo: {
-      title: 'Build your own hamper',
-      body: 'Pick a hamper box or wicker basket, fill it, write the card.',
-      href: '/build-your-own-hamper',
-      imageSrc: '/photography/tpc-03-full.jpg',
-      imageAlt: 'A new baby hamper with a teddy bear, a blanket and a bottle of sparkling rosé',
+      title: 'Christmas gifts and hampers',
+      body: 'Christmas has arrived. Everything on the site is ready to send today.',
+      href: '/occasions/christmas',
+      imageSrc: '/photography/tpc-christmas-11.jpg',
+      imageAlt:
+        'The Parcel Concierge shop in Dunshaughlin dressed for Christmas, the window full of lights and gifts',
     },
   },
   {
@@ -103,40 +107,37 @@ export const NAV = [
       imageAlt: 'The wine room in the shop in Dunshaughlin',
     },
   },
-  // No dropdown, per the client, September 2026. The bulk orders and
-  // branding pages came off and the menu was down to a single link, which
-  // is a panel that costs a hover and says nothing. Straight to the hub.
-  { label: 'Corporate', href: '/corporate-gifting', columns: [], promo: null },
-  // Seasonal: the Christmas entry point gets its own top-level item while
-  // the season runs. Remove this row in January.
-  //
-  // It carries a real menu rather than being a bare link. When it was bare
-  // it was one of two items in the bar that dropped nothing on hover, and
-  // the client read the pair as duplicates of each other.
   {
-    label: 'Christmas',
-    href: '/occasions/christmas',
+    label: 'Hampers',
+    href: '/hampers',
+    // Seasonal: the hamper range is one merchant collection only
+    // (SEASONAL_HAMPERS_ONLY in commerce/collections.ts), so the theme
+    // sub-listings are out of the nav. The price bands are live again and
+    // reachable from the homepage and the hub, which drop any band too thin
+    // to open; the nav is static, so it does not list them until the range
+    // is big enough for all four to fill. Restore the theme links when the
+    // full range reopens.
     columns: [
       {
-        title: 'Christmas',
+        title: 'Hampers',
         links: [
-          { label: 'Christmas gifts and hampers', href: '/occasions/christmas' },
+          { label: 'All hampers', href: '/hampers' },
           { label: 'Build your own hamper', href: '/build-your-own-hamper' },
-          { label: 'The Wine Vault', href: '/wine' },
-          { label: 'Corporate Christmas gifting', href: '/corporate-gifting' },
-          { label: 'Delivery and last posting dates', href: '/delivery' },
         ],
       },
     ],
     promo: {
-      title: 'Christmas gifts and hampers',
-      body: 'More Christmas hampers land in November. Everything on the site is ready to send today.',
-      href: '/occasions/christmas',
-      imageSrc: '/photography/tpc-christmas-11.jpg',
-      imageAlt:
-        'The Parcel Concierge shop in Dunshaughlin dressed for Christmas, the window full of lights and gifts',
+      title: 'Build your own hamper',
+      body: 'Pick a hamper box or wicker basket, fill it, write the card.',
+      href: '/build-your-own-hamper',
+      imageSrc: '/photography/tpc-03-full.jpg',
+      imageAlt: 'A new baby hamper with a teddy bear, a blanket and a bottle of sparkling rosé',
     },
   },
+  // No dropdown, per the client, September 2026. The bulk orders and
+  // branding pages came off and the menu was down to a single link, which
+  // is a panel that costs a hover and says nothing. Straight to the hub.
+  { label: 'Corporate', href: '/corporate-gifting', columns: [], promo: null },
   // Occasions came out of the bar at the client's request, September 2026,
   // and the menu was the reason: of its five links, four pointed at
   // listings whose collections were removed in the collection clear-out,

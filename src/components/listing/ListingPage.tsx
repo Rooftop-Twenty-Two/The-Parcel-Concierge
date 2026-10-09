@@ -14,7 +14,7 @@ import {
 import { ListingHero } from '@/components/listing/ListingHero'
 import {
   LISTING_PAGE_SIZE,
-  MIN_PRODUCTS_PER_LISTING,
+  minProductsFor,
   type CollectionDef,
   type FacetKey,
 } from '@/lib/commerce/collections'
@@ -129,8 +129,8 @@ export async function ListingPage({
   const comingSoon =
     collection.comingSoon !== undefined &&
     !hasActiveFilters(facets) &&
-    result.items.length < MIN_PRODUCTS_PER_LISTING
-  if (!comingSoon && !hasActiveFilters(facets) && result.items.length < MIN_PRODUCTS_PER_LISTING) {
+    result.items.length < minProductsFor(collection)
+  if (!comingSoon && !hasActiveFilters(facets) && result.items.length < minProductsFor(collection)) {
     if (collection.parentPath === collection.path) notFound()
     redirect(collection.parentPath)
   }
@@ -362,7 +362,7 @@ export async function listingMetadata(
   // until it fills. The same cached read the page makes.
   const empty =
     collection.comingSoon !== undefined &&
-    (await queryListing(collection.path, collection.query)).items.length < MIN_PRODUCTS_PER_LISTING
+    (await queryListing(collection.path, collection.query)).items.length < minProductsFor(collection)
 
   return {
     title: copy?.metaTitle ?? collection.title,

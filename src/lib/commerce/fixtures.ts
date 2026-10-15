@@ -3,6 +3,7 @@ import hampersJson from '../../../data/catalogue/hampers.json'
 import mechanismsJson from '../../../data/catalogue/mechanisms.json'
 import wineJson from '../../../data/catalogue/wines.json'
 import type { Catalogue, CatalogueProduct } from '../catalogue/schema'
+import { seasonalCardImage } from './christmas-images'
 import { HIDDEN_FROM_LISTINGS } from './collections'
 import { money } from './money'
 import { recipientsFromTags } from './taxonomy'
@@ -168,7 +169,7 @@ function toCard(product: Product): ProductCard {
     priceRange: product.priceRange,
     availableForSale: product.availableForSale,
     tags: product.tags,
-    image: product.images[0] ?? null,
+    image: seasonalCardImage(product.handle, product.images[0] ?? null),
     badges: product.tags.filter((t) => t.startsWith('badge:')),
     defaultVariantId: buyable?.id ?? null,
     defaultVariantPriceMinor: buyable?.price.amountMinor ?? null,

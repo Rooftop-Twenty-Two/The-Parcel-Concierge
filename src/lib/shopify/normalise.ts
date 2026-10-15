@@ -1,4 +1,5 @@
 import { money } from '../commerce/money'
+import { seasonalCardImage } from '../commerce/christmas-images'
 import { CHRISTMAS_COLLECTION, HAMPERS_COLLECTION } from '../commerce/collections'
 import type {
   Cart,
@@ -240,7 +241,7 @@ export function normaliseProductCard(raw: RawCardProduct): ProductCard {
     kind: kindFromMembership(raw.collections?.nodes.map((n) => n.handle) ?? [], raw.tags, raw.productType),
     tags: raw.tags,
     availableForSale: raw.availableForSale,
-    image: normaliseImage(raw.featuredImage),
+    image: seasonalCardImage(raw.handle, normaliseImage(raw.featuredImage)),
     badges: raw.tags.filter((t) => t.startsWith('badge:')),
     defaultVariantId: buyable?.id ?? null,
     defaultVariantPriceMinor: buyable?.price

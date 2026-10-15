@@ -8,7 +8,8 @@ import type { ProductCard, ProductImage } from './types'
  * photograph: /occasions/christmas and the homepage's featured band
  * (October 2026) show the hamper dressed for Christmas, and every other
  * page (the hampers hub, the price bands, search, the product page) shows
- * the product's own Shopify image. That is
+ * the product's own Shopify image, except the few hampers in
+ * CHRISTMAS_IMAGE_EVERYWHERE below. That is
  * the client's ask, September 2026, and it is why this is an override on
  * the card rather than a second product or a swapped Shopify image.
  *
@@ -220,10 +221,26 @@ export const CHRISTMAS_IMAGES: Readonly<Record<string, ChristmasImage>> = {
 }
 
 /**
- * The same cards with their Christmas photograph in place of the Shopify
- * one, where we hold a Christmas photograph. Everything else about the
- * card, including its price, stock and link, is untouched.
+ * Hampers whose Christmas photograph is the card image on every page,
+ * not only the Christmas listing and the homepage band: the hampers hub,
+ * the price bands, search and "More hampers" too.
+ *
+ * The Grand Indulgence leads the hampers collection, and the client wants
+ * it on its Christmas look there (October 2026). Shopify's featured image
+ * is still the everyday shot, which is what the rest of the site falls
+ * back to, so this is the switch rather than reordering the images in
+ * Shopify. Add a handle to put another hamper on its Christmas photograph
+ * everywhere; empty it in January with the rest of this file.
  */
+export const CHRISTMAS_IMAGE_EVERYWHERE: ReadonlySet<string> = new Set(['large-basket'])
+
+/** A card's image, swapped for its Christmas photograph where it is in the set above. */
+export function seasonalCardImage(handle: string, image: ProductImage | null): ProductImage | null {
+  const festive = CHRISTMAS_IMAGE_EVERYWHERE.has(handle) ? CHRISTMAS_IMAGES[handle] : undefined
+  if (!festive) return image
+  return { url: festive.src, alt: festive.alt, width: 1400, height: 1050 }
+}
+
 /**
  * The product gallery with the Christmas photograph leading it.
  *
@@ -245,6 +262,11 @@ export function withChristmasGallery(handle: string, images: readonly ProductIma
   ]
 }
 
+/**
+ * The same cards with their Christmas photograph in place of the Shopify
+ * one, where we hold a Christmas photograph. Everything else about the
+ * card, including its price, stock and link, is untouched.
+ */
 export function withChristmasImages(cards: readonly ProductCard[]): ProductCard[] {
   return cards.map((card) => {
     const festive = CHRISTMAS_IMAGES[card.handle]

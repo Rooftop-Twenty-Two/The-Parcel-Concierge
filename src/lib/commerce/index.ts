@@ -17,6 +17,7 @@ import {
 } from '../shopify/queries'
 import { fixtureAllHandles, fixtureFacetOptions, fixtureProduct, fixtureQuery } from './fixtures'
 import { money } from './money'
+import { filterByTitle } from './search-match'
 import { countryFromLabel, grapeFromLabel, priceBandForMinor, recipientsFromTags, regionFromLabel } from './taxonomy'
 import type { Money, Product, ProductCard, ProductQuery, ProductQueryResult } from './types'
 
@@ -536,8 +537,9 @@ export async function facetOptions(
  *
  * Shopify's search matches descriptions, tags and vendors too, so
  * "sancerre" brought back picture frames whose copy happened to mention it.
- * Results are narrowed to products whose title holds every word searched,
- * the same rule the fixture search uses. Only when no title matches at all
+ * Results are narrowed to products whose title holds every word searched
+ * as a whole word (search-match.ts), the same rule the fixture search uses.
+ * Only when no title matches at all
  * (a descriptive search like "red wine") do Shopify's wider results stand,
  * so a search never comes back empty when something relevant exists.
  */
@@ -550,7 +552,11 @@ export async function searchProducts(
 
   if (isFixtureMode()) {
     const result = fixtureQuery({ text: trimmed, first, sort: 'featured' })
-    const items = result.items.filter((item) => item.kind !== 'builder-item')
+    const items = filterByTitle(
+      result.items.filter((item) => item.kind !== 'builder-item'),
+      trimmed,
+      (item) => item.title,
+    )
     return { items, total: items.length }
   }
 
@@ -572,11 +578,8 @@ export async function searchProducts(
     .map(normaliseProductCard)
     .filter((card) => card.kind !== 'builder-item')
 
-  const words = searchWords(trimmed)
-  const titleMatches = items.filter((card) => {
-    const title = foldForSearch(card.title)
-    return words.every((word) => title.includes(word))
-  })
+  // Whole words, not fragments: "port" must not find tech su-port. See search-match.ts.
+  const titleMatches = filterByTitle(items, trimmed, (card) => card.title)
   if (titleMatches.length > 0) {
     return { items: titleMatches.slice(0, first), total: titleMatches.length }
   }
@@ -584,15 +587,6 @@ export async function searchProducts(
     items: items.slice(0, first),
     total: Math.max(items.length, data.search.totalCount - (data.search.nodes.length - items.length)),
   }
-}
-
-/** Lower case with accents stripped, so "gerard" finds Gérard. */
-function foldForSearch(value: string): string {
-  return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
-}
-
-function searchWords(term: string): string[] {
-  return foldForSearch(term).split(/\s+/).filter(Boolean)
 }
 
 export async function allProductHandles(): Promise<string[]> {

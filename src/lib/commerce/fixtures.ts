@@ -6,6 +6,7 @@ import type { Catalogue, CatalogueProduct } from '../catalogue/schema'
 import { seasonalCardImage } from './christmas-images'
 import { HIDDEN_FROM_LISTINGS } from './collections'
 import { money } from './money'
+import { titleMatchesLoosely } from './search-match'
 import { recipientsFromTags } from './taxonomy'
 import type {
   Product,
@@ -254,9 +255,8 @@ function matches(product: Product, query: ProductQuery): boolean {
     // Every word must appear somewhere in the title. "irish chocolate"
     // should find Irish Chocolate Truffles, not everything Irish plus
     // everything chocolate.
-    const title = product.title.toLowerCase()
-    const words = query.text.toLowerCase().split(/\s+/).filter(Boolean)
-    if (!words.every((w) => title.includes(w))) return false
+    // Whole words, so "port" does not find tech su-port (search-match.ts).
+    if (!titleMatchesLoosely(product.title, query.text)) return false
   }
   if (query.wineFlags?.length) {
     if (!product.wine) return false

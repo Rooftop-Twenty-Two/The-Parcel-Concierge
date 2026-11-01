@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { toCsv } from '@/lib/corporate/csv'
 import { campaignStore } from '@/lib/corporate/store'
 
 export const dynamic = 'force-dynamic'
@@ -38,9 +39,7 @@ export async function GET(request: NextRequest) {
     r.shopifyOrderId ?? '', r.redeemedAt,
   ])
 
-  const csv = [header, ...rows]
-    .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(','))
-    .join('\r\n')
+  const csv = toCsv([header, ...rows])
 
   return new NextResponse(csv, {
     headers: {

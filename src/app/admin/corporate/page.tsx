@@ -1,6 +1,13 @@
 import type { Metadata } from 'next'
+import { cookies } from 'next/headers'
 import { AdminCampaignRow } from '@/components/corporate/AdminCampaignRow'
 import { formatMinor } from '@/lib/commerce/money'
+import {
+  ADMIN_COOKIE,
+  MIN_ADMIN_KEY_LENGTH,
+  adminSessionValid,
+  configuredAdminKey,
+} from '@/lib/corporate/admin-auth'
 import { campaignStore } from '@/lib/corporate/store'
 import { campaignStats, campaignValueMinor } from '@/lib/corporate/types'
 
@@ -16,37 +23,59 @@ export const metadata: Metadata = {
  * and the picking CSV with the delivery addresses the corporate dashboard
  * deliberately never shows.
  *
- * Gated by CORPORATE_ADMIN_KEY in the URL. That is the right weight of
- * lock for a team of two reading their own orders; real staff accounts
- * arrive with the database. Without the env var the page refuses to
- * exist at all rather than running open.
+ * Gated by CORPORATE_ADMIN_KEY, typed into the sign-in form below and
+ * exchanged for an httpOnly session cookie (see lib/corporate/admin-auth).
+ * That is the right weight of lock for a team of two reading their own
+ * orders; real staff accounts arrive with the database. Without the env
+ * var the page refuses to exist at all rather than running open.
  */
 export default async function AdminCorporatePage({
   searchParams,
 }: {
-  searchParams: Promise<{ key?: string; status?: string }>
+  searchParams: Promise<{ status?: string; wrong?: string }>
 }) {
-  const { key, status } = await searchParams
-  const expected = process.env.CORPORATE_ADMIN_KEY
+  const { status, wrong } = await searchParams
 
-  if (!expected) {
+  if (!configuredAdminKey()) {
     return (
       <main id="main" className="mx-auto max-w-2xl px-4 py-20">
         <h1 className="font-display text-3xl text-navy">Admin is not configured</h1>
         <p className="mt-3 text-ink-muted">
-          Set <code className="bg-beige px-1">CORPORATE_ADMIN_KEY</code> in the environment and
-          open this page as <code className="bg-beige px-1">/admin/corporate?key=…</code>. Until
-          the key exists, this page stays shut.
+          Set <code className="bg-beige px-1">CORPORATE_ADMIN_KEY</code> in the environment, at
+          least {MIN_ADMIN_KEY_LENGTH} characters long, then sign in on this page. Until the key
+          exists, this page stays shut.
         </p>
       </main>
     )
   }
 
-  if (key !== expected) {
+  const jar = await cookies()
+  if (!adminSessionValid(jar.get(ADMIN_COOKIE)?.value)) {
     return (
       <main id="main" className="mx-auto max-w-2xl px-4 py-20">
-        <h1 className="font-display text-3xl text-navy">Not authorised</h1>
-        <p className="mt-3 text-ink-muted">This page needs the admin key in the URL.</p>
+        <h1 className="font-display text-3xl text-navy">Sign in</h1>
+        <p className="mt-3 text-ink-muted">Enter the admin key to open the fulfilment view.</p>
+        <form method="post" action="/admin/corporate/login" className="mt-6 flex flex-wrap gap-2">
+          <label htmlFor="admin-key" className="sr-only">
+            Admin key
+          </label>
+          <input
+            id="admin-key"
+            name="key"
+            type="password"
+            required
+            autoComplete="current-password"
+            className="min-w-[260px] flex-1 border border-navy/25 px-3 py-2 text-navy"
+          />
+          <button type="submit" className="border border-navy bg-navy px-4 py-2 text-cream">
+            Sign in
+          </button>
+        </form>
+        {wrong ? (
+          <p className="mt-3 text-sm text-red" role="alert">
+            That key was not recognised.
+          </p>
+        ) : null}
       </main>
     )
   }
@@ -92,7 +121,7 @@ export default async function AdminCorporatePage({
         {filters.map(([value, label]) => (
           <a
             key={label}
-            href={`/admin/corporate?key=${encodeURIComponent(key)}${value ? `&status=${value}` : ''}`}
+            href={`/admin/corporate${value ? `?status=${value}` : ''}`}
             aria-current={(status ?? '') === value ? 'page' : undefined}
             className={`border px-3 py-1.5 ${
               (status ?? '') === value ? 'border-navy bg-navy text-cream' : 'border-navy/25 text-navy hover:border-navy'
@@ -123,7 +152,6 @@ export default async function AdminCorporatePage({
                 return (
                   <AdminCampaignRow
                     key={campaign.id}
-                    adminKey={key}
                     id={campaign.id}
                     slug={campaign.slug}
                     company={campaign.company.companyName}

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { ADMIN_COOKIE, adminSessionValid } from '@/lib/corporate/admin-auth'
 import { toCsv } from '@/lib/corporate/csv'
 import { campaignStore } from '@/lib/corporate/store'
 
@@ -10,14 +11,12 @@ export const dynamic = 'force-dynamic'
  * This is the fulfilment side of the privacy split. The corporate
  * dashboard never sees an address; the bench gets them all in one file it
  * can work through, whether or not Shopify is connected yet. Same admin
- * key as the dashboard.
+ * session as the dashboard.
  */
 export async function GET(request: NextRequest) {
-  const key = request.nextUrl.searchParams.get('key')
   const id = request.nextUrl.searchParams.get('id')
-  const expected = process.env.CORPORATE_ADMIN_KEY
 
-  if (!expected || key !== expected) {
+  if (!adminSessionValid(request.cookies.get(ADMIN_COOKIE)?.value)) {
     return NextResponse.json({ error: 'Not authorised.' }, { status: 401 })
   }
   if (!id) return NextResponse.json({ error: 'Which campaign?' }, { status: 400 })

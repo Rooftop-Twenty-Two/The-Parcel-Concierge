@@ -11,7 +11,7 @@ else. One payment, one link, zero address spreadsheets.
 | Campaign wizard | `/corporate-gifting/new` | Buyer: company → recipients → budget → gifts → branding → review |
 | Recipient gifting page | `/gift/{slug}` | Recipients, mostly on phones, no shop chrome, no prices |
 | Corporate dashboard | `/corporate-gifting/dashboard/{slug}?token=…` | Buyer: progress, reminders, add recipients |
-| Fulfilment admin | `/admin/corporate?key=…` | Us: activate, progress statuses, picking CSV |
+| Fulfilment admin | `/admin/corporate` (sign in with the admin key) | Us: activate, progress statuses, picking CSV |
 
 ## The privacy split, which is the product
 
@@ -80,7 +80,7 @@ recipient sees.
 ## Setup
 
 ```
-CORPORATE_ADMIN_KEY=   # gates /admin/corporate and campaign activation
+CORPORATE_ADMIN_KEY=   # gates /admin/corporate and campaign activation; 16+ characters
 ```
 
 On Vercel: project → **Storage** → create or connect an **Upstash for

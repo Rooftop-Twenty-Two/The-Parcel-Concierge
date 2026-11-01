@@ -7,7 +7,6 @@ import type { CampaignStatus } from '@/lib/corporate/types'
 
 /** One campaign in the admin table, with its status controls inline. */
 export function AdminCampaignRow({
-  adminKey,
   id,
   slug,
   company,
@@ -18,7 +17,6 @@ export function AdminCampaignRow({
   value,
   status,
 }: {
-  adminKey: string
   id: string
   slug: string
   company: string
@@ -35,7 +33,7 @@ export function AdminCampaignRow({
 
   function setStatus(next: CampaignStatus) {
     startTransition(async () => {
-      const result = await setCampaignStatusAction(adminKey, id, next)
+      const result = await setCampaignStatusAction(id, next)
       if (result.ok) router.refresh()
       else setError(result.message)
     })
@@ -77,7 +75,7 @@ export function AdminCampaignRow({
             </button>
           ) : null}
           <a
-            href={`/admin/corporate/export?key=${encodeURIComponent(adminKey)}&id=${id}`}
+            href={`/admin/corporate/export?id=${encodeURIComponent(id)}`}
             className="text-xs text-navy underline underline-offset-2"
           >
             Picking CSV

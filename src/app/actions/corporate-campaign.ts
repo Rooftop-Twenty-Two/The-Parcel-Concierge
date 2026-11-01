@@ -1,7 +1,9 @@
 'use server'
 
 import { randomBytes, randomUUID } from 'node:crypto'
+import { cookies } from 'next/headers'
 import { queryProducts } from '@/lib/commerce'
+import { ADMIN_COOKIE, adminSessionValid } from '@/lib/corporate/admin-auth'
 import { createRecipientOrder } from '@/lib/corporate/orders'
 import { campaignStore, type CampaignStore } from '@/lib/corporate/store'
 import {
@@ -362,17 +364,16 @@ export async function addAllocationAction(
 // Admin.
 // ---------------------------------------------------------------------------
 
-function adminAuthorised(key: string): boolean {
-  const expected = process.env.CORPORATE_ADMIN_KEY
-  return Boolean(expected) && key === expected
+async function adminAuthorised(): Promise<boolean> {
+  const jar = await cookies()
+  return adminSessionValid(jar.get(ADMIN_COOKIE)?.value)
 }
 
 export async function setCampaignStatusAction(
-  key: string,
   id: string,
   status: Campaign['status'],
 ): Promise<{ ok: true } | Err> {
-  if (!adminAuthorised(key)) return { ok: false, message: 'Not authorised.' }
+  if (!(await adminAuthorised())) return { ok: false, message: 'Not authorised.' }
   const store = await campaignStore()
   const campaign = await store.get(id)
   if (!campaign) return { ok: false, message: 'No such campaign.' }

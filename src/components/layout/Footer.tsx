@@ -35,6 +35,28 @@ export function Footer() {
             <div className="mt-5">
               <TrustpilotStars variant="light" />
             </div>
+            {/* Guaranteed Irish membership, as the accreditation mark rather
+                than only the "Member of" line below. The supplied logo is the
+                white/reversed version, so it sits on the navy footer and would
+                not read on a light background. Links to the business's own
+                Guaranteed Irish directory listing; rel="noopener" because it
+                opens a third-party site in a new tab. */}
+            <div className="mt-6">
+              <a
+                href="https://directory.guaranteedirish.ie/vendor/craft-design-textiles-gifting/the-parcel-concierge"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold"
+              >
+                <Image
+                  src="/brand/guaranteed-irish.png"
+                  alt="Guaranteed Irish member — view our listing"
+                  width={157}
+                  height={164}
+                  className="h-16 w-auto"
+                />
+              </a>
+            </div>
           </div>
 
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">

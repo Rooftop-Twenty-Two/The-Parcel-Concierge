@@ -161,10 +161,13 @@ export const DELIVERY = {
    */
   maxBottlesPerOrder: 6 as number | null,
   /**
-   * Free delivery on orders of €100 or more. Confirmed by the client,
-   * August 2026; the cart progress nudge renders now that this is set.
+   * No free-delivery threshold. The client asked for every "free delivery
+   * over €100" mention to come off the site (November 2026), so this stays
+   * null: the cart nudge, the header bar clause, the hub and delivery-promise
+   * lines and the delivery page all drop the free-over wording while it is.
+   * Set a minor amount here to turn the offer (and all of that copy) back on.
    */
-  freeDeliveryThresholdMinor: 10000 as number | null,
+  freeDeliveryThresholdMinor: null as number | null,
   cutOff: {
     /** Daily order cut-off for next-working-day dispatch. Not confirmed. */
     dailyOrderCutOff: null as string | null,

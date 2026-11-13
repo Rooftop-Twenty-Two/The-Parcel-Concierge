@@ -32,7 +32,7 @@ export const CONTENT: CmsData = {
         kind: 'hero',
         headline: 'Christmas has arrived',
         subhead:
-          'Visit us in Dunshaughlin, Co. Meath or shop with us online from anywhere. Enjoy free local delivery within the A85 eircode area, personally delivered by our team, with nationwide delivery through An Post, free on orders over €100.',
+          'Visit us in Dunshaughlin, Co. Meath or shop with us online from anywhere. Enjoy free local delivery within the A85 eircode area, personally delivered by our team, with nationwide delivery through An Post.',
         ctaLabel: 'Shop Christmas',
         ctaHref: '/occasions/christmas',
         // The Christmas listing's hero photograph (October 2026), in place
@@ -138,21 +138,21 @@ export const CONTENT: CmsData = {
       intro:
         'Hampers from €75 to €125. This is the band for a gift that has to carry a bit of weight: a proper thank you, a milestone birthday, a client you want to keep.',
       seoBlock:
-        '<p>Between €75 and €125 a hamper stops being a nice gesture and starts being a real present. There is room in the box for a bottle worth opening, a full Irish spread or a proper bit of knitwear.</p><p>Bubbles and Bliss at €80 pairs two bottles of Prosecco with Jo Browne body oils. The All Ireland Food Hamper at €105.95 holds McEntee’s tea, Keogh’s crisps, Hassetts biscuits and three jars from Filligan’s of Donegal. The Classic Gentleman’s Hamper at €105 wraps a McNutt lambswool scarf around a Sicilian red, and the Taste of Ireland Gluten Free Hamper at €92 feeds the house nobody can usually buy for.</p><p>Every box in this band is packed by hand and hand tied with ribbon. Free hand delivery locally, €8.95 anywhere else in Ireland, free over €100.</p>',
+        '<p>Between €75 and €125 a hamper stops being a nice gesture and starts being a real present. There is room in the box for a bottle worth opening, a full Irish spread or a proper bit of knitwear.</p><p>Bubbles and Bliss at €80 pairs two bottles of Prosecco with Jo Browne body oils. The All Ireland Food Hamper at €105.95 holds McEntee’s tea, Keogh’s crisps, Hassetts biscuits and three jars from Filligan’s of Donegal. The Classic Gentleman’s Hamper at €105 wraps a McNutt lambswool scarf around a Sicilian red, and the Taste of Ireland Gluten Free Hamper at €92 feeds the house nobody can usually buy for.</p><p>Every box in this band is packed by hand and hand tied with ribbon. Free hand delivery locally, €8.95 anywhere else in Ireland.</p>',
     },
     {
       path: '/hampers/125-200',
       intro:
         'Hampers from €125 to €200. Bigger boxes, better bottles, and gifts that stay in the house after the food is gone. This is the band for an anniversary, a new arrival, or a client list where the names matter.',
       seoBlock:
-        '<p>At this level the box is built around one or two things worth talking about rather than a longer list of small ones. The Italian Job at €134.95 sets two Italian wines beside a Caulfield Country walnut serving board. Because You’re Amazing at €139 is the pamper answer: Prosecco, chocolates, a Herb Dublin candle trio and a body care set from The Handmade Soap Company.</p><p>Hello Baby Boy and Hello Baby Girl, both €189.95, welcome the newest arrivals with a McNutt of Donegal lambswool blanket, a bedtime bear and a bottle for the parents. If nothing here fits, the hamper builder will let you put exactly the right things in a box, and we will pack it the same way we pack everything else.</p><p>Free hand delivery locally, €8.95 anywhere else in Ireland, free over €100.</p>',
+        '<p>At this level the box is built around one or two things worth talking about rather than a longer list of small ones. The Italian Job at €134.95 sets two Italian wines beside a Caulfield Country walnut serving board. Because You’re Amazing at €139 is the pamper answer: Prosecco, chocolates, a Herb Dublin candle trio and a body care set from The Handmade Soap Company.</p><p>Hello Baby Boy and Hello Baby Girl, both €189.95, welcome the newest arrivals with a McNutt of Donegal lambswool blanket, a bedtime bear and a bottle for the parents. If nothing here fits, the hamper builder will let you put exactly the right things in a box, and we will pack it the same way we pack everything else.</p><p>Free hand delivery locally, €8.95 anywhere else in Ireland.</p>',
     },
     {
       path: '/hampers/luxury-200-plus',
       intro:
         'Hampers at €200 and over. Champagne, Rioja, crystal and the biggest baskets we pack.',
       seoBlock:
-        '<p>Above €200 the boxes get deeper rather than louder. The New Home Luxury Hamper at €216 marks a move properly, with Henriot Champagne, Galway Crystal flutes, a Rathbournes diffuser and an Ogham print for the wall. A Taste of Luxury at €280 fills a basket with Italian wine, Prosecco, Shines pâté, chocolates and a La Bougie candle and diffuser.</p><p>The Grand Indulgence at €495 is the biggest thing we pack: Louis Roederer Champagne, Bordeaux and Rioja, Butlers chocolates, Mienas nougat, and fragrance for the house and the car, all in one basket.</p><p>Free delivery on these anywhere in Ireland, and we can deliver to a business address if that is easier.</p>',
+        '<p>Above €200 the boxes get deeper rather than louder. The New Home Luxury Hamper at €216 marks a move properly, with Henriot Champagne, Galway Crystal flutes, a Rathbournes diffuser and an Ogham print for the wall. A Taste of Luxury at €280 fills a basket with Italian wine, Prosecco, Shines pâté, chocolates and a La Bougie candle and diffuser.</p><p>The Grand Indulgence at €495 is the biggest thing we pack: Louis Roederer Champagne, Bordeaux and Rioja, Butlers chocolates, Mienas nougat, and fragrance for the house and the car, all in one basket.</p><p>Free hand delivery locally, €8.95 anywhere else in Ireland, and we can deliver to a business address if that is easier.</p>',
     },
     {
       path: '/hampers/wine',
@@ -306,19 +306,19 @@ export const CONTENT: CmsData = {
       path: '/wine/under-25',
       metaTitle: 'Wine under €25',
       metaDescription:
-        'Every wine on our list under €25, the everyday end of the Wine Vault. Filter by grape, country or style. Free delivery over €100. Over 18s only.',
+        'Every wine on our list under €25, the everyday end of the Wine Vault. Filter by grape, country or style. Over 18s only.',
     },
     {
       path: '/wine/25-50',
       metaTitle: 'Wine from €25 to €50',
       metaDescription:
-        'Wine between €25 and €50, the range most gift bottles come from. Filter by grape, country or style. Free delivery over €100. Over 18s only.',
+        'Wine between €25 and €50, the range most gift bottles come from. Filter by grape, country or style. Over 18s only.',
     },
     {
       path: '/wine/50-plus',
       metaTitle: 'Wine over €50',
       metaDescription:
-        'Wine over €50: the bottles we buy in small quantities and open ourselves before listing. Free delivery over €100. Over 18s only.',
+        'Wine over €50: the bottles we buy in small quantities and open ourselves before listing. Over 18s only.',
     },
 
     // The occasions listings below are dark while their Shopify collections
@@ -354,7 +354,7 @@ export const CONTENT: CmsData = {
       path: '/occasions/mothers-day',
       metaTitle: 'Mother’s Day gifts and hampers',
       metaDescription:
-        'Mother’s Day hampers, wine and pamper gifts, hand packed in Co. Meath. Free local delivery, €8.95 anywhere else in Ireland and free over €100.',
+        'Mother’s Day hampers, wine and pamper gifts, hand packed in Co. Meath. Free local delivery, €8.95 anywhere else in Ireland.',
     },
     {
       path: '/occasions/fathers-day',
@@ -372,7 +372,7 @@ export const CONTENT: CmsData = {
       path: '/occasions/easter',
       metaTitle: 'Easter gifts and hampers',
       metaDescription:
-        'Easter hampers and Irish chocolate, hand packed in Co. Meath. Free local delivery, €8.95 anywhere else in Ireland and free over €100.',
+        'Easter hampers and Irish chocolate, hand packed in Co. Meath. Free local delivery, €8.95 anywhere else in Ireland.',
     },
 
     {
@@ -646,7 +646,7 @@ export const CONTENT: CmsData = {
       title: 'Terms of service',
       intro:
         'The terms you agree to when you buy from us, including cancellations, returns and refunds.',
-      body: '<p>These terms apply when you buy from theparcelconcierge.com. Please read them before you order. Nothing in them affects your statutory rights as a consumer under Irish and EU law.</p><h2>Who we are</h2><p>The Parcel Concierge, No 1, Supple House, Dunshaughlin, Co. Meath, A85 R684, Ireland. You can reach us at hello@theparcelconcierge.com or on (01) 801 9810.</p><h2>Placing an order</h2><p>Your order is an offer to buy. A contract is formed when we email you to confirm the order has been dispatched, not when you complete checkout. If we cannot fulfil an order we will contact you and refund you in full rather than substituting without asking.</p><p>We may refuse an order. The usual reasons are that an item is out of stock, that we cannot deliver to the address, or that we cannot satisfy ourselves about age verification on an order containing alcohol.</p><h2>Prices and payment</h2><p>Prices are in euro and include VAT where it applies. Delivery is charged separately and is shown before you pay. Payment is taken through Shopify’s hosted checkout: we never see or store your card details.</p><p>If a product is listed at the wrong price we will contact you before dispatch and you can confirm the order at the correct price or cancel it for a full refund.</p><h2>Alcohol and age verification</h2><p>You must be 18 or over to buy alcohol from us, and somebody 18 or over has to take the delivery in. We may ask for proof of age on delivery. An Post cannot leave anything containing alcohol with a neighbour or in a safe place, so an undelivered order goes back to the depot.</p><p>If we cannot complete an alcohol delivery for these reasons after reasonable attempts, we will contact you to arrange a redelivery or a refund of the goods.</p><h2>Delivery</h2><p>Free local delivery within the A85 eircode area, delivered by our own team. €8.95 elsewhere in the Republic of Ireland with An Post, free on orders over €100. From €40 to the United Kingdom, where delivery times may vary and additional customs requirements may apply. Full detail is on our delivery page.</p><p>Delivery timescales are estimates. Once an order is with An Post we cannot guarantee the day it arrives. Risk in the goods passes to you on delivery.</p><h2>Cancellations, returns and refunds</h2><p>Our <a href="/legal/returns">refund policy</a> sets out how to return an item, what cannot be returned, and how and when refunds are paid. We give you 30 days to request a return, which is longer than consumer law requires.</p><p>Nothing in that policy affects your statutory rights. If goods are faulty, damaged or not as described, those rights apply whatever the policy says.</p><h2>Gifts sent to somebody else</h2><p>We never put a price or an invoice in the box. Where an order is sent as a gift, our contract is with you as the buyer, so cancellations and refunds are handled with you rather than with the recipient.</p><h2>Products and availability</h2><p>Hamper contents change a little with what is available from our producers. Where we have to substitute an item we substitute something of equal or greater value and of a similar kind. If a substitution would materially change the hamper we contact you first.</p><p>Photographs are of the product as we pack it. Serving suggestions and props in a photograph are not included unless the contents list says so.</p><h2>Our liability</h2><p>We do not exclude or limit our liability for death or personal injury caused by our negligence, for fraud, or for anything else that cannot be excluded under Irish law. Otherwise our liability for any order is limited to the amount you paid for it.</p><h2>Complaints and disputes</h2><p>Contact us first and we will try to sort it out. If we cannot resolve it, you can use the European Commission’s online dispute resolution platform, or contact the Competition and Consumer Protection Commission.</p><h2>Governing law</h2><p>These terms are governed by the laws of Ireland and the courts of Ireland have jurisdiction. As a consumer you keep the protection of the mandatory rules of the country you live in.</p>',
+      body: '<p>These terms apply when you buy from theparcelconcierge.com. Please read them before you order. Nothing in them affects your statutory rights as a consumer under Irish and EU law.</p><h2>Who we are</h2><p>The Parcel Concierge, No 1, Supple House, Dunshaughlin, Co. Meath, A85 R684, Ireland. You can reach us at hello@theparcelconcierge.com or on (01) 801 9810.</p><h2>Placing an order</h2><p>Your order is an offer to buy. A contract is formed when we email you to confirm the order has been dispatched, not when you complete checkout. If we cannot fulfil an order we will contact you and refund you in full rather than substituting without asking.</p><p>We may refuse an order. The usual reasons are that an item is out of stock, that we cannot deliver to the address, or that we cannot satisfy ourselves about age verification on an order containing alcohol.</p><h2>Prices and payment</h2><p>Prices are in euro and include VAT where it applies. Delivery is charged separately and is shown before you pay. Payment is taken through Shopify’s hosted checkout: we never see or store your card details.</p><p>If a product is listed at the wrong price we will contact you before dispatch and you can confirm the order at the correct price or cancel it for a full refund.</p><h2>Alcohol and age verification</h2><p>You must be 18 or over to buy alcohol from us, and somebody 18 or over has to take the delivery in. We may ask for proof of age on delivery. An Post cannot leave anything containing alcohol with a neighbour or in a safe place, so an undelivered order goes back to the depot.</p><p>If we cannot complete an alcohol delivery for these reasons after reasonable attempts, we will contact you to arrange a redelivery or a refund of the goods.</p><h2>Delivery</h2><p>Free local delivery within the A85 eircode area, delivered by our own team. €8.95 elsewhere in the Republic of Ireland with An Post. From €40 to the United Kingdom, where delivery times may vary and additional customs requirements may apply. Full detail is on our delivery page.</p><p>Delivery timescales are estimates. Once an order is with An Post we cannot guarantee the day it arrives. Risk in the goods passes to you on delivery.</p><h2>Cancellations, returns and refunds</h2><p>Our <a href="/legal/returns">refund policy</a> sets out how to return an item, what cannot be returned, and how and when refunds are paid. We give you 30 days to request a return, which is longer than consumer law requires.</p><p>Nothing in that policy affects your statutory rights. If goods are faulty, damaged or not as described, those rights apply whatever the policy says.</p><h2>Gifts sent to somebody else</h2><p>We never put a price or an invoice in the box. Where an order is sent as a gift, our contract is with you as the buyer, so cancellations and refunds are handled with you rather than with the recipient.</p><h2>Products and availability</h2><p>Hamper contents change a little with what is available from our producers. Where we have to substitute an item we substitute something of equal or greater value and of a similar kind. If a substitution would materially change the hamper we contact you first.</p><p>Photographs are of the product as we pack it. Serving suggestions and props in a photograph are not included unless the contents list says so.</p><h2>Our liability</h2><p>We do not exclude or limit our liability for death or personal injury caused by our negligence, for fraud, or for anything else that cannot be excluded under Irish law. Otherwise our liability for any order is limited to the amount you paid for it.</p><h2>Complaints and disputes</h2><p>Contact us first and we will try to sort it out. If we cannot resolve it, you can use the European Commission’s online dispute resolution platform, or contact the Competition and Consumer Protection Commission.</p><h2>Governing law</h2><p>These terms are governed by the laws of Ireland and the courts of Ireland have jurisdiction. As a consumer you keep the protection of the mandatory rules of the country you live in.</p>',
       updatedAt: '2026-09-03',
     },
     {

@@ -7,7 +7,7 @@ import { DELIVERY } from '../src/lib/site-config.ts'
 const wine = { title: 'Decoy Zinfandel', kind: 'wine' as const, descriptionHtml: '' }
 
 /** The real line the product pages pass, so the test covers what ships. */
-const DELIVERY_LINE = `${DELIVERY.national.label}, free over €100.`
+const DELIVERY_LINE = `${DELIVERY.national.label}.`
 
 test('a product with a description uses its own words', () => {
   const description = productMetaDescription({

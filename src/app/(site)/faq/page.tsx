@@ -24,7 +24,7 @@ const FAQS = [
   {
     question: 'How much is delivery?',
     answer:
-      'It depends where it is going: free locally, a flat rate elsewhere in Ireland, free over a certain order value, and a separate rate for the UK. The delivery page has the rates in full.',
+      'It depends where it is going: free locally, a flat rate elsewhere in Ireland, and a separate rate for the UK. The delivery page has the rates in full.',
     link: { href: '/delivery', label: 'See our delivery information' },
   },
   {
